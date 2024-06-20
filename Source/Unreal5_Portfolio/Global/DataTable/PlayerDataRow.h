@@ -20,8 +20,20 @@ protected:
 
 private:
 	UPROPERTY(Category = "Parameter", EditAnywhere, BlueprintReadWrite, meta = (AllowprivateAccess = "true"))
-	float PlayerWalkSpeed = 0.0f;
+	FString Name = "None";
 
 	UPROPERTY(Category = "Parameter", EditAnywhere, BlueprintReadWrite, meta = (AllowprivateAccess = "true"))
-	float PlayerJumpValue = 0.0f;
+	int Hp = 100;
+
+	UPROPERTY(Category = "Parameter", EditAnywhere, BlueprintReadWrite, meta = (AllowprivateAccess = "true"))
+	float MoveSpeed = 100.0f;
+
+	UPROPERTY(Category = "Parameter", EditAnywhere, BlueprintReadWrite, meta = (AllowprivateAccess = "true"))
+	float RotSpeed = 100.0f;
+
+	UPROPERTY(Category = "Parameter", EditAnywhere, BlueprintReadWrite, meta = (AllowprivateAccess = "true"))
+	float RunSpeed = 2.0f;
+
+	UPROPERTY(Category = "Parameter", EditAnywhere, BlueprintReadWrite, meta = (AllowprivateAccess = "true"))
+	bool Jumping = false;
 };

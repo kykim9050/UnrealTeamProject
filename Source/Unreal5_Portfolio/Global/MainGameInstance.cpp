@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "Global/DataTable/PlayerDataRow.h"
 #include "Global/MainGameInstance.h"
+#include "Global/DataTable/PlayerDataRow.h"
 
 UMainGameInstance::UMainGameInstance()
 {
