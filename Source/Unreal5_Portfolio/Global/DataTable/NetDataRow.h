@@ -15,6 +15,33 @@ struct FNetDataRow : public FTableRowBase
 	GENERATED_BODY()
 	
 public:
+	inline FString GetIP()
+	{
+		return IP;
+	}
+	inline FString GetPORT()
+	{
+		return PORT;
+	}
+	inline bool GetIsServer()
+	{
+		return IsServer;
+	}
+
+	void SetIP(FString _IP)
+	{
+		IP = _IP;
+	}
+
+	void SetPORT(FString _PORT)
+	{
+		PORT = _PORT;
+	}
+
+	void SetIsServer(bool _IsServer)
+	{
+		IsServer = _IsServer;
+	}
 
 protected:
 

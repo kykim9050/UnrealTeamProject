@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Engine/GameInstance.h"
+#include "DataTable/NetDataRow.h"
 #include "MainGameInstance.generated.h"
 
 /**
