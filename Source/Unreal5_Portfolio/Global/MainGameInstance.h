@@ -15,10 +15,26 @@ class UNREAL5_PORTFOLIO_API UMainGameInstance : public UGameInstance
 {
 	GENERATED_BODY()
 public:
-	const struct FPlayerDataRow* GetPlayerData(FName _Name);
-	const struct FNetDataRow* GetNetData(FName _Name);
-	FNetDataRow GetNetDataValue(FName _Name);
 
+	/// <summary>
+	/// PlayerDataTable 포인터를 받아오는 함수
+	/// FName은 생성한 PlayerDataTable 행이름
+	/// </summary>
+	/// <param name="_Name"></param>
+	/// <returns></returns>
+	const struct FPlayerDataRow* GetPlayerData(FName _Name);
+
+	/// <summary>
+	/// NetDataTable 포인터를 받아오는 함수
+	/// FName은 생성한 NetDataTable 행이름
+	/// </summary>
+	/// <param name="_Name"></param>
+	/// <returns></returns>
+	const struct FNetDataRow* GetNetData(FName _Name);
+
+
+	// 서버 접속 테스트 관련 기능들 (추후 제거될 예정)
+	FNetDataRow GetNetDataValue(FName _Name);
 	FNetDataRow CurNetInfo;
 protected:
 
