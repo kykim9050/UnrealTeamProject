@@ -17,6 +17,7 @@ public:
 	const struct FPlayerDataRow* GetPlayerData(FName _Name);
 	const struct FNetDataRow* GetNetData(FName _Name);
 
+	FNetDataRow CurNetInfo;
 protected:
 
 private:
