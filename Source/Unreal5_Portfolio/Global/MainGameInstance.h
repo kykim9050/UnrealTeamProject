@@ -17,6 +17,7 @@ class UNREAL5_PORTFOLIO_API UMainGameInstance : public UGameInstance
 public:
 	const struct FPlayerDataRow* GetPlayerData(FName _Name);
 	const struct FNetDataRow* GetNetData(FName _Name);
+	FNetDataRow GetNetDataValue(FName _Name);
 
 	FNetDataRow CurNetInfo;
 protected:

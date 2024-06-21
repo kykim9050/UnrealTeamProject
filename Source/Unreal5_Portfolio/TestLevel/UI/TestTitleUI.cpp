@@ -44,3 +44,13 @@ bool UTestTitleUI::Initialize()
 
 	return ReturnValue;
 }
+
+void UTestTitleUI::ServerTest(FName _IPName)
+{
+	UMainGameInstance* Inst = GetGameInstance<UMainGameInstance>();
+	FNetDataRow Data = Inst->GetNetDataValue(_IPName);
+
+	Inst->CurNetInfo.SetIP(Data.GetIP());
+	Inst->CurNetInfo.SetPORT(Port);
+}
+
