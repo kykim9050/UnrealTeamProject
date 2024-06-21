@@ -28,6 +28,7 @@ public:
 	virtual bool Initialize() override;
 
 	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+
 	FString IPAddress = TEXT("127.0.0.1");
 	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	FString Port = TEXT("30001");

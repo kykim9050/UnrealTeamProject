@@ -29,7 +29,12 @@ void UTestTitleUI::Connect(FString _IP)
 		return;
 	}
 
-	Inst->CurNetInfo.SetIP(_IP);
+	if (false == _IP.IsEmpty())
+	{
+		IPAddress = _IP;
+	}
+
+	Inst->CurNetInfo.SetIP(IPAddress);
 	Inst->CurNetInfo.SetPORT(Port);
 
 	FString ConnectLevelName = FString::Printf(TEXT("%s:%s"), *IPAddress, *Port);
@@ -50,7 +55,8 @@ void UTestTitleUI::ServerTest(FName _IPName)
 	UMainGameInstance* Inst = GetGameInstance<UMainGameInstance>();
 	FNetDataRow Data = Inst->GetNetDataValue(_IPName);
 
-	Inst->CurNetInfo.SetIP(Data.GetIP());
+	IPAddress = Data.GetIP();
+	Inst->CurNetInfo.SetIP(IPAddress);
 	Inst->CurNetInfo.SetPORT(Port);
 }
 
