@@ -6,6 +6,9 @@
 #include "Blueprint/UserWidget.h"
 #include "TestTitleUI.generated.h"
 
+
+struct FNetDataRow;
+
 /**
  * 
  */
@@ -33,6 +36,7 @@ public:
 	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	FString Port = TEXT("30001");
 
+	const FNetDataRow* Test;
 //	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 //	bool IsHoverOnOff;
 //

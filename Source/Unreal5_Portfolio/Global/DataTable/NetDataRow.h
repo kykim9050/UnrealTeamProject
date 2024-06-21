@@ -15,15 +15,15 @@ struct FNetDataRow : public FTableRowBase
 	GENERATED_BODY()
 	
 public:
-	inline FString GetIP()
+	inline FString GetIP() const
 	{
 		return IP;
 	}
-	inline FString GetPORT()
+	inline FString GetPORT() const
 	{
 		return PORT;
 	}
-	inline bool GetIsServer()
+	inline bool GetIsServer() const
 	{
 		return IsServer;
 	}
