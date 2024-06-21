@@ -13,5 +13,7 @@ UCLASS()
 class UNREAL5_PORTFOLIO_API ATestTitleMode : public AGameMode
 {
 	GENERATED_BODY()
-	
+public:
+	UFUNCTION(BlueprintCallable)
+	void ListenServerOn();
 };
