@@ -53,6 +53,10 @@ bool UTestTitleUI::Initialize()
 void UTestTitleUI::ServerTest(FName _IPName)
 {
 	UMainGameInstance* Inst = GetGameInstance<UMainGameInstance>();
+	if (true == _IPName.IsNone())
+	{
+		_IPName = FName("LocalNet");
+	}
 	Test = Inst->GetNetData(_IPName);
 	IPAddress = Test->GetIP();
 	/*FNetDataRow Data = Inst->GetNetDataValue(_IPName);
