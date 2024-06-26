@@ -32,6 +32,14 @@ public:
 	/// <returns></returns>
 	const struct FNetDataRow* GetNetData(FName _Name);
 
+	/// <summary>
+	/// MonsterDataTable 포인터를 받아오는 함수
+	/// FName은 생성한 MonsterDataTable 행이름
+	/// </summary>
+	/// <param name="_Name"></param>
+	/// <returns></returns>
+	const struct FMonsterDataRow* GetMonsterData(FName _Name);
+
 	FNetDataRow CurNetInfo;
 protected:
 
@@ -41,6 +49,10 @@ private:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowprivateAccess = "true"));
 	UDataTable* NetDataTable = nullptr;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowprivateAccess = "true"));
+	UDataTable* MonsterDataTable = nullptr;
+
 private:
 	UMainGameInstance();
 };

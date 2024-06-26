@@ -19,21 +19,39 @@ public:
 protected:
 
 private:
+	/// <summary>
+	/// Player 이름
+	/// </summary>
 	UPROPERTY(Category = "Parameter", EditAnywhere, BlueprintReadWrite, meta = (AllowprivateAccess = "true"))
 	FString Name = "None";
 
+	/// <summary>
+	/// 체력
+	/// </summary>
 	UPROPERTY(Category = "Parameter", EditAnywhere, BlueprintReadWrite, meta = (AllowprivateAccess = "true"))
 	int Hp = 100;
 
+	/// <summary>
+	/// 이동 속도
+	/// </summary>
 	UPROPERTY(Category = "Parameter", EditAnywhere, BlueprintReadWrite, meta = (AllowprivateAccess = "true"))
 	float MoveSpeed = 100.0f;
 
+	/// <summary>
+	/// 회전 속도
+	/// </summary>
 	UPROPERTY(Category = "Parameter", EditAnywhere, BlueprintReadWrite, meta = (AllowprivateAccess = "true"))
 	float RotSpeed = 100.0f;
 
+	/// <summary>
+	/// 뛰기 속도
+	/// </summary>
 	UPROPERTY(Category = "Parameter", EditAnywhere, BlueprintReadWrite, meta = (AllowprivateAccess = "true"))
 	float RunSpeed = 2.0f;
 
+	/// <summary>
+	/// 점프 중
+	/// </summary>
 	UPROPERTY(Category = "Parameter", EditAnywhere, BlueprintReadWrite, meta = (AllowprivateAccess = "true"))
 	bool Jumping = false;
 };
