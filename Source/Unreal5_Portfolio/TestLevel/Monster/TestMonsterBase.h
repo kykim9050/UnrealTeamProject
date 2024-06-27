@@ -3,11 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "TestMonsterLevelCharacterBase.h"
+#include "GameFrameWork/Character.h"
 #include "TestMonsterBase.generated.h"
 
 UCLASS()
-class UNREAL5_PORTFOLIO_API ATestMonsterBase : public ATestMonsterLevelCharacterBase
+class UNREAL5_PORTFOLIO_API ATestMonsterBase : public ACharacter
 {
 	GENERATED_BODY()
 
