@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameState.h"
-#include "TestMonsterGameState.generated.h"
+#include "MainGameState.generated.h"
 
 UCLASS()
 class UNREAL5_PORTFOLIO_API UActorGroup : public UObject
@@ -12,7 +12,7 @@ class UNREAL5_PORTFOLIO_API UActorGroup : public UObject
 	GENERATED_BODY()
 
 public:
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	TArray<AActor*> Actors;
 };
 
@@ -20,7 +20,7 @@ public:
  * 
  */
 UCLASS()
-class UNREAL5_PORTFOLIO_API ATestMonsterGameState : public AGameState
+class UNREAL5_PORTFOLIO_API AMainGameState : public AGameState
 {
 	GENERATED_BODY()
 
@@ -33,6 +33,13 @@ public:
 
 	void PushActor(uint8 _Index, AActor* _Actor);
 
+	template<typename EnumType>
+	UActorGroup* GetActorGroup(EnumType _Index)
+	{
+		return GetActorGroup(static_cast<uint8>(_Index));
+	}
+
+	UActorGroup* GetActorGroup(uint8 _Index);
 
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))

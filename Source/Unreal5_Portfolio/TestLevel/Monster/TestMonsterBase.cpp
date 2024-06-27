@@ -2,6 +2,8 @@
 
 
 #include "TestLevel/Monster/TestMonsterBase.h"
+#include "Global/MainGameBlueprintFunctionLibrary.h"
+#include "Global/ContentsEnum.h"
 
 // Sets default values
 ATestMonsterBase::ATestMonsterBase()
@@ -15,7 +17,9 @@ ATestMonsterBase::ATestMonsterBase()
 void ATestMonsterBase::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	UMainGameBlueprintFunctionLibrary::PushActor(GetWorld(), EObjectType::Monster, this);
+
+	int a = 0;
 }
 
 // Called every frame

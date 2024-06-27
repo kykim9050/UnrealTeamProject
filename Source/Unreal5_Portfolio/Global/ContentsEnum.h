@@ -12,7 +12,8 @@ UENUM(BlueprintType)
 enum class EObjectType : uint8
 {
 	Player,
-	Monster
+	Monster,
+	Max
 };
 
 UENUM(BlueprintType)
