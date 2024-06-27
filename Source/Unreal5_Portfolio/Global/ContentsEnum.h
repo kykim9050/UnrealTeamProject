@@ -9,6 +9,13 @@
 
 // Contents 전반적으로 사용하는 Enum class
 UENUM(BlueprintType)
+enum class EObjectType : uint8
+{
+	Player,
+	Monster
+};
+
+UENUM(BlueprintType)
 enum class EMonsterState : uint8
 {
 	Idle,

@@ -15,6 +15,11 @@ struct FMonsterDataRow : public FTableRowBase
 	GENERATED_BODY()
 	
 public:
+	TSubclassOf<AActor> GetMonsterUClass() const
+	{
+		return MonsterUClass;
+	}
+
 
 protected:
 

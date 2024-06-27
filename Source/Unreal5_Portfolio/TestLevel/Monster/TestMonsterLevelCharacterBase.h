@@ -3,17 +3,17 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "TestMonsterLevelCharacterBase.h"
-#include "TestMonsterBase.generated.h"
+#include "GameFramework/Character.h"
+#include "TestMonsterLevelCharacterBase.generated.h"
 
 UCLASS()
-class UNREAL5_PORTFOLIO_API ATestMonsterBase : public ATestMonsterLevelCharacterBase
+class UNREAL5_PORTFOLIO_API ATestMonsterLevelCharacterBase : public ACharacter
 {
 	GENERATED_BODY()
 
 public:
 	// Sets default values for this character's properties
-	ATestMonsterBase();
+	ATestMonsterLevelCharacterBase();
 
 protected:
 	// Called when the game starts or when spawned
