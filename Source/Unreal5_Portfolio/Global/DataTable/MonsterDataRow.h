@@ -4,63 +4,42 @@
 
 #include "CoreMinimal.h"
 #include "Engine/DataTable.h"
-#include "NetDataRow.generated.h"
+#include "MonsterDataRow.generated.h"
 
 /**
  * 
  */
 USTRUCT(BlueprintType)
-struct FNetDataRow : public FTableRowBase
+struct FMonsterDataRow : public FTableRowBase
 {
 	GENERATED_BODY()
 	
 public:
-	inline FString GetIP() const
+	TSubclassOf<AActor> GetMonsterUClass() const
 	{
-		return IP;
-	}
-	inline FString GetPORT() const
-	{
-		return PORT;
-	}
-	inline bool GetIsServer() const
-	{
-		return IsServer;
+		return MonsterUClass;
 	}
 
-	void SetIP(FString _IP)
-	{
-		IP = _IP;
-	}
-
-	void SetPORT(FString _PORT)
-	{
-		PORT = _PORT;
-	}
-
-	void SetIsServer(bool _IsServer)
-	{
-		IsServer = _IsServer;
-	}
 
 protected:
 
 private:
 	/// <summary>
-	/// IP 주소
+	/// 기본 Monster 종류
 	/// </summary>
 	UPROPERTY(Category = "Parameter", EditAnywhere, BlueprintReadWrite, meta = (AllowprivateAccess = "true"))
-	FString IP = "127.0.0.1";
+	TSubclassOf<AActor> MonsterUClass = TSubclassOf<AActor>();
 
 	/// <summary>
-	/// 포트 번호
+	/// 걷기 속도
 	/// </summary>
 	UPROPERTY(Category = "Parameter", EditAnywhere, BlueprintReadWrite, meta = (AllowprivateAccess = "true"))
-	FString PORT = "30001";
+	float WalkSpeed = 300.0f;
 
 	/// <summary>
-	/// 서버면 true, 아니면 false
+	/// 달리기 속도
 	/// </summary>
 	UPROPERTY(Category = "Parameter", EditAnywhere, BlueprintReadWrite, meta = (AllowprivateAccess = "true"))
-	bool IsServer = false;
+	float RunSpeed = 600.0f;
+
 };
