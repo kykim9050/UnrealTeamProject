@@ -29,12 +29,12 @@ private:
 	/// 걷기 속도
 	/// </summary>
 	UPROPERTY(Category = "Parameter", EditAnywhere, BlueprintReadWrite, meta = (AllowprivateAccess = "true"))
-	float WalkSpeed = 0.0f;
+	float WalkSpeed = 300.0f;
 
 	/// <summary>
 	/// 달리기 속도
 	/// </summary>
 	UPROPERTY(Category = "Parameter", EditAnywhere, BlueprintReadWrite, meta = (AllowprivateAccess = "true"))
-	float RunSpeed = 0.0f;
+	float RunSpeed = 600.0f;
 
 };

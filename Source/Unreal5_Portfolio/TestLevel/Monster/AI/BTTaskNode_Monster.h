@@ -7,9 +7,8 @@
 #include "BehaviorTree/BlackboardComponent.h"
 #include "BTTaskNode_Monster.generated.h"
 
-/**
- * 
- */
+
+// 몬스터 BT 부모 Task 노드
 UCLASS()
 class UNREAL5_PORTFOLIO_API UBTTaskNode_Monster : public UBTTaskNode
 {
