@@ -8,14 +8,7 @@
 
 EBTNodeResult::Type UBTTaskNode_MonsterIdle::ExecuteTask(UBehaviorTreeComponent& _OwnerComp, uint8* _NodeMemory)
 {
-    EBTNodeResult::Type Result = Super::ExecuteTask(_OwnerComp, _NodeMemory);
-
-    // 현재 상태 확인
-    EMonsterState State = GetCurState<EMonsterState>(_OwnerComp);
-    if (EMonsterState::Idle != State)
-    {
-        return EBTNodeResult::Type::Failed;
-    }
+    Super::ExecuteTask(_OwnerComp, _NodeMemory);
 
     ATestMonsterBase* Monster = GetActor<ATestMonsterBase>(_OwnerComp);
     if (false == Monster->IsValidLowLevel())
@@ -24,30 +17,29 @@ EBTNodeResult::Type UBTTaskNode_MonsterIdle::ExecuteTask(UBehaviorTreeComponent&
         return EBTNodeResult::Type::Aborted;
     }
 
-    return Result;
+    return EBTNodeResult::Type::InProgress;
 }
 
 void UBTTaskNode_MonsterIdle::TickTask(UBehaviorTreeComponent& _OwnerComp, uint8* _pNodeMemory, float _DeltaSeconds)
 {
     Super::TickTask(_OwnerComp, _pNodeMemory, _DeltaSeconds);
 
-    UMonsterData* Test = GetValueAsObject<UMonsterData>(_OwnerComp, TEXT("MonsterData"));
-
+    UMonsterData* MonsterData = GetValueAsObject<UMonsterData>(_OwnerComp, TEXT("MonsterData"));
     AMainGameState* GameState = UMainGameBlueprintFunctionLibrary::GetMainGameState(GetWorld());
     UActorGroup* Players = GameState->GetActorGroup(EObjectType::Player);
-    
+
     // 플레이어 존재 확인
     if (true == Players->Actors.IsEmpty())
     {
-        FinishLatentTask(_OwnerComp, EBTNodeResult::Aborted);
-        return;
+        //FinishLatentTask(_OwnerComp, EBTNodeResult::Aborted);
+        //return;
     }
 
-    //AActor* TargetActor;
-
-
-
-
-    StateChange(_OwnerComp, EMonsterState::Patrol);
-    return;
+    MonsterData->IdleTime += _DeltaSeconds;
+    if (2.0f < MonsterData->IdleTime)
+    {
+        MonsterData->IdleTime = 0.0f;
+        StateChange(_OwnerComp, EMonsterState::Patrol); 
+        return;
+    }
 }

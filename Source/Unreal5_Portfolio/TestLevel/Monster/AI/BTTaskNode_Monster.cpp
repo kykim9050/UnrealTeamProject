@@ -11,7 +11,7 @@ UBTTaskNode_Monster::UBTTaskNode_Monster()
 AActor* UBTTaskNode_Monster::GetActor(UBehaviorTreeComponent& _OwnerComp)
 {
 	UObject* Object = _OwnerComp.GetBlackboardComponent()->GetValueAsObject(TEXT("SelfActor"));
-	return nullptr;
+	return Cast<AActor>(Object);
 }
 
 uint8 UBTTaskNode_Monster::GetCurState(UBehaviorTreeComponent& _OwnerComp)

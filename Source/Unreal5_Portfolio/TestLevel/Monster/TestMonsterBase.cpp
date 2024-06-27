@@ -2,6 +2,8 @@
 
 
 #include "TestLevel/Monster/TestMonsterBase.h"
+#include "TestMonsterBaseAIController.h"
+#include "BehaviorTree/BlackboardComponent.h"
 #include "Global/MainGameBlueprintFunctionLibrary.h"
 #include "Global/ContentsEnum.h"
 
@@ -36,6 +38,9 @@ void ATestMonsterBase::BeginPlay()
 	//  몬스터 AI 데이터 세팅
 	SettingData = NewObject<UMonsterData>(this);
 	SettingData->Data = BaseData;
+
+	ATestMonsterBaseAIController* AIController = GetController<ATestMonsterBaseAIController>();
+	AIController->GetBlackboardComponent()->SetValueAsObject(TEXT("MonsterData"), SettingData);
 }
 
 // Called every frame

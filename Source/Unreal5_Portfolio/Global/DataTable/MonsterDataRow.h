@@ -53,5 +53,4 @@ public:
 	const FMonsterDataRow* Data;
 
 	float IdleTime = 0.0f;
-
 };
