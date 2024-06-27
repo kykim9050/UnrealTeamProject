@@ -17,9 +17,25 @@ ATestMonsterBase::ATestMonsterBase()
 void ATestMonsterBase::BeginPlay()
 {
 	Super::BeginPlay();
-	UMainGameBlueprintFunctionLibrary::PushActor(GetWorld(), EObjectType::Monster, this);
 
-	int a = 0;
+	UMainGameInstance* MainGameInst = UMainGameBlueprintFunctionLibrary::GetMainGameInstance(GetWorld());
+
+	// 클라이언트는 딱히 할게 없다.
+	if (nullptr == GetController())
+	{
+		return;
+	}
+
+	BaseData = MainGameInst->GetMonsterData(BaseDataName);
+	if (nullptr == BaseData)
+	{
+		UE_LOG(LogTemp, Fatal, TEXT("%S(%u)> if (PortNumber == 0)"), __FUNCTION__, __LINE__);
+		return;
+	}
+
+	//  몬스터 AI 데이터 세팅
+	SettingData = NewObject<UMonsterData>(this);
+	SettingData->Data = BaseData;
 }
 
 // Called every frame

@@ -14,4 +14,7 @@ class UNREAL5_PORTFOLIO_API ATestPlayMode : public AGameMode
 {
 	GENERATED_BODY()
 	
+public:
+	void BeginPlay() override;
+
 };

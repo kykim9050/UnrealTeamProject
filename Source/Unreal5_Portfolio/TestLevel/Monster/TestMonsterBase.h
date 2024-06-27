@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFrameWork/Character.h"
+#include "Global/DataTable/MonsterDataRow.h"
 #include "TestMonsterBase.generated.h"
 
 UCLASS()
@@ -25,5 +26,14 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+private:
+	const FMonsterDataRow* BaseData;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	FName BaseDataName;
+
+	UPROPERTY()
+	UMonsterData* SettingData;
 
 };
