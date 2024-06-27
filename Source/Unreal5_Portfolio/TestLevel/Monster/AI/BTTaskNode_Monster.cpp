@@ -18,3 +18,9 @@ uint8 UBTTaskNode_Monster::GetCurState(UBehaviorTreeComponent& _OwnerComp)
 {
 	return _OwnerComp.GetBlackboardComponent()->GetValueAsEnum(TEXT("State"));
 }
+
+void UBTTaskNode_Monster::StateChange(UBehaviorTreeComponent& _OwnerComp, uint8 _StateChange)
+{
+	_OwnerComp.GetBlackboardComponent()->SetValueAsEnum(TEXT("State"), _StateChange);
+	FinishLatentTask(_OwnerComp, EBTNodeResult::Failed);
+}

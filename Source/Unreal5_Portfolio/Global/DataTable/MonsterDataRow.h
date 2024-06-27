@@ -43,3 +43,15 @@ private:
 	float RunSpeed = 600.0f;
 
 };
+
+UCLASS()
+class UMonsterData : public UObject
+{
+	GENERATED_BODY()
+
+public:
+	const FMonsterDataRow* Data;
+
+	float IdleTime = 0.0f;
+
+};
