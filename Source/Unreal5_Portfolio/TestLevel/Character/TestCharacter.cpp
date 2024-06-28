@@ -4,6 +4,7 @@
 #include "TestCharacter.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
+#include "Global/MainGameBlueprintFunctionLibrary.h"
 
 // Sets default values
 ATestCharacter::ATestCharacter()
@@ -34,7 +35,7 @@ ATestCharacter::ATestCharacter()
 void ATestCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	UMainGameBlueprintFunctionLibrary::PushActor(EObjectType::Player, this);
 }
 
 // Called every frame

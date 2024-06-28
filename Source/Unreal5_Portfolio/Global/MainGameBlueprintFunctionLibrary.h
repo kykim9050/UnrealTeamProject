@@ -36,7 +36,4 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Game", meta = ( UnsafeDuringActorConstruction = "true"))
 	static void PushActor(uint8 _GroupIndex, AActor* _Actor);
 
-	UFUNCTION(BlueprintCallable, Category = "Game", meta = ( UnsafeDuringActorConstruction = "true"))
-	static void PushWorldActor(class AGameState* _CurGameState, uint8 _GroupIndex, AActor* _Actor);
-
 };

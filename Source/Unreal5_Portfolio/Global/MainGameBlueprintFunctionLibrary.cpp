@@ -46,19 +46,3 @@ void UMainGameBlueprintFunctionLibrary::PushActor(uint8 _GroupIndex, AActor* _Ac
 
 	GameState->PushActor(_GroupIndex, _Actor);
 }
-
-void UMainGameBlueprintFunctionLibrary::PushWorldActor(AGameState* _CurGameState, uint8 _GroupIndex, AActor* _Actor)
-{
-	if (nullptr == _Actor->GetWorld())
-	{
-		return;
-	}
-
-	AMainGameState* GameState = Cast<AMainGameState>(_CurGameState);
-	if (nullptr == GameState)
-	{
-		UE_LOG(LogTemp, Fatal, TEXT("%S(%u)> if (nullptr == State)"), __FUNCTION__, __LINE__);
-	}
-
-	GameState->PushActor(_GroupIndex, _Actor);
-}
