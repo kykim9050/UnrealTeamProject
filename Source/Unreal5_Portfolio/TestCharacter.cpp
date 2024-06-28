@@ -11,13 +11,24 @@ ATestCharacter::ATestCharacter()
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	// SpringArm Component
 	SpringArmComponent = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArmComponent"));
-	SpringArmComponent->bDoCollisionTest = false;
 	SpringArmComponent->SetupAttachment(RootComponent);
+	SpringArmComponent->SetRelativeLocation(FVector(0.0f, 0.0f, 50.0f + BaseEyeHeight));
+	SpringArmComponent->TargetArmLength = 0.0f;
+	SpringArmComponent->bDoCollisionTest = false;
 
+	// Camera Component
 	CameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("CameraComponent"));
-	CameraComponent->SetProjectionMode(ECameraProjectionMode::Perspective);
 	CameraComponent->SetupAttachment(SpringArmComponent);
+	CameraComponent->SetProjectionMode(ECameraProjectionMode::Perspective);
+	CameraComponent->bUsePawnControlRotation = true;
+
+	// Mesh
+	GetMesh()->SetOwnerNoSee(true);
+	WeaponMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("WeaponMesh"));
+	WeaponMesh->SetupAttachment(GetMesh(), "WeaponMesh");
+	WeaponMesh->SetOwnerNoSee(true);
 }
 
 // Called when the game starts or when spawned
@@ -34,10 +45,14 @@ void ATestCharacter::Tick(float DeltaTime)
 
 }
 
-// Called to bind functionality to input
-void ATestCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+void ATestCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
+	DOREPLIFETIME(ATestCharacter, StateValue);
 }
 
+void ATestCharacter::ChangeState_Implementation(EPlayerState _Type)
+{
+	StateValue = _Type;
+}

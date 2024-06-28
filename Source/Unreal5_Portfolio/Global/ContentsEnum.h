@@ -17,6 +17,17 @@ enum class EObjectType : uint8
 };
 
 UENUM(BlueprintType)
+enum class EPlayerState : uint8
+{
+	Idle UMETA(DisplayName = "Idle"),
+	Walk UMETA(DisplayName = "Walk"),
+	Run UMETA(DisplayName = "Run"),
+	Jump UMETA(DisplayName = "Jump"),
+	Crouch UMETA(DisplayName = "Crouch"),
+	Fire UMETA(DisplayName = "Fire"),
+};
+
+UENUM(BlueprintType)
 enum class EMonsterState : uint8
 {
 	Idle,
