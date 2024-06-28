@@ -2,3 +2,14 @@
 
 
 #include "Global/DataAssets/InputDatas.h"
+
+
+UInputDatas::UInputDatas()
+{
+
+}
+
+UInputDatas::~UInputDatas()
+{
+
+}

@@ -35,12 +35,6 @@ public:
 	UPROPERTY(Category = "Contents", VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	UStaticMeshComponent* WeaponMesh = nullptr;
 
-	/*UPROPERTY(Category = "Contents", VisibleDefaultsOnly)
-	USkeletalMeshComponent* FPVMesh = nullptr;
-
-	UPROPERTY(Category = "Contents", VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	UStaticMeshComponent* FPVWeaponMesh = nullptr;*/
-
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

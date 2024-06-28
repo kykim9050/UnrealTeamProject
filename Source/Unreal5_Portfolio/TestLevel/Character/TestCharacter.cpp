@@ -14,7 +14,6 @@ ATestCharacter::ATestCharacter()
 	// SpringArm Component
 	SpringArmComponent = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArmComponent"));
 	SpringArmComponent->SetupAttachment(RootComponent);
-	SpringArmComponent->SetRelativeLocation(FVector(0.0f, 0.0f, 50.0f + BaseEyeHeight));
 	SpringArmComponent->TargetArmLength = 0.0f;
 	SpringArmComponent->bDoCollisionTest = false;
 
@@ -24,11 +23,11 @@ ATestCharacter::ATestCharacter()
 	CameraComponent->SetProjectionMode(ECameraProjectionMode::Perspective);
 	CameraComponent->bUsePawnControlRotation = true;
 
-	// Mesh
-	GetMesh()->SetOwnerNoSee(true);
+	GetMesh()->SetOwnerNoSee(false);
+
+	// Weapon Mesh
 	WeaponMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("WeaponMesh"));
 	WeaponMesh->SetupAttachment(GetMesh(), "WeaponMesh");
-	WeaponMesh->SetOwnerNoSee(true);
 }
 
 // Called when the game starts or when spawned
