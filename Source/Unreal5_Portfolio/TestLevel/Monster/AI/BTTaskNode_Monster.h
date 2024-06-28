@@ -60,6 +60,11 @@ public:
 		_OwnerComp.GetBlackboardComponent()->SetValueAsObject(_Name, _Value);
 	}
 
+	FORCEINLINE FVector GetValueAsVector(UBehaviorTreeComponent& _OwnerComp, FName _Name)
+	{
+		return _OwnerComp.GetBlackboardComponent()->GetValueAsVector(_Name);
+	}
+
 	FORCEINLINE void SetValueAsVector(UBehaviorTreeComponent& _OwnerComp, FName _Name, const FVector& _Value)
 	{
 		_OwnerComp.GetBlackboardComponent()->SetValueAsVector(_Name, _Value);

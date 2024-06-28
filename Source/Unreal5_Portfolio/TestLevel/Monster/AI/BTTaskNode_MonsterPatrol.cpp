@@ -2,8 +2,11 @@
 
 
 #include "TestLevel/Monster/AI/BTTaskNode_MonsterPatrol.h"
+#include "TestLevel/Monster/TestMonsterBaseAIController.h"
 #include "TestLevel/Monster/TestMonsterBase.h"
+
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Navigation/PathFollowingComponent.h"
 #include "NavigationSystem.h"
 #include "NavigationData.h"
 
@@ -24,8 +27,8 @@ EBTNodeResult::Type UBTTaskNode_MonsterPatrol::ExecuteTask(UBehaviorTreeComponen
 	UNavigationSystemV1* NavSystem = UNavigationSystemV1::GetNavigationSystem(GetWorld());
 	
 	FNavLocation PatrolLocation(FVector::ZeroVector);
-	float Radius = FMath::FRandRange(MonsterData->Min_PatrolRange, MonsterData->Max_PatrolRange);
-	bool IsFind = NavSystem->GetRandomReachablePointInRadius(MonsterData->OriginPos, Radius, PatrolLocation);	
+	//float Radius = FMath::FRandRange(MonsterData->Min_PatrolRange, MonsterData->Max_PatrolRange);
+	bool IsFind = NavSystem->GetRandomReachablePointInRadius(MonsterData->OriginPos, MonsterData->Max_PatrolRange, PatrolLocation);
 	
 	if (false == IsFind)
 	{
@@ -43,6 +46,16 @@ void UBTTaskNode_MonsterPatrol::TickTask(UBehaviorTreeComponent& _OwnerComp, uin
 {
 	Super::TickTask(_OwnerComp, _pNodeMemory, _DeltaSeconds);
 
+	ATestMonsterBase* Monster = GetActor<ATestMonsterBase>(_OwnerComp);
+	EPathFollowingRequestResult::Type IsMove = Monster->GetAIController()->MoveToLocation(GetValueAsVector(_OwnerComp, TEXT("PatrolLocation")));
+	
+	//Failed,
+		//AlreadyAtGoal,
+		//RequestSuccessful
 
-
+	if (EPathFollowingRequestResult::Type::RequestSuccessful == IsMove)
+	{
+		StateChange(_OwnerComp, EMonsterState::Idle);
+		return;
+	}
 }

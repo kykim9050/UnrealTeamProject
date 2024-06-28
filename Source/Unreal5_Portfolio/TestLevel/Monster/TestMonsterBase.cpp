@@ -60,3 +60,8 @@ void ATestMonsterBase::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 
 }
 
+ATestMonsterBaseAIController* ATestMonsterBase::GetAIController()
+{
+	return Cast<ATestMonsterBaseAIController>(GetController());
+}
+
