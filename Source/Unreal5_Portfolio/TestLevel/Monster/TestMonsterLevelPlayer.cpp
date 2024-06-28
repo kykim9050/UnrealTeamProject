@@ -17,7 +17,7 @@ ATestMonsterLevelPlayer::ATestMonsterLevelPlayer()
 void ATestMonsterLevelPlayer::BeginPlay()
 {
 	Super::BeginPlay();
-	UMainGameBlueprintFunctionLibrary::PushActor(GetWorld(), EObjectType::Player, this);	
+	UMainGameBlueprintFunctionLibrary::PushActor(EObjectType::Player, this);	
 }
 
 // Called every frame

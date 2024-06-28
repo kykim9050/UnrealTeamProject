@@ -22,18 +22,21 @@ public:
 	static AMainGameState* GetMainGameState(const UObject* WorldContextObject);
 
 	template<typename EnumType>
-	static void PushActor(const UObject* WorldContextObject, EnumType _GroupIndex, AActor* _Actor)
+	static void PushActor(EnumType _GroupIndex, AActor* _Actor)
 	{
-		if (nullptr == WorldContextObject)
+		if (nullptr == _Actor->GetWorld())
 		{
 			return;
 		}
 
-		PushActor(WorldContextObject, static_cast<uint8>(_GroupIndex), _Actor);
+		PushActor(static_cast<uint8>(_GroupIndex), _Actor);
 	}
 
 	// MainGameState 의 AllActor 에 추가
-	UFUNCTION(BlueprintCallable, Category = "Game", meta = (WorldContext = "WorldContextObject", UnsafeDuringActorConstruction = "true"))
-	static void PushActor(const UObject* WorldContextObject, uint8 _GroupIndex, AActor* _Actor);
+	UFUNCTION(BlueprintCallable, Category = "Game", meta = ( UnsafeDuringActorConstruction = "true"))
+	static void PushActor(uint8 _GroupIndex, AActor* _Actor);
+
+	UFUNCTION(BlueprintCallable, Category = "Game", meta = ( UnsafeDuringActorConstruction = "true"))
+	static void PushWorldActor(class AGameState* _CurGameState, uint8 _GroupIndex, AActor* _Actor);
 
 };

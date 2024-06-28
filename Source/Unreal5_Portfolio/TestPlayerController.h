@@ -14,4 +14,7 @@ class UNREAL5_PORTFOLIO_API ATestPlayerController : public APlayerController
 {
 	GENERATED_BODY()
 	
+public:
+	void BeginPlay() override;
+
 };

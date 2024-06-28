@@ -3,3 +3,9 @@
 
 #include "TestLevel/Monster/TestMonsterBaseAIController.h"
 
+void ATestMonsterBaseAIController::BeginPlay()
+{
+	Super::BeginPlay();
+
+
+}

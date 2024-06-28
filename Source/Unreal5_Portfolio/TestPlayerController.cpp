@@ -3,3 +3,7 @@
 
 #include "TestPlayerController.h"
 
+void ATestPlayerController::BeginPlay()
+{
+	Super::BeginPlay();
+}

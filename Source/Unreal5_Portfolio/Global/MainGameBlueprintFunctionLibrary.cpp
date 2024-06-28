@@ -29,16 +29,32 @@ AMainGameState* UMainGameBlueprintFunctionLibrary::GetMainGameState(const UObjec
 	return GameState;
 }
 
-void UMainGameBlueprintFunctionLibrary::PushActor(const UObject* WorldContextObject, uint8 _GroupIndex, AActor* _Actor)
+void UMainGameBlueprintFunctionLibrary::PushActor(uint8 _GroupIndex, AActor* _Actor)
 {
-	if (nullptr == WorldContextObject)
+	if (nullptr == _Actor->GetWorld())
 	{
 		return;
 	}
 
-	const UWorld* World = Cast<UWorld>(WorldContextObject);
+	const UWorld* World = Cast<UWorld>(_Actor->GetWorld());
 
 	AMainGameState* GameState = World->GetGameState<AMainGameState>();
+	if (nullptr == GameState)
+	{
+		UE_LOG(LogTemp, Fatal, TEXT("%S(%u)> if (nullptr == State)"), __FUNCTION__, __LINE__);
+	}
+
+	GameState->PushActor(_GroupIndex, _Actor);
+}
+
+void UMainGameBlueprintFunctionLibrary::PushWorldActor(AGameState* _CurGameState, uint8 _GroupIndex, AActor* _Actor)
+{
+	if (nullptr == _Actor->GetWorld())
+	{
+		return;
+	}
+
+	AMainGameState* GameState = Cast<AMainGameState>(_CurGameState);
 	if (nullptr == GameState)
 	{
 		UE_LOG(LogTemp, Fatal, TEXT("%S(%u)> if (nullptr == State)"), __FUNCTION__, __LINE__);
