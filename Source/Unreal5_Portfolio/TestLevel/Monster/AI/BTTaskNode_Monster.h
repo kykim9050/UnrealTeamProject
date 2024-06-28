@@ -60,4 +60,9 @@ public:
 		_OwnerComp.GetBlackboardComponent()->SetValueAsObject(_Name, _Value);
 	}
 
+	FORCEINLINE void SetValueAsVector(UBehaviorTreeComponent& _OwnerComp, FName _Name, const FVector& _Value)
+	{
+		_OwnerComp.GetBlackboardComponent()->SetValueAsVector(_Name, _Value);
+	}
+
 };

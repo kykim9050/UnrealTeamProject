@@ -35,9 +35,12 @@ void ATestMonsterBase::BeginPlay()
 		return;
 	}
 
-	//  몬스터 AI 데이터 세팅
+	//  몬스터 데이터 세팅
 	SettingData = NewObject<UMonsterData>(this);
 	SettingData->Data = BaseData;
+	SettingData->OriginPos = GetActorLocation();
+	SettingData->Min_PatrolRange = 300.0f;
+	SettingData->Max_PatrolRange = 600.0f;
 
 	ATestMonsterBaseAIController* AIController = GetController<ATestMonsterBaseAIController>();
 	AIController->GetBlackboardComponent()->SetValueAsObject(TEXT("MonsterData"), SettingData);

@@ -13,7 +13,7 @@ EBTNodeResult::Type UBTTaskNode_MonsterIdle::ExecuteTask(UBehaviorTreeComponent&
     ATestMonsterBase* Monster = GetActor<ATestMonsterBase>(_OwnerComp);
     if (false == Monster->IsValidLowLevel())
     {
-        UE_LOG(LogTemp, Fatal, TEXT("%S(%u)> if (ItemMeshs.Num() <= static_cast<uint8>(_Slot))"), __FUNCTION__, __LINE__);
+        UE_LOG(LogTemp, Fatal, TEXT("%S(%u)> Monster Is Not Valid"), __FUNCTION__, __LINE__);
         return EBTNodeResult::Type::Aborted;
     }
 
@@ -31,8 +31,8 @@ void UBTTaskNode_MonsterIdle::TickTask(UBehaviorTreeComponent& _OwnerComp, uint8
     // 플레이어 존재 확인
     if (true == Players->Actors.IsEmpty())
     {
-        //FinishLatentTask(_OwnerComp, EBTNodeResult::Aborted);
-        //return;
+        FinishLatentTask(_OwnerComp, EBTNodeResult::Aborted);
+        return;
     }
 
     MonsterData->IdleTime += _DeltaSeconds;
