@@ -60,6 +60,5 @@ public:
 	FVector OriginPos = FVector::ZeroVector;
 	float IdleTime = 0.0f;
 
-	float Min_PatrolRange = 0.0f;
 	float Max_PatrolRange = 0.0f;
 };

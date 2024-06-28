@@ -39,8 +39,7 @@ void ATestMonsterBase::BeginPlay()
 	SettingData = NewObject<UMonsterData>(this);
 	SettingData->Data = BaseData;
 	SettingData->OriginPos = GetActorLocation();
-	SettingData->Min_PatrolRange = 300.0f;
-	SettingData->Max_PatrolRange = 600.0f;
+	SettingData->Max_PatrolRange = 800.0f;
 
 	ATestMonsterBaseAIController* AIController = GetController<ATestMonsterBaseAIController>();
 	AIController->GetBlackboardComponent()->SetValueAsObject(TEXT("MonsterData"), SettingData);

@@ -27,7 +27,6 @@ EBTNodeResult::Type UBTTaskNode_MonsterPatrol::ExecuteTask(UBehaviorTreeComponen
 	UNavigationSystemV1* NavSystem = UNavigationSystemV1::GetNavigationSystem(GetWorld());
 	
 	FNavLocation PatrolLocation(FVector::ZeroVector);
-	//float Radius = FMath::FRandRange(MonsterData->Min_PatrolRange, MonsterData->Max_PatrolRange);
 	bool IsFind = NavSystem->GetRandomReachablePointInRadius(MonsterData->OriginPos, MonsterData->Max_PatrolRange, PatrolLocation);
 	
 	if (false == IsFind)
@@ -53,7 +52,7 @@ void UBTTaskNode_MonsterPatrol::TickTask(UBehaviorTreeComponent& _OwnerComp, uin
 		//AlreadyAtGoal,
 		//RequestSuccessful
 
-	if (EPathFollowingRequestResult::Type::RequestSuccessful == IsMove)
+	if (EPathFollowingRequestResult::Type::AlreadyAtGoal == IsMove)
 	{
 		StateChange(_OwnerComp, EMonsterState::Idle);
 		return;
