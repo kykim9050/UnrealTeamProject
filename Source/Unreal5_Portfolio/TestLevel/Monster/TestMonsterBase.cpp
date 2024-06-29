@@ -22,7 +22,7 @@ void ATestMonsterBase::BeginPlay()
 
 	UMainGameInstance* MainGameInst = UMainGameBlueprintFunctionLibrary::GetMainGameInstance(GetWorld());
 
-	// 클라이언트는 딱히 할게 없다.
+	// 클라이언트일 경우
 	if (nullptr == GetController())
 	{
 		return;

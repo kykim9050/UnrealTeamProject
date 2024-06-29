@@ -25,9 +25,6 @@ public:
 		return WalkSpeed;
 	}
 
-
-protected:
-
 private:
 	/// <summary>
 	/// 기본 Monster 종류
