@@ -6,12 +6,30 @@
 #include "Components/SphereComponent.h"
 #include "PickUpComponent.generated.h"
 
-/**
- * 
- */
-UCLASS()
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPickUp, class ATestCharacter*, PickUpCharacter);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPutDown, class ATestCharacter*, PutDownCharacter);
+
+
+UCLASS(Blueprintable, BlueprintType, ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class UNREAL5_PORTFOLIO_API UPickUpComponent : public USphereComponent
 {
 	GENERATED_BODY()
 	
+public:
+	UPROPERTY(BlueprintAssignable, Category = "Interaction")
+	FOnPickUp OnPickUp;
+
+	UPROPERTY(BlueprintAssignable, Category = "Interaction")
+	FOnPutDown OnPutDown;
+
+	UPickUpComponent();
+
+protected:
+	void BeginPlay() override;
+
+	UFUNCTION()
+	void OnSphereBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
+
+
 };
