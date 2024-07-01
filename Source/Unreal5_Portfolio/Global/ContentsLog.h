@@ -4,10 +4,10 @@
 
 #include "CoreMinimal.h"
 
-DECLARE_LOG_CATEGORY_EXTERN(Player, Log, All);
-DECLARE_LOG_CATEGORY_EXTERN(Monster, Log, All);
-DECLARE_LOG_CATEGORY_EXTERN(UI, Log, All);
-DECLARE_LOG_CATEGORY_EXTERN(Object, Log, All);
+DECLARE_LOG_CATEGORY_EXTERN(PlayerLog, Log, All);
+DECLARE_LOG_CATEGORY_EXTERN(MonsterLog, Log, All);
+DECLARE_LOG_CATEGORY_EXTERN(UILog, Log, All);
+DECLARE_LOG_CATEGORY_EXTERN(ObjectLog, Log, All);
 
 #define LOG(Category, Verbosity, String)    UE_LOG(Category, Verbosity, \
                                             TEXT("%s"), *FString::Printf(TEXT("%s : {%d} : %s"), \
