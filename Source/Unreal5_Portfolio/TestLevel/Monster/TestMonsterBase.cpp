@@ -8,6 +8,7 @@
 #include "Global/MainGameBlueprintFunctionLibrary.h"
 #include "Global/Animation/MainAnimInstance.h"
 #include "Global/ContentsEnum.h"
+#include "Global/ContentsLog.h"
 
 // Sets default values
 ATestMonsterBase::ATestMonsterBase()
@@ -30,7 +31,7 @@ void ATestMonsterBase::BeginPlay()
 
 	if (nullptr == BaseData)
 	{
-		UE_LOG(LogTemp, Fatal, TEXT("%S(%u)> BaseData Is Null"), __FUNCTION__, __LINE__);
+		LOG(MonsterLog, Fatal, TEXT("BaseData Is Null"));
 		return;
 	}
 

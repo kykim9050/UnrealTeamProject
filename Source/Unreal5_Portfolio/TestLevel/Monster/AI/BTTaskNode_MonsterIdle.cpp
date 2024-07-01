@@ -4,6 +4,8 @@
 #include "TestLevel/Monster/AI/BTTaskNode_MonsterIdle.h"
 #include "TestLevel/Monster/TestMonsterBase.h"
 #include "Global/DataTable/MonsterDataRow.h"
+#include "Global/ContentsLog.h"
+#include "BehaviorTree/BlackboardComponent.h"
 
 
 EBTNodeResult::Type UBTTaskNode_MonsterIdle::ExecuteTask(UBehaviorTreeComponent& _OwnerComp, uint8* _NodeMemory)
@@ -13,7 +15,7 @@ EBTNodeResult::Type UBTTaskNode_MonsterIdle::ExecuteTask(UBehaviorTreeComponent&
     ATestMonsterBase* Monster = GetActor<ATestMonsterBase>(_OwnerComp);
     if (false == Monster->IsValidLowLevel())
     {
-        UE_LOG(LogTemp, Fatal, TEXT("%S(%u)> Monster Is Not Valid"), __FUNCTION__, __LINE__);
+        LOG(MonsterLog, Fatal, TEXT("Monster Is Not Valid"));
         return EBTNodeResult::Type::Aborted;
     }
 
@@ -29,6 +31,14 @@ void UBTTaskNode_MonsterIdle::TickTask(UBehaviorTreeComponent& _OwnerComp, uint8
     UMonsterData* MonsterData = GetValueAsObject<UMonsterData>(_OwnerComp, TEXT("MonsterData"));
     AMainGameState* GameState = UMainGameBlueprintFunctionLibrary::GetMainGameState(GetWorld());
     UActorGroup* Players = GameState->GetActorGroup(EObjectType::Player);
+
+    bool CanSee = _OwnerComp.GetBlackboardComponent()->GetValueAsBool(TEXT("CanSeePlayer"));
+    if (true == CanSee)
+    {
+        MonsterData->IdleTime = 0.0f;
+        StateChange(_OwnerComp, EMonsterState::Chase);
+        return;
+    }
 
     // 플레이어 존재 확인
     if (true == Players->Actors.IsEmpty())
