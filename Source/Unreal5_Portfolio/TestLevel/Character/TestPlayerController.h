@@ -46,9 +46,11 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void FireEnd(const FInputActionValue& Value);
 
-	// State
+	// State, Posture
 	UFUNCTION(BlueprintCallable)
 	void ChangeState(EPlayerState _State);
+	UFUNCTION(BlueprintCallable)
+	void ChangePosture(EPlayerPosture _Posture);
 
 private :
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "TeamId", meta = (AllowPrivateAccess = true))

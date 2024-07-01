@@ -24,8 +24,6 @@ ATestCharacter::ATestCharacter()
 	CameraComponent->SetProjectionMode(ECameraProjectionMode::Perspective);
 	CameraComponent->bUsePawnControlRotation = true;
 
-	GetMesh()->SetOwnerNoSee(false);
-
 	// Weapon Mesh
 	WeaponMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("WeaponMesh"));
 	WeaponMesh->SetupAttachment(GetMesh(), "WeaponMesh");
@@ -55,4 +53,9 @@ void ATestCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLi
 void ATestCharacter::ChangeState_Implementation(EPlayerState _Type)
 {
 	StateValue = _Type;
+}
+
+void ATestCharacter::ChangePosture_Implementation(EPlayerPosture _Type)
+{
+	PostureValue = _Type;
 }
