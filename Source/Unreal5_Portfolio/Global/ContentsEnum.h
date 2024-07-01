@@ -38,13 +38,13 @@ enum class EMonsterState : uint8
 };
 
 UENUM(BlueprintType)
-enum class EZombie1Anim : uint8
+enum class EMonsterAnim : uint8
 {
-	Idle,
-	Walk,
-	Run,
-	Attack,
-	Dead
+	Idle	UMETA(DisplayName = "Idle"),
+	Walk	UMETA(DisplayName = "Walk"),
+	Run		UMETA(DisplayName = "Run"),
+	Attack	UMETA(DisplayName = "Attack"),
+	Dead	UMETA(DisplayName = "Dead")
 };
 
 UCLASS()

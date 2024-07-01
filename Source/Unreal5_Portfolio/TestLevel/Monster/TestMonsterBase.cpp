@@ -5,6 +5,7 @@
 #include "TestMonsterBaseAIController.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "Global/MainGameBlueprintFunctionLibrary.h"
+#include "Global/Animation/MainAnimInstance.h"
 #include "Global/ContentsEnum.h"
 
 // Sets default values
@@ -21,17 +22,25 @@ void ATestMonsterBase::BeginPlay()
 	Super::BeginPlay();
 
 	UMainGameInstance* MainGameInst = UMainGameBlueprintFunctionLibrary::GetMainGameInstance(GetWorld());
-
-	// 클라이언트일 경우
-	if (nullptr == GetController())
-	{
-		return;
-	}
-
+	//AnimInst = Cast<UMainAnimInstance>(GetMesh()->GetAnimInstance());
 	BaseData = MainGameInst->GetMonsterData(BaseDataName);
+
 	if (nullptr == BaseData)
 	{
 		UE_LOG(LogTemp, Fatal, TEXT("%S(%u)> if (PortNumber == 0)"), __FUNCTION__, __LINE__);
+		return;
+	}
+
+	//TMap<EMonsterAnim, UAnimMontage*> AnimMontages = BaseData->GetAnimMontage();
+	//for (TPair<EMonsterAnim, class UAnimMontage*> Montage : AnimMontages)
+	//{
+	//	AnimInst->PushAnimation(Montage.Key, Montage.Value);
+	//}
+
+	// 클라이언트일 경우
+	ATestMonsterBaseAIController* AIController = GetController<ATestMonsterBaseAIController>();
+	if (nullptr == AIController)
+	{
 		return;
 	}
 
@@ -41,7 +50,6 @@ void ATestMonsterBase::BeginPlay()
 	SettingData->OriginPos = GetActorLocation();
 	SettingData->Max_PatrolRange = 800.0f;
 
-	ATestMonsterBaseAIController* AIController = GetController<ATestMonsterBaseAIController>();
 	AIController->GetBlackboardComponent()->SetValueAsObject(TEXT("MonsterData"), SettingData);
 }
 
@@ -59,8 +67,19 @@ void ATestMonsterBase::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 
 }
 
+void ATestMonsterBase::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(ATestMonsterBase, AniValue);
+}
+
 ATestMonsterBaseAIController* ATestMonsterBase::GetAIController()
 {
 	return Cast<ATestMonsterBaseAIController>(GetController());
 }
 
+UMainAnimInstance* ATestMonsterBase::GetAnimInstance()
+{
+	return AnimInst;
+}
