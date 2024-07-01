@@ -12,6 +12,7 @@
 
 ATestPlayerController::ATestPlayerController()
 {
+	TeamId = FGenericTeamId(0);
 	{
 		FString RefPathString = TEXT("InputDatas'/Game/Resources/Global/DataAssets/DA_InputDatas.DA_InputDatas'");
 		ConstructorHelpers::FObjectFinder<UInputDatas> ResPath(*RefPathString);
@@ -118,4 +119,9 @@ void ATestPlayerController::ChangeState(EPlayerState _State)
 {
 	ATestCharacter* Ch = GetPawn<ATestCharacter>();
 	Ch->ChangeState(_State);
+}
+
+FGenericTeamId ATestPlayerController::GetGenericTeamId() const
+{
+	return TeamId;
 }
