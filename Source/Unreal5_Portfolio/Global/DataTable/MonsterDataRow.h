@@ -26,6 +26,11 @@ public:
 		return WalkSpeed;
 	}
 
+	float GetRunSpeed() const
+	{
+		return RunSpeed;
+	}
+
 	TMap<EMonsterAnim, class UAnimMontage*> GetAnimMontage() const
 	{
 		return AnimMontages;

@@ -7,6 +7,7 @@
 #include "TestLevel/Monster/TestMonsterBase.h"
 
 #include "Navigation/PathFollowingComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 EBTNodeResult::Type UBTTaskNode_MonsterChase::ExecuteTask(UBehaviorTreeComponent& _OwnerComp, uint8* _NodeMemory)
 {
@@ -19,6 +20,9 @@ EBTNodeResult::Type UBTTaskNode_MonsterChase::ExecuteTask(UBehaviorTreeComponent
 		return EBTNodeResult::Type::Aborted;
 	}
 
+	UMonsterData* MonsterData = GetValueAsObject<UMonsterData>(_OwnerComp, TEXT("MonsterData"));
+	Monster->GetCharacterMovement()->MaxWalkSpeed = MonsterData->Data->GetRunSpeed();
+	Monster->ChangeAnimation(EMonsterAnim::Run);
 	return EBTNodeResult::Type::InProgress;
 }
 
@@ -28,7 +32,7 @@ void UBTTaskNode_MonsterChase::TickTask(UBehaviorTreeComponent& _OwnerComp, uint
 
 	ATestMonsterBase* Monster = GetActor<ATestMonsterBase>(_OwnerComp);
 
-	UObject* TargetObject = GetValueAsObject(_OwnerComp, TEXT("TargetActor"));
+	UObject* TargetObject = GetValueAsObject<AActor>(_OwnerComp, TEXT("TargetActor"));
 	AActor* TargetActor = Cast<AActor>(TargetObject);
 	EPathFollowingRequestResult::Type IsMove = Monster->GetAIController()->MoveToLocation(TargetActor->GetActorLocation());
 
