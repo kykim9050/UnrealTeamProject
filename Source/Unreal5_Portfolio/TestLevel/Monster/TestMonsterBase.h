@@ -32,6 +32,16 @@ protected:
 public:
 	class ATestMonsterBaseAIController* GetAIController();
 	class UMainAnimInstance* GetAnimInstance();
+	
+	UFUNCTION(Reliable, Server)
+	void ChangeAnimation(uint8 _Type);
+	void ChangeAnimation_Implementation(uint8 _Type);
+
+	template<typename EnumType>
+	void ChangeAnimation(EnumType _Type)
+	{
+		ChangeAnimation(static_cast<uint8>(_Type));
+	}
 
 private:
 	const FMonsterDataRow* BaseData;

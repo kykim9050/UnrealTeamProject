@@ -17,6 +17,8 @@ EBTNodeResult::Type UBTTaskNode_MonsterIdle::ExecuteTask(UBehaviorTreeComponent&
         return EBTNodeResult::Type::Aborted;
     }
 
+    Monster->ChangeAnimation(EMonsterAnim::Idle);
+
     return EBTNodeResult::Type::InProgress;
 }
 

@@ -4,6 +4,7 @@
 #include "TestLevel/Monster/TestMonsterBase.h"
 #include "TestMonsterBaseAIController.h"
 #include "BehaviorTree/BlackboardComponent.h"
+#include "Animation/AnimInstance.h"
 #include "Global/MainGameBlueprintFunctionLibrary.h"
 #include "Global/Animation/MainAnimInstance.h"
 #include "Global/ContentsEnum.h"
@@ -22,20 +23,22 @@ void ATestMonsterBase::BeginPlay()
 	Super::BeginPlay();
 
 	UMainGameInstance* MainGameInst = UMainGameBlueprintFunctionLibrary::GetMainGameInstance(GetWorld());
-	//AnimInst = Cast<UMainAnimInstance>(GetMesh()->GetAnimInstance());
+
+	UAnimInstance* Inst = GetMesh()->GetAnimInstance();
+	AnimInst = Cast<UMainAnimInstance>(GetMesh()->GetAnimInstance());
 	BaseData = MainGameInst->GetMonsterData(BaseDataName);
 
 	if (nullptr == BaseData)
 	{
-		UE_LOG(LogTemp, Fatal, TEXT("%S(%u)> if (PortNumber == 0)"), __FUNCTION__, __LINE__);
+		UE_LOG(LogTemp, Fatal, TEXT("%S(%u)> BaseData Is Null"), __FUNCTION__, __LINE__);
 		return;
 	}
 
-	//TMap<EMonsterAnim, UAnimMontage*> AnimMontages = BaseData->GetAnimMontage();
-	//for (TPair<EMonsterAnim, class UAnimMontage*> Montage : AnimMontages)
-	//{
-	//	AnimInst->PushAnimation(Montage.Key, Montage.Value);
-	//}
+	TMap<EMonsterAnim, UAnimMontage*> AnimMontages = BaseData->GetAnimMontage();
+	for (TPair<EMonsterAnim, class UAnimMontage*> Montage : AnimMontages)
+	{
+		AnimInst->PushAnimation(Montage.Key, Montage.Value);
+	}
 
 	// 클라이언트일 경우
 	ATestMonsterBaseAIController* AIController = GetController<ATestMonsterBaseAIController>();
@@ -58,6 +61,7 @@ void ATestMonsterBase::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	AnimInst->ChangeAnimation(AniValue);
 }
 
 // Called to bind functionality to input
@@ -82,4 +86,9 @@ ATestMonsterBaseAIController* ATestMonsterBase::GetAIController()
 UMainAnimInstance* ATestMonsterBase::GetAnimInstance()
 {
 	return AnimInst;
+}
+
+void ATestMonsterBase::ChangeAnimation_Implementation(uint8 _Type)
+{
+	AniValue = _Type;
 }
