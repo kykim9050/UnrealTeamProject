@@ -5,13 +5,14 @@
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
 #include "Global/ContentsEnum.h"
+#include "GenericTeamAgentInterface.h"
 #include "TestPlayerController.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class UNREAL5_PORTFOLIO_API ATestPlayerController : public APlayerController
+class UNREAL5_PORTFOLIO_API ATestPlayerController : public APlayerController, public IGenericTeamAgentInterface
 {
 	GENERATED_BODY()
 	
@@ -48,4 +49,9 @@ public:
 	// State
 	UFUNCTION(BlueprintCallable)
 	void ChangeState(EPlayerState _State);
+
+private :
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "TeamId", meta = (AllowPrivateAccess = true))
+	FGenericTeamId TeamId;
+	virtual FGenericTeamId GetGenericTeamId() const override;
 };

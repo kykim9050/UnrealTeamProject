@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Engine/DataTable.h"
+#include "Global/ContentsEnum.h"
 #include "MonsterDataRow.generated.h"
 
 /**
@@ -25,25 +26,35 @@ public:
 		return WalkSpeed;
 	}
 
+	TMap<EMonsterAnim, class UAnimMontage*> GetAnimMontage() const
+	{
+		return AnimMontages;
+	}
+
 private:
 	/// <summary>
 	/// 기본 Monster 종류
 	/// </summary>
-	UPROPERTY(Category = "Parameter", EditAnywhere, BlueprintReadWrite, meta = (AllowprivateAccess = "true"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowprivateAccess = "true"))
 	TSubclassOf<AActor> MonsterUClass = TSubclassOf<AActor>();
 
 	/// <summary>
 	/// 걷기 속도
 	/// </summary>
-	UPROPERTY(Category = "Parameter", EditAnywhere, BlueprintReadWrite, meta = (AllowprivateAccess = "true"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowprivateAccess = "true"))
 	float WalkSpeed = 300.0f;
 
 	/// <summary>
 	/// 달리기 속도
 	/// </summary>
-	UPROPERTY(Category = "Parameter", EditAnywhere, BlueprintReadWrite, meta = (AllowprivateAccess = "true"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowprivateAccess = "true"))
 	float RunSpeed = 600.0f;
 
+	/// <summary>
+	/// 몽타주
+	/// </summary>
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowprivateAccess = "true"))
+	TMap<EMonsterAnim, class UAnimMontage*> AnimMontages;
 };
 
 UCLASS()

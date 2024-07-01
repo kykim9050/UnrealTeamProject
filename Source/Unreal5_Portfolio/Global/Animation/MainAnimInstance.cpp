@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Global/MainAnimInstance.h"
+#include "MainAnimInstance.h"
 
 void UMainAnimInstance::ChangeAnimation(uint8 _Key)
 {

@@ -4,6 +4,7 @@
 #include "TestLevel/Monster/AI/BTTaskNode_MonsterPatrol.h"
 #include "TestLevel/Monster/TestMonsterBaseAIController.h"
 #include "TestLevel/Monster/TestMonsterBase.h"
+#include "Global/ContentsLog.h"
 
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Navigation/PathFollowingComponent.h"
@@ -17,7 +18,7 @@ EBTNodeResult::Type UBTTaskNode_MonsterPatrol::ExecuteTask(UBehaviorTreeComponen
 	ATestMonsterBase* Monster = GetActor<ATestMonsterBase>(_OwnerComp);
 	if (false == Monster->IsValidLowLevel())
 	{
-		UE_LOG(LogTemp, Fatal, TEXT("%S(%u)> Monster Is Not Valid"), __FUNCTION__, __LINE__);
+		LOG(MonsterLog, Fatal, TEXT("Monster Is Not Valid"));
 		return EBTNodeResult::Type::Aborted;
 	}
 
@@ -37,6 +38,7 @@ EBTNodeResult::Type UBTTaskNode_MonsterPatrol::ExecuteTask(UBehaviorTreeComponen
 	SetValueAsVector(_OwnerComp, "PatrolLocation", PatrolLocation.Location);
 
 	Monster->GetCharacterMovement()->MaxWalkSpeed = MonsterData->Data->GetWalkSpeed();
+	Monster->ChangeAnimation(EMonsterAnim::Walk);
 
 	return EBTNodeResult::Type::InProgress;
 }
@@ -47,10 +49,6 @@ void UBTTaskNode_MonsterPatrol::TickTask(UBehaviorTreeComponent& _OwnerComp, uin
 
 	ATestMonsterBase* Monster = GetActor<ATestMonsterBase>(_OwnerComp);
 	EPathFollowingRequestResult::Type IsMove = Monster->GetAIController()->MoveToLocation(GetValueAsVector(_OwnerComp, TEXT("PatrolLocation")));
-	
-	//Failed,
-		//AlreadyAtGoal,
-		//RequestSuccessful
 
 	bool CanSee = _OwnerComp.GetBlackboardComponent()->GetValueAsBool(TEXT("CanSeePlayer"));
 	if (true == CanSee)

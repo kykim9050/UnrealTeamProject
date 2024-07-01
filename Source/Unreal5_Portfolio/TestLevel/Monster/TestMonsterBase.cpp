@@ -4,8 +4,11 @@
 #include "TestLevel/Monster/TestMonsterBase.h"
 #include "TestMonsterBaseAIController.h"
 #include "BehaviorTree/BlackboardComponent.h"
+#include "Animation/AnimInstance.h"
 #include "Global/MainGameBlueprintFunctionLibrary.h"
+#include "Global/Animation/MainAnimInstance.h"
 #include "Global/ContentsEnum.h"
+#include "Global/ContentsLog.h"
 
 // Sets default values
 ATestMonsterBase::ATestMonsterBase()
@@ -22,16 +25,26 @@ void ATestMonsterBase::BeginPlay()
 
 	UMainGameInstance* MainGameInst = UMainGameBlueprintFunctionLibrary::GetMainGameInstance(GetWorld());
 
-	// 클라이언트일 경우
-	if (nullptr == GetController())
+	UAnimInstance* Inst = GetMesh()->GetAnimInstance();
+	AnimInst = Cast<UMainAnimInstance>(GetMesh()->GetAnimInstance());
+	BaseData = MainGameInst->GetMonsterData(BaseDataName);
+
+	if (nullptr == BaseData)
 	{
+		LOG(MonsterLog, Fatal, TEXT("BaseData Is Null"));
 		return;
 	}
 
-	BaseData = MainGameInst->GetMonsterData(BaseDataName);
-	if (nullptr == BaseData)
+	TMap<EMonsterAnim, UAnimMontage*> AnimMontages = BaseData->GetAnimMontage();
+	for (TPair<EMonsterAnim, class UAnimMontage*> Montage : AnimMontages)
 	{
-		UE_LOG(LogTemp, Fatal, TEXT("%S(%u)> if (PortNumber == 0)"), __FUNCTION__, __LINE__);
+		AnimInst->PushAnimation(Montage.Key, Montage.Value);
+	}
+
+	// 클라이언트일 경우
+	ATestMonsterBaseAIController* AIController = GetController<ATestMonsterBaseAIController>();
+	if (nullptr == AIController)
+	{
 		return;
 	}
 
@@ -41,7 +54,6 @@ void ATestMonsterBase::BeginPlay()
 	SettingData->OriginPos = GetActorLocation();
 	SettingData->Max_PatrolRange = 800.0f;
 
-	ATestMonsterBaseAIController* AIController = GetController<ATestMonsterBaseAIController>();
 	AIController->GetBlackboardComponent()->SetValueAsObject(TEXT("MonsterData"), SettingData);
 }
 
@@ -50,6 +62,7 @@ void ATestMonsterBase::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	AnimInst->ChangeAnimation(AniValue);
 }
 
 // Called to bind functionality to input
@@ -59,8 +72,24 @@ void ATestMonsterBase::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 
 }
 
+void ATestMonsterBase::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(ATestMonsterBase, AniValue);
+}
+
 ATestMonsterBaseAIController* ATestMonsterBase::GetAIController()
 {
 	return Cast<ATestMonsterBaseAIController>(GetController());
 }
 
+UMainAnimInstance* ATestMonsterBase::GetAnimInstance()
+{
+	return AnimInst;
+}
+
+void ATestMonsterBase::ChangeAnimation_Implementation(uint8 _Type)
+{
+	AniValue = _Type;
+}
