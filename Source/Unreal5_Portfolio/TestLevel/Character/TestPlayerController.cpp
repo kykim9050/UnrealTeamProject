@@ -132,7 +132,6 @@ void ATestPlayerController::ChangePosture(EPlayerPosture _Posture)
 	ATestCharacter* Ch = GetPawn<ATestCharacter>();
 	Ch->ChangePosture(_Posture);
 }
-}
 
 FGenericTeamId ATestPlayerController::GetGenericTeamId() const
 {
