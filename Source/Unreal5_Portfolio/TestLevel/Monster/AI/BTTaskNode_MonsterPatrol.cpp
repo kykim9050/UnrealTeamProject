@@ -52,6 +52,13 @@ void UBTTaskNode_MonsterPatrol::TickTask(UBehaviorTreeComponent& _OwnerComp, uin
 		//AlreadyAtGoal,
 		//RequestSuccessful
 
+	bool CanSee = _OwnerComp.GetBlackboardComponent()->GetValueAsBool(TEXT("CanSeePlayer"));
+	if (true == CanSee)
+	{
+		StateChange(_OwnerComp, EMonsterState::Chase);
+		return;
+	}
+
 	if (EPathFollowingRequestResult::Type::AlreadyAtGoal == IsMove)
 	{
 		StateChange(_OwnerComp, EMonsterState::Idle);
