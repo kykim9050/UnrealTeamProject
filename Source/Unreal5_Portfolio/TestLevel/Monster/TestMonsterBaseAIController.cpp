@@ -32,7 +32,11 @@ void ATestMonsterBaseAIController::PlayerDetect(AActor* Actor, FAIStimulus const
 		GetBlackboardComponent()->SetValueAsBool(TEXT("CanSeePlayer"), Stimulus.WasSuccessfullySensed());
 		if (true == GetBlackboardComponent()->GetValueAsBool(TEXT("CanSeePlayer")))
 		{
-			GetBlackboardComponent()->SetValueAsObject(TEXT("TargetActor"), Actor);
+			UObject* PrevObject = GetBlackboardComponent()->GetValueAsObject(TEXT("TargetActor"));
+			if (nullptr == PrevObject)
+			{
+				GetBlackboardComponent()->SetValueAsObject(TEXT("TargetActor"), Actor);
+			}
 		}
 	}
 }
