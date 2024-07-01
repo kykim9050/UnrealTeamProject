@@ -37,6 +37,7 @@ EBTNodeResult::Type UBTTaskNode_MonsterPatrol::ExecuteTask(UBehaviorTreeComponen
 	SetValueAsVector(_OwnerComp, "PatrolLocation", PatrolLocation.Location);
 
 	Monster->GetCharacterMovement()->MaxWalkSpeed = MonsterData->Data->GetWalkSpeed();
+	Monster->ChangeAnimation(EMonsterAnim::Walk);
 
 	return EBTNodeResult::Type::InProgress;
 }
@@ -47,10 +48,6 @@ void UBTTaskNode_MonsterPatrol::TickTask(UBehaviorTreeComponent& _OwnerComp, uin
 
 	ATestMonsterBase* Monster = GetActor<ATestMonsterBase>(_OwnerComp);
 	EPathFollowingRequestResult::Type IsMove = Monster->GetAIController()->MoveToLocation(GetValueAsVector(_OwnerComp, TEXT("PatrolLocation")));
-	
-	//Failed,
-		//AlreadyAtGoal,
-		//RequestSuccessful
 
 	if (EPathFollowingRequestResult::Type::AlreadyAtGoal == IsMove)
 	{
