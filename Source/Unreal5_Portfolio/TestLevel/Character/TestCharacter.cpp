@@ -48,6 +48,7 @@ void ATestCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLi
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
 	DOREPLIFETIME(ATestCharacter, StateValue);
+	DOREPLIFETIME(ATestCharacter, PostureValue);
 }
 
 void ATestCharacter::ChangeState_Implementation(EPlayerState _Type)

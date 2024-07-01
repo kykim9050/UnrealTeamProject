@@ -33,13 +33,12 @@ enum class EPlayerState : uint8
 UENUM(BlueprintType)
 enum class EPlayerPosture : uint8
 {
-	Number0 UMETA(DisplayName = "맨손"), // temp
-	Number1 UMETA(DisplayName = "주 무기"),
-	Number2 UMETA(DisplayName = "보조 무기"),
+	Number0 UMETA(DisplayName = "Barehand"), // temp
+	Number1 UMETA(DisplayName = "Rifle"),
+	Number2 UMETA(DisplayName = "Pistol"),
 	Number3 UMETA(DisplayName = "근거리 무기"),
 	Number4 UMETA(DisplayName = "투척 무기"),
-	Number5 UMETA(DisplayName = "특수 무기"),
-	SlotMax
+	Number5 UMETA(DisplayName = "특수 무기")
 };
 
 UENUM(BlueprintType)

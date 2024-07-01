@@ -52,7 +52,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void ChangePosture(EPlayerPosture _Posture);
 
-private :
+private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "TeamId", meta = (AllowPrivateAccess = true))
 	FGenericTeamId TeamId;
 	virtual FGenericTeamId GetGenericTeamId() const override;
