@@ -27,6 +27,18 @@ enum class EPlayerState : uint8
 	Fire UMETA(DisplayName = "Fire"),
 };
 
+/// <summary>
+/// 1, 2, 3, 4 번에 대한 플레이어 자세.
+/// </summary>
+UENUM(BlueprintType)
+enum class EPlayerPosture : uint8
+{
+	Number1 UMETA(DIsplayName = "주 무기"),
+	Number2 UMETA(DIsplayName = "보조 무기"),
+	Number3 UMETA(DIsplayName = "근거리 무기"),
+	Number4 UMETA(DIsplayName = "투척 무기"),
+};
+
 UENUM(BlueprintType)
 enum class EMonsterState : uint8
 {
