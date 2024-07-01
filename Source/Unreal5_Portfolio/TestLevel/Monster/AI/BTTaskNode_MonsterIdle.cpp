@@ -4,6 +4,7 @@
 #include "TestLevel/Monster/AI/BTTaskNode_MonsterIdle.h"
 #include "TestLevel/Monster/TestMonsterBase.h"
 #include "Global/DataTable/MonsterDataRow.h"
+#include "Global/ContentsLog.h"
 
 
 EBTNodeResult::Type UBTTaskNode_MonsterIdle::ExecuteTask(UBehaviorTreeComponent& _OwnerComp, uint8* _NodeMemory)
@@ -13,7 +14,7 @@ EBTNodeResult::Type UBTTaskNode_MonsterIdle::ExecuteTask(UBehaviorTreeComponent&
     ATestMonsterBase* Monster = GetActor<ATestMonsterBase>(_OwnerComp);
     if (false == Monster->IsValidLowLevel())
     {
-        UE_LOG(LogTemp, Fatal, TEXT("%S(%u)> Monster Is Not Valid"), __FUNCTION__, __LINE__);
+        LOG(MonsterLog, Fatal, TEXT("Monster Is Not Valid"));
         return EBTNodeResult::Type::Aborted;
     }
 
