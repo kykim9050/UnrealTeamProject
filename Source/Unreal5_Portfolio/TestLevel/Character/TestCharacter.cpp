@@ -29,6 +29,20 @@ ATestCharacter::ATestCharacter()
 	WeaponMesh->SetupAttachment(GetMesh(), "WeaponMesh");
 }
 
+void ATestCharacter::Collision(AActor* _OtherActor, UPrimitiveComponent* _Collision)
+{
+	ATestCharacter* OtherPlayCharacter = Cast<ATestCharacter>(_OtherActor);
+	if (nullptr == OtherPlayCharacter)
+	{
+		return;
+	}
+
+	int a = 0;
+	// Collision_Check
+	//if (true == _Collision->ComponentHasTag())
+	//{}
+}
+
 // Called when the game starts or when spawned
 void ATestCharacter::BeginPlay()
 {
