@@ -19,12 +19,12 @@ enum class EObjectType : uint8
 UENUM(BlueprintType)
 enum class EPlayerState : uint8
 {
-	Idle UMETA(DisplayName = "Idle"),
-	Walk UMETA(DisplayName = "Walk"),
-	Run UMETA(DisplayName = "Run"),
-	Jump UMETA(DisplayName = "Jump"),
-	Crouch UMETA(DisplayName = "Crouch"),
-	Fire UMETA(DisplayName = "Fire"),
+	Idle	UMETA(DisplayName = "Idle"),
+	Walk	UMETA(DisplayName = "Walk"),
+	Run		UMETA(DisplayName = "Run"),
+	Jump	UMETA(DisplayName = "Jump"),
+	Crouch	UMETA(DisplayName = "Crouch"),
+	Fire	UMETA(DisplayName = "Fire"),
 };
 
 /// <summary>
@@ -33,10 +33,13 @@ enum class EPlayerState : uint8
 UENUM(BlueprintType)
 enum class EPlayerPosture : uint8
 {
-	Number1 UMETA(DIsplayName = "주 무기"),
-	Number2 UMETA(DIsplayName = "보조 무기"),
-	Number3 UMETA(DIsplayName = "근거리 무기"),
-	Number4 UMETA(DIsplayName = "투척 무기"),
+	Number0 UMETA(DisplayName = "맨손"), // temp
+	Number1 UMETA(DisplayName = "주 무기"),
+	Number2 UMETA(DisplayName = "보조 무기"),
+	Number3 UMETA(DisplayName = "근거리 무기"),
+	Number4 UMETA(DisplayName = "투척 무기"),
+	Number5 UMETA(DisplayName = "특수 무기"),
+	SlotMax
 };
 
 UENUM(BlueprintType)
