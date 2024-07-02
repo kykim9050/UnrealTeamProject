@@ -15,7 +15,7 @@ ATestCharacter::ATestCharacter()
 	// SpringArm Component
 	SpringArmComponent = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArmComponent"));
 	SpringArmComponent->SetupAttachment(RootComponent);
-	SpringArmComponent->TargetArmLength = 0.0f;
+	SpringArmComponent->TargetArmLength = 500.0f;
 	SpringArmComponent->bDoCollisionTest = false;
 
 	// Camera Component
