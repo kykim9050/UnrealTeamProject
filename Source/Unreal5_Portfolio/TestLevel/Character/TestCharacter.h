@@ -38,6 +38,10 @@ public:
 	UPROPERTY(Category = "Contents", VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	UStaticMeshComponent* WeaponMesh = nullptr;
 
+	// Collision
+	UFUNCTION(BlueprintCallable)
+	void Collision(AActor* _OtherActor, UPrimitiveComponent* _Collision);
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
