@@ -29,6 +29,9 @@ public:
 	UFUNCTION(Reliable, Server)
 	void ChangePosture(EPlayerPosture _Type);
 	void ChangePosture_Implementation(EPlayerPosture _Type);
+	UFUNCTION(Reliable, Server)
+	void GetItem(FName _ItemName);
+	void GetItem_Implementation(FName _ItemName);
 
 	// Components
 	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
@@ -36,7 +39,7 @@ public:
 	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	class UCameraComponent* CameraComponent = nullptr;
 	UPROPERTY(Category = "Contents", VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	TArray<UStaticMeshComponent*> ItemMeshs;
+	TArray<UStaticMeshComponent*> ItemMeshes;
 
 	// Collision
 	UFUNCTION(BlueprintCallable)

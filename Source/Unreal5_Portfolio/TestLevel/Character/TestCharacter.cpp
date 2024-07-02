@@ -5,6 +5,7 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
 #include "Global/MainGameBlueprintFunctionLibrary.h"
+#include "Global/DataTable/ItemDataRow.h"
 
 // Sets default values
 ATestCharacter::ATestCharacter()
@@ -33,7 +34,8 @@ ATestCharacter::ATestCharacter()
 		NewSlotMesh->SetupAttachment(GetMesh(), *Name);
 		NewSlotMesh->SetCollisionProfileName(TEXT("NoCollision"));
 		NewSlotMesh->SetGenerateOverlapEvents(true);
-		ItemMeshs.Push(NewSlotMesh);
+		NewSlotMesh->SetHiddenInGame(true);
+		ItemMeshes.Push(NewSlotMesh);
 	}
 }
 
@@ -81,4 +83,29 @@ void ATestCharacter::ChangeState_Implementation(EPlayerState _Type)
 void ATestCharacter::ChangePosture_Implementation(EPlayerPosture _Type)
 {
 	PostureValue = _Type;
+	
+	for (size_t i = 1; i < static_cast<size_t>(EPlayerPosture::SlotMax); i++)
+	{
+		if (i == static_cast<size_t>(_Type))
+		{
+			ItemMeshes[i - 1]->SetHiddenInGame(false);
+		}
+		else
+		{
+			ItemMeshes[i - 1]->SetHiddenInGame(true);
+		}
+	}
+}
+
+void ATestCharacter::GetItem_Implementation(FName _ItemName)
+{
+	UMainGameInstance* Inst = GetGameInstance<UMainGameInstance>();
+	const FItemDataRow* ItemData = Inst->GetItemData(_ItemName);
+
+	EPlayerPosture ItemType = ItemData->GetType();
+	UStaticMesh* ItemMesh = ItemData->GetResMesh();
+	
+	ItemMeshes[static_cast<uint8>(ItemType)]->SetStaticMesh(ItemMesh);
+
+	ChangePosture(ItemType);
 }
