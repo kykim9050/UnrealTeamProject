@@ -15,7 +15,7 @@ ATestCharacter::ATestCharacter()
 	// SpringArm Component
 	SpringArmComponent = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArmComponent"));
 	SpringArmComponent->SetupAttachment(RootComponent);
-	SpringArmComponent->TargetArmLength = 0.0f;
+	SpringArmComponent->TargetArmLength = 500.0f;
 	SpringArmComponent->bDoCollisionTest = false;
 
 	// Camera Component
@@ -24,9 +24,17 @@ ATestCharacter::ATestCharacter()
 	CameraComponent->SetProjectionMode(ECameraProjectionMode::Perspective);
 	CameraComponent->bUsePawnControlRotation = true;
 
-	// Weapon Mesh
-	WeaponMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("WeaponMesh"));
-	WeaponMesh->SetupAttachment(GetMesh(), "WeaponMesh");
+	// Weapon Meshes
+	UEnum* Enum = StaticEnum<EPlayerPosture>();
+	for (size_t i = 1; i < static_cast<size_t>(EPlayerPosture::SlotMax); i++)
+	{
+		FString Name = Enum->GetNameStringByValue(i) + "Socket";
+		UStaticMeshComponent* NewSlotMesh = CreateDefaultSubobject<UStaticMeshComponent>(*Name);
+		NewSlotMesh->SetupAttachment(GetMesh(), *Name);
+		NewSlotMesh->SetCollisionProfileName(TEXT("NoCollision"));
+		NewSlotMesh->SetGenerateOverlapEvents(true);
+		ItemMeshs.Push(NewSlotMesh);
+	}
 }
 
 void ATestCharacter::Collision(AActor* _OtherActor, UPrimitiveComponent* _Collision)

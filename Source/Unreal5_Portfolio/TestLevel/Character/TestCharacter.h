@@ -21,7 +21,7 @@ public:
 	UPROPERTY(Category = "Contents", Replicated, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	EPlayerState StateValue = EPlayerState::Idle;
 	UPROPERTY(Category = "Contents", Replicated, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	EPlayerPosture PostureValue = EPlayerPosture::Number0;
+	EPlayerPosture PostureValue = EPlayerPosture::Barehand;
 
 	UFUNCTION(Reliable, Server)
 	void ChangeState(EPlayerState _Type);
@@ -31,16 +31,20 @@ public:
 	void ChangePosture_Implementation(EPlayerPosture _Type);
 
 	// Components
-	UPROPERTY(Category = "Contents", VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	class USpringArmComponent* SpringArmComponent = nullptr;
-	UPROPERTY(Category = "Contents", VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	class UCameraComponent* CameraComponent = nullptr;
 	UPROPERTY(Category = "Contents", VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	UStaticMeshComponent* WeaponMesh = nullptr;
+	TArray<UStaticMeshComponent*> ItemMeshs;
 
 	// Collision
 	UFUNCTION(BlueprintCallable)
 	void Collision(AActor* _OtherActor, UPrimitiveComponent* _Collision);
+
+	// HP (for UI Test)
+	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	int HP = 100;
 
 protected:
 	// Called when the game starts or when spawned
