@@ -19,6 +19,9 @@ EBTNodeResult::Type UBTTaskNode_MonsterIdle::ExecuteTask(UBehaviorTreeComponent&
         return EBTNodeResult::Type::Aborted;
     }
 
+    UMonsterData* MonsterData = GetValueAsObject<UMonsterData>(_OwnerComp, TEXT("MonsterData"));
+    MonsterData->IdleTime = 0.0f;
+
     Monster->ChangeAnimation(EMonsterAnim::Idle);
 
     return EBTNodeResult::Type::InProgress;
@@ -35,23 +38,15 @@ void UBTTaskNode_MonsterIdle::TickTask(UBehaviorTreeComponent& _OwnerComp, uint8
     bool CanSee = _OwnerComp.GetBlackboardComponent()->GetValueAsBool(TEXT("CanSeePlayer"));
     if (true == CanSee)
     {
-        MonsterData->IdleTime = 0.0f;
         StateChange(_OwnerComp, EMonsterState::Chase);
         return;
     }
 
-    // 플레이어 존재 확인
-    if (true == Players->Actors.IsEmpty())
+    if (2.0f < MonsterData->IdleTime)
     {
-        FinishLatentTask(_OwnerComp, EBTNodeResult::Aborted);
+        StateChange(_OwnerComp, EMonsterState::Patrol); 
         return;
     }
 
     MonsterData->IdleTime += _DeltaSeconds;
-    if (2.0f < MonsterData->IdleTime)
-    {
-        MonsterData->IdleTime = 0.0f;
-        StateChange(_OwnerComp, EMonsterState::Patrol); 
-        return;
-    }
 }
