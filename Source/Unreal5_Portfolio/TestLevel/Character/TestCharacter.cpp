@@ -25,8 +25,10 @@ ATestCharacter::ATestCharacter()
 	CameraComponent->bUsePawnControlRotation = true;
 
 	// Weapon Mesh
-	WeaponMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("WeaponMesh"));
-	WeaponMesh->SetupAttachment(GetMesh(), "WeaponMesh");
+	RifleMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("RifleMesh"));
+	RifleMesh->SetupAttachment(GetMesh(), "RifleMesh");
+	PistolMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("PistolMesh"));
+	PistolMesh->SetupAttachment(GetMesh(), "PistolMesh");
 }
 
 void ATestCharacter::Collision(AActor* _OtherActor, UPrimitiveComponent* _Collision)
