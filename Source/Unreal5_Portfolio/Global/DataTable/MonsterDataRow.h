@@ -69,9 +69,10 @@ class UMonsterData : public UObject
 
 public:
 	const FMonsterDataRow* Data;
-
+	
 	FVector OriginPos = FVector::ZeroVector;
-	float IdleTime = 0.0f;
 
-	float Max_PatrolRange = 0.0f;
+	float Hp = 100.0f;
+	float IdleTime = 0.0f;
+	float Max_PatrolRange = 800.0f;
 };
