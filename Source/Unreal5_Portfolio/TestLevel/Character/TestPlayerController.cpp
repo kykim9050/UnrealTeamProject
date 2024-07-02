@@ -57,6 +57,7 @@ void ATestPlayerController::SetupInputComponent()
 			EnhancedInputComponent->BindAction(InputData->Actions[10], ETriggerEvent::Triggered, this, &ATestPlayerController::ChangePosture, static_cast<EPlayerPosture>(4));
 			EnhancedInputComponent->BindAction(InputData->Actions[11], ETriggerEvent::Triggered, this, &ATestPlayerController::ChangePosture, static_cast<EPlayerPosture>(5));
 			EnhancedInputComponent->BindAction(InputData->Actions[12], ETriggerEvent::Triggered, this, &ATestPlayerController::ChangePosture, static_cast<EPlayerPosture>(0));
+			EnhancedInputComponent->BindAction(InputData->Actions[13], ETriggerEvent::Triggered, this, &ATestPlayerController::GetItem);
 		}
 	}
 }
@@ -119,6 +120,11 @@ void ATestPlayerController::Fire(const FInputActionValue& Value)
 void ATestPlayerController::FireEnd(const FInputActionValue& Value)
 {
 	ChangeState(EPlayerState::Idle);
+}
+
+void ATestPlayerController::GetItem(const FInputActionValue& Value)
+{
+
 }
 
 void ATestPlayerController::ChangeState(EPlayerState _State)
