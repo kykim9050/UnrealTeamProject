@@ -33,12 +33,13 @@ enum class EPlayerState : uint8
 UENUM(BlueprintType)
 enum class EPlayerPosture : uint8
 {
-	Number0 UMETA(DisplayName = "Barehand"),
-	Number1 UMETA(DisplayName = "Rifle"),
-	Number2 UMETA(DisplayName = "Pistol"),
-	Number3 UMETA(DisplayName = "근거리 무기"),
-	Number4 UMETA(DisplayName = "투척 무기"),
-	Number5 UMETA(DisplayName = "특수 무기")
+	Barehand	UMETA(DisplayName = "BarehandAttack"),	// 맨손공격
+	Rifle		UMETA(DisplayName = "RifleAttack"),		// 주무기(Rifle)
+	Pistol		UMETA(DisplayName = "PistolAttack"),	// 보조무기(Pistol)
+	Melee		UMETA(DisplayName = "MeleeAttack"),		// 근거리무기
+	Throwing	UMETA(DisplayName = "ThrowingAttack"),	// 투척무기
+	Item		UMETA(DisplayName = "Item"),			// 그 외 아이템
+	SlotMax
 };
 
 UENUM(BlueprintType)
