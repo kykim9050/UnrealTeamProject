@@ -24,11 +24,11 @@ ATestCharacter::ATestCharacter()
 	CameraComponent->SetProjectionMode(ECameraProjectionMode::Perspective);
 	CameraComponent->bUsePawnControlRotation = true;
 
-	// Weapon Mesh
+	// Weapon Meshes
 	UEnum* Enum = StaticEnum<EPlayerPosture>();
 	for (size_t i = 1; i < static_cast<size_t>(EPlayerPosture::SlotMax); i++)
 	{
-		FString Name = Enum->GetNameStringByValue(i) + "Mesh";
+		FString Name = Enum->GetNameStringByValue(i) + "Socket";
 		UStaticMeshComponent* NewSlotMesh = CreateDefaultSubobject<UStaticMeshComponent>(*Name);
 		NewSlotMesh->SetupAttachment(GetMesh(), *Name);
 		NewSlotMesh->SetCollisionProfileName(TEXT("NoCollision"));
