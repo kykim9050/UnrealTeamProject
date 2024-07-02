@@ -42,6 +42,15 @@ public:
 	{
 		ChangeAnimation(static_cast<uint8>(_Type));
 	}
+	
+	FORCEINLINE void SetAttackAnimationEnd(bool IsAttackEnd)
+	{
+		AttackEnd = IsAttackEnd;
+	}
+	FORCEINLINE bool GetAttackAnimationEnd()
+	{
+		return AttackEnd;
+	}
 
 private:
 	const FMonsterDataRow* BaseData;
@@ -57,5 +66,8 @@ private:
 
 	UPROPERTY(Category = "Animation", Replicated, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	class UMainAnimInstance* AnimInst;
+
+	UPROPERTY()
+	bool AttackEnd = false;
 
 };

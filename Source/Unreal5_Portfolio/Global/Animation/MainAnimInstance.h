@@ -30,9 +30,12 @@ public:
 	}
 
 	void PushAnimation(uint8 _Key, class UAnimMontage* _Montage);
-	
+
+	TMap<uint8, class UAnimMontage*> GetAnimMontages()
+	{
+		return AnimMontages;
+	}
 private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	TMap<uint8, class UAnimMontage*> AnimMontages;
-	
 };
