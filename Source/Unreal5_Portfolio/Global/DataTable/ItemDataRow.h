@@ -66,7 +66,7 @@ private:
 	/// 아이템 종류
 	/// </summary>
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowprivateAccess = "true"))
-	EPlayerPosture Type = EPlayerPosture::Number0;
+	EPlayerPosture Type = EPlayerPosture::Barehand;
 
 	/// <summary>
 	/// 아이템 이름

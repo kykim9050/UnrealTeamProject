@@ -38,7 +38,8 @@ enum class EPlayerPosture : uint8
 	Pistol		UMETA(DisplayName = "PistolAttack"),	// 보조무기(Pistol)
 	Melee		UMETA(DisplayName = "MeleeAttack"),		// 근거리무기
 	Throwing	UMETA(DisplayName = "ThrowingAttack"),	// 투척무기
-	Item		UMETA(DisplayName = "Item")				// 그 외 아이템
+	Item		UMETA(DisplayName = "Item"),			// 그 외 아이템
+	SlotMax
 };
 
 UENUM(BlueprintType)

@@ -25,10 +25,16 @@ ATestCharacter::ATestCharacter()
 	CameraComponent->bUsePawnControlRotation = true;
 
 	// Weapon Mesh
-	RifleMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("RifleMesh"));
-	RifleMesh->SetupAttachment(GetMesh(), "RifleMesh");
-	PistolMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("PistolMesh"));
-	PistolMesh->SetupAttachment(GetMesh(), "PistolMesh");
+	UEnum* Enum = StaticEnum<EPlayerPosture>();
+	for (size_t i = 1; i < static_cast<size_t>(EPlayerPosture::SlotMax); i++)
+	{
+		FString Name = Enum->GetNameStringByValue(i) + "Mesh";
+		UStaticMeshComponent* NewSlotMesh = CreateDefaultSubobject<UStaticMeshComponent>(*Name);
+		NewSlotMesh->SetupAttachment(GetMesh(), *Name);
+		NewSlotMesh->SetCollisionProfileName(TEXT("NoCollision"));
+		NewSlotMesh->SetGenerateOverlapEvents(true);
+		ItemMeshs.Push(NewSlotMesh);
+	}
 }
 
 void ATestCharacter::Collision(AActor* _OtherActor, UPrimitiveComponent* _Collision)
