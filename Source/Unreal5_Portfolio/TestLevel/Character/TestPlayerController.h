@@ -45,6 +45,8 @@ public:
 	void Fire(const FInputActionValue& Value);
 	UFUNCTION(BlueprintCallable)
 	void FireEnd(const FInputActionValue& Value);
+	UFUNCTION(BlueprintCallable)
+	void GetItem(const FInputActionValue& Value);
 
 	// State, Posture
 	UFUNCTION(BlueprintCallable)
