@@ -36,4 +36,7 @@ protected:
 	UFUNCTION()
 	virtual void HandlePickUp(class ATestCharacter* PickUpCharacter);
 
+	UFUNCTION()
+	virtual void HandlePutDown(class ATestCharacter* PutDownCharacter);
+
 };

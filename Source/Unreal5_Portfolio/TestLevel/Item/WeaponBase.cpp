@@ -31,3 +31,7 @@ void AWeaponBase::HandlePickUp(ATestCharacter* PickUpCharacter)
 
 }
 
+void AWeaponBase::HandlePutDown(ATestCharacter* PutDownCharacter)
+{
+}
+

@@ -28,4 +28,7 @@ protected:
 	// 원거리 무기 획득
 	virtual void HandlePickUp(class ATestCharacter* PickUpCharacter) override;
 
+	// 원거리 무기 버리기
+	virtual void HandlePutDown(class ATestCharacter* PutDownCharacter) override;
+
 };

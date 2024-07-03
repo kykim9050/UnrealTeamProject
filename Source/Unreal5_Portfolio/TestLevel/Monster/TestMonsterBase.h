@@ -58,6 +58,8 @@ public:
 
 	UAnimMontage* GetKeyMontage(uint8 Key);
 
+	virtual void Attack();
+
 
 private:
 	const FMonsterDataRow* BaseData;
@@ -76,5 +78,11 @@ private:
 
 	UPROPERTY()
 	bool AttackEnd = false;
+
+	UPROPERTY(EditAnywhere, BlueprintREadWrite, meta = (AllowPrivateAccess = true))
+	UCapsuleComponent* LeftAttackComponent;
+
+	UPROPERTY(EditAnywhere, BlueprintREadWrite, meta = (AllowPrivateAccess = true))
+	UCapsuleComponent* RightAttackComponent;
 
 };

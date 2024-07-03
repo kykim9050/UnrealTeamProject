@@ -35,4 +35,6 @@ protected:
 public:
 	void TriggerPickUpEvent(class ATestCharacter* PickUpCharacter);
 
+	void TriggerPutDownEvent(class ATestCharacter* PutDownCharacter);
+
 };

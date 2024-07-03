@@ -6,6 +6,7 @@
 #include "TestLevel/Item/PickUpComponent.h"
 #include "TestLevel/Item/WeaponComponent.h"
 #include "TestLevel/Item/RangedWPComponent.h"
+#include "TestLevel/Character/TestCharacter.h"
 
 // Sets default values
 ARangedWP::ARangedWP()
@@ -41,5 +42,12 @@ void ARangedWP::HandlePickUp(ATestCharacter* PickUpCharacter)
 	if (WeaponComponent)
 	{
 		WeaponComponent->AttachWeapon(PickUpCharacter);
+		PickUpCharacter->GetItem(FName("TestRifle"));
+		Destroy();
 	}
+}
+
+void ARangedWP::HandlePutDown(ATestCharacter* PutDownCharacter)
+{
+
 }
