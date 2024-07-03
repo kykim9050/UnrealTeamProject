@@ -52,13 +52,13 @@ void UBTTaskNode_MonsterChase::TickTask(UBehaviorTreeComponent& _OwnerComp, uint
 
 
 	// »ç¸Á Å×½ºÆ®
-	/*UMonsterData* MonsterData = GetValueAsObject<UMonsterData>(_OwnerComp, TEXT("MonsterData"));
-	if (2.0f < MonsterData->IdleTime)
-	{
-		StateChange(_OwnerComp, EMonsterState::Dead);
-		return;
-	}
+	//UMonsterData* MonsterData = GetValueAsObject<UMonsterData>(_OwnerComp, TEXT("MonsterData"));
+	//if (2.0f < MonsterData->IdleTime)
+	//{
+	//	StateChange(_OwnerComp, EMonsterState::Dead);
+	//	return;
+	//}
 
-	MonsterData->IdleTime += _DeltaSeconds;*/
+	//MonsterData->IdleTime += _DeltaSeconds;
 
 }
