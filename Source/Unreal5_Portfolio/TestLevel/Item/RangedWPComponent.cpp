@@ -25,4 +25,10 @@ void URangedWPComponent::DetachWeapon()
 void URangedWPComponent::AttachWeapon(ATestCharacter* TargetCharacter)
 {
 	Super::AttachWeapon(TargetCharacter);
+
+	// Attach the weapon to the First Person Character
+	FAttachmentTransformRules AttachmentRules(EAttachmentRule::SnapToTarget, true);
+	FName AttachSocket = Character->GetMesh()->GetSocketBoneName(FName(TEXT("RifleSocket")));
+	AttachToComponent(Character->GetMesh(), AttachmentRules, AttachSocket);
+
 }
