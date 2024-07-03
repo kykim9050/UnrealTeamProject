@@ -14,8 +14,7 @@ AMonsterSpawner::AMonsterSpawner()
 // Called when the game starts or when spawned
 void AMonsterSpawner::BeginPlay()
 {
-	Super::BeginPlay();
-	
+	Super::BeginPlay();	
 }
 
 // Called every frame
@@ -23,5 +22,14 @@ void AMonsterSpawner::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+}
+
+void AMonsterSpawner::InitSpawner(EMonsterSpawnerType _Type, const FVector& _Location, int _MinSize, int _MaxSize)
+{
+	SetActorLocation(_Location);
+
+	SettingData = NewObject<UMonsterSpawnerData>(this);
+	SettingData->MinSize = _MinSize;
+	SettingData->MaxSize = _MaxSize;	
 }
 

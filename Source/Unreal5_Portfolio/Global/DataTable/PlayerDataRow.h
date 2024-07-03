@@ -7,20 +7,20 @@
 #include "PlayerDataRow.generated.h"
 
 /**
- * 
+ *
  */
 USTRUCT(BlueprintType)
 struct FPlayerDataRow : public FTableRowBase
 {
 	GENERATED_BODY()
-	
+
 public:
 	FString GetName() const
 	{
 		return Name;
 	}
 
-	int GetHp() const
+	float GetHp() const
 
 	{
 		return Hp;
@@ -59,7 +59,7 @@ private:
 	/// 체력
 	/// </summary>
 	UPROPERTY(Category = "Parameter", EditAnywhere, BlueprintReadWrite, meta = (AllowprivateAccess = "true"))
-	int Hp = 100;
+	float Hp = 100.0f;
 
 	/// <summary>
 	/// 이동 속도
