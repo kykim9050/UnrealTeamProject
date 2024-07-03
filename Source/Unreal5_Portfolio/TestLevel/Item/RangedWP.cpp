@@ -42,7 +42,7 @@ void ARangedWP::HandlePickUp(ATestCharacter* PickUpCharacter)
 	if (WeaponComponent)
 	{
 		WeaponComponent->AttachWeapon(PickUpCharacter);
-		PickUpCharacter->GetItem(FName("TestRifle"));
+		PickUpCharacter->PickUpItem(FName("TestRifle"));
 		Destroy();
 	}
 }
