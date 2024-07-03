@@ -45,7 +45,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void Collision(AActor* _OtherActor, UPrimitiveComponent* _Collision);
 
-	// HP
+	// HP (for UI Test)
 	UFUNCTION(BlueprintCallable)
 	float GetPlayerHp();
 
@@ -61,6 +61,7 @@ protected:
 
 	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
+	// HP (for UI Test)
 	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	float PlayerHp = 100.0f;
 };
