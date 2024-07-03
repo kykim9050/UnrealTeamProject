@@ -10,6 +10,7 @@
 #include "Global/Animation/MainAnimInstance.h"
 #include "Global/ContentsEnum.h"
 #include "Global/ContentsLog.h"
+#include "Components/SkeletalMeshComponent.h"
 
 // Sets default values
 ATestMonsterBase::ATestMonsterBase()
@@ -17,6 +18,11 @@ ATestMonsterBase::ATestMonsterBase()
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	LeftAttackComponent = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Left Attack Comp"));
+	LeftAttackComponent->SetupAttachment(GetMesh(), FName(TEXT("LeftAttackPos")));
+	
+	RightAttackComponent = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Right Attack Comp"));
+	RightAttackComponent->SetupAttachment(GetMesh(), FName(TEXT("RightAttackPos")));
 }
 
 // Called when the game starts or when spawned
@@ -103,4 +109,9 @@ UAnimMontage* ATestMonsterBase::GetKeyMontage(uint8 Key)
 {
 	UAnimMontage* Result = AnimInst->GetKeyAnimMontage(Key);
 	return Result;
+}
+
+void ATestMonsterBase::Attack()
+{
+	
 }
