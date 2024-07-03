@@ -17,4 +17,6 @@ class UNREAL5_PORTFOLIO_API UBTTaskNode_MonsterAttack : public UBTTaskNode_Monst
 public:
 	EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& _OwnerComp, uint8* _NodeMemory) override;
 	void TickTask(UBehaviorTreeComponent& _OwnerComp, uint8* _pNodeMemory, float _DeltaSeconds) override;
+
+	float AttackTime = 0.0f;
 };

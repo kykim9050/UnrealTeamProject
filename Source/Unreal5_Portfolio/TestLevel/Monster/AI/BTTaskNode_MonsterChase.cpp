@@ -32,8 +32,9 @@ void UBTTaskNode_MonsterChase::TickTask(UBehaviorTreeComponent& _OwnerComp, uint
 {
 	Super::TickTask(_OwnerComp, _pNodeMemory, _DeltaSeconds);
 
-	ATestMonsterBase* Monster = GetActor<ATestMonsterBase>(_OwnerComp);
+	UMonsterData* MonsterData = GetValueAsObject<UMonsterData>(_OwnerComp, TEXT("MonsterData"));
 
+	ATestMonsterBase* Monster = GetActor<ATestMonsterBase>(_OwnerComp);
 	UObject* TargetObject = GetValueAsObject<AActor>(_OwnerComp, TEXT("TargetActor"));
 	AActor* TargetActor = Cast<AActor>(TargetObject);
 	EPathFollowingRequestResult::Type IsMove = Monster->GetAIController()->MoveToLocation(TargetActor->GetActorLocation());
@@ -43,7 +44,7 @@ void UBTTaskNode_MonsterChase::TickTask(UBehaviorTreeComponent& _OwnerComp, uint
 	FVector MyLoc = Monster->GetActorLocation();
 	FVector TargetToMy = TargetLoc - MyLoc;
 	double TargetLength = abs(TargetToMy.Length());
-	if (TargetLength <= AttackBoundary)
+	if (TargetLength <= MonsterData->AttackBoundary)
 	{
 		StateChange(_OwnerComp, EMonsterState::Attack);
 		return;

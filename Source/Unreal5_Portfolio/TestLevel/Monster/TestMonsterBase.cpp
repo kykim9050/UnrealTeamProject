@@ -92,3 +92,9 @@ void ATestMonsterBase::ChangeAnimation_Implementation(uint8 _Type)
 {
 	AniValue = _Type;
 }
+
+UAnimMontage* ATestMonsterBase::GetKeyMontage(uint8 Key)
+{
+	UAnimMontage* Result = AnimInst->GetKeyAnimMontage(Key);
+	return Result;
+}
