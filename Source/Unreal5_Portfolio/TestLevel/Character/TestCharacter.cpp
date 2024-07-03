@@ -102,7 +102,7 @@ void ATestCharacter::ChangePosture_Implementation(EPlayerPosture _Type)
 	}
 }
 
-void ATestCharacter::GetItem_Implementation(FName _ItemName)
+void ATestCharacter::PickUpItem_Implementation(FName _ItemName)
 {
 	UMainGameInstance* Inst = GetGameInstance<UMainGameInstance>();
 	const FItemDataRow* ItemData = Inst->GetItemData(_ItemName);

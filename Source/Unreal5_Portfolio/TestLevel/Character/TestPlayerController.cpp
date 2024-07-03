@@ -57,7 +57,8 @@ void ATestPlayerController::SetupInputComponent()
 			EnhancedInputComponent->BindAction(InputData->Actions[10], ETriggerEvent::Triggered, this, &ATestPlayerController::ChangePosture, static_cast<EPlayerPosture>(4));
 			EnhancedInputComponent->BindAction(InputData->Actions[11], ETriggerEvent::Triggered, this, &ATestPlayerController::ChangePosture, static_cast<EPlayerPosture>(5));
 			EnhancedInputComponent->BindAction(InputData->Actions[12], ETriggerEvent::Triggered, this, &ATestPlayerController::ChangePosture, static_cast<EPlayerPosture>(0));
-			EnhancedInputComponent->BindAction(InputData->Actions[13], ETriggerEvent::Triggered, this, &ATestPlayerController::GetItem);
+			EnhancedInputComponent->BindAction(InputData->Actions[13], ETriggerEvent::Triggered, this, &ATestPlayerController::PickUpItem);
+			EnhancedInputComponent->BindAction(InputData->Actions[13], ETriggerEvent::Completed, this, &ATestPlayerController::PickUpItemEnd);
 		}
 	}
 }
@@ -122,11 +123,17 @@ void ATestPlayerController::FireEnd(const FInputActionValue& Value)
 	ChangeState(EPlayerState::Idle);
 }
 
-void ATestPlayerController::GetItem()
+void ATestPlayerController::PickUpItem()
 {
 	ATestCharacter* Ch = GetPawn<ATestCharacter>();
-	//Ch->GetItem(FName("TestRifle"));
+	//Ch->GetItem(FName("TestRifle"));	// (for Item Test)
 	Ch->SetPickUp(true);
+}
+
+void ATestPlayerController::PickUpItemEnd()
+{
+	ATestCharacter* Ch = GetPawn<ATestCharacter>();
+	Ch->SetPickUp(false);
 }
 
 void ATestPlayerController::ChangeState(EPlayerState _State)
