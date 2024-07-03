@@ -4,6 +4,7 @@
 #include "TestLevel/Monster/TestMonsterBase.h"
 #include "TestMonsterBaseAIController.h"
 #include "BehaviorTree/BlackboardComponent.h"
+#include "Components/CapsuleComponent.h"
 #include "Animation/AnimInstance.h"
 #include "Global/MainGameBlueprintFunctionLibrary.h"
 #include "Global/Animation/MainAnimInstance.h"
@@ -91,4 +92,9 @@ UMainAnimInstance* ATestMonsterBase::GetAnimInstance()
 void ATestMonsterBase::ChangeAnimation_Implementation(uint8 _Type)
 {
 	AniValue = _Type;
+}
+
+void ATestMonsterBase::SetCapsuleCompCollObjectType_Implementation(ECollisionChannel _Channel)
+{
+	GetCapsuleComponent()->SetCollisionObjectType(_Channel);
 }

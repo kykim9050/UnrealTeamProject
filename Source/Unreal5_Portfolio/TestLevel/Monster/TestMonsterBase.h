@@ -42,6 +42,10 @@ public:
 	{
 		ChangeAnimation(static_cast<uint8>(_Type));
 	}
+
+	UFUNCTION(Reliable, NetMulticast)
+	void SetCapsuleCompCollObjectType(ECollisionChannel _Channel);
+	void SetCapsuleCompCollObjectType_Implementation(ECollisionChannel _Channel);
 	
 	FORCEINLINE void SetAttackAnimationEnd(bool IsAttackEnd)
 	{

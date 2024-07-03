@@ -23,7 +23,7 @@ EBTNodeResult::Type UBTTaskNode_MonsterChase::ExecuteTask(UBehaviorTreeComponent
 	UMonsterData* MonsterData = GetValueAsObject<UMonsterData>(_OwnerComp, TEXT("MonsterData"));
 	Monster->GetCharacterMovement()->MaxWalkSpeed = MonsterData->Data->GetRunSpeed();
 	Monster->ChangeAnimation(EMonsterAnim::Run);
-	//MonsterData->IdleTime = 0.0f;
+	MonsterData->IdleTime = 0.0f;
 
 	return EBTNodeResult::Type::InProgress;
 }
@@ -51,13 +51,13 @@ void UBTTaskNode_MonsterChase::TickTask(UBehaviorTreeComponent& _OwnerComp, uint
 
 
 	// »ç¸Á Å×½ºÆ®
-	/*UMonsterData* MonsterData = GetValueAsObject<UMonsterData>(_OwnerComp, TEXT("MonsterData"));
+	UMonsterData* MonsterData = GetValueAsObject<UMonsterData>(_OwnerComp, TEXT("MonsterData"));
 	if (2.0f < MonsterData->IdleTime)
 	{
 		StateChange(_OwnerComp, EMonsterState::Dead);
 		return;
 	}
 
-	MonsterData->IdleTime += _DeltaSeconds;*/
+	MonsterData->IdleTime += _DeltaSeconds;
 
 }

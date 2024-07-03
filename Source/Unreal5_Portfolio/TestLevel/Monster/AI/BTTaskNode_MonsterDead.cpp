@@ -20,7 +20,7 @@ EBTNodeResult::Type UBTTaskNode_MonsterDead::ExecuteTask(UBehaviorTreeComponent&
 	}
 
 	Monster->ChangeAnimation(EMonsterAnim::Dead);
-	Monster->GetCapsuleComponent()->SetCollisionObjectType(ECC_GameTraceChannel5);
+	Monster->SetCapsuleCompCollObjectType(ECC_GameTraceChannel5);
 
 	return EBTNodeResult::Type::InProgress;
 }
