@@ -5,6 +5,7 @@
 #include "Global/DataTable/PlayerDataRow.h"
 #include "Global/DataTable/NetDataRow.h"
 #include "Global/DataTable/MonsterDataRow.h"
+#include "Global/DataTable/MonsterSpawnerDataRow.h"
 #include "Global/DataTable/ItemDataRow.h"
 
 UMainGameInstance::UMainGameInstance()
@@ -56,6 +57,24 @@ const FMonsterDataRow* UMainGameInstance::GetMonsterData(FName _Name)
 	}
 
 	FMonsterDataRow* Data = MonsterDataTable->FindRow<FMonsterDataRow>(_Name, nullptr);
+
+	if (nullptr == Data)
+	{
+		UE_LOG(MonsterLog, Error, TEXT("%S(%u)> %s Name Data Is Nullptr"), __FUNCTION__, __LINE__, *_Name.ToString());
+		return nullptr;
+	}
+
+	return Data;
+}
+
+const FMonsterSpawnerDataRow* UMainGameInstance::GetMonsterSpawnerData(FName _Name)
+{
+	if (nullptr == MonsterSpawnerDataTable)
+	{
+		UE_LOG(MonsterLog, Fatal, TEXT("%S(%u)> if (nullptr == MonsterSpawnerDataTable)"), __FUNCTION__, __LINE__);
+	}
+
+	FMonsterSpawnerDataRow* Data = MonsterSpawnerDataTable->FindRow<FMonsterSpawnerDataRow>(_Name, nullptr);
 
 	if (nullptr == Data)
 	{
