@@ -7,7 +7,7 @@
 #include "RangedWPComponent.generated.h"
 
 /**
- * 
+ * 원거리 무기 컴포넌트
  */
 UCLASS(Blueprintable, BlueprintType, ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class UNREAL5_PORTFOLIO_API URangedWPComponent : public UWeaponComponent

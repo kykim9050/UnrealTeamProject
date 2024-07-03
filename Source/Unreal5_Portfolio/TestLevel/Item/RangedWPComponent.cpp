@@ -30,5 +30,4 @@ void URangedWPComponent::AttachWeapon(ATestCharacter* TargetCharacter)
 	FAttachmentTransformRules AttachmentRules(EAttachmentRule::SnapToTarget, true);
 	FName AttachSocket = Character->GetMesh()->GetSocketBoneName(FName(TEXT("RifleSocket")));
 	AttachToComponent(Character->GetMesh(), AttachmentRules, AttachSocket);
-
 }

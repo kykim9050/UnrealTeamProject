@@ -4,7 +4,7 @@
 #include "TestLevel/UI/TestPlayerUI.h"
 #include "Kismet/GameplayStatics.h"
 #include "TestLevel/Character/TestCharacter.h"
-#include "Global/MainGameInstance.h"
+#include "Global/MainGameBlueprintFunctionLibrary.h"
 #include "Global/DataTable/PlayerDataRow.h"
 
 void UTestPlayerUI::NativeConstruct()
@@ -12,7 +12,7 @@ void UTestPlayerUI::NativeConstruct()
 	Super::NativeConstruct();
  
 	MyCharacter = Cast<ATestCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
-	Inst = GetWorld()->GetGameInstanceChecked<UMainGameInstance>();
+	Inst = UMainGameBlueprintFunctionLibrary::GetMainGameInstance(GetWorld());
 	MaxHp = static_cast<float>(Inst->GetPlayerData(FName("TestPlayer"))->GetHp());
 }
 
