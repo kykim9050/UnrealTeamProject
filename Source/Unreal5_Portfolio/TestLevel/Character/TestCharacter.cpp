@@ -34,7 +34,7 @@ ATestCharacter::ATestCharacter()
 		NewSlotMesh->SetupAttachment(GetMesh(), *Name);
 		NewSlotMesh->SetCollisionProfileName(TEXT("NoCollision"));
 		NewSlotMesh->SetGenerateOverlapEvents(true);
-		NewSlotMesh->SetHiddenInGame(true);
+		NewSlotMesh->SetVisibility(false);
 		ItemMeshes.Push(NewSlotMesh);
 	}
 }
@@ -93,16 +93,16 @@ void ATestCharacter::ChangePosture_Implementation(EPlayerPosture _Type)
 	{
 		if (i == static_cast<size_t>(_Type))
 		{
-			ItemMeshes[i - 1]->SetHiddenInGame(false);
+			ItemMeshes[i - 1]->SetVisibility(true);
 		}
 		else
 		{
-			ItemMeshes[i - 1]->SetHiddenInGame(true);
+			ItemMeshes[i - 1]->SetVisibility(false);
 		}
 	}
 }
 
-void ATestCharacter::GetItem_Implementation(FName _ItemName)
+void ATestCharacter::PickUpItem_Implementation(FName _ItemName)
 {
 	UMainGameInstance* Inst = GetGameInstance<UMainGameInstance>();
 	const FItemDataRow* ItemData = Inst->GetItemData(_ItemName);
@@ -110,7 +110,7 @@ void ATestCharacter::GetItem_Implementation(FName _ItemName)
 	EPlayerPosture ItemType = ItemData->GetType();
 	UStaticMesh* ItemMesh = ItemData->GetResMesh();
 
-	ItemMeshes[static_cast<uint8>(ItemType)]->SetStaticMesh(ItemMesh);
+	ItemMeshes[static_cast<uint8>(ItemType) - 1]->SetStaticMesh(ItemMesh);
 
 	ChangePosture(ItemType);
 }

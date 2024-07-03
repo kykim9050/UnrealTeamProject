@@ -28,3 +28,8 @@ void UPickUpComponent::TriggerPickUpEvent(ATestCharacter* PickUpCharacter)
 {
 	OnPickUp.Broadcast(PickUpCharacter);
 }
+
+void UPickUpComponent::TriggerPutDownEvent(ATestCharacter* PutDownCharacter)
+{
+	OnPutDown.Broadcast(PutDownCharacter);
+}

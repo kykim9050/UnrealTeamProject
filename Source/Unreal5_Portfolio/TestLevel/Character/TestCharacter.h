@@ -22,6 +22,8 @@ public:
 	class USpringArmComponent* SpringArmComponent = nullptr;
 	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	class UCameraComponent* CameraComponent = nullptr;
+	UPROPERTY(Category = "Contents", VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	TArray<UStaticMeshComponent*> ItemMeshes;
 
 	// State, Posture
 	UPROPERTY(Category = "Contents", Replicated, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
@@ -37,22 +39,10 @@ public:
 	void ChangePosture_Implementation(EPlayerPosture _Type);
 
 	// Item
-	UPROPERTY(Category = "Contents", VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	TArray<UStaticMeshComponent*> ItemMeshes;
-
-	UFUNCTION(Reliable, Server)
-	void GetItem(FName _ItemName);
-	void GetItem_Implementation(FName _ItemName);
-
-	UFUNCTION(BlueprintCallable)
-	void SetPickUp(bool _PickUp)
-	{
-		PickUp = _PickUp;
-	}
 	/*
 	struct FItemInfo
 	{
-		
+
 		//아이템 이름
 		//남은 탄환 갯수
 		//...
@@ -60,6 +50,21 @@ public:
 	TArray<FItemInfo*> ItemSlot;
 	FItemInfo* CurItem;
 	*/
+
+	UFUNCTION(Reliable, Server)
+	void PickUpItem(FName _ItemName);
+	void PickUpItem_Implementation(FName _ItemName);
+
+	UFUNCTION(BlueprintCallable)
+	inline bool GetPickUp()
+	{
+		return PickUp;
+	}
+	UFUNCTION(BlueprintCallable)
+	inline void SetPickUp(bool _PickUp)
+	{
+		PickUp = _PickUp;
+	}
 
 	// Collision
 	UFUNCTION(BlueprintCallable)
