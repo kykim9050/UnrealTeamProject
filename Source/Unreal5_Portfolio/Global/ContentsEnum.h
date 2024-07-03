@@ -62,6 +62,14 @@ enum class EMonsterAnim : uint8
 	Dead	UMETA(DisplayName = "Dead")
 };
 
+UENUM()
+enum class EMonsterSpawnerType : uint8
+{
+	Once,
+	Continuous,
+	Max
+};
+
 UCLASS()
 class UNREAL5_PORTFOLIO_API UContentsEnum : public UObject
 {
