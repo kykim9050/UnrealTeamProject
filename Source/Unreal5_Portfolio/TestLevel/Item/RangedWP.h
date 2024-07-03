@@ -7,7 +7,7 @@
 #include "RangedWP.generated.h"
 
 /**
- * 
+ * ¿ø°Å¸® ¹«±â °´Ã¼
  */
 UCLASS()
 class UNREAL5_PORTFOLIO_API ARangedWP : public AWeaponBase
@@ -22,8 +22,10 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-	
+
+	// ¿ø°Å¸® ¹«±â È¹µæ
+	virtual void HandlePickUp(class ATestCharacter* PickUpCharacter) override;
+
 };
