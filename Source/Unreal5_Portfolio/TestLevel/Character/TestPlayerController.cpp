@@ -125,16 +125,7 @@ void ATestPlayerController::FireEnd(const FInputActionValue& Value)
 void ATestPlayerController::GetItem()
 {
 	ATestCharacter* Ch = GetPawn<ATestCharacter>();
-
-	/*
-	if (Character와 Collision 된 아이템이 없다면)
-	{
-		return;
-	}
-
-	FName ItemName = (Character에서 Collision 검사하여 얻어낸 아이템의 FName)
-	Ch->GetItem(ItemName);
-	*/
+	Ch->SetPickUp(true);
 }
 
 void ATestPlayerController::ChangeState(EPlayerState _State)
