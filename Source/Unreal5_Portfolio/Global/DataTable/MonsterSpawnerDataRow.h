@@ -12,18 +12,23 @@ struct FMonsterSpawnerInfo : public FTableRowBase
 {
 	GENERATED_BODY()
 
+	// 스포너 타입
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowprivateAccess = "true"))
 	EMonsterSpawnerType Type;
 
+	// 스포너 위치
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowprivateAccess = "true"))
 	FVector Location;
 
+	// 스폰 반경
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowprivateAccess = "true"))
 	float Ridus;
 
+	// 최소 스폰 수
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowprivateAccess = "true"))
 	int MinSpawnNum;
 
+	// 최대 스폰 수
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowprivateAccess = "true"))
 	int MaxSpawnNum;
 
@@ -38,9 +43,9 @@ struct FMonsterSpawnerDataRow : public FTableRowBase
 	GENERATED_BODY()
 
 public:
-	TArray<FMonsterSpawnerInfo> GetSpawnInfo() const
+	TArray<FMonsterSpawnerInfo> GetSpawnerInfo() const
 	{
-		return SpawnInfo;
+		return SpawnerInfo;
 	}
 
 private:
@@ -48,7 +53,7 @@ private:
 	/// 몬스터 Spawn 정보
 	/// </summary>
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowprivateAccess = "true"))
-	TArray<FMonsterSpawnerInfo> SpawnInfo;
+	TArray<FMonsterSpawnerInfo> SpawnerInfo;
 
 };
 

@@ -26,6 +26,7 @@ protected:
 
 public:
 	void InitSpawner(EMonsterSpawnerType _Type, const FVector& _Location, float _Radius, int _MinSize, int _MaxSize);
+	void DestroyCheck();
 
 	UFUNCTION(Reliable, Server)
 	void SpawnMonster();

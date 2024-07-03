@@ -26,6 +26,7 @@ void AMonsterSpawner::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 	SpawnMonster();
+	DestroyCheck();
 }
 
 void AMonsterSpawner::InitSpawner(EMonsterSpawnerType _Type, const FVector& _Location, float _Radius, int _MinSize, int _MaxSize)
@@ -36,6 +37,16 @@ void AMonsterSpawner::InitSpawner(EMonsterSpawnerType _Type, const FVector& _Loc
 	SettingData->MaxSize = _MaxSize;
 	SettingData->Radius = _Radius;
 	SettingData->Type = _Type;
+}
+
+void AMonsterSpawner::DestroyCheck()
+{
+	switch (SettingData->Type)
+	{
+	case EMonsterSpawnerType::Once:
+		Destroy();
+		break;
+	}
 }
 
 void AMonsterSpawner::SpawnMonster_Implementation()
@@ -51,17 +62,12 @@ void AMonsterSpawner::SpawnMonster_Implementation()
 	{
 		FNavLocation Location(FVector::ZeroVector);
 	    NavSystem->GetRandomReachablePointInRadius(CurLocation, SettingData->Radius, Location);
+		
+		// 생성 실패 줄이기 위해 높이 수정
 		Location.Location.Z += 500.0f;
 
 		FTransform Transform;
 		Transform.SetLocation(Location);
 		GetWorld()->SpawnActor<AActor>(MonsterData->GetMonsterUClass(), Transform);
-	}
-
-	switch (SettingData->Type)
-	{
-	case EMonsterSpawnerType::Once:
-		Destroy();
-		break;
 	}
 }

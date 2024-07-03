@@ -17,8 +17,6 @@ void AMainGameMode::BeginPlay()
 void AMainGameMode::Tick(float _DeltaTime)
 {
 	Super::Tick(_DeltaTime);
-
-
 }
 
 void AMainGameMode::CreateMonsterSpawner(FName _DataTableRowName)
@@ -26,7 +24,7 @@ void AMainGameMode::CreateMonsterSpawner(FName _DataTableRowName)
 	UMainGameInstance* MainGameInst = UMainGameBlueprintFunctionLibrary::GetMainGameInstance(GetWorld());
 	const FMonsterSpawnerDataRow* MonsterSpawnerData = MainGameInst->GetMonsterSpawnerData(_DataTableRowName);
 
-	TArray<FMonsterSpawnerInfo> SpawnerInfo = MonsterSpawnerData->GetSpawnInfo();
+	TArray<FMonsterSpawnerInfo> SpawnerInfo = MonsterSpawnerData->GetSpawnerInfo();
 	for (int i = 0; i < SpawnerInfo.Num(); i++)
 	{
 		AMonsterSpawner* NewMonsterSpawner = GetWorld()->SpawnActor<AMonsterSpawner>();
