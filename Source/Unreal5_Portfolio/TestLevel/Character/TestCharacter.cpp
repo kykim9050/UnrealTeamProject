@@ -83,6 +83,40 @@ void ATestCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLi
 	DOREPLIFETIME(ATestCharacter, PostureValue);
 }
 
+void ATestCharacter::CreateRayCast()
+{
+	FVector Start = GetActorLocation();
+	FVector ForwardVector = CameraComponent->GetForwardVector();
+
+	Start = FVector(Start.X + (ForwardVector.X * 100), Start.Y + (ForwardVector.Y * 100), Start.Z + (ForwardVector.Z * 100));
+
+	FVector End = Start + (ForwardVector * 1000);
+
+	FHitResult Hit;
+	if (GetWorld())
+	{
+		bool ActorHit = GetWorld()->LineTraceSingleByChannel(Hit, Start, End, ECC_GameTraceChannel3, FCollisionQueryParams(), FCollisionResponseParams());
+		DrawDebugLine(GetWorld(), Start, End, FColor::Red, false, 1.0f, 0.0f, 0.0f);
+
+		if (true == ActorHit && Hit.GetActor())
+		{
+			//GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, Hit.GetActor()->GetFName().ToString());
+			//Hit.GetActor()->ActorHasTag(TEXT(""));
+			AActor* GetActorTest = Hit.GetActor();
+			int TagCount = Hit.GetActor()->Tags.Num();
+			if (0 != TagCount)
+			{
+				for (size_t i = 0; i < Hit.GetActor()->Tags.Num(); i++)
+				{
+					FString TagName = Hit.GetActor()->Tags[i].ToString();
+					GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, TagName);
+				}
+			}
+			int a = 0;
+		}
+	}
+}
+
 void ATestCharacter::ChangeState_Implementation(EPlayerState _Type)
 {
 	StateValue = _Type;
