@@ -125,6 +125,7 @@ void ATestPlayerController::FireEnd(const FInputActionValue& Value)
 void ATestPlayerController::GetItem()
 {
 	ATestCharacter* Ch = GetPawn<ATestCharacter>();
+	//Ch->GetItem(FName("TestRifle"));
 	Ch->SetPickUp(true);
 }
 

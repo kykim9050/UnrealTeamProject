@@ -110,7 +110,7 @@ void ATestCharacter::GetItem_Implementation(FName _ItemName)
 	EPlayerPosture ItemType = ItemData->GetType();
 	UStaticMesh* ItemMesh = ItemData->GetResMesh();
 
-	ItemMeshes[static_cast<uint8>(ItemType)]->SetStaticMesh(ItemMesh);
+	ItemMeshes[static_cast<uint8>(ItemType) - 1]->SetStaticMesh(ItemMesh);
 
 	ChangePosture(ItemType);
 }
