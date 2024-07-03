@@ -56,6 +56,9 @@ public:
 		return AttackEnd;
 	}
 
+	UAnimMontage* GetKeyMontage(uint8 Key);
+
+
 private:
 	const FMonsterDataRow* BaseData;
 

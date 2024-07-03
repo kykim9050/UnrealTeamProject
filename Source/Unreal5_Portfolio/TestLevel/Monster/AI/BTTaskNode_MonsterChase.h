@@ -17,6 +17,4 @@ class UNREAL5_PORTFOLIO_API UBTTaskNode_MonsterChase : public UBTTaskNode_Monste
 public:
 	EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& _OwnerComp, uint8* _NodeMemory) override;
 	void TickTask(UBehaviorTreeComponent& _OwnerComp, uint8* _pNodeMemory, float _DeltaSeconds) override;
-
-	float AttackBoundary = 200.0f;
 };

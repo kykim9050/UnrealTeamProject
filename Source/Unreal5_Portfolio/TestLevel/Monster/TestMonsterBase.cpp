@@ -98,3 +98,9 @@ void ATestMonsterBase::SetCapsuleCompCollObjectType_Implementation(ECollisionCha
 {
 	GetCapsuleComponent()->SetCollisionObjectType(_Channel);
 }
+
+UAnimMontage* ATestMonsterBase::GetKeyMontage(uint8 Key)
+{
+	UAnimMontage* Result = AnimInst->GetKeyAnimMontage(Key);
+	return Result;
+}
