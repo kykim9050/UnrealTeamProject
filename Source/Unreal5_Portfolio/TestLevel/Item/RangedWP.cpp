@@ -6,6 +6,7 @@
 #include "TestLevel/Item/PickUpComponent.h"
 #include "TestLevel/Item/WeaponComponent.h"
 #include "TestLevel/Item/RangedWPComponent.h"
+#include "TestLevel/Character/TestCharacter.h"
 
 // Sets default values
 ARangedWP::ARangedWP()
@@ -25,6 +26,7 @@ void ARangedWP::BeginPlay()
 {
 	Super::BeginPlay();
 
+	PickUpComponent->OnPickUp.AddDynamic(this, &ARangedWP::HandlePickUp);
 	WeaponComponent->SetCollisionProfileName(FName(TEXT("NoCollision")));
 }
 
@@ -32,5 +34,20 @@ void ARangedWP::BeginPlay()
 void ARangedWP::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+}
+
+void ARangedWP::HandlePickUp(ATestCharacter* PickUpCharacter)
+{
+	if (WeaponComponent)
+	{
+		WeaponComponent->AttachWeapon(PickUpCharacter);
+		PickUpCharacter->PickUpItem(FName("TestRifle"));
+		Destroy();
+	}
+}
+
+void ARangedWP::HandlePutDown(ATestCharacter* PutDownCharacter)
+{
 
 }

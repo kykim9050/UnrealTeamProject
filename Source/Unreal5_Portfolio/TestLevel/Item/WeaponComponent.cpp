@@ -36,11 +36,6 @@ void UWeaponComponent::AttachWeapon(ATestCharacter* TargetCharacter)
 		return;
 	}
 
-	// Attach the weapon to the First Person Character
-	FAttachmentTransformRules AttachmentRules(EAttachmentRule::SnapToTarget, true);
-	FName AttachSocket = Character->GetMesh()->GetSocketBoneName(FName(TEXT("RifleSocket")));
-	AttachToComponent(Character->GetMesh(), AttachmentRules, AttachSocket);
-
 	// add the weapon as an instance component to the character
 	// Character->AddInstanceComponent(this);
 

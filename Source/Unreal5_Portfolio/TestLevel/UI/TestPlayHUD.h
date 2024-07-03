@@ -14,4 +14,10 @@ class UNREAL5_PORTFOLIO_API ATestPlayHUD : public AHUD
 {
 	GENERATED_BODY()
 	
+protected:
+	void BeginPlay() override;
+
+private:
+	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	TMap<FString, UUserWidget*> AllTestPlayWidgets;
 };

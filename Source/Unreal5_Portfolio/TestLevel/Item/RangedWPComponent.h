@@ -7,7 +7,7 @@
 #include "RangedWPComponent.generated.h"
 
 /**
- * 
+ * 원거리 무기 컴포넌트
  */
 UCLASS(Blueprintable, BlueprintType, ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class UNREAL5_PORTFOLIO_API URangedWPComponent : public UWeaponComponent
@@ -17,10 +17,8 @@ class UNREAL5_PORTFOLIO_API URangedWPComponent : public UWeaponComponent
 protected:
 	URangedWPComponent();
 
-	//UFUNCTION(BlueprintCallable, Category = "Weapon")
 	virtual void AttachWeapon(class ATestCharacter* TargetCharacter) override;
 
-	//UFUNCTION(BlueprintCallable, Category = "Weapon")
 	virtual void DetachWeapon() override;
 
 	/** Ends gameplay for this component. */

@@ -10,7 +10,7 @@
 // Sets default values
 ATestCharacter::ATestCharacter()
 {
- 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
 	// SpringArm Component
@@ -34,7 +34,7 @@ ATestCharacter::ATestCharacter()
 		NewSlotMesh->SetupAttachment(GetMesh(), *Name);
 		NewSlotMesh->SetCollisionProfileName(TEXT("NoCollision"));
 		NewSlotMesh->SetGenerateOverlapEvents(true);
-		NewSlotMesh->SetHiddenInGame(true);
+		NewSlotMesh->SetVisibility(false);
 		ItemMeshes.Push(NewSlotMesh);
 	}
 }
@@ -51,6 +51,11 @@ void ATestCharacter::Collision(AActor* _OtherActor, UPrimitiveComponent* _Collis
 	// Collision_Check
 	//if (true == _Collision->ComponentHasTag())
 	//{}
+}
+
+float ATestCharacter::GetPlayerHp()
+{
+	return PlayerHp;
 }
 
 // Called when the game starts or when spawned
@@ -83,29 +88,29 @@ void ATestCharacter::ChangeState_Implementation(EPlayerState _Type)
 void ATestCharacter::ChangePosture_Implementation(EPlayerPosture _Type)
 {
 	PostureValue = _Type;
-	
+
 	for (size_t i = 1; i < static_cast<size_t>(EPlayerPosture::SlotMax); i++)
 	{
 		if (i == static_cast<size_t>(_Type))
 		{
-			ItemMeshes[i - 1]->SetHiddenInGame(false);
+			ItemMeshes[i - 1]->SetVisibility(true);
 		}
 		else
 		{
-			ItemMeshes[i - 1]->SetHiddenInGame(true);
+			ItemMeshes[i - 1]->SetVisibility(false);
 		}
 	}
 }
 
-void ATestCharacter::GetItem_Implementation(FName _ItemName)
+void ATestCharacter::PickUpItem_Implementation(FName _ItemName)
 {
 	UMainGameInstance* Inst = GetGameInstance<UMainGameInstance>();
 	const FItemDataRow* ItemData = Inst->GetItemData(_ItemName);
 
 	EPlayerPosture ItemType = ItemData->GetType();
 	UStaticMesh* ItemMesh = ItemData->GetResMesh();
-	
-	ItemMeshes[static_cast<uint8>(ItemType)]->SetStaticMesh(ItemMesh);
+
+	ItemMeshes[static_cast<uint8>(ItemType) - 1]->SetStaticMesh(ItemMesh);
 
 	ChangePosture(ItemType);
 }
