@@ -45,6 +45,10 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void Collision(AActor* _OtherActor, UPrimitiveComponent* _Collision);
 
+	// HP
+	UFUNCTION(BlueprintCallable)
+	float GetPlayerHp();
+
 	// HP (for UI Test)
 	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	int HP = 100;
@@ -56,4 +60,7 @@ protected:
 	virtual void Tick(float DeltaTime) override;
 
 	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+
+	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	float PlayerHp = 100.0f;
 };

@@ -23,7 +23,7 @@ void UTestPlayerUI::NativeTick(const FGeometry& _MyGeometry, float _InDeltaTime)
 
 float UTestPlayerUI::HPUpdate()
 {
-	CurHp = static_cast<float>(MyCharacter->HP);
+	CurHp = static_cast<float>(MyCharacter->GetPlayerHp());
 	
 	// 현재 체력 / MAX 체력 
 	return CurHp / MaxHp;

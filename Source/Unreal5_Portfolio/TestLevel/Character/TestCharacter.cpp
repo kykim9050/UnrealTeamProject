@@ -10,7 +10,7 @@
 // Sets default values
 ATestCharacter::ATestCharacter()
 {
- 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
 	// SpringArm Component
@@ -53,6 +53,11 @@ void ATestCharacter::Collision(AActor* _OtherActor, UPrimitiveComponent* _Collis
 	//{}
 }
 
+float ATestCharacter::GetPlayerHp()
+{
+	return PlayerHp;
+}
+
 // Called when the game starts or when spawned
 void ATestCharacter::BeginPlay()
 {
@@ -83,7 +88,7 @@ void ATestCharacter::ChangeState_Implementation(EPlayerState _Type)
 void ATestCharacter::ChangePosture_Implementation(EPlayerPosture _Type)
 {
 	PostureValue = _Type;
-	
+
 	for (size_t i = 1; i < static_cast<size_t>(EPlayerPosture::SlotMax); i++)
 	{
 		if (i == static_cast<size_t>(_Type))
@@ -104,7 +109,7 @@ void ATestCharacter::GetItem_Implementation(FName _ItemName)
 
 	EPlayerPosture ItemType = ItemData->GetType();
 	UStaticMesh* ItemMesh = ItemData->GetResMesh();
-	
+
 	ItemMeshes[static_cast<uint8>(ItemType)]->SetStaticMesh(ItemMesh);
 
 	ChangePosture(ItemType);
