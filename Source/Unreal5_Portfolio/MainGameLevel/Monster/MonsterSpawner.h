@@ -4,6 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Global/DataTable/MonsterSpawnerDataRow.h"
+#include "Global/ContentsEnum.h"
 #include "MonsterSpawner.generated.h"
 
 UCLASS()
@@ -18,9 +20,19 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-
-public:	
+	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+public:
+	void InitSpawner(EMonsterSpawnerType _Type, const FVector& _Location, float _Radius, int _MinSize, int _MaxSize);
+
+	UFUNCTION(Reliable, Server)
+	void SpawnMonster();
+	void SpawnMonster_Implementation();
+
+private:
+	UPROPERTY()
+	UMonsterSpawnerData* SettingData = nullptr;
 
 };

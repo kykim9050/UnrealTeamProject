@@ -46,7 +46,13 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void FireEnd(const FInputActionValue& Value);
 	UFUNCTION(BlueprintCallable)
-	void GetItem(FName _ItemName);
+	void GetItem();
+
+	UFUNCTION(BlueprintCallable)
+	void SendItem()
+	{
+		GetItem();
+	}
 
 	// State, Posture
 	UFUNCTION(BlueprintCallable)

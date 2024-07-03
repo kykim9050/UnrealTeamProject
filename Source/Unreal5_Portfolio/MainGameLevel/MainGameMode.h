@@ -13,5 +13,16 @@ UCLASS()
 class UNREAL5_PORTFOLIO_API AMainGameMode : public AGameMode
 {
 	GENERATED_BODY()
-	
+
+protected:
+	void BeginPlay() override;
+	void Tick(float _DeltaTime) override;
+
+public:
+	void CreateMonsterSpawner(FName _DataTableRowName);
+
+private:
+	UPROPERTY(Category = "Data", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	int MaxMonsterNum = 0;
+
 };
