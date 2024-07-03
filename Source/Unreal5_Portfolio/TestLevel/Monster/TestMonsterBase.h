@@ -43,6 +43,22 @@ public:
 		ChangeAnimation(static_cast<uint8>(_Type));
 	}
 
+	UFUNCTION(Reliable, NetMulticast)
+	void SetCapsuleCompCollObjectType(ECollisionChannel _Channel);
+	void SetCapsuleCompCollObjectType_Implementation(ECollisionChannel _Channel);
+	
+	FORCEINLINE void SetAttackAnimationEnd(bool IsAttackEnd)
+	{
+		AttackEnd = IsAttackEnd;
+	}
+	FORCEINLINE bool GetAttackAnimationEnd()
+	{
+		return AttackEnd;
+	}
+
+	UAnimMontage* GetKeyMontage(uint8 Key);
+
+
 private:
 	const FMonsterDataRow* BaseData;
 
@@ -57,5 +73,8 @@ private:
 
 	UPROPERTY(Category = "Animation", Replicated, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	class UMainAnimInstance* AnimInst;
+
+	UPROPERTY()
+	bool AttackEnd = false;
 
 };

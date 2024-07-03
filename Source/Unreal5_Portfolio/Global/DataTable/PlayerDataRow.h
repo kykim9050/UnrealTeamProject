@@ -15,6 +15,36 @@ struct FPlayerDataRow : public FTableRowBase
 	GENERATED_BODY()
 	
 public:
+	FString GetName() const
+	{
+		return Name;
+	}
+
+	int GetHp() const
+
+	{
+		return Hp;
+	}
+
+	float GetMoveSpeed() const
+	{
+		return MoveSpeed;
+	}
+
+	float GetRotSpeed() const
+	{
+		return RotSpeed;
+	}
+
+	float GetRunSpeed() const
+	{
+		return RunSpeed;
+	}
+
+	bool GetJumping() const
+	{
+		return Jumping;
+	}
 
 protected:
 

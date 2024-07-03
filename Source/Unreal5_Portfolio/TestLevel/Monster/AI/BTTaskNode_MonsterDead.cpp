@@ -6,6 +6,7 @@
 #include "Global/DataTable/MonsterDataRow.h"
 #include "Global/ContentsLog.h"
 #include "BehaviorTree/BlackboardComponent.h"
+#include "Components/CapsuleComponent.h"
 
 EBTNodeResult::Type UBTTaskNode_MonsterDead::ExecuteTask(UBehaviorTreeComponent& _OwnerComp, uint8* _NodeMemory)
 {
@@ -19,6 +20,7 @@ EBTNodeResult::Type UBTTaskNode_MonsterDead::ExecuteTask(UBehaviorTreeComponent&
 	}
 
 	Monster->ChangeAnimation(EMonsterAnim::Dead);
+	Monster->SetCapsuleCompCollObjectType(ECC_GameTraceChannel5);
 
 	return EBTNodeResult::Type::InProgress;
 }
@@ -26,7 +28,4 @@ EBTNodeResult::Type UBTTaskNode_MonsterDead::ExecuteTask(UBehaviorTreeComponent&
 void UBTTaskNode_MonsterDead::TickTask(UBehaviorTreeComponent& _OwnerComp, uint8* _NodeMemory, float _DeltaSeconds)
 {
 	Super::TickTask(_OwnerComp, _NodeMemory, _DeltaSeconds);
-
-
-	int a = 0;
 }
