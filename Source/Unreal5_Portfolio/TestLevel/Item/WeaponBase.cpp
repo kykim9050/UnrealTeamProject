@@ -26,3 +26,8 @@ void AWeaponBase::Tick(float DeltaTime)
 
 }
 
+void AWeaponBase::HandlePickUp(ATestCharacter* PickUpCharacter)
+{
+
+}
+

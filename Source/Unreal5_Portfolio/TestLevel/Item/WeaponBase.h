@@ -6,6 +6,9 @@
 #include "GameFramework/Actor.h"
 #include "WeaponBase.generated.h"
 
+/**
+* 무기(개념) 최상위 부모
+*/
 UCLASS()
 class UNREAL5_PORTFOLIO_API AWeaponBase : public AActor
 {
@@ -29,5 +32,8 @@ protected:
 
 	UPROPERTY(Category = "Components", VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	class UPickUpComponent* PickUpComponent = nullptr;
+
+	UFUNCTION()
+	virtual void HandlePickUp(class ATestCharacter* PickUpCharacter);
 
 };

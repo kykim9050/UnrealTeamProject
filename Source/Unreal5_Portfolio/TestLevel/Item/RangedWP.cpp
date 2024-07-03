@@ -25,6 +25,7 @@ void ARangedWP::BeginPlay()
 {
 	Super::BeginPlay();
 
+	PickUpComponent->OnPickUp.AddDynamic(this, &ARangedWP::HandlePickUp);
 	WeaponComponent->SetCollisionProfileName(FName(TEXT("NoCollision")));
 }
 
@@ -33,4 +34,12 @@ void ARangedWP::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+}
+
+void ARangedWP::HandlePickUp(ATestCharacter* PickUpCharacter)
+{
+	if (WeaponComponent)
+	{
+		WeaponComponent->AttachWeapon(PickUpCharacter);
+	}
 }
