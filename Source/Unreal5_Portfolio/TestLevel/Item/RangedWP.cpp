@@ -41,5 +41,12 @@ void ARangedWP::HandlePickUp(ATestCharacter* PickUpCharacter)
 	if (WeaponComponent)
 	{
 		WeaponComponent->AttachWeapon(PickUpCharacter);
+		
+		Destroy();
 	}
+}
+
+void ARangedWP::HandlePutDown(ATestCharacter* PutDownCharacter)
+{
+
 }
