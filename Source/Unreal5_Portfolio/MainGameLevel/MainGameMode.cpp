@@ -30,7 +30,7 @@ void AMainGameMode::CreateMonsterSpawner(FName _DataTableRowName)
 	for (int i = 0; i < SpawnerInfo.Num(); i++)
 	{
 		AMonsterSpawner* NewMonsterSpawner = GetWorld()->SpawnActor<AMonsterSpawner>();
-		NewMonsterSpawner->InitSpawner(SpawnerInfo[i].Type, SpawnerInfo[i].Location, SpawnerInfo[i].MinSpawnNum, SpawnerInfo[i].MaxSpawnNum);
+		NewMonsterSpawner->InitSpawner(SpawnerInfo[i].Type, SpawnerInfo[i].Location, SpawnerInfo[i].Ridus, SpawnerInfo[i].MinSpawnNum, SpawnerInfo[i].MaxSpawnNum);
 	}
 }
 

@@ -19,6 +19,9 @@ struct FMonsterSpawnerInfo : public FTableRowBase
 	FVector Location;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowprivateAccess = "true"))
+	float Ridus;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowprivateAccess = "true"))
 	int MinSpawnNum;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowprivateAccess = "true"))
@@ -56,6 +59,8 @@ class UMonsterSpawnerData : public UObject
 
 public:
 	EMonsterSpawnerType Type = EMonsterSpawnerType::Max;
+	FVector Location = FVector::ZeroVector;
+	float Radius = 0.0f;
 	int MinSize = -1;
 	int MaxSize = -1;
 
