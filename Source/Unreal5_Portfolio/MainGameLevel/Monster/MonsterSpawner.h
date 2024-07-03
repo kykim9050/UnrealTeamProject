@@ -25,7 +25,11 @@ protected:
 	virtual void Tick(float DeltaTime) override;
 
 public:
-	void InitSpawner(EMonsterSpawnerType _Type, const FVector& _Location, int _MinSize, int _MaxSize);
+	void InitSpawner(EMonsterSpawnerType _Type, const FVector& _Location, float _Radius, int _MinSize, int _MaxSize);
+
+	UFUNCTION(Reliable, Server)
+	void SpawnMonster();
+	void SpawnMonster_Implementation();
 
 private:
 	UPROPERTY()
