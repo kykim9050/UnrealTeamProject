@@ -38,18 +38,14 @@ public:
 	void ChangePosture(EPlayerPosture _Type);
 	void ChangePosture_Implementation(EPlayerPosture _Type);
 
-	// Item
-	/*
+	// Item (for UI Test)
 	struct FItemInfo
 	{
-
-		//아이템 이름
-		//남은 탄환 갯수
-		//...
+		FName ItemName;
+		int ItemReloadNum;
 	};
 	TArray<FItemInfo*> ItemSlot;
-	FItemInfo* CurItem;
-	*/
+	FItemInfo* CurItem = nullptr;
 
 	UFUNCTION(Reliable, Server)
 	void PickUpItem(FName _ItemName);

@@ -37,6 +37,9 @@ ATestCharacter::ATestCharacter()
 		NewSlotMesh->SetVisibility(false);
 		ItemMeshes.Push(NewSlotMesh);
 	}
+
+	// Item Slot
+
 }
 
 void ATestCharacter::Collision(AActor* _OtherActor, UPrimitiveComponent* _Collision)
