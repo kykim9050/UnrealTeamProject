@@ -54,6 +54,11 @@ public:
 	/// </summary>
 	const struct FItemDataRow* GetItemData(FName _Name);
 
+	/// <summary>
+	/// InGameUserWidgetDataTable 포인터를 받아오는 함수
+	/// FName은 생성한 InGameUserWidgetDataTable 행 이름
+	/// </summary>
+	const struct FInGameUserWidgetDataRow* GetInGameUserWidgetDataTable(FName _Name);
 
 	FNetDataRow CurNetInfo;
 protected:
@@ -73,6 +78,9 @@ private:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowprivateAccess = "true"));
 	UDataTable* ItemDataTable = nullptr;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowprivateAccess = "true"));
+	UDataTable* InGameUserWidgetDataTable = nullptr;
 
 private:
 	UMainGameInstance();

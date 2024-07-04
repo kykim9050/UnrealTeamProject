@@ -6,6 +6,7 @@
 #include "Global/DataTable/NetDataRow.h"
 #include "Global/DataTable/MonsterDataRow.h"
 #include "Global/DataTable/MonsterSpawnerDataRow.h"
+#include "Global/DataTable/InGameUserWidgetDataRow.h"
 #include "Global/DataTable/ItemDataRow.h"
 
 UMainGameInstance::UMainGameInstance()
@@ -97,6 +98,24 @@ const FItemDataRow* UMainGameInstance::GetItemData(FName _Name)
 	if (nullptr == Data)
 	{
 		UE_LOG(ObjectLog, Error, TEXT("%S(%u)> %s Name Data Is Nullptr"), __FUNCTION__, __LINE__, *_Name.ToString());
+		return nullptr;
+	}
+
+	return Data;
+}
+
+const FInGameUserWidgetDataRow* UMainGameInstance::GetInGameUserWidgetDataTable(FName _Name)
+{
+	if (nullptr == InGameUserWidgetDataTable)
+	{
+		UE_LOG(UILog, Fatal, TEXT("%S(%u)> if (nullptr == InGameUserWidgetDataTable)"), __FUNCTION__, __LINE__);
+	}
+
+	FInGameUserWidgetDataRow* Data = InGameUserWidgetDataTable->FindRow<FInGameUserWidgetDataRow>(_Name, nullptr);
+
+	if (nullptr == Data)
+	{
+		UE_LOG(UILog, Error, TEXT("%S(%u)> %s Name Data Is Nullptr"), __FUNCTION__, __LINE__, *_Name.ToString());
 		return nullptr;
 	}
 
