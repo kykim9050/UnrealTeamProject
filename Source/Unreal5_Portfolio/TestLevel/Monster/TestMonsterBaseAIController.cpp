@@ -9,6 +9,8 @@
 #include "BehaviorTree/BlackboardComponent.h"
 #include "GenericTeamAgentInterface.h"
 
+#include "TestLevel/Character/TestCharacter.h"
+
 #include "Global/MainGameBlueprintFunctionLibrary.h"
 #include "Global/ContentsEnum.h"
 
@@ -27,7 +29,8 @@ void ATestMonsterBaseAIController::BeginPlay()
 
 void ATestMonsterBaseAIController::PlayerDetect(AActor* Actor, FAIStimulus const Stimulus)
 {
-	if (nullptr != Actor)
+	ATestCharacter* Player = Cast<ATestCharacter>(Actor);
+	if (nullptr != Player && 0 < Player->GetPlayerHp())
 	{
 		GetBlackboardComponent()->SetValueAsBool(TEXT("CanSeePlayer"), Stimulus.WasSuccessfullySensed());
 		if (true == GetBlackboardComponent()->GetValueAsBool(TEXT("CanSeePlayer")))
