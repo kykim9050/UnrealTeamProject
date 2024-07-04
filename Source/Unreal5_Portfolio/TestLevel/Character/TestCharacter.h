@@ -93,4 +93,8 @@ protected:
 	// HP (for UI Test)
 	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	float PlayerHp = 100.0f;
+
+private :
+	UFUNCTION(BlueprintCallable)
+	void CreateRayCast();
 };

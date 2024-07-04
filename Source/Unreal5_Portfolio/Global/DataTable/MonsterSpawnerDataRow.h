@@ -14,23 +14,23 @@ struct FMonsterSpawnerInfo : public FTableRowBase
 
 	// 스포너 타입
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowprivateAccess = "true"))
-	EMonsterSpawnerType Type;
+	EMonsterSpawnerType Type = EMonsterSpawnerType::Max;
 
 	// 스포너 위치
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowprivateAccess = "true"))
-	FVector Location;
+	FVector Location = FVector::ZeroVector;
 
 	// 스폰 반경
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowprivateAccess = "true"))
-	float Ridus;
+	float Ridus = 0.0f;
 
 	// 최소 스폰 수
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowprivateAccess = "true"))
-	int MinSpawnNum;
+	int MinSpawnNum = 0;
 
 	// 최대 스폰 수
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowprivateAccess = "true"))
-	int MaxSpawnNum;
+	int MaxSpawnNum = 0;
 
 };
 
@@ -66,7 +66,7 @@ public:
 	EMonsterSpawnerType Type = EMonsterSpawnerType::Max;
 	FVector Location = FVector::ZeroVector;
 	float Radius = 0.0f;
-	int MinSize = -1;
-	int MaxSize = -1;
+	int MinSize = 0;
+	int MaxSize = 0;
 
 };
