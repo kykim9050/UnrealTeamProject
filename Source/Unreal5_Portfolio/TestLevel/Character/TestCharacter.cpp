@@ -37,7 +37,7 @@ ATestCharacter::ATestCharacter()
 		NewSocketMesh->SetVisibility(false);
 		ItemMeshes.Push(NewSocketMesh);
 
-		// Item Slot (for UI Test)
+		// Inventory (for UI Test)
 		FItemInfo NewSlot;
 		NewSlot.Name = "";
 		NewSlot.ReloadMaxNum = -1;
@@ -138,6 +138,7 @@ void ATestCharacter::ChangePosture_Implementation(EPlayerPosture _Type)
 		int ItemSlotIndex = static_cast<int>(_Type) - 1;
 		if (IsItemIn[ItemSlotIndex] == false)
 		{
+			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("The item slot is empty."));
 			return;
 		}
 
@@ -172,7 +173,7 @@ void ATestCharacter::PickUpItem_Implementation(FName _ItemName)
 	// Setting Weapon Mesh
 	ItemMeshes[ItemIndex]->SetStaticMesh(ItemMesh);
 
-	// Setting Item Info
+	// Setting Inventory
 	ItemSlot[ItemIndex].Name = _ItemName;
 	ItemSlot[ItemIndex].ReloadMaxNum = ItemReloadNum;
 	ItemSlot[ItemIndex].ReloadLeftNum = ItemReloadNum;
