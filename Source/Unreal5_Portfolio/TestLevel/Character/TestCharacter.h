@@ -38,7 +38,7 @@ public:
 	void ChangePosture(EPlayerPosture _Type);
 	void ChangePosture_Implementation(EPlayerPosture _Type);
 
-	// Item (for UI Test)
+	// Inventory (for UI Test)
 	struct FItemInfo
 	{
 		FName Name = "";
@@ -46,7 +46,9 @@ public:
 		int ReloadLeftNum = -1;
 	};
 	TArray<FItemInfo> ItemSlot;
+	UPROPERTY()
 	TArray<bool> IsItemIn;
+	UPROPERTY()
 	int CurItemIndex = -1;
 
 	// Item
@@ -69,11 +71,16 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void Collision(AActor* _OtherActor, UPrimitiveComponent* _Collision);
 
-	// HP (for UI Test)
+	// HP (for UI, Monster Test)
 	UFUNCTION(BlueprintCallable)
 	inline float GetPlayerHp()
 	{
 		return PlayerHp;
+	}
+	UFUNCTION(BlueprintCallable)
+	inline void AddPlayerHp(float _HP)
+	{
+		PlayerHp += _HP;
 	}
 
 protected:
