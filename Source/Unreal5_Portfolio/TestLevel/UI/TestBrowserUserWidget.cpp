@@ -15,6 +15,7 @@ void UTestBrowserUserWidget::ServerStart()
 		return;
 	}
 
+	Inst->CurNetInfo.SetIP(IPAddress);
 	Inst->CurNetInfo.SetIsServer(true);
 	Inst->CurNetInfo.SetPORT(Port);
 
