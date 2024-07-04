@@ -11,6 +11,7 @@
 #include "Global/ContentsEnum.h"
 #include "Global/ContentsLog.h"
 #include "Components/SkeletalMeshComponent.h"
+#include "TestLevel/Character/TestCharacter.h"
 
 // Sets default values
 ATestMonsterBase::ATestMonsterBase()
@@ -111,7 +112,11 @@ UAnimMontage* ATestMonsterBase::GetKeyMontage(uint8 Key)
 	return Result;
 }
 
-void ATestMonsterBase::Attack()
+void ATestMonsterBase::Attack(AActor* _OtherActor, UPrimitiveComponent* _Collision)
 {
-	
+	ATestCharacter* HitCharacter = Cast<ATestCharacter>(_OtherActor);
+	if (nullptr != HitCharacter)
+	{
+		IsCharacterHit = true;
+	}
 }

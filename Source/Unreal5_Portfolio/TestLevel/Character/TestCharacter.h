@@ -57,12 +57,12 @@ public:
 	void PickUpItem_Implementation(FName _ItemName);
 
 	UFUNCTION(BlueprintCallable)
-	inline bool GetPickUp()
+	FORCEINLINE bool GetPickUp()
 	{
 		return PickUp;
 	}
 	UFUNCTION(BlueprintCallable)
-	inline void SetPickUp(bool _PickUp)
+	FORCEINLINE void SetPickUp(bool _PickUp)
 	{
 		PickUp = _PickUp;
 	}
@@ -73,12 +73,12 @@ public:
 
 	// HP (for UI, Monster Test)
 	UFUNCTION(BlueprintCallable)
-	inline float GetPlayerHp()
+	FORCEINLINE float GetPlayerHp()
 	{
 		return PlayerHp;
 	}
 	UFUNCTION(BlueprintCallable)
-	inline void GetDamage(float _Damage)
+	FORCEINLINE void GetDamage(float _Damage)
 	{
 		PlayerHp -= _Damage;
 	}

@@ -7,6 +7,7 @@
 #include "TestLevel/Monster/TestMonsterBase.h"
 #include "Global/Animation/MainAnimInstance.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "TestLevel/Character/TestCharacter.h"
 
 EBTNodeResult::Type UBTTaskNode_MonsterAttack::ExecuteTask(UBehaviorTreeComponent& _OwnerComp, uint8* _NodeMemory)
 {
@@ -22,7 +23,6 @@ EBTNodeResult::Type UBTTaskNode_MonsterAttack::ExecuteTask(UBehaviorTreeComponen
 	UMonsterData* MonsterData = GetValueAsObject<UMonsterData>(_OwnerComp, TEXT("MonsterData"));
 	MonsterData->IdleTime = 0.0f;
 	Monster->ChangeAnimation(EMonsterAnim::Attack);
-	Monster->Attack();
 
 	MonsterData->AttackTime = Monster->GetAnimInstance()->GetKeyAnimMontage(static_cast<uint8>(EMonsterAnim::Attack))->GetPlayLength();
 	AttackTime = MonsterData->AttackTime;
@@ -46,16 +46,21 @@ void UBTTaskNode_MonsterAttack::TickTask(UBehaviorTreeComponent& _OwnerComp, uin
 
 	if (0.0f >= AttackTime)
 	{
-		
-		/*if (0.0f >= TargetActor->GetHp())
+		ATestCharacter* TargetCharacter = Cast<ATestCharacter>(TargetActor);
+		if (0.0f >= TargetCharacter->GetPlayerHp())
 		{
 			StateChange(_OwnerComp, EMonsterState::Idle);
 			_OwnerComp.GetBlackboardComponent()->SetValueAsObject(TEXT("TargetActor"), nullptr);
-			_OwnerComp.GetBlackboardComponent()->SetValueAsObject(TEXT("CanSeePlayer"), false);
+			_OwnerComp.GetBlackboardComponent()->SetValueAsBool(TEXT("CanSeePlayer"), false);
 			return;
 		}
-		else*/
+		else
 		{
+			if (true == Monster->GetIsCharacterHit())
+			{
+				TargetCharacter->GetDamage(Monster->GetAttackDamage());
+				Monster->SetIsCharacterHit(false);
+			}
 			FVector TargetToMy = TargetLoc - MyLoc;
 			float Dist = abs(TargetToMy.Length());
 			if (MonsterData->AttackBoundary >= Dist)

@@ -47,19 +47,24 @@ public:
 	void SetCapsuleCompCollObjectType(ECollisionChannel _Channel);
 	void SetCapsuleCompCollObjectType_Implementation(ECollisionChannel _Channel);
 	
-	FORCEINLINE void SetAttackAnimationEnd(bool IsAttackEnd)
-	{
-		AttackEnd = IsAttackEnd;
-	}
-	FORCEINLINE bool GetAttackAnimationEnd()
-	{
-		return AttackEnd;
-	}
-
 	UAnimMontage* GetKeyMontage(uint8 Key);
 
-	virtual void Attack();
+	UFUNCTION(BlueprintCallable)
+	virtual void Attack(AActor* _OtherActor, UPrimitiveComponent* _Collision);
 
+	FORCEINLINE bool GetIsCharacterHit()
+	{
+		return IsCharacterHit;
+	}
+	FORCEINLINE void SetIsCharacterHit(bool IsHit)
+	{
+		IsCharacterHit = IsHit;
+	}
+
+	FORCEINLINE float GetAttackDamage()
+	{
+		return AttackDamage;
+	}
 
 private:
 	const FMonsterDataRow* BaseData;
@@ -76,13 +81,14 @@ private:
 	UPROPERTY(Category = "Animation", Replicated, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	class UMainAnimInstance* AnimInst;
 
-	UPROPERTY()
-	bool AttackEnd = false;
-
-	UPROPERTY(EditAnywhere, BlueprintREadWrite, meta = (AllowPrivateAccess = true))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
 	UCapsuleComponent* LeftAttackComponent;
 
-	UPROPERTY(EditAnywhere, BlueprintREadWrite, meta = (AllowPrivateAccess = true))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
 	UCapsuleComponent* RightAttackComponent;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
+	float AttackDamage = 34.0f;
+
+	bool IsCharacterHit = false;
 };
