@@ -41,12 +41,15 @@ public:
 	// Item (for UI Test)
 	struct FItemInfo
 	{
-		FName ItemName;
-		int ItemReloadNum;
+		FName Name = "";
+		int ReloadMaxNum = -1;
+		int ReloadLeftNum = -1;
 	};
-	TArray<FItemInfo*> ItemSlot;
-	FItemInfo* CurItem = nullptr;
+	TArray<FItemInfo> ItemSlot;
+	TArray<bool> IsItemIn;
+	int CurItemIndex = -1;
 
+	// Item
 	UFUNCTION(Reliable, Server)
 	void PickUpItem(FName _ItemName);
 	void PickUpItem_Implementation(FName _ItemName);
@@ -68,7 +71,10 @@ public:
 
 	// HP (for UI Test)
 	UFUNCTION(BlueprintCallable)
-	float GetPlayerHp();
+	inline float GetPlayerHp()
+	{
+		return PlayerHp;
+	}
 
 protected:
 	// Called when the game starts or when spawned

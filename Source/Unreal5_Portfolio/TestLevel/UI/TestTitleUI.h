@@ -17,11 +17,6 @@ class UNREAL5_PORTFOLIO_API UTestTitleUI : public UUserWidget
 {
 	GENERATED_BODY()
 public:
-	//UFUNCTION(BlueprintCallable, Category = "MyBtnEvent")
-	//int MyBtnHover();
-	//UFUNCTION(BlueprintCallable, Category = "MyBtnEvent")
-	//int MyBtnUnhover();
-
 	UFUNCTION(BlueprintCallable)
 	void ServerStart();
 	UFUNCTION(BlueprintCallable)
@@ -37,12 +32,5 @@ public:
 	FString Port = TEXT("30001");
 
 	const FNetDataRow* Test;
-//	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-//	bool IsHoverOnOff;
-//
-//	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-//	EBtnType HoverBtnType;
-//
-//	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-//	EBtnType UnHoverBtnType;
+
 };

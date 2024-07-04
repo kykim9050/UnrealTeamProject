@@ -24,22 +24,27 @@ ATestCharacter::ATestCharacter()
 	CameraComponent->SetupAttachment(SpringArmComponent);
 	CameraComponent->SetProjectionMode(ECameraProjectionMode::Perspective);
 	CameraComponent->bUsePawnControlRotation = true;
-
-	// Weapon Meshes
+	
 	UEnum* Enum = StaticEnum<EPlayerPosture>();
 	for (size_t i = 1; i < static_cast<size_t>(EPlayerPosture::SlotMax); i++)
 	{
+		// Weapon Meshes
 		FString Name = Enum->GetNameStringByValue(i) + "Socket";
-		UStaticMeshComponent* NewSlotMesh = CreateDefaultSubobject<UStaticMeshComponent>(*Name);
-		NewSlotMesh->SetupAttachment(GetMesh(), *Name);
-		NewSlotMesh->SetCollisionProfileName(TEXT("NoCollision"));
-		NewSlotMesh->SetGenerateOverlapEvents(true);
-		NewSlotMesh->SetVisibility(false);
-		ItemMeshes.Push(NewSlotMesh);
+		UStaticMeshComponent* NewSocketMesh = CreateDefaultSubobject<UStaticMeshComponent>(*Name);
+		NewSocketMesh->SetupAttachment(GetMesh(), *Name);
+		NewSocketMesh->SetCollisionProfileName(TEXT("NoCollision"));
+		NewSocketMesh->SetGenerateOverlapEvents(true);
+		NewSocketMesh->SetVisibility(false);
+		ItemMeshes.Push(NewSocketMesh);
+
+		// Item Slot (for UI Test)
+		FItemInfo NewSlot;
+		NewSlot.Name = "";
+		NewSlot.ReloadMaxNum = -1;
+		NewSlot.ReloadLeftNum = -1;
+		ItemSlot.Push(NewSlot);
+		IsItemIn.Push(false);
 	}
-
-	// Item Slot
-
 }
 
 void ATestCharacter::Collision(AActor* _OtherActor, UPrimitiveComponent* _Collision)
@@ -56,11 +61,6 @@ void ATestCharacter::Collision(AActor* _OtherActor, UPrimitiveComponent* _Collis
 	//{}
 }
 
-float ATestCharacter::GetPlayerHp()
-{
-	return PlayerHp;
-}
-
 // Called when the game starts or when spawned
 void ATestCharacter::BeginPlay()
 {
@@ -72,7 +72,6 @@ void ATestCharacter::BeginPlay()
 void ATestCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
 void ATestCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -124,17 +123,37 @@ void ATestCharacter::ChangeState_Implementation(EPlayerState _Type)
 
 void ATestCharacter::ChangePosture_Implementation(EPlayerPosture _Type)
 {
-	PostureValue = _Type;
-
-	for (size_t i = 1; i < static_cast<size_t>(EPlayerPosture::SlotMax); i++)
+	if (_Type == EPlayerPosture::Barehand)
 	{
-		if (i == static_cast<size_t>(_Type))
-		{
-			ItemMeshes[i - 1]->SetVisibility(true);
-		}
-		else
+		PostureValue = _Type;
+		CurItemIndex = -1;
+		
+		for (size_t i = 1; i < static_cast<size_t>(EPlayerPosture::SlotMax); i++)
 		{
 			ItemMeshes[i - 1]->SetVisibility(false);
+		}
+	}
+	else
+	{
+		int ItemSlotIndex = static_cast<int>(_Type) - 1;
+		if (IsItemIn[ItemSlotIndex] == false)
+		{
+			return;
+		}
+
+		PostureValue = _Type;
+		CurItemIndex = ItemSlotIndex;
+
+		for (size_t i = 1; i < static_cast<size_t>(EPlayerPosture::SlotMax); i++)
+		{
+			if (i == static_cast<size_t>(_Type))
+			{
+				ItemMeshes[i - 1]->SetVisibility(true);
+			}
+			else
+			{
+				ItemMeshes[i - 1]->SetVisibility(false);
+			}
 		}
 	}
 }
@@ -146,8 +165,18 @@ void ATestCharacter::PickUpItem_Implementation(FName _ItemName)
 
 	EPlayerPosture ItemType = ItemData->GetType();
 	UStaticMesh* ItemMesh = ItemData->GetResMesh();
+	int ItemReloadNum = ItemData->GetReloadNum();
 
-	ItemMeshes[static_cast<uint8>(ItemType) - 1]->SetStaticMesh(ItemMesh);
+	uint8 ItemIndex = static_cast<uint8>(ItemType) - 1;
+
+	// Setting Weapon Mesh
+	ItemMeshes[ItemIndex]->SetStaticMesh(ItemMesh);
+
+	// Setting Item Info
+	ItemSlot[ItemIndex].Name = _ItemName;
+	ItemSlot[ItemIndex].ReloadMaxNum = ItemReloadNum;
+	ItemSlot[ItemIndex].ReloadLeftNum = ItemReloadNum;
+	IsItemIn[ItemIndex] = true;
 
 	ChangePosture(ItemType);
 }

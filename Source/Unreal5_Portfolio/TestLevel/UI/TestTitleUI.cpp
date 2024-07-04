@@ -59,9 +59,7 @@ void UTestTitleUI::ServerTest(FName _IPName)
 	}
 	Test = Inst->GetNetData(_IPName);
 	IPAddress = Test->GetIP();
-	/*FNetDataRow Data = Inst->GetNetDataValue(_IPName);
 
-	IPAddress = Data.GetIP();*/
 	Inst->CurNetInfo.SetIP(IPAddress);
 	Inst->CurNetInfo.SetPORT(Port);
 }
