@@ -126,6 +126,7 @@ void ATestCharacter::ChangePosture_Implementation(EPlayerPosture _Type)
 	if (_Type == EPlayerPosture::Barehand)
 	{
 		PostureValue = _Type;
+		CurItemIndex = -1;
 		
 		for (size_t i = 1; i < static_cast<size_t>(EPlayerPosture::SlotMax); i++)
 		{
