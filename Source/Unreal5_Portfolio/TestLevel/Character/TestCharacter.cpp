@@ -61,6 +61,11 @@ void ATestCharacter::Collision(AActor* _OtherActor, UPrimitiveComponent* _Collis
 	//{}
 }
 
+void ATestCharacter::GetDamage_Implementation(float _Damage)
+{
+	PlayerHp -= _Damage;
+}
+
 // Called when the game starts or when spawned
 void ATestCharacter::BeginPlay()
 {
@@ -80,6 +85,9 @@ void ATestCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLi
 
 	DOREPLIFETIME(ATestCharacter, StateValue);
 	DOREPLIFETIME(ATestCharacter, PostureValue);
+
+	// 플레이어 H
+	DOREPLIFETIME(ATestCharacter, PlayerHp);
 }
 
 void ATestCharacter::CreateRayCast()

@@ -77,11 +77,10 @@ public:
 	{
 		return PlayerHp;
 	}
-	UFUNCTION(BlueprintCallable)
-	FORCEINLINE void GetDamage(float _Damage)
-	{
-		PlayerHp -= _Damage;
-	}
+	
+	UFUNCTION(Reliable, Server)
+	void GetDamage(float _Damage);
+	void GetDamage_Implementation(float _Damage);
 
 protected:
 	// Called when the game starts or when spawned
@@ -95,8 +94,8 @@ protected:
 	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	bool PickUp = false;
 
-	// HP (for UI Test)
-	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	// HP (for UI, Monster Test)
+	UPROPERTY(Category = "Contents", Replicated, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	float PlayerHp = 100.0f;
 
 private :
