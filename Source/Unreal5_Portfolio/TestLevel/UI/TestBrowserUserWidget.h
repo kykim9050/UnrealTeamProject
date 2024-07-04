@@ -25,9 +25,9 @@ public:
 
 	// IP ComboBox 관련 함수
 	UFUNCTION(BlueprintCallable)
-	void RoomIPDataInit(UDataTable* _IPData, UComboBoxString* _Combo);
+	void IPComboDataInit(UDataTable* _IPData, UComboBoxString* _Combo);
 	UFUNCTION(BlueprintCallable)
-	void RoomIPSelectChange(FString _Text);
+	void IPComboSelectChange(FString _Text);
 
 private:
 	FString IPAddress = "127.0.0.1";
