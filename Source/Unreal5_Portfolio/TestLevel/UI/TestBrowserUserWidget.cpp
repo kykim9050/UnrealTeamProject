@@ -18,7 +18,7 @@ void UTestBrowserUserWidget::ServerStart()
 	Inst->CurNetInfo.SetIsServer(true);
 	Inst->CurNetInfo.SetPORT(Port);
 
-	UGameplayStatics::OpenLevel(GetWorld(), TEXT("LobbyLevel"));
+	UGameplayStatics::OpenLevel(GetWorld(), TEXT("TestLobbyLevel"));
 }
 
 void UTestBrowserUserWidget::Connect(FString _IP)
@@ -56,7 +56,7 @@ void UTestBrowserUserWidget::ServerInitialize(FName _RowName)
 	Inst->CurNetInfo.SetPORT(Port);
 }
 
-void UTestBrowserUserWidget::RoomIPDataInit(UDataTable* _IPData, UComboBoxString* _Combo)
+void UTestBrowserUserWidget::IPComboDataInit(UDataTable* _IPData, UComboBoxString* _Combo)
 {
 	TArray<FNetDataRow*> IPArr;
 	_IPData->GetAllRows<FNetDataRow>(TEXT("GetAllRows"), IPArr);
@@ -68,15 +68,16 @@ void UTestBrowserUserWidget::RoomIPDataInit(UDataTable* _IPData, UComboBoxString
 
 	for (size_t i = 0; i < IPArr.Num(); ++i)
 	{
-		//FNetDataRow* Data = IPArr[i];
+		FNetDataRow* Data = IPArr[i];
+		FString Option = FString::Printf(TEXT("[%s][%s]"), *Data->GetName(), *Data->GetIP());
 		//FString Option = FString::Printf(TEXT("%s"), *Data->GetName());
-		//_Combo->AddOption(Option);
+		_Combo->AddOption(Option);
 	}
 
 	_Combo->SetSelectedIndex(0);
 }
 
-void UTestBrowserUserWidget::RoomIPSelectChange(FString _Text)
+void UTestBrowserUserWidget::IPComboSelectChange(FString _Text)
 {
 	_Text.RemoveAt(0);
 	_Text.RemoveAt(_Text.Len() - 1);

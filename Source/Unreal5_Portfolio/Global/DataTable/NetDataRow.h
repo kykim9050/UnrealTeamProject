@@ -15,15 +15,20 @@ struct FNetDataRow : public FTableRowBase
 	GENERATED_BODY()
 	
 public:
-	inline FString GetIP() const
+	FString GetName() const
+	{
+		return Name;
+	}
+
+	FString GetIP() const
 	{
 		return IP;
 	}
-	inline FString GetPORT() const
+	FString GetPORT() const
 	{
 		return PORT;
 	}
-	inline bool GetIsServer() const
+	bool GetIsServer() const
 	{
 		return IsServer;
 	}
@@ -46,6 +51,12 @@ public:
 protected:
 
 private:
+	/// <summary>
+	/// IP 주인 이름 
+	/// </summary>
+	UPROPERTY(Category = "Parameter", EditAnywhere, BlueprintReadWrite, meta = (AllowprivateAccess = "true"))
+	FString Name = "Anonymous";
+
 	/// <summary>
 	/// IP 주소
 	/// </summary>

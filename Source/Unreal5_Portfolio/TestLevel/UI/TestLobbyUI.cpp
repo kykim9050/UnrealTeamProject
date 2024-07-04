@@ -3,10 +3,11 @@
 
 #include "TestLevel/UI/TestLobbyUI.h"
 #include "Global/MainGameInstance.h"
+#include "Global/MainGameBlueprintFunctionLibrary.h"
 
 void UTestLobbyUI::TravelToNext()
 {
-	UMainGameInstance* Inst = GetWorld()->GetGameInstanceChecked<UMainGameInstance>();
+	UMainGameInstance* Inst = UMainGameBlueprintFunctionLibrary::GetMainGameInstance(GetWorld());
 	if (nullptr != Inst && true == Inst->CurNetInfo.GetIsServer())
 	{
 		GetWorld()->ServerTravel("/Game/Resources/TestLevel/TestPlayLevel");
@@ -15,6 +16,6 @@ void UTestLobbyUI::TravelToNext()
 
 bool UTestLobbyUI::IsServer()
 {
-	UMainGameInstance* Inst = GetWorld()->GetGameInstanceChecked<UMainGameInstance>();
+	UMainGameInstance* Inst = UMainGameBlueprintFunctionLibrary::GetMainGameInstance(GetWorld());
 	return Inst->CurNetInfo.GetIsServer();
 }

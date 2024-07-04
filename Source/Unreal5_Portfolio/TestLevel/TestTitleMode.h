@@ -16,4 +16,10 @@ class UNREAL5_PORTFOLIO_API ATestTitleMode : public AGameMode
 public:
 	UFUNCTION(BlueprintCallable)
 	void ListenServerOn();
+
+	// Browser On/Off 관련 변수 
+	UPROPERTY(BlueprintReadWrite)
+	bool ServerBrowserOnOff = false; //true - On, false - Off
+	UPROPERTY(BlueprintReadWrite)
+	bool ConnectBrowserOnOff = false; //true - On, false - Off
 };
