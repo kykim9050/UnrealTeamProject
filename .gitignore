@@ -75,3 +75,6 @@ DerivedDataCache/*
 
 # MainGameLevel 안에 고용량 .umap 파일 업로드 방지를 위한 ignore 설정
 Content/Resources/MainGameLevel/LandscapePreview.umap
+
+# Shipping Build 결과물을 업로드 하지 않기 위한 ignore 설정
+Windows/*
