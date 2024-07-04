@@ -37,8 +37,11 @@ ATestCharacter::ATestCharacter()
 		NewSocketMesh->SetVisibility(false);
 		ItemMeshes.Push(NewSocketMesh);
 
-		// Item Slot
-		FItemInfo* NewSlot = new FItemInfo;
+		// Item Slot (for UI Test)
+		FItemInfo NewSlot;
+		NewSlot.Name = "";
+		NewSlot.ReloadMaxNum = -1;
+		NewSlot.ReloadLeftNum = -1;
 		ItemSlot.Push(NewSlot);
 		IsItemIn.Push(false);
 	}
@@ -69,11 +72,6 @@ void ATestCharacter::BeginPlay()
 void ATestCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-}
-
-void ATestCharacter::SetItemInfo(FName _ItemName)
-{
-
 }
 
 void ATestCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -125,27 +123,38 @@ void ATestCharacter::ChangeState_Implementation(EPlayerState _Type)
 
 void ATestCharacter::ChangePosture_Implementation(EPlayerPosture _Type)
 {
-	int ItemSlotIndex = static_cast<int>(_Type) - 1;
-	if (IsItemIn[ItemSlotIndex] == false)
+	if (_Type == EPlayerPosture::Barehand)
 	{
-		return;
-	}
-
-	PostureValue = _Type;
-
-	for (size_t i = 1; i < static_cast<size_t>(EPlayerPosture::SlotMax); i++)
-	{
-		if (i == static_cast<size_t>(_Type))
-		{
-			ItemMeshes[i - 1]->SetVisibility(true);
-		}
-		else
+		PostureValue = _Type;
+		
+		for (size_t i = 1; i < static_cast<size_t>(EPlayerPosture::SlotMax); i++)
 		{
 			ItemMeshes[i - 1]->SetVisibility(false);
 		}
 	}
+	else
+	{
+		int ItemSlotIndex = static_cast<int>(_Type) - 1;
+		if (IsItemIn[ItemSlotIndex] == false)
+		{
+			return;
+		}
 
-	CurItem = ItemSlot[ItemSlotIndex];
+		PostureValue = _Type;
+		CurItemIndex = ItemSlotIndex;
+
+		for (size_t i = 1; i < static_cast<size_t>(EPlayerPosture::SlotMax); i++)
+		{
+			if (i == static_cast<size_t>(_Type))
+			{
+				ItemMeshes[i - 1]->SetVisibility(true);
+			}
+			else
+			{
+				ItemMeshes[i - 1]->SetVisibility(false);
+			}
+		}
+	}
 }
 
 void ATestCharacter::PickUpItem_Implementation(FName _ItemName)
@@ -163,9 +172,9 @@ void ATestCharacter::PickUpItem_Implementation(FName _ItemName)
 	ItemMeshes[ItemIndex]->SetStaticMesh(ItemMesh);
 
 	// Setting Item Info
-	ItemSlot[ItemIndex]->Name = _ItemName;
-	ItemSlot[ItemIndex]->ReloadMaxNum = ItemReloadNum;
-	ItemSlot[ItemIndex]->ReloadLeftNum = ItemReloadNum;
+	ItemSlot[ItemIndex].Name = _ItemName;
+	ItemSlot[ItemIndex].ReloadMaxNum = ItemReloadNum;
+	ItemSlot[ItemIndex].ReloadLeftNum = ItemReloadNum;
 	IsItemIn[ItemIndex] = true;
 
 	ChangePosture(ItemType);

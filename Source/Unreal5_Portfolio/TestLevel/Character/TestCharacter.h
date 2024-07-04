@@ -45,13 +45,11 @@ public:
 		int ReloadMaxNum = -1;
 		int ReloadLeftNum = -1;
 	};
-	TArray<FItemInfo*> ItemSlot;
+	TArray<FItemInfo> ItemSlot;
 	TArray<bool> IsItemIn;
-	FItemInfo* CurItem = nullptr;
+	int CurItemIndex = -1;
 
-	UFUNCTION(BlueprintCallable)
-	void SetItemInfo(FName _ItemName);
-
+	// Item
 	UFUNCTION(Reliable, Server)
 	void PickUpItem(FName _ItemName);
 	void PickUpItem_Implementation(FName _ItemName);
