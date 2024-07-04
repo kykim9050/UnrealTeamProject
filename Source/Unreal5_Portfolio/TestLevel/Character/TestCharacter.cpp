@@ -38,7 +38,7 @@ ATestCharacter::ATestCharacter()
 		ItemMeshes.Push(NewSocketMesh);
 
 		// Item Slot
-		FItemInfo* NewSlot;
+		FItemInfo* NewSlot = new FItemInfo;
 		ItemSlot.Push(NewSlot);
 		IsItemIn.Push(false);
 	}
@@ -69,7 +69,6 @@ void ATestCharacter::BeginPlay()
 void ATestCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
 void ATestCharacter::SetItemInfo(FName _ItemName)
