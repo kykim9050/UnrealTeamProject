@@ -78,9 +78,9 @@ public:
 		return PlayerHp;
 	}
 	UFUNCTION(BlueprintCallable)
-	inline void AddPlayerHp(float _HP)
+	inline void GetDamage(float _Damage)
 	{
-		PlayerHp += _HP;
+		PlayerHp -= _Damage;
 	}
 
 protected:
