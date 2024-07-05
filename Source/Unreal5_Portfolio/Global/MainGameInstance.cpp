@@ -32,8 +32,6 @@ void UMainGameInstance::Init()
 	{
 		TestInGameWidgets.Add(Names[i].ToString(), TSubclassOf<UUserWidget>(Data[i]->GetWidget()));
 	}
-
-	int a = 0;
 }
 
 const FPlayerDataRow* UMainGameInstance::GetPlayerData(FName _Name)
