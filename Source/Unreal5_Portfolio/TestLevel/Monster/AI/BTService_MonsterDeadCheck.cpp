@@ -8,6 +8,8 @@
 
 UBTService_MonsterDeadCheck::UBTService_MonsterDeadCheck()
 {
+	bNotifyBecomeRelevant = true;
+
 	Interval = 0.0f;
 	RandomDeviation = 0.0f;
 }
