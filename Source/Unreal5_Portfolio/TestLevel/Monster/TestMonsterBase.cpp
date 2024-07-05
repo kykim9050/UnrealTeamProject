@@ -52,17 +52,17 @@ void ATestMonsterBase::BeginPlay()
 		AnimInst->PushAnimation(Montage.Key, Montage.Value);
 	}
 
+	//  몬스터 데이터 세팅
+	SettingData = NewObject<UMonsterData>(this);
+	SettingData->Data = BaseData;
+	SettingData->OriginPos = GetActorLocation();
+
 	// 클라이언트일 경우
 	ATestMonsterBaseAIController* AIController = GetController<ATestMonsterBaseAIController>();
 	if (nullptr == AIController)
 	{
 		return;
 	}
-
-	//  몬스터 데이터 세팅
-	SettingData = NewObject<UMonsterData>(this);
-	SettingData->Data = BaseData;
-	SettingData->OriginPos = GetActorLocation();
 
 	AIController->GetBlackboardComponent()->SetValueAsObject(TEXT("MonsterData"), SettingData);
 }
