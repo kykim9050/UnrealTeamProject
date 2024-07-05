@@ -7,6 +7,7 @@
 #include "TestMonsterBaseAIController.generated.h"
 
 class UAISenseConfig_Sight;
+class UBehaviorTree;
 struct FAIStimulus;
 
 /**
@@ -26,6 +27,8 @@ public:
 
 	ETeamAttitude::Type GetTeamAttitudeTowards(const AActor& Other) const override;
 
+	
+
 protected:
 	void SetPerception();
 
@@ -33,4 +36,6 @@ private:
 	UPROPERTY(EditANywhere, BlueprintReadWrite, Category = "Sight", meta = (AllowPrivateAccess = true))
 	UAISenseConfig_Sight* SightConfig;
 
+	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = true))
+	UBehaviorTree* BehaviorTree;
 };
