@@ -24,7 +24,7 @@ void ATestMonsterBaseAIController::BeginPlay()
 {
 	Super::BeginPlay();
 
-
+	RunBehaviorTree(BehaviorTree);
 }
 
 void ATestMonsterBaseAIController::PlayerDetect(AActor* Actor, FAIStimulus const Stimulus)

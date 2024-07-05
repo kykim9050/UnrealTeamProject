@@ -12,6 +12,8 @@
 #include "Global/ContentsLog.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "TestLevel/Character/TestCharacter.h"
+#include "BehaviorTree/BehaviorTreeComponent.h"
+#include "Blueprint/AIBlueprintHelperLibrary.h"
 
 // Sets default values
 ATestMonsterBase::ATestMonsterBase()
@@ -114,9 +116,19 @@ UAnimMontage* ATestMonsterBase::GetKeyMontage(uint8 Key)
 
 void ATestMonsterBase::Attack(AActor* _OtherActor, UPrimitiveComponent* _Collision)
 {
-	ATestCharacter* HitCharacter = Cast<ATestCharacter>(_OtherActor);
-	if (nullptr != HitCharacter)
+	EMonsterState MonsterState;
+	UBlackboardComponent* BlackBoard = UAIBlueprintHelperLibrary::GetBlackboard(this);
+	if (nullptr != BlackBoard)
 	{
-		IsCharacterHit = true;
+		MonsterState = static_cast<EMonsterState>(BlackBoard->GetValueAsEnum(TEXT("State")));
+	}
+	
+	if (EMonsterState::Attack == MonsterState)
+	{
+		ATestCharacter* HitCharacter = Cast<ATestCharacter>(_OtherActor);
+		if (nullptr != HitCharacter)
+		{
+			IsCharacterHit = true;
+		}
 	}
 }
