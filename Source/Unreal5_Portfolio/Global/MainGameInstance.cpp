@@ -14,6 +14,26 @@ UMainGameInstance::UMainGameInstance()
 
 }
 
+void UMainGameInstance::Init()
+{
+	Super::Init();
+
+	if (nullptr == InGameUserWidgetDataTable)
+	{
+		LOG(UILog, Error, TEXT("InGameUserWidgetDataTable is nullptr"));
+	}
+
+	TArray<FInGameUserWidgetDataRow*> Data;
+
+	TArray<FName> Names = InGameUserWidgetDataTable->GetRowNames();
+	InGameUserWidgetDataTable->GetAllRows(TEXT(""), Data);
+
+	for (size_t i = 0; i < Data.Num(); ++i)
+	{
+		TestInGameWidgets.Add(Names[i].ToString(), TSubclassOf<UUserWidget>(Data[i]->GetWidget()));
+	}
+}
+
 const FPlayerDataRow* UMainGameInstance::GetPlayerData(FName _Name)
 {
 	if (nullptr == PlayerDataTable)

@@ -61,7 +61,7 @@ void ATestCharacter::Collision(AActor* _OtherActor, UPrimitiveComponent* _Collis
 	//{}
 }
 
-void ATestCharacter::GetDamage_Implementation(float _Damage)
+void ATestCharacter::GetDamage(float _Damage)
 {
 	PlayerHp -= _Damage;
 }

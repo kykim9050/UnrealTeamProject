@@ -15,6 +15,7 @@ class UNREAL5_PORTFOLIO_API UMainGameInstance : public UGameInstance
 {
 	GENERATED_BODY()
 public:
+	void Init() override;
 
 	/// <summary>
 	/// PlayerDataTable 포인터를 받아오는 함수
@@ -60,6 +61,14 @@ public:
 	/// </summary>
 	const struct FInGameUserWidgetDataRow* GetInGameUserWidgetDataTable(FName _Name);
 
+	/// <summary>
+	/// TestInGameWidgets 를 받아오는 함수
+	/// </summary>
+	TMap<FString, TSubclassOf<UUserWidget>>& GetInGameWidgets()
+	{
+		return TestInGameWidgets;
+	}
+
 	FNetDataRow CurNetInfo;
 protected:
 
@@ -82,6 +91,8 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowprivateAccess = "true"));
 	UDataTable* InGameUserWidgetDataTable = nullptr;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	TMap<FString, TSubclassOf<UUserWidget>> TestInGameWidgets;
 private:
 	UMainGameInstance();
 };
