@@ -66,6 +66,16 @@ public:
 		return AttackDamage;
 	}
 
+	FORCEINLINE float GetMonsterHp()
+	{
+		return SettingData->Hp;
+	}
+
+	FORCEINLINE void GetDamage(float Damage)
+	{
+		SettingData->Hp -= Damage;
+	}
+
 private:
 	const FMonsterDataRow* BaseData;
 
