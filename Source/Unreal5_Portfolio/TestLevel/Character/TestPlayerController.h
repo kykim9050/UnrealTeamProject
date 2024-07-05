@@ -41,8 +41,11 @@ public:
 	void Jump(const FInputActionValue& Value);
 	UFUNCTION(BlueprintCallable)
 	void JumpEnd(const FInputActionValue& Value);
+	
 	UFUNCTION(BlueprintCallable)
-	void Fire(const FInputActionValue& Value);
+	void FireStart(const FInputActionValue& Value);
+	UFUNCTION(BlueprintCallable)
+	void FireTick(const FInputActionValue& Value);
 	UFUNCTION(BlueprintCallable)
 	void FireEnd(const FInputActionValue& Value);
 	UFUNCTION(BlueprintCallable)

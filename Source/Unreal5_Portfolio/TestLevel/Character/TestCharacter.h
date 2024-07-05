@@ -6,7 +6,6 @@
 #include "GameFramework/Character.h"
 #include "Net/UnrealNetwork.h"
 #include "Global/ContentsEnum.h"
-#include "Components/SphereComponent.h"
 #include "TestCharacter.generated.h"
 
 UCLASS()
@@ -46,9 +45,13 @@ public:
 		int ReloadMaxNum = -1;
 		int ReloadLeftNum = -1;
 	};
+
+	//UPROPERTY()
 	TArray<FItemInfo> ItemSlot;
+
 	UPROPERTY()
 	TArray<bool> IsItemIn;
+
 	UPROPERTY()
 	int CurItemIndex = -1;
 
@@ -104,9 +107,21 @@ protected:
 	float PlayerHp = 100.0f;
 
 private :
-	UFUNCTION(BlueprintCallable)
-	void CreateRayCast();
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	class USphereComponent* HandAttackComponent = nullptr;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
-	USphereComponent* HandAttackComponent;
+public :
+	UFUNCTION(BlueprintCallable)
+	void CreateRayCast(float _DeltaTime, FVector _StartPos, FVector _EndPos, FRotator _CameraRot);	
+
+	UFUNCTION(BlueprintCallable)
+	FString GetRayCastToItemName() const;
+
+
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	FString RayCastToItemName = "";
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	AActor* GetMapItem = nullptr;
 };
