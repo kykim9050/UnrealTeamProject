@@ -46,9 +46,13 @@ public:
 		int ReloadMaxNum = -1;
 		int ReloadLeftNum = -1;
 	};
+
+	//UPROPERTY()
 	TArray<FItemInfo> ItemSlot;
+
 	UPROPERTY()
 	TArray<bool> IsItemIn;
+
 	UPROPERTY()
 	int CurItemIndex = -1;
 
@@ -103,10 +107,18 @@ protected:
 	UPROPERTY(Category = "Contents", Replicated, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	float PlayerHp = 100.0f;
 
-private :
+public :
 	UFUNCTION(BlueprintCallable)
-	void CreateRayCast();
+	void CreateRayCast(float _DeltaTime, FVector _StartPos, FVector _EndPos, FRotator _CameraRot);	
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
-	USphereComponent* HandAttackComponent;
+	UFUNCTION(BlueprintCallable)
+	FString GetRayCastToItemName() const;
+
+
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	FString RayCastToItemName = "";
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	AActor* GetMapItem = nullptr;
 };
