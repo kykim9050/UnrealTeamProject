@@ -52,7 +52,10 @@ void AMonsterSpawner::DestroyCheck()
 void AMonsterSpawner::SpawnMonster_Implementation()
 {
 	UMainGameInstance* MainGameInst = GetWorld()->GetGameInstanceChecked<UMainGameInstance>();
-	const FMonsterDataRow* MonsterData = MainGameInst->GetMonsterData(TEXT("MonsterType_1"));
+
+	int Type = FMath::RandRange(1, 2);
+	FString MonsterType = "MonsterType_" + FString::FromInt(Type);
+	const FMonsterDataRow* MonsterData = MainGameInst->GetMonsterData(FName(MonsterType));
 
 	UNavigationSystemV1* NavSystem = UNavigationSystemV1::GetNavigationSystem(GetWorld());
 	int Size = FMath::RandRange(SettingData->MinSize, SettingData->MaxSize);
@@ -68,6 +71,7 @@ void AMonsterSpawner::SpawnMonster_Implementation()
 
 		FTransform Transform;
 		Transform.SetLocation(Location);
+		TSubclassOf<AActor> UClass = MonsterData->GetMonsterUClass();
 		GetWorld()->SpawnActor<AActor>(MonsterData->GetMonsterUClass(), Transform);
 	}
 }
