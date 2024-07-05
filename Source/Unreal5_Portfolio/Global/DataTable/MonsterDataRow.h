@@ -67,12 +67,16 @@ class UMonsterData : public UObject
 {
 	GENERATED_BODY()
 
+protected:
+	void GetLifetimeReplicatedProps(TArray< class FLifetimeProperty >& OutLifetimeProps) const override;
+
 public:
 	const FMonsterDataRow* Data;
 	
 	FVector OriginPos = FVector::ZeroVector;
-
+	UPROPERTY(Replicated)
 	float Hp = 100.0f;
+
 	float IdleTime = 0.0f;
 	float AttackTime = 0.0f;
 	float Max_PatrolRange = 800.0f;
