@@ -3,22 +3,20 @@
 
 #include "TestLevel/UI/TestPlayHUD.h"
 #include "Global/MainGameBlueprintFunctionLibrary.h"
+#include "Blueprint/UserWidget.h"
 
 void ATestPlayHUD::BeginPlay()
 {
 	Super::BeginPlay();
 
-	//UMainGameInstance* Inst = UMainGameBlueprintFunctionLibrary::GetMainGameInstance(GetWorld());
+	UMainGameInstance* Inst = UMainGameBlueprintFunctionLibrary::GetMainGameInstance(GetWorld());
 
-	//TMap<FString, TSubclassOf<UUserWidget>>& AllUI = Inst->GetTPSPlayWidgets();
+	TMap<FString, TSubclassOf<UUserWidget>>& AllUI = Inst->GetInGameWidgets();
 
-	//// 애초에 빌드할때는 
-	//for (TPair<FString, TSubclassOf<UUserWidget>> Pair : AllUI)
-	//{
-	//	UUserWidget* Widget = CreateWidget<UUserWidget>(GetWorld(), Pair.Value);
-	//	Widget->AddToViewport();
-	//	Widgets.Add(Pair.Key, Widget);
-	//}
-
-
+	for (TPair<FString, TSubclassOf<UUserWidget>> Pair : AllUI)
+	{
+		UUserWidget* Widget = CreateWidget<UUserWidget>(GetWorld(), Pair.Value);
+		Widget->AddToViewport();
+		AllTestPlayWidgets.Add(Pair.Key, Widget);
+	}
 }
