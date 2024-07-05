@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "Net/UnrealNetwork.h"
 #include "Global/ContentsEnum.h"
+#include "Components/SphereComponent.h"
 #include "TestCharacter.generated.h"
 
 UCLASS()
@@ -71,6 +72,11 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void Collision(AActor* _OtherActor, UPrimitiveComponent* _Collision);
 
+	UFUNCTION(BlueprintCallable)
+	void HandAttackCollision(AActor* _OtherActor, UPrimitiveComponent* _Collision);
+
+	void ChangeHandAttackCollisionProfile(FName _Name);
+
 	// HP (for UI, Monster Test)
 	UFUNCTION(BlueprintCallable)
 	FORCEINLINE float GetPlayerHp()
@@ -100,4 +106,7 @@ protected:
 private :
 	UFUNCTION(BlueprintCallable)
 	void CreateRayCast();
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
+	USphereComponent* HandAttackComponent;
 };

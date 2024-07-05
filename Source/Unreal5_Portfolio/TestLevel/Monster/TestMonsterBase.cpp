@@ -3,17 +3,18 @@
 
 #include "TestLevel/Monster/TestMonsterBase.h"
 #include "TestMonsterBaseAIController.h"
+#include "TestLevel/Character/TestCharacter.h"
+
 #include "BehaviorTree/BlackboardComponent.h"
 #include "Components/CapsuleComponent.h"
-#include "Animation/AnimInstance.h"
+#include "Components/SkeletalMeshComponent.h"
+#include "Blueprint/AIBlueprintHelperLibrary.h"
+
 #include "Global/MainGameBlueprintFunctionLibrary.h"
 #include "Global/Animation/MainAnimInstance.h"
 #include "Global/ContentsEnum.h"
 #include "Global/ContentsLog.h"
-#include "Components/SkeletalMeshComponent.h"
-#include "TestLevel/Character/TestCharacter.h"
-#include "BehaviorTree/BehaviorTreeComponent.h"
-#include "Blueprint/AIBlueprintHelperLibrary.h"
+
 
 // Sets default values
 ATestMonsterBase::ATestMonsterBase()
@@ -116,19 +117,16 @@ UAnimMontage* ATestMonsterBase::GetKeyMontage(uint8 Key)
 
 void ATestMonsterBase::Attack(AActor* _OtherActor, UPrimitiveComponent* _Collision)
 {
-	EMonsterState MonsterState;
 	UBlackboardComponent* BlackBoard = UAIBlueprintHelperLibrary::GetBlackboard(this);
-	if (nullptr != BlackBoard)
+	if (nullptr == BlackBoard)
 	{
-		MonsterState = static_cast<EMonsterState>(BlackBoard->GetValueAsEnum(TEXT("State")));
+		return;
 	}
 	
-	if (EMonsterState::Attack == MonsterState)
+	EMonsterState MonsterState = static_cast<EMonsterState>(BlackBoard->GetValueAsEnum(TEXT("State")));
+	ATestCharacter* HitCharacter = Cast<ATestCharacter>(_OtherActor);
+	if (nullptr != HitCharacter && EMonsterState::Attack == MonsterState)
 	{
-		ATestCharacter* HitCharacter = Cast<ATestCharacter>(_OtherActor);
-		if (nullptr != HitCharacter)
-		{
-			IsCharacterHit = true;
-		}
+		IsCharacterHit = true;
 	}
 }
