@@ -6,6 +6,7 @@
 #include "Camera/CameraComponent.h"
 #include "Global/MainGameBlueprintFunctionLibrary.h"
 #include "Global/DataTable/ItemDataRow.h"
+#include "TestLevel/Monster/TestMonsterBase.h"
 
 // Sets default values
 ATestCharacter::ATestCharacter()
@@ -45,20 +46,38 @@ ATestCharacter::ATestCharacter()
 		ItemSlot.Push(NewSlot);
 		IsItemIn.Push(false);
 	}
+
+	// HandAttack Component
+	FString Name = "Pist";
+	HandAttackComponent = CreateDefaultSubobject<USphereComponent>(TEXT("Hand Attack Comp"));
+	HandAttackComponent->SetupAttachment(GetMesh(), *Name);
+	//HandAttackComponent->SetCollisionProfileName(TEXT("NoCollision"));
+
 }
 
 void ATestCharacter::Collision(AActor* _OtherActor, UPrimitiveComponent* _Collision)
 {
-	ATestCharacter* OtherPlayCharacter = Cast<ATestCharacter>(_OtherActor);
-	if (nullptr == OtherPlayCharacter)
+	ATestMonsterBase* Monster = Cast<ATestMonsterBase>(_OtherActor);
+	if (nullptr == Monster)
+	{
+		return;
+	}
+}
+
+void ATestCharacter::HandAttackCollision(AActor* _OtherActor, UPrimitiveComponent* _Collision)
+{
+	ATestMonsterBase* Monster = Cast<ATestMonsterBase>(_OtherActor);
+	if (nullptr == Monster)
 	{
 		return;
 	}
 
-	int a = 0;
-	// Collision_Check
-	//if (true == _Collision->ComponentHasTag())
-	//{}
+	Monster->GetDamage(150.0f);
+}
+
+void ATestCharacter::ChangeHandAttackCollisionProfile(FName _Name)
+{
+	HandAttackComponent->SetCollisionProfileName(_Name);
 }
 
 void ATestCharacter::GetDamage(float _Damage)
@@ -71,6 +90,8 @@ void ATestCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	UMainGameBlueprintFunctionLibrary::PushActor(EObjectType::Player, this);
+
+	HandAttackComponent->SetCollisionProfileName(TEXT("NoCollision"));
 }
 
 // Called every frame
