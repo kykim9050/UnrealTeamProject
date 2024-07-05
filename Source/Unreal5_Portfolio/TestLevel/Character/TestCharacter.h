@@ -6,7 +6,6 @@
 #include "GameFramework/Character.h"
 #include "Net/UnrealNetwork.h"
 #include "Global/ContentsEnum.h"
-#include "Components/SphereComponent.h"
 #include "TestCharacter.generated.h"
 
 UCLASS()
@@ -106,6 +105,10 @@ protected:
 	// HP (for UI, Monster Test)
 	UPROPERTY(Category = "Contents", Replicated, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	float PlayerHp = 100.0f;
+
+private :
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	class USphereComponent* HandAttackComponent = nullptr;
 
 public :
 	UFUNCTION(BlueprintCallable)

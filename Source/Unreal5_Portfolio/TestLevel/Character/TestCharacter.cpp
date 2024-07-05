@@ -6,6 +6,7 @@
 #include "Camera/CameraComponent.h"
 #include "Global/MainGameBlueprintFunctionLibrary.h"
 #include "Global/DataTable/ItemDataRow.h"
+#include "Components/SphereComponent.h"
 #include "TestLevel/Monster/TestMonsterBase.h"
 
 // Sets default values
