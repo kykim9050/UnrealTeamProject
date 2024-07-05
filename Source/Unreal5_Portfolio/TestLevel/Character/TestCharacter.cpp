@@ -26,7 +26,7 @@ ATestCharacter::ATestCharacter()
 	CameraComponent->SetupAttachment(SpringArmComponent);
 	CameraComponent->SetProjectionMode(ECameraProjectionMode::Perspective);
 	CameraComponent->bUsePawnControlRotation = true;
-	
+
 	UEnum* Enum = StaticEnum<EPlayerPosture>();
 	for (size_t i = 0; i < static_cast<size_t>(EPlayerPosture::Barehand); i++)
 	{
@@ -52,6 +52,7 @@ ATestCharacter::ATestCharacter()
 	FString Name = "Pist";
 	HandAttackComponent = CreateDefaultSubobject<USphereComponent>(TEXT("Hand Attack Comp"));
 	HandAttackComponent->SetupAttachment(GetMesh(), *Name);
+	HandAttackComponent->SetRelativeLocation({ 0.0f, 80.0f, 120.0f });
 	//HandAttackComponent->SetCollisionProfileName(TEXT("NoCollision"));
 
 }
@@ -120,7 +121,7 @@ void ATestCharacter::CreateRayCast(float _DeltaTime, FVector _StartPos, FVector 
 	Start.X += _StartPos.X;
 	Start.Y += _StartPos.Y;
 	Start.Z += _StartPos.Z;
-	
+
 	CameraComponent->AddLocalRotation(_CameraRot);
 	FVector ForwardVector = CameraComponent->GetForwardVector();
 
@@ -176,7 +177,7 @@ void ATestCharacter::ChangePosture_Implementation(EPlayerPosture _Type)
 	{
 		PostureValue = _Type;
 		CurItemIndex = -1;
-		
+
 		for (size_t i = 0; i < static_cast<size_t>(EPlayerPosture::Barehand); i++)
 		{
 			ItemMeshes[i]->SetVisibility(false);
@@ -222,7 +223,7 @@ void ATestCharacter::PickUpItem_Implementation(FName _ItemName)
 	// Setting Weapon Mesh
 	ItemMeshes[ItemIndex]->SetStaticMesh(ItemMesh);
 	GetMapItem->Destroy();
-	
+
 	// Setting Inventory
 	ItemSlot[ItemIndex].Name = _ItemName;
 	ItemSlot[ItemIndex].ReloadMaxNum = ItemReloadNum;
