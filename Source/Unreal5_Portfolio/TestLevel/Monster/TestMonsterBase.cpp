@@ -7,6 +7,7 @@
 
 #include "BehaviorTree/BlackboardComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "GameFrameWork/CharacterMovementComponent.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Blueprint/AIBlueprintHelperLibrary.h"
 
@@ -128,5 +129,23 @@ void ATestMonsterBase::Attack(AActor* _OtherActor, UPrimitiveComponent* _Collisi
 	if (nullptr != HitCharacter && EMonsterState::Attack == MonsterState)
 	{
 		IsCharacterHit = true;
+	}
+}
+
+void ATestMonsterBase::GetDamage(float Damage)
+{
+	SettingData->Hp -= Damage;
+
+	if (0.0f >= SettingData->Hp)
+	{
+		ATestMonsterBaseAIController* AIController = GetController<ATestMonsterBaseAIController>();
+		if (nullptr != AIController)
+		{
+			AIController->UnPossess();
+		}
+
+		SetCapsuleCompCollObjectType(ECC_GameTraceChannel5);
+		GetCharacterMovement()->SetActive(false);
+		ChangeAnimation(EMonsterAnim::Dead);
 	}
 }

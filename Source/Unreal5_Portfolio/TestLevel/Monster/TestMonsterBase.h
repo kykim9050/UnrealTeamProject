@@ -71,10 +71,7 @@ public:
 		return SettingData->Hp;
 	}
 
-	FORCEINLINE void GetDamage(float Damage)
-	{
-		SettingData->Hp -= Damage;
-	}
+	FORCEINLINE void GetDamage(float Damage);
 
 private:
 	const FMonsterDataRow* BaseData;
