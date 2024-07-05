@@ -53,16 +53,16 @@ void AMonsterSpawner::SpawnMonster_Implementation()
 {
 	UMainGameInstance* MainGameInst = GetWorld()->GetGameInstanceChecked<UMainGameInstance>();
 
-	int Type = FMath::RandRange(1, 2);
-	FString MonsterType = "MonsterType_" + FString::FromInt(Type);
-	const FMonsterDataRow* MonsterData = MainGameInst->GetMonsterData(FName(MonsterType));
-
 	UNavigationSystemV1* NavSystem = UNavigationSystemV1::GetNavigationSystem(GetWorld());
 	int Size = FMath::RandRange(SettingData->MinSize, SettingData->MaxSize);
 	FVector CurLocation = SettingData->Location;
 
 	for (int i = 0; i < Size; i++)
 	{
+		int Type = FMath::RandRange(1, 2);
+		FString MonsterType = "MonsterType_" + FString::FromInt(Type);
+		const FMonsterDataRow* MonsterData = MainGameInst->GetMonsterData(FName(MonsterType));
+
 		FNavLocation Location(FVector::ZeroVector);
 	    NavSystem->GetRandomReachablePointInRadius(CurLocation, SettingData->Radius, Location);
 		
