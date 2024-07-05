@@ -78,9 +78,8 @@ public:
 		return PlayerHp;
 	}
 	
-	UFUNCTION(Reliable, Server)
+	UFUNCTION(BlueprintCallable)
 	void GetDamage(float _Damage);
-	void GetDamage_Implementation(float _Damage);
 
 protected:
 	// Called when the game starts or when spawned
