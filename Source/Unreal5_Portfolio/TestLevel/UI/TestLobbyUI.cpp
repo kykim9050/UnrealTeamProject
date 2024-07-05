@@ -10,7 +10,7 @@ void UTestLobbyUI::TravelToNext()
 	UMainGameInstance* Inst = UMainGameBlueprintFunctionLibrary::GetMainGameInstance(GetWorld());
 	if (nullptr != Inst && true == Inst->CurNetInfo.GetIsServer())
 	{
-		bool CanTravel = GetWorld()->ServerTravel("/Game/Resources/TestLevel/TestPlayLevel");
+		bool CanTravel = GetWorld()->ServerTravel("/Game/Resources/MainGameLevel/LandscapePreview");
 		int a = 0;
 	}
 }
