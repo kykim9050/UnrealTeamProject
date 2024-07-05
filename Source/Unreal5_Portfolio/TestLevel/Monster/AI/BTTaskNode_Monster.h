@@ -20,6 +20,8 @@ class UNREAL5_PORTFOLIO_API UBTTaskNode_Monster : public UBTTaskNode
 public:
 	UBTTaskNode_Monster();
 
+	void TickTask(UBehaviorTreeComponent& _OwnerComp, uint8* _pNodeMemory, float _DeltaSeconds) override;
+
 	template<typename OwnerType>
 	OwnerType* GetActor(UBehaviorTreeComponent& _OwnerComp)
 	{

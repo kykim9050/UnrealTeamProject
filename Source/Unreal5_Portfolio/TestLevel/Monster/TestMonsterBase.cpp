@@ -3,15 +3,19 @@
 
 #include "TestLevel/Monster/TestMonsterBase.h"
 #include "TestMonsterBaseAIController.h"
+#include "TestLevel/Character/TestCharacter.h"
+
 #include "BehaviorTree/BlackboardComponent.h"
 #include "Components/CapsuleComponent.h"
-#include "Animation/AnimInstance.h"
+#include "GameFrameWork/CharacterMovementComponent.h"
+#include "Components/SkeletalMeshComponent.h"
+#include "Blueprint/AIBlueprintHelperLibrary.h"
+
 #include "Global/MainGameBlueprintFunctionLibrary.h"
 #include "Global/Animation/MainAnimInstance.h"
 #include "Global/ContentsEnum.h"
 #include "Global/ContentsLog.h"
-#include "Components/SkeletalMeshComponent.h"
-#include "TestLevel/Character/TestCharacter.h"
+
 
 // Sets default values
 ATestMonsterBase::ATestMonsterBase()
@@ -49,17 +53,17 @@ void ATestMonsterBase::BeginPlay()
 		AnimInst->PushAnimation(Montage.Key, Montage.Value);
 	}
 
+	//  몬스터 데이터 세팅
+	SettingData = NewObject<UMonsterData>(this);
+	SettingData->Data = BaseData;
+	SettingData->OriginPos = GetActorLocation();
+
 	// 클라이언트일 경우
 	ATestMonsterBaseAIController* AIController = GetController<ATestMonsterBaseAIController>();
 	if (nullptr == AIController)
 	{
 		return;
 	}
-
-	//  몬스터 데이터 세팅
-	SettingData = NewObject<UMonsterData>(this);
-	SettingData->Data = BaseData;
-	SettingData->OriginPos = GetActorLocation();
 
 	AIController->GetBlackboardComponent()->SetValueAsObject(TEXT("MonsterData"), SettingData);
 }
@@ -114,9 +118,34 @@ UAnimMontage* ATestMonsterBase::GetKeyMontage(uint8 Key)
 
 void ATestMonsterBase::Attack(AActor* _OtherActor, UPrimitiveComponent* _Collision)
 {
+	UBlackboardComponent* BlackBoard = UAIBlueprintHelperLibrary::GetBlackboard(this);
+	if (nullptr == BlackBoard)
+	{
+		return;
+	}
+	
+	EMonsterState MonsterState = static_cast<EMonsterState>(BlackBoard->GetValueAsEnum(TEXT("State")));
 	ATestCharacter* HitCharacter = Cast<ATestCharacter>(_OtherActor);
-	if (nullptr != HitCharacter)
+	if (nullptr != HitCharacter && EMonsterState::Attack == MonsterState)
 	{
 		IsCharacterHit = true;
+	}
+}
+
+void ATestMonsterBase::GetDamage(float Damage)
+{
+	SettingData->Hp -= Damage;
+
+	if (0.0f >= SettingData->Hp)
+	{
+		ATestMonsterBaseAIController* AIController = GetController<ATestMonsterBaseAIController>();
+		if (nullptr != AIController)
+		{
+			AIController->UnPossess();
+		}
+
+		SetCapsuleCompCollObjectType(ECC_GameTraceChannel5);
+		GetCharacterMovement()->SetActive(false);
+		ChangeAnimation(EMonsterAnim::Dead);
 	}
 }

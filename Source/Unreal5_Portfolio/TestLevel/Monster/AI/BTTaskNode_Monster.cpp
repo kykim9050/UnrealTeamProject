@@ -2,10 +2,22 @@
 
 
 #include "TestLevel/Monster/AI/BTTaskNode_Monster.h"
+#include "Global/ContentsEnum.h"
 
 UBTTaskNode_Monster::UBTTaskNode_Monster()
 {
 	bNotifyTick = true;
+}
+
+void UBTTaskNode_Monster::TickTask(UBehaviorTreeComponent& _OwnerComp, uint8* _pNodeMemory, float _DeltaSeconds)
+{
+	Super::TickTask(_OwnerComp, _pNodeMemory, _DeltaSeconds);
+
+	if (EMonsterState::Dead == static_cast<EMonsterState>(GetCurState(_OwnerComp)))
+	{
+		StateChange(_OwnerComp, EMonsterState::Dead);
+		return;
+	}
 }
 
 AActor* UBTTaskNode_Monster::GetActor(UBehaviorTreeComponent& _OwnerComp)

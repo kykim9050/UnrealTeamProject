@@ -45,9 +45,13 @@ public:
 		int ReloadMaxNum = -1;
 		int ReloadLeftNum = -1;
 	};
+
+	//UPROPERTY()
 	TArray<FItemInfo> ItemSlot;
+
 	UPROPERTY()
 	TArray<bool> IsItemIn;
+
 	UPROPERTY()
 	int CurItemIndex = -1;
 
@@ -70,6 +74,11 @@ public:
 	// Collision
 	UFUNCTION(BlueprintCallable)
 	void Collision(AActor* _OtherActor, UPrimitiveComponent* _Collision);
+
+	UFUNCTION(BlueprintCallable)
+	void HandAttackCollision(AActor* _OtherActor, UPrimitiveComponent* _Collision);
+
+	void ChangeHandAttackCollisionProfile(FName _Name);
 
 	// HP (for UI, Monster Test)
 	UFUNCTION(BlueprintCallable)
@@ -98,6 +107,21 @@ protected:
 	float PlayerHp = 100.0f;
 
 private :
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	class USphereComponent* HandAttackComponent = nullptr;
+
+public :
 	UFUNCTION(BlueprintCallable)
-	void CreateRayCast();
+	void CreateRayCast(float _DeltaTime, FVector _StartPos, FVector _EndPos, FRotator _CameraRot);	
+
+	UFUNCTION(BlueprintCallable)
+	FString GetRayCastToItemName() const;
+
+
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	FString RayCastToItemName = "";
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	AActor* GetMapItem = nullptr;
 };
