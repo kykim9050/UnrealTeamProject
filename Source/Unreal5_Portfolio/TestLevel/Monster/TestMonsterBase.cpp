@@ -28,6 +28,9 @@ ATestMonsterBase::ATestMonsterBase()
 	
 	RightAttackComponent = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Right Attack Comp"));
 	RightAttackComponent->SetupAttachment(GetMesh(), FName(TEXT("RightAttackPos")));
+
+	GetMesh()->SetCollisionEnabled(ECollisionEnabled::Type::NoCollision);
+
 }
 
 // Called when the game starts or when spawned
@@ -105,15 +108,11 @@ void ATestMonsterBase::ChangeAnimation_Implementation(uint8 _Type)
 	AniValue = _Type;
 }
 
-void ATestMonsterBase::SetCapsuleCompCollObjectType_Implementation(ECollisionChannel _Channel)
+void ATestMonsterBase::SetDeadCollision_Implementation()
 {
-	GetCapsuleComponent()->SetCollisionObjectType(_Channel);
-}
-
-UAnimMontage* ATestMonsterBase::GetKeyMontage(uint8 Key)
-{
-	UAnimMontage* Result = AnimInst->GetKeyAnimMontage(Key);
-	return Result;
+	GetCapsuleComponent()->SetCollisionObjectType(ECC_GameTraceChannel5);
+	RightAttackComponent->SetCollisionObjectType(ECC_GameTraceChannel5);
+	LeftAttackComponent->SetCollisionObjectType(ECC_GameTraceChannel5);
 }
 
 void ATestMonsterBase::Attack(AActor* _OtherActor, UPrimitiveComponent* _Collision)
@@ -144,7 +143,7 @@ void ATestMonsterBase::GetDamage(float Damage)
 			AIController->UnPossess();
 		}
 
-		SetCapsuleCompCollObjectType(ECC_GameTraceChannel5);
+		SetDeadCollision();
 		GetCharacterMovement()->SetActive(false);
 		ChangeAnimation(EMonsterAnim::Dead);
 	}
