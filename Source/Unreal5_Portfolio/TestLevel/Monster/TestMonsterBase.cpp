@@ -121,9 +121,7 @@ void ATestMonsterBase::SetDeadCollision_Implementation()
 	GetCapsuleComponent()->SetCollisionObjectType(ECC_GameTraceChannel5);
 	RightAttackComponent->SetCollisionObjectType(ECC_GameTraceChannel5);
 	LeftAttackComponent->SetCollisionObjectType(ECC_GameTraceChannel5);
-
-	GetMesh()->SetCollisionProfileName(TEXT("Ragdoll"));
-	GetMesh()->SetSimulatePhysics(true);
+	GetCharacterMovement()->SetActive(false);
 }
 
 void ATestMonsterBase::Attack(AActor* _OtherActor, UPrimitiveComponent* _Collision)
@@ -145,7 +143,11 @@ void ATestMonsterBase::Attack(AActor* _OtherActor, UPrimitiveComponent* _Collisi
 void ATestMonsterBase::GetDamage(float Damage)
 {
 	SettingData->Hp -= Damage;
+	DeadCheck();
+}
 
+void ATestMonsterBase::DeadCheck()
+{
 	if (0.0f >= SettingData->Hp)
 	{
 		ATestMonsterBaseAIController* AIController = GetController<ATestMonsterBaseAIController>();
@@ -155,7 +157,6 @@ void ATestMonsterBase::GetDamage(float Damage)
 		}
 
 		SetDeadCollision();
-		GetCharacterMovement()->SetActive(false);
 		ChangeAnimation(EMonsterAnim::Dead);
 	}
 }

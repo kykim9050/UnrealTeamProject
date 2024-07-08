@@ -25,7 +25,7 @@ ATestFPVCharacter::ATestFPVCharacter()
 	CameraComponent->SetProjectionMode(ECameraProjectionMode::Perspective);
 	CameraComponent->bUsePawnControlRotation = true;
 
-	// Mesh
+	// Character Mesh
 	GetMesh()->SetOwnerNoSee(true);
 
 	FPVMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("FirstPersonMesh"));
@@ -33,20 +33,51 @@ ATestFPVCharacter::ATestFPVCharacter()
 	FPVMesh->SetOnlyOwnerSee(true);
 	FPVMesh->bCastDynamicShadow = false;
 	FPVMesh->CastShadow = false;
+	
+	// Item Meshes
+	RifleMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("RifleMesh"));
+	RifleMesh->SetupAttachment(GetMesh(), TEXT("RifleMesh"));
+	RifleMesh->SetCollisionProfileName(TEXT("NoCollision"));
+	RifleMesh->SetGenerateOverlapEvents(true);
+	RifleMesh->SetOwnerNoSee(true);
+	RifleMesh->SetVisibility(false);
+	ItemMeshes.Push(RifleMesh);
+
+	PistolMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("PistolMesh"));
+	PistolMesh->SetupAttachment(GetMesh(), TEXT("PistolMesh"));
+	PistolMesh->SetCollisionProfileName(TEXT("NoCollision"));
+	PistolMesh->SetGenerateOverlapEvents(true);
+	PistolMesh->SetOwnerNoSee(true);
+	PistolMesh->SetVisibility(false);
+	ItemMeshes.Push(PistolMesh);
+	
+	MeleeMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MeleeMesh"));
+	MeleeMesh->SetupAttachment(GetMesh(), TEXT("MeleeMesh"));
+	MeleeMesh->SetCollisionProfileName(TEXT("NoCollision"));
+	MeleeMesh->SetGenerateOverlapEvents(true);
+	MeleeMesh->SetOwnerNoSee(true);
+	MeleeMesh->SetVisibility(false);
+	ItemMeshes.Push(MeleeMesh);
+	
+	ThrowingMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ThrowingMesh"));
+	ThrowingMesh->SetupAttachment(GetMesh(), TEXT("ThrowingMesh"));
+	ThrowingMesh->SetCollisionProfileName(TEXT("NoCollision"));
+	ThrowingMesh->SetGenerateOverlapEvents(true);
+	ThrowingMesh->SetOwnerNoSee(true);
+	ThrowingMesh->SetVisibility(false);
+	ItemMeshes.Push(ThrowingMesh);
+	
+	SupplyMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("SupplyMesh"));
+	SupplyMesh->SetupAttachment(GetMesh(), TEXT("SupplyMesh"));
+	SupplyMesh->SetCollisionProfileName(TEXT("NoCollision"));
+	SupplyMesh->SetGenerateOverlapEvents(true);
+	SupplyMesh->SetOwnerNoSee(true);
+	SupplyMesh->SetVisibility(false);
+	ItemMeshes.Push(SupplyMesh);
 
 	UEnum* Enum = StaticEnum<EPlayerPosture>();
 	for (size_t i = 0; i < static_cast<size_t>(EPlayerPosture::Barehand); i++)
 	{
-		// Item Meshes
-		FString MeshName = Enum->GetNameStringByValue(i) + "Mesh";
-		UStaticMeshComponent* NewMesh = CreateDefaultSubobject<UStaticMeshComponent>(*MeshName);
-		NewMesh->SetupAttachment(GetMesh(), *MeshName);
-		NewMesh->SetCollisionProfileName(TEXT("NoCollision"));
-		NewMesh->SetGenerateOverlapEvents(true);
-		NewMesh->SetOwnerNoSee(true);
-		NewMesh->SetVisibility(false);
-		ItemMeshes.Push(NewMesh);
-
 		FString FPVMeshName = Enum->GetNameStringByValue(i) + "FPVMesh";
 		UStaticMeshComponent* NewFPVMesh = CreateDefaultSubobject<UStaticMeshComponent>(*FPVMeshName);
 		NewFPVMesh->SetupAttachment(FPVMesh, *FPVMeshName);
@@ -107,9 +138,16 @@ void ATestFPVCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Ou
 
 	DOREPLIFETIME(ATestFPVCharacter, StateValue);
 	DOREPLIFETIME(ATestFPVCharacter, PostureValue);
-	DOREPLIFETIME(ATestFPVCharacter, PlayerHp);
+	
+	DOREPLIFETIME(ATestFPVCharacter, RifleMesh);
+	DOREPLIFETIME(ATestFPVCharacter, PistolMesh);
+	DOREPLIFETIME(ATestFPVCharacter, MeleeMesh);
+	DOREPLIFETIME(ATestFPVCharacter, ThrowingMesh);
+	DOREPLIFETIME(ATestFPVCharacter, SupplyMesh);
 	DOREPLIFETIME(ATestFPVCharacter, ItemMeshes);
 	DOREPLIFETIME(ATestFPVCharacter, FPVItemMeshes);
+
+	DOREPLIFETIME(ATestFPVCharacter, PlayerHp);
 }
 
 void ATestFPVCharacter::CreateRayCast()

@@ -70,7 +70,11 @@ public:
 		return SettingData->Hp;
 	}
 
-	FORCEINLINE void GetDamage(float Damage);
+	void GetDamage(float Damage);
+	
+private:
+	void DeadCheck();
+	
 
 protected:
 	UFUNCTION()
