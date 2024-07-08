@@ -42,12 +42,19 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void JumpEnd(const FInputActionValue& Value);
 	
+	//UFUNCTION(BlueprintCallable)
+	//void FireStart(const FInputActionValue& Value);
+	//UFUNCTION(BlueprintCallable)
+	//void FireTick(const FInputActionValue& Value);
+	//UFUNCTION(BlueprintCallable)
+	//void FireEnd(const FInputActionValue& Value);
 	UFUNCTION(BlueprintCallable)
-	void FireStart(const FInputActionValue& Value);
+	void FireStart(float _DeltaTime);
 	UFUNCTION(BlueprintCallable)
-	void FireTick(const FInputActionValue& Value);
+	void FireTick(float _DeltaTime);
 	UFUNCTION(BlueprintCallable)
-	void FireEnd(const FInputActionValue& Value);
+	void FireEnd();
+
 	UFUNCTION(BlueprintCallable)
 	void PickUpItem();
 	UFUNCTION(BlueprintCallable)

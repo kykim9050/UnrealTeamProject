@@ -101,7 +101,7 @@ void ATestCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	//CreateRayCast(DeltaTime);
+	DefaultRayCast(DeltaTime);
 }
 
 void ATestCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -115,7 +115,7 @@ void ATestCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLi
 	DOREPLIFETIME(ATestCharacter, PlayerHp);
 }
 
-void ATestCharacter::CreateRayCast(float _DeltaTime, FVector _StartPos, FVector _EndPos, FRotator _CameraRot)
+void ATestCharacter::TestRayCast(float _DeltaTime, FVector _StartPos, FVector _EndPos, FRotator _CameraRot)
 {
 	FVector Start = GetActorLocation();
 	Start.X += _StartPos.X;
@@ -157,6 +157,67 @@ void ATestCharacter::CreateRayCast(float _DeltaTime, FVector _StartPos, FVector 
 		{
 			GetMapItem = nullptr;
 			RayCastToItemName = "";
+		}
+	}
+}
+
+void ATestCharacter::DefaultRayCast(float _DeltaTime)
+{
+	FVector Start = GetActorLocation();
+	FVector ForwardVector = CameraComponent->GetForwardVector();
+	Start = FVector(Start.X + (ForwardVector.X * 100), Start.Y + (ForwardVector.Y * 100), Start.Z + (ForwardVector.Z * 100));
+	FVector End = Start + (ForwardVector * 1000);
+
+	// 아이템 줍기.
+	FHitResult Hit;
+	if (GetWorld())
+	{
+		// 아이템 콜리전 충돌.
+		bool ActorHit = GetWorld()->LineTraceSingleByChannel(Hit, Start, End, ECC_GameTraceChannel3, FCollisionQueryParams(), FCollisionResponseParams());
+		DrawDebugLine(GetWorld(), Start, End, FColor::Green, false, _DeltaTime, 0.0f, 0.0f);
+
+		if (true == ActorHit && Hit.GetActor())
+		{
+			GetMapItem = Hit.GetActor();
+			int TagCount = Hit.GetActor()->Tags.Num();
+			if (0 != TagCount)
+			{
+				for (size_t i = 0; i < Hit.GetActor()->Tags.Num(); i++)
+				{
+					FString TagName = Hit.GetActor()->Tags[i].ToString();
+					RayCastToItemName = TagName;
+					GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, TagName);
+				}
+			}
+		}
+		else
+		{
+			GetMapItem = nullptr;
+			RayCastToItemName = "";
+		}
+	}
+}
+
+void ATestCharacter::FireRayCast(float _DeltaTime)
+{
+	FVector Start = GetActorLocation();
+	FVector ForwardVector = CameraComponent->GetForwardVector();
+	Start = FVector(Start.X + (ForwardVector.X * 100), Start.Y + (ForwardVector.Y * 100), Start.Z + (ForwardVector.Z * 100));
+	FVector End = Start + (ForwardVector * 1000.0);
+
+	FHitResult Hit;
+	if (GetWorld())
+	{
+		bool ActorHit = GetWorld()->LineTraceSingleByChannel(Hit, Start, End, ECC_GameTraceChannel2, FCollisionQueryParams(), FCollisionResponseParams());
+		DrawDebugLine(GetWorld(), Start, End, FColor::Red, false, _DeltaTime, 0.0f, 0.0f);
+
+		if (true == ActorHit && nullptr != Hit.GetActor())
+		{
+			ATestMonsterBase* Monster = Cast<ATestMonsterBase>(Hit.GetActor());
+			if (nullptr != Monster)
+			{
+				Monster->GetDamage(50.0f);
+			}
 		}
 	}
 }

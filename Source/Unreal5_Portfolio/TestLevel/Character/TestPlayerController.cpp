@@ -49,9 +49,9 @@ void ATestPlayerController::SetupInputComponent()
 			EnhancedInputComponent->BindAction(InputData->Actions[4], ETriggerEvent::Triggered, this, &ATestPlayerController::MoveLeft);
 			EnhancedInputComponent->BindAction(InputData->Actions[5], ETriggerEvent::Triggered, this, &ATestPlayerController::Jump);
 			EnhancedInputComponent->BindAction(InputData->Actions[5], ETriggerEvent::Completed, this, &ATestPlayerController::JumpEnd);
-			EnhancedInputComponent->BindAction(InputData->Actions[6], ETriggerEvent::Started, this, &ATestPlayerController::FireStart);
-			EnhancedInputComponent->BindAction(InputData->Actions[6], ETriggerEvent::Triggered, this, &ATestPlayerController::FireTick);
-			EnhancedInputComponent->BindAction(InputData->Actions[6], ETriggerEvent::Completed, this, &ATestPlayerController::FireEnd);
+			//EnhancedInputComponent->BindAction(InputData->Actions[6], ETriggerEvent::Started, this, &ATestPlayerController::FireStart);
+			//EnhancedInputComponent->BindAction(InputData->Actions[6], ETriggerEvent::Triggered, this, &ATestPlayerController::FireTick);
+			//EnhancedInputComponent->BindAction(InputData->Actions[6], ETriggerEvent::Completed, this, &ATestPlayerController::FireEnd);
 			EnhancedInputComponent->BindAction(InputData->Actions[7], ETriggerEvent::Triggered, this, &ATestPlayerController::ChangePosture, static_cast<EPlayerPosture>(0));
 			EnhancedInputComponent->BindAction(InputData->Actions[8], ETriggerEvent::Triggered, this, &ATestPlayerController::ChangePosture, static_cast<EPlayerPosture>(1));
 			EnhancedInputComponent->BindAction(InputData->Actions[9], ETriggerEvent::Triggered, this, &ATestPlayerController::ChangePosture, static_cast<EPlayerPosture>(2));
@@ -113,19 +113,33 @@ void ATestPlayerController::JumpEnd(const FInputActionValue& Value)
 	Ch->StopJumping();
 }
 
-void ATestPlayerController::FireStart(const FInputActionValue& Value)
+//void ATestPlayerController::FireStart(const FInputActionValue& Value)
+//{
+//	ChangeState(EPlayerState::Fire);
+//}
+//void ATestPlayerController::FireTick(const FInputActionValue& Value)
+//{
+//	//ChangeState(EPlayerState::Fire);
+//}
+//void ATestPlayerController::FireEnd(const FInputActionValue& Value)
+//{
+//	ChangeState(EPlayerState::Idle);
+//}
+
+void ATestPlayerController::FireStart(float _DeltaTime)
 {
 	ChangeState(EPlayerState::Fire);
+	ATestCharacter* Ch = GetPawn<ATestCharacter>();
+	Ch->FireRayCast(_DeltaTime);
 }
 
-void ATestPlayerController::FireTick(const FInputActionValue& Value)
+void ATestPlayerController::FireTick(float _DeltaTime)
 {
-	//ChangeState(EPlayerState::Fire);
-
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Fire!"));
+	ATestCharacter* Ch = GetPawn<ATestCharacter>();
+	Ch->FireRayCast(_DeltaTime);
 }
 
-void ATestPlayerController::FireEnd(const FInputActionValue& Value)
+void ATestPlayerController::FireEnd()
 {
 	ChangeState(EPlayerState::Idle);
 }
