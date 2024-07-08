@@ -65,6 +65,14 @@ public:
 	void Damaged(float Damage);
 	void Damaged_Implementation(float Damage);
 	
+	void GetDamage(float Damage);
+	
+	void SetActiveAttackCollision(bool Active);
+
+private:
+	void DeadCheck();
+	
+
 protected:
 	UFUNCTION()
 	void OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
