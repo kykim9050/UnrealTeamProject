@@ -30,7 +30,6 @@ ATestMonsterBase::ATestMonsterBase()
 	RightAttackComponent->SetupAttachment(GetMesh(), FName(TEXT("RightAttackPos")));
 
 	GetMesh()->SetCollisionEnabled(ECollisionEnabled::Type::NoCollision);
-
 }
 
 // Called when the game starts or when spawned
@@ -113,6 +112,9 @@ void ATestMonsterBase::SetDeadCollision_Implementation()
 	GetCapsuleComponent()->SetCollisionObjectType(ECC_GameTraceChannel5);
 	RightAttackComponent->SetCollisionObjectType(ECC_GameTraceChannel5);
 	LeftAttackComponent->SetCollisionObjectType(ECC_GameTraceChannel5);
+
+	GetMesh()->SetCollisionProfileName(TEXT("Ragdoll"));
+	GetMesh()->SetSimulatePhysics(true);
 }
 
 void ATestMonsterBase::Attack(AActor* _OtherActor, UPrimitiveComponent* _Collision)
