@@ -40,7 +40,7 @@ ATestCharacter::ATestCharacter()
 		ItemMeshes.Push(NewSocketMesh);
 
 		// Inventory (for UI Test)
-		FItemInfo NewSlot;
+		FItemInformation NewSlot;
 		NewSlot.Name = "";
 		NewSlot.ReloadMaxNum = -1;
 		NewSlot.ReloadLeftNum = -1;

@@ -8,6 +8,21 @@
 #include "Global/ContentsEnum.h"
 #include "TestCharacter.generated.h"
 
+// Inventory (for UI Test)
+USTRUCT(BlueprintType)
+struct FItemInformation
+{
+	GENERATED_USTRUCT_BODY();
+
+public:
+	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	FName Name = "";
+	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	int ReloadMaxNum = -1;
+	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	int ReloadLeftNum = -1;
+};
+
 UCLASS()
 class UNREAL5_PORTFOLIO_API ATestCharacter : public ACharacter
 {
@@ -38,20 +53,11 @@ public:
 	void ChangePosture(EPlayerPosture _Type);
 	void ChangePosture_Implementation(EPlayerPosture _Type);
 
-	// Inventory (for UI Test)
-	struct FItemInfo
-	{
-		FName Name = "";
-		int ReloadMaxNum = -1;
-		int ReloadLeftNum = -1;
-	};
-
-	//UPROPERTY()
-	TArray<FItemInfo> ItemSlot;
-
+	// Inventory
+	UPROPERTY()
+	TArray<FItemInformation> ItemSlot;
 	UPROPERTY()
 	TArray<bool> IsItemIn;
-
 	UPROPERTY()
 	int CurItemIndex = -1;
 
