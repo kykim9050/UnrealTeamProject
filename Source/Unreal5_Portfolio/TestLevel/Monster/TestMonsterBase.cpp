@@ -72,6 +72,7 @@ void ATestMonsterBase::BeginPlay()
 
 	LeftAttackComponent->OnComponentEndOverlap.AddDynamic(this, &ATestMonsterBase::OnOverlapEnd);
 	RightAttackComponent->OnComponentEndOverlap.AddDynamic(this, &ATestMonsterBase::OnOverlapEnd);
+	SetActiveAttackCollision(false);
 }
 
 // Called every frame
@@ -111,12 +112,12 @@ UMainAnimInstance* ATestMonsterBase::GetAnimInstance()
 	return AnimInst;
 }
 
-void ATestMonsterBase::ChangeAnimation_Implementation(uint8 _Type)
+void ATestMonsterBase::ChangeAniValue(uint8 _Type)
 {
 	AniValue = _Type;
 }
 
-void ATestMonsterBase::SetDeadCollision_Implementation()
+void ATestMonsterBase::SetDeadCollision()
 {
 	GetCapsuleComponent()->SetCollisionObjectType(ECC_GameTraceChannel5);
 	RightAttackComponent->SetCollisionObjectType(ECC_GameTraceChannel5);
@@ -140,10 +141,29 @@ void ATestMonsterBase::Attack(AActor* _OtherActor, UPrimitiveComponent* _Collisi
 	}
 }
 
-void ATestMonsterBase::GetDamage(float Damage)
+void ATestMonsterBase::Damaged_Implementation(float Damage)
 {
+	if (0.0f >= SettingData->Hp)
+	{
+		return;
+	}
+
 	SettingData->Hp -= Damage;
 	DeadCheck();
+}
+
+void ATestMonsterBase::SetActiveAttackCollision(bool Active)
+{
+	if (false == Active)
+	{
+		LeftAttackComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		RightAttackComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	}
+	else
+	{
+		LeftAttackComponent->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+		RightAttackComponent->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+	}
 }
 
 void ATestMonsterBase::DeadCheck()
@@ -157,6 +177,6 @@ void ATestMonsterBase::DeadCheck()
 		}
 
 		SetDeadCollision();
-		ChangeAnimation(EMonsterAnim::Dead);
+		ChangeAniValue(EMonsterAnim::Dead);
 	}
 }

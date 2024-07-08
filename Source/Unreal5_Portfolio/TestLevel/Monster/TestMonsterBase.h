@@ -33,22 +33,13 @@ public:
 	class ATestMonsterBaseAIController* GetAIController();
 	class UMainAnimInstance* GetAnimInstance();
 	
-	UFUNCTION(Reliable, Server)
-	void ChangeAnimation(uint8 _Type);
-	void ChangeAnimation_Implementation(uint8 _Type);
+	void ChangeAniValue(uint8 _Type);
 
 	template<typename EnumType>
-	void ChangeAnimation(EnumType _Type)
+	void ChangeAniValue(EnumType _Type)
 	{
-		ChangeAnimation(static_cast<uint8>(_Type));
+		ChangeAniValue(static_cast<uint8>(_Type));
 	}
-
-	UFUNCTION(Reliable, NetMulticast)
-	void SetDeadCollision();
-	void SetDeadCollision_Implementation();
-
-	UFUNCTION(BlueprintCallable)
-	virtual void Attack(AActor* _OtherActor, UPrimitiveComponent* _Collision);
 
 	FORCEINLINE bool GetIsCharacterHit()
 	{
@@ -70,15 +61,22 @@ public:
 		return SettingData->Hp;
 	}
 
-	void GetDamage(float Damage);
+	UFUNCTION(Reliable, Server)
+	void Damaged(float Damage);
+	void Damaged_Implementation(float Damage);
 	
-private:
-	void DeadCheck();
-	
+	void SetActiveAttackCollision(bool Active);
 
 protected:
 	UFUNCTION()
 	void OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+
+	UFUNCTION(BlueprintCallable)
+	virtual void Attack(AActor* _OtherActor, UPrimitiveComponent* _Collision);
+
+private:
+	void SetDeadCollision();
+	void DeadCheck();
 
 private:
 	const FMonsterDataRow* BaseData;
