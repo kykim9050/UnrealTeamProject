@@ -54,6 +54,7 @@ public:
 	{
 		return IsCharacterHit;
 	}
+
 	FORCEINLINE void SetIsCharacterHit(bool IsHit)
 	{
 		IsCharacterHit = IsHit;
@@ -69,7 +70,15 @@ public:
 		return SettingData->Hp;
 	}
 
-	FORCEINLINE void GetDamage(float Damage);
+	void GetDamage(float Damage);
+	
+private:
+	void DeadCheck();
+	
+
+protected:
+	UFUNCTION()
+	void OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
 private:
 	const FMonsterDataRow* BaseData;
