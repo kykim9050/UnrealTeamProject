@@ -112,7 +112,13 @@ private :
 
 public :
 	UFUNCTION(BlueprintCallable)
-	void CreateRayCast(float _DeltaTime, FVector _StartPos, FVector _EndPos, FRotator _CameraRot);	
+	void TestRayCast(float _DeltaTime, FVector _StartPos, FVector _EndPos, FRotator _CameraRot);
+
+	UFUNCTION(BlueprintCallable)
+	void DefaultRayCast(float _DeltaTime);
+
+	UFUNCTION(BlueprintCallable)
+	void FireRayCast(float _DeltaTime);
 
 	UFUNCTION(BlueprintCallable)
 	FString GetRayCastToItemName() const;
