@@ -65,8 +65,6 @@ public:
 	void Damaged(float Damage);
 	void Damaged_Implementation(float Damage);
 	
-	void GetDamage(float Damage);
-	
 	void SetActiveAttackCollision(bool Active);
 
 private:
