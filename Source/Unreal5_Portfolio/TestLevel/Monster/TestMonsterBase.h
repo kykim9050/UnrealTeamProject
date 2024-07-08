@@ -44,10 +44,8 @@ public:
 	}
 
 	UFUNCTION(Reliable, NetMulticast)
-	void SetCapsuleCompCollObjectType(ECollisionChannel _Channel);
-	void SetCapsuleCompCollObjectType_Implementation(ECollisionChannel _Channel);
-	
-	UAnimMontage* GetKeyMontage(uint8 Key);
+	void SetDeadCollision();
+	void SetDeadCollision_Implementation();
 
 	UFUNCTION(BlueprintCallable)
 	virtual void Attack(AActor* _OtherActor, UPrimitiveComponent* _Collision);
@@ -56,6 +54,7 @@ public:
 	{
 		return IsCharacterHit;
 	}
+
 	FORCEINLINE void SetIsCharacterHit(bool IsHit)
 	{
 		IsCharacterHit = IsHit;
