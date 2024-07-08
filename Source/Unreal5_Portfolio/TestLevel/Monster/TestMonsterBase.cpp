@@ -111,12 +111,12 @@ UMainAnimInstance* ATestMonsterBase::GetAnimInstance()
 	return AnimInst;
 }
 
-void ATestMonsterBase::ChangeAnimation_Implementation(uint8 _Type)
+void ATestMonsterBase::ChangeAniValue(uint8 _Type)
 {
 	AniValue = _Type;
 }
 
-void ATestMonsterBase::SetDeadCollision_Implementation()
+void ATestMonsterBase::SetDeadCollision()
 {
 	GetCapsuleComponent()->SetCollisionObjectType(ECC_GameTraceChannel5);
 	RightAttackComponent->SetCollisionObjectType(ECC_GameTraceChannel5);
@@ -140,8 +140,13 @@ void ATestMonsterBase::Attack(AActor* _OtherActor, UPrimitiveComponent* _Collisi
 	}
 }
 
-void ATestMonsterBase::GetDamage(float Damage)
+void ATestMonsterBase::Damaged_Implementation(float Damage)
 {
+	if (0.0f >= SettingData->Hp)
+	{
+		return;
+	}
+
 	SettingData->Hp -= Damage;
 	DeadCheck();
 }
@@ -157,6 +162,6 @@ void ATestMonsterBase::DeadCheck()
 		}
 
 		SetDeadCollision();
-		ChangeAnimation(EMonsterAnim::Dead);
+		ChangeAniValue(EMonsterAnim::Dead);
 	}
 }

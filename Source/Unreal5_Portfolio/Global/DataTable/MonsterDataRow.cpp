@@ -3,10 +3,3 @@
 
 #include "Global/DataTable/MonsterDataRow.h"
 #include "Net/UnrealNetwork.h"
-
-void UMonsterData::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const
-{
-	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
-
-	DOREPLIFETIME(UMonsterData, Hp);
-}

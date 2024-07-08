@@ -74,7 +74,7 @@ void ATestCharacter::HandAttackCollision(AActor* _OtherActor, UPrimitiveComponen
 		return;
 	}
 
-	Monster->GetDamage(150.0f);
+	Monster->Damaged(150.0f);
 }
 
 void ATestCharacter::ChangeHandAttackCollisionProfile(FName _Name)
@@ -198,7 +198,7 @@ void ATestCharacter::DefaultRayCast(float _DeltaTime)
 	}
 }
 
-void ATestCharacter::FireRayCast(float _DeltaTime)
+void ATestCharacter::FireRayCast_Implementation(float _DeltaTime)
 {
 	FVector Start = GetActorLocation();
 	FVector ForwardVector = CameraComponent->GetForwardVector();
@@ -216,7 +216,7 @@ void ATestCharacter::FireRayCast(float _DeltaTime)
 			ATestMonsterBase* Monster = Cast<ATestMonsterBase>(Hit.GetActor());
 			if (nullptr != Monster)
 			{
-				Monster->GetDamage(50.0f);
+				Monster->Damaged(50.0f);
 			}
 		}
 	}
