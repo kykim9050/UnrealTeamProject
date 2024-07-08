@@ -67,10 +67,6 @@ public:
 	
 	void SetActiveAttackCollision(bool Active);
 
-private:
-	void DeadCheck();
-	
-
 protected:
 	UFUNCTION()
 	void OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);

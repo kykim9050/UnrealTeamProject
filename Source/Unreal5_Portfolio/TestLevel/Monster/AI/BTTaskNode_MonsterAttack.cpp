@@ -23,8 +23,6 @@ EBTNodeResult::Type UBTTaskNode_MonsterAttack::ExecuteTask(UBehaviorTreeComponen
 	UMonsterData* MonsterData = GetValueAsObject<UMonsterData>(_OwnerComp, TEXT("MonsterData"));
 	MonsterData->IdleTime = 0.0f;
 	Monster->ChangeAniValue(EMonsterAnim::Attack);
-
-	Monster->ChangeAnimation(EMonsterAnim::Attack);
 	Monster->SetActiveAttackCollision(true);
 	MonsterData->AttackTime = Monster->GetAnimInstance()->GetKeyAnimMontage(static_cast<uint8>(EMonsterAnim::Attack))->GetPlayLength();
 
