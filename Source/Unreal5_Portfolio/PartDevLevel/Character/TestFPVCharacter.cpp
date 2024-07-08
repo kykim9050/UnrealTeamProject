@@ -6,6 +6,7 @@
 #include "Camera/CameraComponent.h"
 #include "Global/MainGameBlueprintFunctionLibrary.h"
 #include "Global/DataTable/ItemDataRow.h"
+#include "Engine/SkeletalMeshSocket.h"
 
 // Sets default values
 ATestFPVCharacter::ATestFPVCharacter()
@@ -33,51 +34,22 @@ ATestFPVCharacter::ATestFPVCharacter()
 	FPVMesh->SetOnlyOwnerSee(true);
 	FPVMesh->bCastDynamicShadow = false;
 	FPVMesh->CastShadow = false;
-	
-	// Item Meshes
-	RifleMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("RifleMesh"));
-	RifleMesh->SetupAttachment(GetMesh(), TEXT("RifleMesh"));
-	RifleMesh->SetCollisionProfileName(TEXT("NoCollision"));
-	RifleMesh->SetGenerateOverlapEvents(true);
-	RifleMesh->SetOwnerNoSee(true);
-	RifleMesh->SetVisibility(false);
-	ItemMeshes.Push(RifleMesh);
-
-	PistolMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("PistolMesh"));
-	PistolMesh->SetupAttachment(GetMesh(), TEXT("PistolMesh"));
-	PistolMesh->SetCollisionProfileName(TEXT("NoCollision"));
-	PistolMesh->SetGenerateOverlapEvents(true);
-	PistolMesh->SetOwnerNoSee(true);
-	PistolMesh->SetVisibility(false);
-	ItemMeshes.Push(PistolMesh);
-	
-	MeleeMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MeleeMesh"));
-	MeleeMesh->SetupAttachment(GetMesh(), TEXT("MeleeMesh"));
-	MeleeMesh->SetCollisionProfileName(TEXT("NoCollision"));
-	MeleeMesh->SetGenerateOverlapEvents(true);
-	MeleeMesh->SetOwnerNoSee(true);
-	MeleeMesh->SetVisibility(false);
-	ItemMeshes.Push(MeleeMesh);
-	
-	ThrowingMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ThrowingMesh"));
-	ThrowingMesh->SetupAttachment(GetMesh(), TEXT("ThrowingMesh"));
-	ThrowingMesh->SetCollisionProfileName(TEXT("NoCollision"));
-	ThrowingMesh->SetGenerateOverlapEvents(true);
-	ThrowingMesh->SetOwnerNoSee(true);
-	ThrowingMesh->SetVisibility(false);
-	ItemMeshes.Push(ThrowingMesh);
-	
-	SupplyMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("SupplyMesh"));
-	SupplyMesh->SetupAttachment(GetMesh(), TEXT("SupplyMesh"));
-	SupplyMesh->SetCollisionProfileName(TEXT("NoCollision"));
-	SupplyMesh->SetGenerateOverlapEvents(true);
-	SupplyMesh->SetOwnerNoSee(true);
-	SupplyMesh->SetVisibility(false);
-	ItemMeshes.Push(SupplyMesh);
 
 	UEnum* Enum = StaticEnum<EPlayerPosture>();
 	for (size_t i = 0; i < static_cast<size_t>(EPlayerPosture::Barehand); i++)
 	{
+		// Item Meshes
+		FString MeshName = Enum->GetNameStringByValue(i) + "Mesh";
+		UStaticMeshComponent* NewMesh = CreateDefaultSubobject<UStaticMeshComponent>(*MeshName);
+		NewMesh->SetupAttachment(GetMesh(), *MeshName);
+		NewMesh->SetCollisionProfileName(TEXT("NoCollision"));
+		NewMesh->SetGenerateOverlapEvents(true);
+		NewMesh->SetOwnerNoSee(true);
+		NewMesh->bCastDynamicShadow = false;
+		NewMesh->CastShadow = false;
+		NewMesh->SetVisibility(false);
+		ItemMeshes.Push(NewMesh);
+
 		FString FPVMeshName = Enum->GetNameStringByValue(i) + "FPVMesh";
 		UStaticMeshComponent* NewFPVMesh = CreateDefaultSubobject<UStaticMeshComponent>(*FPVMeshName);
 		NewFPVMesh->SetupAttachment(FPVMesh, *FPVMeshName);
@@ -97,7 +69,6 @@ ATestFPVCharacter::ATestFPVCharacter()
 		ItemSlot.Push(NewSlot);
 		IsItemIn.Push(false);
 	}
-	int a = 0;
 }
 
 void ATestFPVCharacter::Collision(AActor* _OtherActor, UPrimitiveComponent* _Collision)
@@ -130,6 +101,12 @@ void ATestFPVCharacter::BeginPlay()
 void ATestFPVCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	if (IsWeaponChanged == true)
+	{
+		ChangeWeaponMesh(EPlayerPosture(CurItemIndex));
+		IsWeaponChanged = false;
+	}
 }
 
 void ATestFPVCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -138,15 +115,8 @@ void ATestFPVCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Ou
 
 	DOREPLIFETIME(ATestFPVCharacter, StateValue);
 	DOREPLIFETIME(ATestFPVCharacter, PostureValue);
-	
-	DOREPLIFETIME(ATestFPVCharacter, RifleMesh);
-	DOREPLIFETIME(ATestFPVCharacter, PistolMesh);
-	DOREPLIFETIME(ATestFPVCharacter, MeleeMesh);
-	DOREPLIFETIME(ATestFPVCharacter, ThrowingMesh);
-	DOREPLIFETIME(ATestFPVCharacter, SupplyMesh);
 	DOREPLIFETIME(ATestFPVCharacter, ItemMeshes);
 	DOREPLIFETIME(ATestFPVCharacter, FPVItemMeshes);
-
 	DOREPLIFETIME(ATestFPVCharacter, PlayerHp);
 }
 
@@ -214,6 +184,41 @@ void ATestFPVCharacter::ChangePosture_Implementation(EPlayerPosture _Type)
 		PostureValue = _Type;
 		CurItemIndex = ItemSlotIndex;
 
+		for (size_t i = 0; i < static_cast<size_t>(EPlayerPosture::Barehand); i++)
+		{
+			if (i == static_cast<size_t>(_Type))
+			{
+				ItemMeshes[i]->SetVisibility(true);
+				FPVItemMeshes[i]->SetVisibility(true);
+			}
+			else
+			{
+				ItemMeshes[i]->SetVisibility(false);
+				FPVItemMeshes[i]->SetVisibility(false);
+			}
+		}
+	}
+	
+	IsWeaponChanged = true;
+}
+
+void ATestFPVCharacter::ChangeWeaponMesh(EPlayerPosture _Type)
+{
+	if (_Type == EPlayerPosture::Barehand)
+	{
+		for (size_t i = 0; i < static_cast<size_t>(EPlayerPosture::Barehand); i++)
+		{
+			ItemMeshes[i]->SetVisibility(false);
+			FPVItemMeshes[i]->SetVisibility(false);
+		}
+	}
+	else
+	{
+		/*if (IsItemIn[ItemSlotIndex] == false)
+		{
+			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("The item slot is empty."));
+			return;
+		}*/
 		for (size_t i = 0; i < static_cast<size_t>(EPlayerPosture::Barehand); i++)
 		{
 			if (i == static_cast<size_t>(_Type))
