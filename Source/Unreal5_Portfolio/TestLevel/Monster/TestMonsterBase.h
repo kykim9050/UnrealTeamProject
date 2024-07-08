@@ -54,6 +54,7 @@ public:
 	{
 		return IsCharacterHit;
 	}
+
 	FORCEINLINE void SetIsCharacterHit(bool IsHit)
 	{
 		IsCharacterHit = IsHit;
