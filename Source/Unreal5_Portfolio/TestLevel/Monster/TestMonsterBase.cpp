@@ -117,7 +117,7 @@ void ATestMonsterBase::ChangeAniValue(uint8 _Type)
 	AniValue = _Type;
 }
 
-void ATestMonsterBase::SetDeadCollision()
+void ATestMonsterBase::SetDeadCollision_Implementation()
 {
 	GetCapsuleComponent()->SetCollisionObjectType(ECC_GameTraceChannel5);
 	RightAttackComponent->SetCollisionObjectType(ECC_GameTraceChannel5);
@@ -141,9 +141,9 @@ void ATestMonsterBase::Attack(AActor* _OtherActor, UPrimitiveComponent* _Collisi
 	}
 }
 
-void ATestMonsterBase::Damaged_Implementation(float Damage)
+void ATestMonsterBase::Damaged(float Damage)
 {
-	if (0.0f >= SettingData->Hp)
+	if (false == HasAuthority() || 0.0f >= SettingData->Hp)
 	{
 		return;
 	}

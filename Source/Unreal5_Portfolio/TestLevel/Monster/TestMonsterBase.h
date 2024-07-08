@@ -61,10 +61,7 @@ public:
 		return SettingData->Hp;
 	}
 
-	UFUNCTION(Reliable, Server)
 	void Damaged(float Damage);
-	void Damaged_Implementation(float Damage);
-	
 	void SetActiveAttackCollision(bool Active);
 
 protected:
@@ -75,7 +72,10 @@ protected:
 	virtual void Attack(AActor* _OtherActor, UPrimitiveComponent* _Collision);
 
 private:
+	UFUNCTION(Reliable, NetMulticast)
 	void SetDeadCollision();
+	void SetDeadCollision_Implementation();
+
 	void DeadCheck();
 
 private:
