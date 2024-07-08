@@ -72,6 +72,8 @@ public:
 
 	void GetDamage(float Damage);
 	
+	void SetActiveAttackCollision(bool Active);
+
 private:
 	void DeadCheck();
 	
