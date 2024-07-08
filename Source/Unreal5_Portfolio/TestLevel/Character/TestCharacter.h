@@ -54,11 +54,11 @@ public:
 	void ChangePosture_Implementation(EPlayerPosture _Type);
 
 	// Inventory
-	UPROPERTY()
+	UPROPERTY(Category = "Contents", Replicated, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	TArray<FItemInformation> ItemSlot;
-	UPROPERTY()
+	UPROPERTY(Category = "Contents", Replicated, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	TArray<bool> IsItemIn;
-	UPROPERTY()
+	UPROPERTY(Category = "Contents", Replicated, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	int CurItemIndex = -1;
 
 	// Item
