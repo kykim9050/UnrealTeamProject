@@ -10,6 +10,7 @@
 #include "GameFrameWork/CharacterMovementComponent.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Blueprint/AIBlueprintHelperLibrary.h"
+#include "Components/CapsuleComponent.h"
 
 #include "Global/MainGameBlueprintFunctionLibrary.h"
 #include "Global/Animation/MainAnimInstance.h"
@@ -68,6 +69,10 @@ void ATestMonsterBase::BeginPlay()
 	}
 
 	AIController->GetBlackboardComponent()->SetValueAsObject(TEXT("MonsterData"), SettingData);
+
+	LeftAttackComponent->OnComponentEndOverlap.AddDynamic(this, &ATestMonsterBase::OnOverlapEnd);
+	RightAttackComponent->OnComponentEndOverlap.AddDynamic(this, &ATestMonsterBase::OnOverlapEnd);
+	SetActiveAttackCollision(false);
 }
 
 // Called every frame
@@ -92,6 +97,11 @@ void ATestMonsterBase::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Out
 	DOREPLIFETIME(ATestMonsterBase, AniValue);
 }
 
+void ATestMonsterBase::OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
+	Attack(OtherActor, OtherComp);
+}
+
 ATestMonsterBaseAIController* ATestMonsterBase::GetAIController()
 {
 	return Cast<ATestMonsterBaseAIController>(GetController());
@@ -112,9 +122,7 @@ void ATestMonsterBase::SetDeadCollision_Implementation()
 	GetCapsuleComponent()->SetCollisionObjectType(ECC_GameTraceChannel5);
 	RightAttackComponent->SetCollisionObjectType(ECC_GameTraceChannel5);
 	LeftAttackComponent->SetCollisionObjectType(ECC_GameTraceChannel5);
-
-	GetMesh()->SetCollisionProfileName(TEXT("Ragdoll"));
-	GetMesh()->SetSimulatePhysics(true);
+	GetCharacterMovement()->SetActive(false);
 }
 
 void ATestMonsterBase::Attack(AActor* _OtherActor, UPrimitiveComponent* _Collision)
@@ -136,7 +144,25 @@ void ATestMonsterBase::Attack(AActor* _OtherActor, UPrimitiveComponent* _Collisi
 void ATestMonsterBase::GetDamage(float Damage)
 {
 	SettingData->Hp -= Damage;
+	DeadCheck();
+}
 
+void ATestMonsterBase::SetActiveAttackCollision(bool Active)
+{
+	if (false == Active)
+	{
+		LeftAttackComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		RightAttackComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	}
+	else
+	{
+		LeftAttackComponent->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+		RightAttackComponent->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+	}
+}
+
+void ATestMonsterBase::DeadCheck()
+{
 	if (0.0f >= SettingData->Hp)
 	{
 		ATestMonsterBaseAIController* AIController = GetController<ATestMonsterBaseAIController>();
@@ -146,7 +172,6 @@ void ATestMonsterBase::GetDamage(float Damage)
 		}
 
 		SetDeadCollision();
-		GetCharacterMovement()->SetActive(false);
 		ChangeAnimation(EMonsterAnim::Dead);
 	}
 }

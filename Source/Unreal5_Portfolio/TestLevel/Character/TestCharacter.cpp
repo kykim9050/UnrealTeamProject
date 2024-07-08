@@ -49,9 +49,10 @@ ATestCharacter::ATestCharacter()
 	}
 
 	// HandAttack Component
-	FString Name = "Pist";
+	//FString Name = "Punch";
 	HandAttackComponent = CreateDefaultSubobject<USphereComponent>(TEXT("Hand Attack Comp"));
-	HandAttackComponent->SetupAttachment(GetMesh(), *Name);
+	//HandAttackComponent->SetupAttachment(GetMesh(), *Name);
+	HandAttackComponent->SetupAttachment(GetMesh());
 	HandAttackComponent->SetRelativeLocation({ 0.0f, 80.0f, 120.0f });
 	//HandAttackComponent->SetCollisionProfileName(TEXT("NoCollision"));
 
