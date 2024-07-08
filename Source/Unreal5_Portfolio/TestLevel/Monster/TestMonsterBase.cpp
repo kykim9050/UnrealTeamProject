@@ -72,6 +72,7 @@ void ATestMonsterBase::BeginPlay()
 
 	LeftAttackComponent->OnComponentEndOverlap.AddDynamic(this, &ATestMonsterBase::OnOverlapEnd);
 	RightAttackComponent->OnComponentEndOverlap.AddDynamic(this, &ATestMonsterBase::OnOverlapEnd);
+	SetActiveAttackCollision(false);
 }
 
 // Called every frame
@@ -144,6 +145,20 @@ void ATestMonsterBase::GetDamage(float Damage)
 {
 	SettingData->Hp -= Damage;
 	DeadCheck();
+}
+
+void ATestMonsterBase::SetActiveAttackCollision(bool Active)
+{
+	if (false == Active)
+	{
+		LeftAttackComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		RightAttackComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	}
+	else
+	{
+		LeftAttackComponent->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+		RightAttackComponent->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+	}
 }
 
 void ATestMonsterBase::DeadCheck()
