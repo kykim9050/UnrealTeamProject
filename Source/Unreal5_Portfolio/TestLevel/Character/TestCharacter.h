@@ -123,8 +123,9 @@ public :
 	UFUNCTION(BlueprintCallable)
 	void DefaultRayCast(float _DeltaTime);
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(Reliable, Server, BlueprintCallable)
 	void FireRayCast(float _DeltaTime);
+	void FireRayCast_Implementation(float _DeltaTime);
 
 	UFUNCTION(BlueprintCallable)
 	FString GetRayCastToItemName() const;
