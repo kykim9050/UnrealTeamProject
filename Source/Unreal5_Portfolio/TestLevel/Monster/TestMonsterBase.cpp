@@ -10,6 +10,7 @@
 #include "GameFrameWork/CharacterMovementComponent.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Blueprint/AIBlueprintHelperLibrary.h"
+#include "Components/CapsuleComponent.h"
 
 #include "Global/MainGameBlueprintFunctionLibrary.h"
 #include "Global/Animation/MainAnimInstance.h"
@@ -66,6 +67,9 @@ void ATestMonsterBase::BeginPlay()
 	}
 
 	AIController->GetBlackboardComponent()->SetValueAsObject(TEXT("MonsterData"), SettingData);
+
+	LeftAttackComponent->OnComponentEndOverlap.AddDynamic(this, &ATestMonsterBase::OnOverlapEnd);
+	RightAttackComponent->OnComponentEndOverlap.AddDynamic(this, &ATestMonsterBase::OnOverlapEnd);
 }
 
 // Called every frame
@@ -88,6 +92,11 @@ void ATestMonsterBase::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Out
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
 	DOREPLIFETIME(ATestMonsterBase, AniValue);
+}
+
+void ATestMonsterBase::OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
+	Attack(OtherActor, OtherComp);
 }
 
 ATestMonsterBaseAIController* ATestMonsterBase::GetAIController()

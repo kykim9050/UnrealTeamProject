@@ -73,6 +73,10 @@ public:
 
 	FORCEINLINE void GetDamage(float Damage);
 
+protected:
+	UFUNCTION()
+	void OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+
 private:
 	const FMonsterDataRow* BaseData;
 
