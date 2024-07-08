@@ -28,6 +28,7 @@ void AMinimapCaptureCamera::Tick(float DeltaTime)
 	ATestCharacter* MyCharacter = Cast<ATestCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 	
 	FVector CharacterPos = MyCharacter->GetActorLocation();
+	CharacterPos.Z = 0.f;
 	SetActorLocation(CharacterPos);
 }
 
