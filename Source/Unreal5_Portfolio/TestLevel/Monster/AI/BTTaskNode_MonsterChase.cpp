@@ -23,7 +23,6 @@ EBTNodeResult::Type UBTTaskNode_MonsterChase::ExecuteTask(UBehaviorTreeComponent
 	UMonsterData* MonsterData = GetValueAsObject<UMonsterData>(_OwnerComp, TEXT("MonsterData"));
 	Monster->GetCharacterMovement()->MaxWalkSpeed = MonsterData->Data->GetRunSpeed();
 	Monster->ChangeAniValue(EMonsterAnim::Run);
-	//MonsterData->IdleTime = 0.0f;
 
 	return EBTNodeResult::Type::InProgress;
 }
@@ -35,29 +34,23 @@ void UBTTaskNode_MonsterChase::TickTask(UBehaviorTreeComponent& _OwnerComp, uint
 	UMonsterData* MonsterData = GetValueAsObject<UMonsterData>(_OwnerComp, TEXT("MonsterData"));
 
 	ATestMonsterBase* Monster = GetActor<ATestMonsterBase>(_OwnerComp);
-	UObject* TargetObject = GetValueAsObject<AActor>(_OwnerComp, TEXT("TargetActor"));
-	AActor* TargetActor = Cast<AActor>(TargetObject);
+	AActor* TargetActor = GetValueAsObject<AActor>(_OwnerComp, TEXT("TargetActor"));
 	EPathFollowingRequestResult::Type IsMove = Monster->GetAIController()->MoveToLocation(TargetActor->GetActorLocation());
+	
+	if (EMonsterState::Fall == static_cast<EMonsterState>(GetCurState(_OwnerComp)))
+	{
+		FinishLatentTask(_OwnerComp, EBTNodeResult::Failed);
+		return;
+	}
 
 	// 범위 안에 있으면 공격상태로 변경
-	FVector TargetLoc = TargetActor->GetActorLocation();
-	FVector MyLoc = Monster->GetActorLocation();
-	FVector TargetToMy = TargetLoc - MyLoc;
-	double TargetLength = abs(TargetToMy.Length());
-	if (TargetLength <= MonsterData->AttackBoundary)
+	FVector TargetLocation = TargetActor->GetActorLocation();
+	FVector MonsterLocation = Monster->GetActorLocation();
+	FVector LocationDiff = TargetLocation - MonsterLocation;
+	double DiffLength = LocationDiff.Size();
+	if (DiffLength <= MonsterData->AttackBoundary)
 	{
 		StateChange(_OwnerComp, EMonsterState::Attack);
 		return;
 	}
-
-
-	// 사망 테스트
-	//if (2.0f < MonsterData->IdleTime)
-	//{
-	//	StateChange(_OwnerComp, EMonsterState::Dead);
-	//	return;
-	//}
-	//
-	//MonsterData->IdleTime += _DeltaSeconds;
-
 }
