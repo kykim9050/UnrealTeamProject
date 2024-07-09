@@ -61,6 +61,8 @@ public:
 	/// </summary>
 	const struct FInGameUserWidgetDataRow* GetInGameUserWidgetDataTable(FName _Name);
 
+	const struct FBossDataRow* GetBossDataTable(FName _Name);
+
 	/// <summary>
 	/// TestInGameWidgets 를 받아오는 함수
 	/// </summary>
@@ -90,6 +92,9 @@ private:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowprivateAccess = "true"));
 	UDataTable* InGameUserWidgetDataTable = nullptr;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowprivateAccess = "true"));
+	UDataTable* BossDataTable = nullptr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	TMap<FString, TSubclassOf<UUserWidget>> TestInGameWidgets;
