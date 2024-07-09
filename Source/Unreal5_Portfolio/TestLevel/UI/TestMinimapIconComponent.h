@@ -13,6 +13,8 @@ UCLASS(ShowCategories = (Mobility), ClassGroup = Paper2D, meta = (BlueprintSpawn
 class UNREAL5_PORTFOLIO_API UTestMinimapIconComponent : public UPaperSpriteComponent
 {
 	GENERATED_BODY()
+
+public:
 	UTestMinimapIconComponent();
 	void BeginPlay() override;
 };
