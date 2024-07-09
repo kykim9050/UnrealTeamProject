@@ -32,3 +32,8 @@ void ATestBossMonsterBase::SetupPlayerInputComponent(UInputComponent* PlayerInpu
 
 }
 
+void ATestBossMonsterBase::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+}
+
