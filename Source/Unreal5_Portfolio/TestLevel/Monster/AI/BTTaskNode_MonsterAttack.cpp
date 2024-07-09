@@ -37,10 +37,11 @@ void UBTTaskNode_MonsterAttack::TickTask(UBehaviorTreeComponent& _OwnerComp, uin
 
 	ATestMonsterBase* Monster = GetActor<ATestMonsterBase>(_OwnerComp);
 	AActor* TargetActor = GetValueAsObject<AActor>(_OwnerComp, TEXT("TargetActor"));
-	FVector MyLoc = Monster->GetActorLocation();
-	FVector TargetLoc = TargetActor->GetActorLocation();
+
+	FVector MonsterLocation = Monster->GetActorLocation();
+	FVector TargetLocation = TargetActor->GetActorLocation();
 	
-	FRotator TurnRot = UKismetMathLibrary::FindLookAtRotation(MyLoc, TargetLoc);
+	FRotator TurnRot = UKismetMathLibrary::FindLookAtRotation(MonsterLocation, TargetLocation);
 	Monster->SetActorRotation(TurnRot);
 
 	if (0.0f >= MonsterData->AttackTime)
@@ -62,8 +63,9 @@ void UBTTaskNode_MonsterAttack::TickTask(UBehaviorTreeComponent& _OwnerComp, uin
 				TargetCharacter->GetDamage(Monster->GetAttackDamage());
 				Monster->SetIsCharacterHit(false);
 			}
-			FVector TargetToMy = TargetLoc - MyLoc;
-			float Dist = abs(TargetToMy.Length());
+
+			FVector LocationDiff = TargetLocation - MonsterLocation;
+			float Dist = LocationDiff.Size();
 			if (MonsterData->AttackBoundary >= Dist)
 			{
 				MonsterData->AttackTime = Monster->GetAnimInstance()->GetKeyAnimMontage(static_cast<uint8>(EMonsterAnim::Attack))->GetPlayLength();
@@ -77,5 +79,6 @@ void UBTTaskNode_MonsterAttack::TickTask(UBehaviorTreeComponent& _OwnerComp, uin
 			}
 		}
 	}
+
 	MonsterData->AttackTime -= _DeltaSeconds;
 }
