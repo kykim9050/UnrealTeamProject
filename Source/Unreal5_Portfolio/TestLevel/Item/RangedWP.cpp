@@ -19,6 +19,8 @@ ARangedWP::ARangedWP()
 
 	WeaponComponent->SetupAttachment(RootComponent);
 	PickUpComponent->SetupAttachment(WeaponComponent);
+
+	bReplicates = true;
 }
 
 // Called when the game starts or when spawned
@@ -42,7 +44,7 @@ void ARangedWP::HandlePickUp(ATestCharacter* PickUpCharacter)
 	if (WeaponComponent)
 	{
 		WeaponComponent->AttachWeapon(PickUpCharacter);
-		PickUpCharacter->PickUpItem(FName("TestRifle"));
+		PickUpCharacter->PickUpItem();
 		Destroy();
 	}
 }
