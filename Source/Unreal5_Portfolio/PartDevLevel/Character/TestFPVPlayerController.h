@@ -52,9 +52,13 @@ public:
 
 	// State, Posture
 	UFUNCTION(BlueprintCallable)
-	void ChangeState(EPlayerState _State);
+	void ChangeStateController(EPlayerState _State);
 	UFUNCTION(BlueprintCallable)
 	void ChangePostureController(EPlayerPosture _Posture);
+
+	// POV
+	UFUNCTION(BlueprintCallable)
+	void ChangePOVController();
 
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "TeamId", meta = (AllowPrivateAccess = true))
