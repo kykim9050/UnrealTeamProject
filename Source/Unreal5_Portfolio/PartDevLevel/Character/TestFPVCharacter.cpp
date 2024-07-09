@@ -101,12 +101,6 @@ void ATestFPVCharacter::BeginPlay()
 void ATestFPVCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
-	if (IsWeaponChanged == true)
-	{
-		ChangeWeaponMesh(EPlayerPosture(CurItemIndex));
-		IsWeaponChanged = false;
-	}
 }
 
 void ATestFPVCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -117,6 +111,8 @@ void ATestFPVCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Ou
 	DOREPLIFETIME(ATestFPVCharacter, PostureValue);
 	DOREPLIFETIME(ATestFPVCharacter, ItemMeshes);
 	DOREPLIFETIME(ATestFPVCharacter, FPVItemMeshes);
+	DOREPLIFETIME(ATestFPVCharacter, IsItemMeshOn);
+	DOREPLIFETIME(ATestFPVCharacter, CurItemIndex);
 	DOREPLIFETIME(ATestFPVCharacter, PlayerHp);
 }
 
@@ -165,12 +161,6 @@ void ATestFPVCharacter::ChangePosture_Implementation(EPlayerPosture _Type)
 	{
 		PostureValue = _Type;
 		CurItemIndex = -1;
-
-		for (size_t i = 0; i < static_cast<size_t>(EPlayerPosture::Barehand); i++)
-		{
-			ItemMeshes[i]->SetVisibility(false);
-			FPVItemMeshes[i]->SetVisibility(false);
-		}
 	}
 	else
 	{
@@ -183,30 +173,16 @@ void ATestFPVCharacter::ChangePosture_Implementation(EPlayerPosture _Type)
 
 		PostureValue = _Type;
 		CurItemIndex = ItemSlotIndex;
-
-		for (size_t i = 0; i < static_cast<size_t>(EPlayerPosture::Barehand); i++)
-		{
-			if (i == static_cast<size_t>(_Type))
-			{
-				ItemMeshes[i]->SetVisibility(true);
-				FPVItemMeshes[i]->SetVisibility(true);
-			}
-			else
-			{
-				ItemMeshes[i]->SetVisibility(false);
-				FPVItemMeshes[i]->SetVisibility(false);
-			}
-		}
 	}
-	
-	IsWeaponChanged = true;
+
+	SettingItemMesh(CurItemIndex);
 }
 
-void ATestFPVCharacter::ChangeWeaponMesh(EPlayerPosture _Type)
+void ATestFPVCharacter::SettingItemMesh_Implementation(int _ItemIndex)
 {
-	if (_Type == EPlayerPosture::Barehand)
+	if (_ItemIndex == -1)
 	{
-		for (size_t i = 0; i < static_cast<size_t>(EPlayerPosture::Barehand); i++)
+		for (int i = 0; i < static_cast<int>(EPlayerPosture::Barehand); i++)
 		{
 			ItemMeshes[i]->SetVisibility(false);
 			FPVItemMeshes[i]->SetVisibility(false);
@@ -214,14 +190,9 @@ void ATestFPVCharacter::ChangeWeaponMesh(EPlayerPosture _Type)
 	}
 	else
 	{
-		/*if (IsItemIn[ItemSlotIndex] == false)
+		for (int i = 0; i < static_cast<int>(EPlayerPosture::Barehand); i++)
 		{
-			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("The item slot is empty."));
-			return;
-		}*/
-		for (size_t i = 0; i < static_cast<size_t>(EPlayerPosture::Barehand); i++)
-		{
-			if (i == static_cast<size_t>(_Type))
+			if (i == _ItemIndex)
 			{
 				ItemMeshes[i]->SetVisibility(true);
 				FPVItemMeshes[i]->SetVisibility(true);

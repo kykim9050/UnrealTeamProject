@@ -2,12 +2,12 @@
 
 
 #include "TestLevel/Monster/AI/BTTaskNode_MonsterAttack.h"
-
-#include "Global/ContentsLog.h"
 #include "TestLevel/Monster/TestMonsterBase.h"
-#include "Global/Animation/MainAnimInstance.h"
-#include "Kismet/KismetMathLibrary.h"
 #include "TestLevel/Character/TestCharacter.h"
+
+#include "Global/Animation/MainAnimInstance.h"
+#include "Global/ContentsLog.h"
+#include "Kismet/KismetMathLibrary.h"
 
 EBTNodeResult::Type UBTTaskNode_MonsterAttack::ExecuteTask(UBehaviorTreeComponent& _OwnerComp, uint8* _NodeMemory)
 {
