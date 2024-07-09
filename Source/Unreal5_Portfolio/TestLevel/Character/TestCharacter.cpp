@@ -4,9 +4,10 @@
 #include "TestCharacter.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
-#include "Components/SphereComponent.h"
 #include "Global/MainGameBlueprintFunctionLibrary.h"
 #include "Global/DataTable/ItemDataRow.h"
+#include "Components/SphereComponent.h"
+#include "TestPlayerController.h"
 #include "TestLevel/UI/TestMinimapIconComponent.h"
 #include "TestLevel/Monster/TestMonsterBase.h"
 
@@ -46,6 +47,7 @@ ATestCharacter::ATestCharacter()
 		NewSocketMesh->SetCollisionProfileName(TEXT("NoCollision"));
 		NewSocketMesh->SetGenerateOverlapEvents(true);
 		NewSocketMesh->SetVisibility(false);
+		NewSocketMesh->SetIsReplicated(true);
 		ItemMeshes.Push(NewSocketMesh);
 
 		// Inventory (for UI Test)
@@ -120,6 +122,7 @@ void ATestCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLi
 
 	DOREPLIFETIME(ATestCharacter, StateValue);
 	DOREPLIFETIME(ATestCharacter, PostureValue);
+	DOREPLIFETIME(ATestCharacter, RayCastToItemName);
 
 	// 플레이어 H
 	DOREPLIFETIME(ATestCharacter, PlayerHp);
@@ -232,11 +235,6 @@ void ATestCharacter::FireRayCast_Implementation(float _DeltaTime)
 	}
 }
 
-FString ATestCharacter::GetRayCastToItemName() const
-{
-	return RayCastToItemName;
-}
-
 void ATestCharacter::ChangeState_Implementation(EPlayerState _Type)
 {
 	StateValue = _Type;
@@ -280,26 +278,41 @@ void ATestCharacter::ChangePosture_Implementation(EPlayerPosture _Type)
 	}
 }
 
-void ATestCharacter::PickUpItem_Implementation(FName _ItemName)
+void ATestCharacter::PickUpItem_Implementation()
 {
+	//AGameModeBase* Test = GetWorld()->GetAuthGameMode();
+	//ATestPlayerController* PlayerControl = Cast<ATestPlayerController>(GetController());
+	// 
+	// RayCast를 통해 Tag 이름을 가져온다.
+	FString GetItemName = "";
+	GetItemName = RayCastToItemName;
+	if (GetItemName == "")
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, TEXT("Not Item"));
+		return;
+	}
+
+	FName ItemStringToName = FName(*GetItemName);
+
+	// Data Table에 있는 Static Mesh 가져오기.
 	UMainGameInstance* Inst = GetGameInstance<UMainGameInstance>();
-	const FItemDataRow* ItemData = Inst->GetItemData(_ItemName);
+	const FItemDataRow* ItemData = Inst->GetItemData(ItemStringToName);
 
-	EPlayerPosture ItemType = ItemData->GetType();
-	UStaticMesh* ItemMesh = ItemData->GetResMesh();
-	int ItemReloadNum = ItemData->GetReloadNum();
+	EPlayerPosture ItemType = ItemData->GetType();	// 무기 Type
+	UStaticMesh* ItemMesh = ItemData->GetResMesh(); // Static Mesh
+	int ItemReloadNum = ItemData->GetReloadNum();	// 장전 단위.(30, 40)
 
-	uint8 ItemIndex = static_cast<uint8>(ItemType);
+	uint8 ItemIndex = static_cast<uint8>(ItemType); // 사용할 소켓 번호.
 
 	// Setting Weapon Mesh
-	ItemMeshes[ItemIndex]->SetStaticMesh(ItemMesh);
-	GetMapItem->Destroy();
+	ItemMeshes[ItemIndex]->SetStaticMesh(ItemMesh); // Static Mesh 적용.
+	GetMapItem->Destroy(); // Map에 있는 아이템 삭제.
 
 	// Setting Inventory
-	ItemSlot[ItemIndex].Name = _ItemName;
+	ItemSlot[ItemIndex].Name = ItemStringToName;
 	ItemSlot[ItemIndex].ReloadMaxNum = ItemReloadNum;
 	ItemSlot[ItemIndex].ReloadLeftNum = ItemReloadNum;
 	IsItemIn[ItemIndex] = true;
 
-	ChangePosture(ItemType);
+	ChangePosture(ItemType); // 무기 Type에 따른 애니메이션 변화 함수 호출.
 }

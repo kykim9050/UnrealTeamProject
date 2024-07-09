@@ -48,7 +48,8 @@ void UBTTaskNode_MonsterPatrol::TickTask(UBehaviorTreeComponent& _OwnerComp, uin
 	Super::TickTask(_OwnerComp, _pNodeMemory, _DeltaSeconds);
 
 	ATestMonsterBase* Monster = GetActor<ATestMonsterBase>(_OwnerComp);
-	EPathFollowingRequestResult::Type IsMove = Monster->GetAIController()->MoveToLocation(GetValueAsVector(_OwnerComp, TEXT("PatrolLocation")));
+	FVector PatrolLocation = GetValueAsVector(_OwnerComp, TEXT("PatrolLocation"));
+	EPathFollowingRequestResult::Type IsMove = Monster->GetAIController()->MoveToLocation(PatrolLocation);
 
 	bool CanSee = _OwnerComp.GetBlackboardComponent()->GetValueAsBool(TEXT("CanSeePlayer"));
 	if (true == CanSee)

@@ -6,6 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "MinimapCaptureCamera.generated.h"
 
+class ATestCharacter;
 UCLASS()
 class UNREAL5_PORTFOLIO_API AMinimapCaptureCamera : public AActor
 {
@@ -22,5 +23,7 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-
+	void SetCharacter(ATestCharacter* _MyCharacter);
+private:
+	ATestCharacter* MyCharacter = nullptr;
 };

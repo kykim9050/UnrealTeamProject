@@ -18,6 +18,8 @@ AMeleeWP::AMeleeWP()
 
 	WeaponComponent->SetupAttachment(RootComponent);
 	PickUpComponent->SetupAttachment(WeaponComponent);
+
+	bReplicates = true;
 }
 
 void AMeleeWP::BeginPlay()
@@ -39,7 +41,7 @@ void AMeleeWP::HandlePickUp(ATestCharacter* PickUpCharacter)
 	if (WeaponComponent)
 	{
 		WeaponComponent->AttachWeapon(PickUpCharacter);
-		PickUpCharacter->PickUpItem(FName("TestRifle"));
+		PickUpCharacter->PickUpItem();
 		Destroy();
 	}
 }

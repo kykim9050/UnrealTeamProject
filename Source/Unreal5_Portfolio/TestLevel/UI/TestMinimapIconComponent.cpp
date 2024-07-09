@@ -17,8 +17,8 @@ UTestMinimapIconComponent::UTestMinimapIconComponent()
 		LOG(UILog, Fatal, TEXT("UTestMinimapIconComponent::UTestMinimapIconComponent() > ConstructorHelpers::FObjectFinder<UPaperSprite> Error"));
 	}
 
-	SetRelativeLocation(FVector(0.f, 0.f, 1000.f));
-	SetRelativeScale3D(FVector(4.f, 4.f, 4.f));
+	SetRelativeLocation(FVector(0.f, 0.f, 2000.f));
+	SetRelativeScale3D(FVector(4.f, 1.f, 4.f));
 
 	FQuat Q;
 	UKismetMathLibrary::Quat_SetFromEuler(Q, FVector(90.f, 0.f, 90.f));

@@ -2,12 +2,12 @@
 
 
 #include "TestLevel/Monster/AI/BTTaskNode_MonsterChase.h"
-
 #include "TestLevel/Monster/TestMonsterBaseAIController.h"
 #include "TestLevel/Monster/TestMonsterBase.h"
 
-#include "Navigation/PathFollowingComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Navigation/PathFollowingComponent.h"
+#include "Kismet/KismetMathLibrary.h"
 
 EBTNodeResult::Type UBTTaskNode_MonsterChase::ExecuteTask(UBehaviorTreeComponent& _OwnerComp, uint8* _NodeMemory)
 {
@@ -31,21 +31,22 @@ void UBTTaskNode_MonsterChase::TickTask(UBehaviorTreeComponent& _OwnerComp, uint
 {
 	Super::TickTask(_OwnerComp, _pNodeMemory, _DeltaSeconds);
 
-	UMonsterData* MonsterData = GetValueAsObject<UMonsterData>(_OwnerComp, TEXT("MonsterData"));
-
-	ATestMonsterBase* Monster = GetActor<ATestMonsterBase>(_OwnerComp);
-	AActor* TargetActor = GetValueAsObject<AActor>(_OwnerComp, TEXT("TargetActor"));
-	EPathFollowingRequestResult::Type IsMove = Monster->GetAIController()->MoveToLocation(TargetActor->GetActorLocation());
-	
-	if (EMonsterState::Fall == static_cast<EMonsterState>(GetCurState(_OwnerComp)))
+	if (EMonsterState::Chase != static_cast<EMonsterState>(GetCurState(_OwnerComp)))
 	{
 		FinishLatentTask(_OwnerComp, EBTNodeResult::Failed);
 		return;
 	}
 
-	// 범위 안에 있으면 공격상태로 변경
-	FVector TargetLocation = TargetActor->GetActorLocation();
+	UMonsterData* MonsterData = GetValueAsObject<UMonsterData>(_OwnerComp, TEXT("MonsterData"));
+	ATestMonsterBase* Monster = GetActor<ATestMonsterBase>(_OwnerComp);
 	FVector MonsterLocation = Monster->GetActorLocation();
+	
+	AActor* TargetActor = GetValueAsObject<AActor>(_OwnerComp, TEXT("TargetActor"));
+	FVector TargetLocation = TargetActor->GetActorLocation();
+
+	EPathFollowingRequestResult::Type IsMove = Monster->GetAIController()->MoveToLocation(TargetLocation);
+
+	// 범위 안에 있으면 공격상태로 변경
 	FVector LocationDiff = TargetLocation - MonsterLocation;
 	double DiffLength = LocationDiff.Size();
 	if (DiffLength <= MonsterData->AttackBoundary)
