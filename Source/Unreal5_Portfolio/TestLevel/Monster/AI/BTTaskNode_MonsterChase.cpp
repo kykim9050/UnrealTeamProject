@@ -36,6 +36,12 @@ void UBTTaskNode_MonsterChase::TickTask(UBehaviorTreeComponent& _OwnerComp, uint
 	ATestMonsterBase* Monster = GetActor<ATestMonsterBase>(_OwnerComp);
 	AActor* TargetActor = GetValueAsObject<AActor>(_OwnerComp, TEXT("TargetActor"));
 	EPathFollowingRequestResult::Type IsMove = Monster->GetAIController()->MoveToLocation(TargetActor->GetActorLocation());
+	
+	if (EMonsterState::Fall == static_cast<EMonsterState>(GetCurState(_OwnerComp)))
+	{
+		FinishLatentTask(_OwnerComp, EBTNodeResult::Failed);
+		return;
+	}
 
 	// 범위 안에 있으면 공격상태로 변경
 	FVector TargetLocation = TargetActor->GetActorLocation();
