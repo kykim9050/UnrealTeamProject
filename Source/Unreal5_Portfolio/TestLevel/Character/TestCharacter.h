@@ -65,8 +65,8 @@ public:
 
 	// Item
 	UFUNCTION(Reliable, Server)
-	void PickUpItem(FName _ItemName);
-	void PickUpItem_Implementation(FName _ItemName);
+	void PickUpItem();
+	void PickUpItem_Implementation();
 
 	UFUNCTION(BlueprintCallable)
 	FORCEINLINE bool GetPickUp()
@@ -129,12 +129,9 @@ public :
 	void FireRayCast(float _DeltaTime);
 	void FireRayCast_Implementation(float _DeltaTime);
 
-	UFUNCTION(BlueprintCallable)
-	FString GetRayCastToItemName() const;
 
-
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	//UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	UPROPERTY(Category = "Contents", Replicated, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	FString RayCastToItemName = "";
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)

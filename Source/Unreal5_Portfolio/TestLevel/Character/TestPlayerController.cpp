@@ -147,21 +147,21 @@ void ATestPlayerController::FireEnd()
 void ATestPlayerController::PickUpItem()
 {
 	ATestCharacter* Ch = GetPawn<ATestCharacter>();
-	FString Name = Ch->GetRayCastToItemName();
-	if (Name == "")
+
+	//AGameModeBase* Test = GetWorld()->GetAuthGameMode(); // Is Server? Is Client?
+	if (nullptr == Ch)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, TEXT("Not Item"));
 		return;
 	}
 
-	Ch->PickUpItem(FName(Name));
+	Ch->PickUpItem();
 	Ch->SetPickUp(true);
 }
 
 void ATestPlayerController::PickUpItemEnd()
 {
 	ATestCharacter* Ch = GetPawn<ATestCharacter>();
-	Ch->SetPickUp(false);
+	//Ch->SetPickUp(false);
 }
 
 void ATestPlayerController::ChangeState(EPlayerState _State)
