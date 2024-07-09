@@ -22,8 +22,8 @@ EBTNodeResult::Type UBTTaskNode_MonsterFall::ExecuteTask(UBehaviorTreeComponent&
 	FVector MonsterLocation = Monster->GetActorLocation();
 	FVector LandingLocation = GetValueAsVector(_OwnerComp, TEXT("LandingLocation"));
 	FVector Velocity = FVector::ZeroVector;
-
-	UGameplayStatics::SuggestProjectileVelocity_CustomArc(GetWorld(), Velocity, MonsterLocation, LandingLocation);
+	
+	UGameplayStatics::SuggestProjectileVelocity_CustomArc(GetWorld(), Velocity, MonsterLocation, LandingLocation, 0.0f, 0.5f);
 	Monster->LaunchCharacter(Velocity, true, true);	
 
 	return EBTNodeResult::Type::InProgress;
