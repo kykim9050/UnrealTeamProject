@@ -30,6 +30,8 @@ public:
 	TArray<UStaticMeshComponent*> ItemMeshes;
 	UPROPERTY(Category = "Contents", Replicated, EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	TArray<UStaticMeshComponent*> FPVItemMeshes;
+	UPROPERTY(Category = "Contents", Replicated, EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	TArray<bool> IsItemMeshOn;
 
 	// State, Posture
 	UPROPERTY(Category = "Contents", Replicated, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
@@ -43,10 +45,9 @@ public:
 	UFUNCTION(Reliable, Server)
 	void ChangePosture(EPlayerPosture _Type);
 	void ChangePosture_Implementation(EPlayerPosture _Type);
-	UFUNCTION(BlueprintCallable)
-	void ChangeWeaponMesh(EPlayerPosture _Type);
-	UPROPERTY(Category = "Contents", Replicated, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	bool IsWeaponChanged = false;
+	UFUNCTION(Reliable, NetMulticast)
+	void SettingItemMesh(int _ItemIndex);
+	void SettingItemMesh_Implementation(int _ItemIndex);
 
 	// Inventory (for UI Test)
 	struct FItemInfo
@@ -58,7 +59,7 @@ public:
 	TArray<FItemInfo> ItemSlot;
 	UPROPERTY()
 	TArray<bool> IsItemIn;
-	UPROPERTY()
+	UPROPERTY(Category = "Contents", Replicated, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	int CurItemIndex = -1;
 
 	// Item
