@@ -2,6 +2,14 @@
 
 
 #include "MainAnimInstance.h"
+#include "TestLevel/Character/TestCharacter.h"
+
+void UMainAnimInstance::NativeBeginPlay()
+{
+	Super::NativeBeginPlay();
+
+	OwnerPlayer = Cast<ATestCharacter>(TryGetPawnOwner());
+}
 
 void UMainAnimInstance::ChangeAnimation(uint8 _Key)
 {
