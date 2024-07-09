@@ -16,5 +16,14 @@ class UNREAL5_PORTFOLIOEDITOR_API UDataEditor : public UEditorUtilityWidget
 
 public:
 	UDataEditor();
-	
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (BindWidget))
+	class UDetailsView* DataView = nullptr;
+
+protected:
+	void NativeConstruct() override;
+
+private:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowprivateAccess = "true"));
+	UDataTable* TestDataTable = nullptr;
 };
