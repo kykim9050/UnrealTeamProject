@@ -20,7 +20,11 @@
 		{
 			"Name": "Unreal5_PortfolioEditor",
 			"Type": "Editor",
-			"LoadingPhase": "Default"
+			"LoadingPhase": "Default",
+			"AdditionalDependencies": [
+				"UMG",
+				"Blutility"
+			]
 		}
 	],
 	"Plugins": [
