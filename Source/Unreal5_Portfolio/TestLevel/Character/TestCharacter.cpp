@@ -4,9 +4,10 @@
 #include "TestCharacter.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
+#include "Components/SphereComponent.h"
 #include "Global/MainGameBlueprintFunctionLibrary.h"
 #include "Global/DataTable/ItemDataRow.h"
-#include "Components/SphereComponent.h"
+#include "TestLevel/UI/TestMinimapIconComponent.h"
 #include "TestLevel/Monster/TestMonsterBase.h"
 
 // Sets default values
@@ -26,6 +27,14 @@ ATestCharacter::ATestCharacter()
 	CameraComponent->SetupAttachment(SpringArmComponent);
 	CameraComponent->SetProjectionMode(ECameraProjectionMode::Perspective);
 	CameraComponent->bUsePawnControlRotation = true;
+
+	// MinimapIcon Component
+	MinimapIconComponent = CreateDefaultSubobject<UTestMinimapIconComponent>(TEXT("MinimapPlayerIcon"));
+	MinimapIconComponent->SetupAttachment(RootComponent);
+	MinimapIconComponent->bVisibleInSceneCaptureOnly = true;
+
+	// Mesh
+	GetMesh()->bHiddenInSceneCapture = true;
 
 	UEnum* Enum = StaticEnum<EPlayerPosture>();
 	for (size_t i = 0; i < static_cast<size_t>(EPlayerPosture::Barehand); i++)
