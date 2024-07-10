@@ -76,7 +76,18 @@ private:
 	void SetDeadCollision();
 	void SetDeadCollision_Implementation();
 
+	UFUNCTION(Reliable, NetMulticast)
+	void SetDeadTimeline();
+	void SetDeadTimeline_Implementation();
+
 	void OnDead();
+	UFUNCTION()
+	void OnDeadDissolveInterp(float _Value);
+	UFUNCTION()
+	void OnDeadFinish()
+	{
+		Destroy();
+	}
 
 private:
 	const FMonsterDataRow* BaseData;
@@ -93,8 +104,16 @@ private:
 	UPROPERTY(Category = "Animation", Replicated, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	class UMainAnimInstance* AnimInst;
 
-	TArray<class UMaterialInterface*> DynamicMaterials;
+	TArray<class UMaterialInstanceDynamic*> DynamicMaterials;
+	
+	UPROPERTY()
 	FTimeline DeadTimeLine;
+
+	UPROPERTY(EditAnywhere, Category = "DeadTimeLine")
+	class UCurveFloat* DeadDissolveCurve;
+	
+	FOnTimelineFloat DeadDissolveCallBack;
+	FOnTimelineEvent DeadTimelineFinish;
 
 private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))

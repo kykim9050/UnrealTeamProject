@@ -25,12 +25,15 @@ ATestMonsterBase::ATestMonsterBase()
 	PrimaryActorTick.bCanEverTick = true;
 
 	LeftAttackComponent = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Left Attack Comp"));
-	LeftAttackComponent->SetupAttachment(GetMesh(), FName(TEXT("LeftAttackPos")));
+	LeftAttackComponent->SetupAttachment(GetMesh(), FName("LeftAttackPos"));
 	
 	RightAttackComponent = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Right Attack Comp"));
-	RightAttackComponent->SetupAttachment(GetMesh(), FName(TEXT("RightAttackPos")));
+	RightAttackComponent->SetupAttachment(GetMesh(), FName("RightAttackPos"));
 
 	GetMesh()->SetCollisionEnabled(ECollisionEnabled::Type::NoCollision);
+
+	DeadTimelineFinish.BindUFunction(this, FName("OnDeadFinish"));
+	DeadDissolveCallBack.BindUFunction(this, FName("OnDeadDissolveInterp"));
 }
 
 // Called when the game starts or when spawned
@@ -81,6 +84,7 @@ void ATestMonsterBase::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	DeadTimeLine.TickTimeline(DeltaTime);
 	AnimInst->ChangeAnimation(AniValue);
 }
 
@@ -115,14 +119,6 @@ UMainAnimInstance* ATestMonsterBase::GetAnimInstance()
 void ATestMonsterBase::ChangeAniValue(uint8 _Type)
 {
 	AniValue = _Type;
-}
-
-void ATestMonsterBase::SetDeadCollision_Implementation()
-{
-	GetCapsuleComponent()->SetCollisionObjectType(ECC_GameTraceChannel5);
-	RightAttackComponent->SetCollisionObjectType(ECC_GameTraceChannel5);
-	LeftAttackComponent->SetCollisionObjectType(ECC_GameTraceChannel5);
-	GetCharacterMovement()->SetActive(false);
 }
 
 void ATestMonsterBase::Attack(AActor* _OtherActor, UPrimitiveComponent* _Collision)
@@ -170,24 +166,46 @@ void ATestMonsterBase::SetActiveAttackCollision(bool Active)
 	}
 }
 
+void ATestMonsterBase::SetDeadCollision_Implementation()
+{
+	GetCapsuleComponent()->SetCollisionObjectType(ECC_GameTraceChannel5);
+	RightAttackComponent->SetCollisionObjectType(ECC_GameTraceChannel5);
+	LeftAttackComponent->SetCollisionObjectType(ECC_GameTraceChannel5);
+	GetCharacterMovement()->SetActive(false);
+}
+
+void ATestMonsterBase::SetDeadTimeline_Implementation()
+{
+	TArray<class UMaterialInterface*> MaterialsInterface = GetMesh()->GetMaterials();
+
+	DynamicMaterials.Empty();
+	for (int32 i = 0; i < MaterialsInterface.Num(); i++)
+	{
+		UMaterialInstanceDynamic* MatInstDynamic = GetMesh()->UPrimitiveComponent::CreateDynamicMaterialInstance(i, MaterialsInterface[i], TEXT("None"));
+		DynamicMaterials.Add(MatInstDynamic);
+	}
+
+	DeadTimeLine.AddInterpFloat(DeadDissolveCurve, DeadDissolveCallBack);
+	DeadTimeLine.SetTimelineFinishedFunc(DeadTimelineFinish);
+	DeadTimeLine.SetTimelineLength(3.0f);
+	DeadTimeLine.SetLooping(false);
+	DeadTimeLine.PlayFromStart();
+}
+
 void ATestMonsterBase::OnDead()
 {
+	SetDeadTimeline();
 	SetDeadCollision();
 	ChangeAniValue(EMonsterAnim::Dead);
 
 	ATestMonsterBaseAIController* AIController = GetController<ATestMonsterBaseAIController>();
 	AIController->UnPossess();
+}
 
-	DynamicMaterials.Empty();
-	DynamicMaterials = GetMesh()->GetMaterials();
-
-	int32 DynamicMaterials_Num = DynamicMaterials.Num();
-	for (int32 i = 0; i < DynamicMaterials_Num; i++)
+void ATestMonsterBase::OnDeadDissolveInterp(float _Value)
+{
+	for (UMaterialInstanceDynamic* DynamicMat : DynamicMaterials)
 	{
-		UMaterialInstanceDynamic* MatInstDynamic = GetMesh()->UPrimitiveComponent::CreateDynamicMaterialInstance(i, DynamicMaterials[i], TEXT("None"));
-		DynamicMaterials.Add(MatInstDynamic);
+		DynamicMat->SetScalarParameterValue("Dissolve", _Value);
 	}
-
-
-
 }
