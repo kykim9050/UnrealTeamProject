@@ -17,4 +17,6 @@ class UNREAL5_PORTFOLIO_API ATestPlayMode : public AGameMode
 public:
 	void BeginPlay() override;
 
+	UFUNCTION(BlueprintCallable)
+	void PlayerToDropItem(FName _ItemName, FTransform _Transform);
 };
