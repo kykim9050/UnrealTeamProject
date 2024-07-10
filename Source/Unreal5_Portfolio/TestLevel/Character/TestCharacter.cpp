@@ -10,6 +10,7 @@
 #include "TestPlayerController.h"
 #include "TestLevel/UI/TestMinimapIconComponent.h"
 #include "PartDevLevel/Monster/TestMonsterBase.h"
+#include "PartDevLevel/Character/PlayerAnimInstance.h"
 
 // Sets default values
 ATestCharacter::ATestCharacter()
@@ -69,6 +70,18 @@ ATestCharacter::ATestCharacter()
 
 }
 
+void ATestCharacter::PlayerToDropItem(FName _ItemName, FTransform _Transform)
+{
+	UMainGameInstance* MainGameInst = GetWorld()->GetGameInstanceChecked<UMainGameInstance>();
+	//const FItemDataRow* ItemBase = MainGameInst->GetItemData(_ItemName);
+	//GetWorld()->SpawnActor<AActor>(ItemBase->GetItemUClass(), _Transform);
+
+
+	const FItemDataRow* ItemBase = MainGameInst->GetItemData(FName("TestRifle"));
+
+	GetWorld()->SpawnActor<AActor>(ItemBase->GetItemUClass(), _Transform);
+}
+
 void ATestCharacter::Collision(AActor* _OtherActor, UPrimitiveComponent* _Collision)
 {
 	ATestMonsterBase* Monster = Cast<ATestMonsterBase>(_OtherActor);
@@ -104,6 +117,11 @@ void ATestCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	UMainGameBlueprintFunctionLibrary::PushActor(EObjectType::Player, this);
+	
+	// 몽타주 변경에 필요한 세팅 추가 필요 (태환)
+	//UAnimInstance* Inst = GetMesh()->GetAnimInstance();
+	//AnimInst = Cast<UPlayerAnimInstance>(GetMesh()->GetAnimInstance());
+	//UMainGameInstance* MainGameInst = UMainGameBlueprintFunctionLibrary::GetMainGameInstance(GetWorld());
 
 	HandAttackComponent->SetCollisionProfileName(TEXT("NoCollision"));
 }
@@ -114,6 +132,9 @@ void ATestCharacter::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 	DefaultRayCast(DeltaTime);
+
+	// 몽타주 Tick에서 실행 (태환)
+	//AnimInst->ChangeAnimation(AniValue);
 }
 
 void ATestCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -276,6 +297,11 @@ void ATestCharacter::ChangePosture_Implementation(EPlayerPosture _Type)
 			}
 		}
 	}
+}
+
+void ATestCharacter::ChangeAniValue(uint8 _Type)
+{
+	AniValue = _Type;
 }
 
 void ATestCharacter::PickUpItem_Implementation()
