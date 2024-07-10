@@ -32,10 +32,11 @@ void AMinimapCaptureCamera::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 	AGameModeBase* Ptr = GetWorld()->GetAuthGameMode();
+	
 
-	//MyCharacter = Cast<ATestCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+	MyCharacter = Cast<ATestCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 	FVector CharacterPos = MyCharacter->GetActorLocation();
-	CharacterPos.Z = 0.f;
+	CharacterPos.Z = 2000.f;
 	SetActorLocation(CharacterPos);
 }
 

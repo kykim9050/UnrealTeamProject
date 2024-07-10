@@ -49,7 +49,8 @@ enum class EMonsterState : uint8
 	Patrol,
 	Chase,
 	Fall,
-	Climbing,
+	Jump,
+	Climb,
 	Attack,
 	Dead
 };
@@ -70,6 +71,27 @@ enum class EMonsterSpawnerType : uint8
 	Once,
 	Continuous,
 	Max
+};
+
+UENUM(BlueprintType)
+enum class EBossMonsterState : uint8
+{
+	Idle,
+	Chase,
+	MeleeAttack,
+	RangedAttack,
+	Dead
+};
+
+UENUM(BlueprintType)
+enum class EBossMonsterAnim : uint8
+{
+	Idle	UMETA(DisplayName = "Idle"),
+	WalK	UMETA(DisplayName = "Walk"),
+	Run	UMETA(DisplayName = "Run"),
+	MeleeAttack	UMETA(DisplayName = "MeleeAttack"),
+	RangedAttack	UMETA(DisplayName = "RangedAttack"),
+	Dead	UMETA(DisplayName = "Dead")
 };
 
 UCLASS()

@@ -3,6 +3,8 @@
 
 #include "TestLevel/TestPlayMode.h"
 #include "Global/DataTable/MonsterDataRow.h"
+#include "Global/DataTable/ItemDataRow.h"
+#include "Item/RangedWP.h"
 #include "Global/MainGameInstance.h"
 
 void ATestPlayMode::BeginPlay()

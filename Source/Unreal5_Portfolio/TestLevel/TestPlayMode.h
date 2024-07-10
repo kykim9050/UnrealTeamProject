@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameMode.h"
+
 #include "TestPlayMode.generated.h"
 
 /**
@@ -16,5 +17,4 @@ class UNREAL5_PORTFOLIO_API ATestPlayMode : public AGameMode
 	
 public:
 	void BeginPlay() override;
-
 };
