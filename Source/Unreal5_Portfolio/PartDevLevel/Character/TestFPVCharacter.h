@@ -53,6 +53,25 @@ public:
 	UFUNCTION()
 	void ChangePOV();
 
+	// Fire(Raycast)
+	UPROPERTY()
+	FTimerHandle FireTimerHandle;
+	UPROPERTY()
+	int BulletMaxCnt = 0;
+	UPROPERTY()
+	int BulletRemainCnt = 0;
+	UPROPERTY()
+	float ReloadDelayTime = 0.0f;
+	UPROPERTY()
+	float FireIntervalTime = 0.0f;
+	UFUNCTION()
+	void FireStart();
+	UFUNCTION(Reliable, Server, BlueprintCallable)
+	void Fire();
+	void Fire_Implementation();
+	UFUNCTION()
+	void FireEnd();
+
 	// Inventory (for UI Test)
 	struct FItemInfo
 	{

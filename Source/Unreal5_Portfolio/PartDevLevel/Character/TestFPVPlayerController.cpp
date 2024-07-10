@@ -49,8 +49,8 @@ void ATestFPVPlayerController::SetupInputComponent()
 			EnhancedInputComponent->BindAction(InputData->Actions[4], ETriggerEvent::Triggered, this, &ATestFPVPlayerController::MoveLeft);
 			EnhancedInputComponent->BindAction(InputData->Actions[5], ETriggerEvent::Triggered, this, &ATestFPVPlayerController::Jump);
 			EnhancedInputComponent->BindAction(InputData->Actions[5], ETriggerEvent::Completed, this, &ATestFPVPlayerController::JumpEnd);
-			EnhancedInputComponent->BindAction(InputData->Actions[6], ETriggerEvent::Triggered, this, &ATestFPVPlayerController::Fire);
-			EnhancedInputComponent->BindAction(InputData->Actions[6], ETriggerEvent::Completed, this, &ATestFPVPlayerController::FireEnd);
+			EnhancedInputComponent->BindAction(InputData->Actions[6], ETriggerEvent::Triggered, this, &ATestFPVPlayerController::FireStartController);
+			EnhancedInputComponent->BindAction(InputData->Actions[6], ETriggerEvent::Completed, this, &ATestFPVPlayerController::FireEndController);
 			EnhancedInputComponent->BindAction(InputData->Actions[7], ETriggerEvent::Triggered, this, &ATestFPVPlayerController::ChangePostureController, static_cast<EPlayerPosture>(0));
 			EnhancedInputComponent->BindAction(InputData->Actions[8], ETriggerEvent::Triggered, this, &ATestFPVPlayerController::ChangePostureController, static_cast<EPlayerPosture>(1));
 			EnhancedInputComponent->BindAction(InputData->Actions[9], ETriggerEvent::Triggered, this, &ATestFPVPlayerController::ChangePostureController, static_cast<EPlayerPosture>(2));
@@ -106,22 +106,26 @@ void ATestFPVPlayerController::Jump(const FInputActionValue& Value)
 	Ch->Jump();
 }
 
-void ATestFPVPlayerController::JumpEnd(const FInputActionValue& Value)
+void ATestFPVPlayerController::JumpEnd()
 {
 	ChangeStateController(EPlayerState::Idle);
 	ATestFPVCharacter* Ch = GetPawn<ATestFPVCharacter>();
 	Ch->StopJumping();
 }
 
-void ATestFPVPlayerController::Fire(const FInputActionValue& Value)
+void ATestFPVPlayerController::FireStartController()
 {
 	ChangeStateController(EPlayerState::Fire);
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Fire!"));
+	//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Fire!"));
+	ATestFPVCharacter* Ch = GetPawn<ATestFPVCharacter>();
+	Ch->FireStart();
 }
 
-void ATestFPVPlayerController::FireEnd(const FInputActionValue& Value)
+void ATestFPVPlayerController::FireEndController()
 {
 	ChangeStateController(EPlayerState::Idle);
+	ATestFPVCharacter* Ch = GetPawn<ATestFPVCharacter>();
+	Ch->FireEnd();
 }
 
 void ATestFPVPlayerController::PickUpItem()
