@@ -21,15 +21,3 @@ void ATestPlayMode::BeginPlay()
 		GetWorld()->SpawnActor<AActor>(MonsterData->GetMonsterUClass(), Transform);
 	}
 }
-
-void ATestPlayMode::PlayerToDropItem(FName _ItemName, FTransform _Transform)
-{
-	UMainGameInstance* MainGameInst = GetWorld()->GetGameInstanceChecked<UMainGameInstance>();
-	//const FItemDataRow* ItemBase = MainGameInst->GetItemData(_ItemName);
-	//GetWorld()->SpawnActor<AActor>(ItemBase->GetItemUClass(), _Transform);
-	
-	
-	const FItemDataRow* ItemBase = MainGameInst->GetItemData(FName("TestRifle"));
-	FTransform trans;
-	GetWorld()->SpawnActor<AActor>(ItemBase->GetItemUClass(), trans);
-}

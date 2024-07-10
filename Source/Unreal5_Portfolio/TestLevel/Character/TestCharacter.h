@@ -89,6 +89,9 @@ public:
 		PickUp = _PickUp;
 	}
 
+	UFUNCTION(BlueprintCallable)
+	void PlayerToDropItem(FName _ItemName, FTransform _Transform);
+
 	// Collision
 	UFUNCTION(BlueprintCallable)
 	void Collision(AActor* _OtherActor, UPrimitiveComponent* _Collision);

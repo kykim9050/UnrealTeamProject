@@ -70,6 +70,18 @@ ATestCharacter::ATestCharacter()
 
 }
 
+void ATestCharacter::PlayerToDropItem(FName _ItemName, FTransform _Transform)
+{
+	UMainGameInstance* MainGameInst = GetWorld()->GetGameInstanceChecked<UMainGameInstance>();
+	//const FItemDataRow* ItemBase = MainGameInst->GetItemData(_ItemName);
+	//GetWorld()->SpawnActor<AActor>(ItemBase->GetItemUClass(), _Transform);
+
+
+	const FItemDataRow* ItemBase = MainGameInst->GetItemData(FName("TestRifle"));
+
+	GetWorld()->SpawnActor<AActor>(ItemBase->GetItemUClass(), _Transform);
+}
+
 void ATestCharacter::Collision(AActor* _OtherActor, UPrimitiveComponent* _Collision)
 {
 	ATestMonsterBase* Monster = Cast<ATestMonsterBase>(_OtherActor);
