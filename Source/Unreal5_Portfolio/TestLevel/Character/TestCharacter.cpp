@@ -9,7 +9,7 @@
 #include "Components/SphereComponent.h"
 #include "TestPlayerController.h"
 #include "TestLevel/UI/TestMinimapIconComponent.h"
-#include "TestLevel/Monster/TestMonsterBase.h"
+#include "PartDevLevel/Monster/TestMonsterBase.h"
 #include "PartDevLevel/Character/PlayerAnimInstance.h"
 
 // Sets default values
