@@ -49,7 +49,8 @@ enum class EMonsterState : uint8
 	Patrol,
 	Chase,
 	Fall,
-	Climbing,
+	Jump,
+	Climb,
 	Attack,
 	Dead
 };

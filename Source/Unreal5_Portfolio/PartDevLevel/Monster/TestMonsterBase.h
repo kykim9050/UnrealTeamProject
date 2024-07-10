@@ -98,10 +98,10 @@ private:
 	UPROPERTY(Category = "Data", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	FName BaseDataName;
 
-	UPROPERTY(Category = "Animation", Replicated, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(Replicated)
 	uint8 AniValue;
 
-	UPROPERTY(Category = "Animation", Replicated, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(Replicated)
 	class UMainAnimInstance* AnimInst;
 
 	TArray<class UMaterialInstanceDynamic*> DynamicMaterials;
