@@ -3,6 +3,8 @@
 
 #include "MainAnimInstance.h"
 #include "TestLevel/Character/TestCharacter.h"
+#include "../ContentsLog.h"
+
 
 void UMainAnimInstance::NativeBeginPlay()
 {
@@ -11,11 +13,13 @@ void UMainAnimInstance::NativeBeginPlay()
 	OwnerPlayer = Cast<ATestCharacter>(TryGetPawnOwner());
 }
 
+
 void UMainAnimInstance::ChangeAnimation(uint8 _Key)
 {
 	if (false == AnimMontages.Contains(_Key))
 	{
-		UE_LOG(LogTemp, Fatal, TEXT("%S(%u)> if (false == AnimMontages.Contains(Key))"), __FUNCTION__, __LINE__);
+		//UE_LOG(LogTemp, Fatal, TEXT("%S(%u)> if (false == AnimMontages.Contains(Key))"), __FUNCTION__, __LINE__);
+		LOG(GlobalLog, Fatal, TEXT("AnimMontages false"));
 		return;
 	}
 
@@ -23,7 +27,8 @@ void UMainAnimInstance::ChangeAnimation(uint8 _Key)
 
 	if (nullptr == Montage)
 	{
-		UE_LOG(LogTemp, Fatal, TEXT("%S(%u)> if (nullptr == Montage)"), __FUNCTION__, __LINE__);
+		//UE_LOG(LogTemp, Fatal, TEXT("%S(%u)> if (nullptr == Montage)"), __FUNCTION__, __LINE__);
+		LOG(GlobalLog, Fatal, TEXT("Montage is nullptr"));
 		return;
 	}
 
