@@ -73,6 +73,27 @@ enum class EMonsterSpawnerType : uint8
 	Max
 };
 
+UENUM(BlueprintType)
+enum class EBossMonsterState : uint8
+{
+	Idle,
+	Chase,
+	MeleeAttack,
+	RangedAttack,
+	Dead
+};
+
+UENUM(BlueprintType)
+enum class EBossMonsterAnim : uint8
+{
+	Idle	UMETA(DisplayName = "Idle"),
+	WalK	UMETA(DisplayName = "Walk"),
+	Run	UMETA(DisplayName = "Run"),
+	MeleeAttack	UMETA(DisplayName = "MeleeAttack"),
+	RangedAttack	UMETA(DisplayName = "RangedAttack"),
+	Dead	UMETA(DisplayName = "Dead")
+};
+
 UCLASS()
 class UNREAL5_PORTFOLIO_API UContentsEnum : public UObject
 {
