@@ -26,12 +26,10 @@ public:
 	class UCameraComponent* CameraComponent = nullptr;
 	UPROPERTY(Category = "Contents", VisibleDefaultsOnly)
 	USkeletalMeshComponent* FPVMesh = nullptr;
-	UPROPERTY(Category = "Contents", Replicated, EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	TArray<UStaticMeshComponent*> ItemMeshes;
-	UPROPERTY(Category = "Contents", Replicated, EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	TArray<UStaticMeshComponent*> FPVItemMeshes;
-	UPROPERTY(Category = "Contents", Replicated, EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-	TArray<bool> IsItemMeshOn;
 
 	// State, Posture
 	UPROPERTY(Category = "Contents", Replicated, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
@@ -45,9 +43,15 @@ public:
 	UFUNCTION(Reliable, Server)
 	void ChangePosture(EPlayerPosture _Type);
 	void ChangePosture_Implementation(EPlayerPosture _Type);
-	UFUNCTION(Reliable, NetMulticast)
+	UFUNCTION(Reliable, Server)
 	void SettingItemMesh(int _ItemIndex);
 	void SettingItemMesh_Implementation(int _ItemIndex);
+
+	// POV
+	bool IsFPV = true;
+
+	UFUNCTION()
+	void ChangePOV();
 
 	// Inventory (for UI Test)
 	struct FItemInfo
@@ -59,7 +63,7 @@ public:
 	TArray<FItemInfo> ItemSlot;
 	UPROPERTY()
 	TArray<bool> IsItemIn;
-	UPROPERTY(Category = "Contents", Replicated, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY()
 	int CurItemIndex = -1;
 
 	// Item

@@ -18,14 +18,15 @@ ATestFPVCharacter::ATestFPVCharacter()
 	SpringArmComponent = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArmComponent"));
 	SpringArmComponent->SetupAttachment(RootComponent);
 	SpringArmComponent->TargetArmLength = 0.0f;
-	SpringArmComponent->bDoCollisionTest = false;
+	SpringArmComponent->bUsePawnControlRotation = true;
+	SpringArmComponent->bDoCollisionTest = true;
 
 	// Camera Component
 	CameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("CameraComponent"));
 	CameraComponent->SetupAttachment(SpringArmComponent);
 	CameraComponent->SetProjectionMode(ECameraProjectionMode::Perspective);
-	CameraComponent->bUsePawnControlRotation = true;
-
+	//CameraComponent->bUsePawnControlRotation = true;
+	
 	// Character Mesh
 	GetMesh()->SetOwnerNoSee(true);
 
@@ -45,9 +46,8 @@ ATestFPVCharacter::ATestFPVCharacter()
 		NewMesh->SetCollisionProfileName(TEXT("NoCollision"));
 		NewMesh->SetGenerateOverlapEvents(true);
 		NewMesh->SetOwnerNoSee(true);
-		NewMesh->bCastDynamicShadow = false;
-		NewMesh->CastShadow = false;
 		NewMesh->SetVisibility(false);
+		NewMesh->SetIsReplicated(true);
 		ItemMeshes.Push(NewMesh);
 
 		FString FPVMeshName = Enum->GetNameStringByValue(i) + "FPVMesh";
@@ -59,6 +59,7 @@ ATestFPVCharacter::ATestFPVCharacter()
 		NewFPVMesh->bCastDynamicShadow = false;
 		NewFPVMesh->CastShadow = false;
 		NewFPVMesh->SetVisibility(false);
+		NewFPVMesh->SetIsReplicated(true);
 		FPVItemMeshes.Push(NewFPVMesh);
 
 		// Inventory (for UI Test)
@@ -109,10 +110,7 @@ void ATestFPVCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Ou
 
 	DOREPLIFETIME(ATestFPVCharacter, StateValue);
 	DOREPLIFETIME(ATestFPVCharacter, PostureValue);
-	DOREPLIFETIME(ATestFPVCharacter, ItemMeshes);
-	DOREPLIFETIME(ATestFPVCharacter, FPVItemMeshes);
-	DOREPLIFETIME(ATestFPVCharacter, IsItemMeshOn);
-	DOREPLIFETIME(ATestFPVCharacter, CurItemIndex);
+
 	DOREPLIFETIME(ATestFPVCharacter, PlayerHp);
 }
 
@@ -228,4 +226,54 @@ void ATestFPVCharacter::PickUpItem_Implementation(FName _ItemName)
 	IsItemIn[ItemIndex] = true;
 
 	ChangePosture(ItemType);
+}
+
+void ATestFPVCharacter::ChangePOV()
+{
+	if (IsFPV)
+	{
+		// SpringArm Component
+		SpringArmComponent->TargetArmLength = 200.0f;
+		SpringArmComponent->SetRelativeLocation(FVector(0.0f, 0.0f, 80.0f));
+
+		// Character Mesh
+		GetMesh()->SetOnlyOwnerSee(true);
+		GetMesh()->SetOwnerNoSee(false);
+		FPVMesh->SetOwnerNoSee(true);
+		FPVMesh->SetOnlyOwnerSee(false);
+
+		// Item Meshes
+		for (int i = 0; i < int(EPlayerPosture::Barehand); i++)
+		{
+			ItemMeshes[i]->SetOnlyOwnerSee(true);
+			ItemMeshes[i]->SetOwnerNoSee(false);
+			FPVItemMeshes[i]->SetOwnerNoSee(true);
+			FPVItemMeshes[i]->SetOnlyOwnerSee(false);
+		}
+
+		IsFPV = false;
+	}
+	else
+	{
+		// SpringArm Component
+		SpringArmComponent->TargetArmLength = 0.0f;
+		SpringArmComponent->SetRelativeLocation(FVector(20.0f, 0.0f, 67.0f));
+
+		// Character Mesh
+		GetMesh()->SetOwnerNoSee(true);
+		GetMesh()->SetOnlyOwnerSee(false);
+		FPVMesh->SetOnlyOwnerSee(true);
+		FPVMesh->SetOwnerNoSee(false);
+
+		// Item Meshes
+		for (int i = 0; i < int(EPlayerPosture::Barehand); i++)
+		{
+			ItemMeshes[i]->SetOwnerNoSee(true);
+			ItemMeshes[i]->SetOnlyOwnerSee(false);
+			FPVItemMeshes[i]->SetOnlyOwnerSee(true);
+			FPVItemMeshes[i]->SetOwnerNoSee(false);
+		}
+
+		IsFPV = true;
+	}
 }

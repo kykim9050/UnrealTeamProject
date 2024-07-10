@@ -59,6 +59,7 @@ void ATestFPVPlayerController::SetupInputComponent()
 			EnhancedInputComponent->BindAction(InputData->Actions[12], ETriggerEvent::Triggered, this, &ATestFPVPlayerController::ChangePostureController, static_cast<EPlayerPosture>(5));
 			EnhancedInputComponent->BindAction(InputData->Actions[13], ETriggerEvent::Triggered, this, &ATestFPVPlayerController::PickUpItem);
 			EnhancedInputComponent->BindAction(InputData->Actions[13], ETriggerEvent::Completed, this, &ATestFPVPlayerController::PickUpItemEnd);
+			EnhancedInputComponent->BindAction(InputData->Actions[14], ETriggerEvent::Triggered, this, &ATestFPVPlayerController::ChangePOVController);
 		}
 	}
 }
@@ -72,55 +73,55 @@ void ATestFPVPlayerController::MouseRotation(const FInputActionValue& Value)
 
 void ATestFPVPlayerController::MoveFront(const FInputActionValue& Value)
 {
-	ChangeState(EPlayerState::Walk);
+	ChangeStateController(EPlayerState::Walk);
 	FVector Forward = GetPawn()->GetActorForwardVector();
 	GetPawn()->AddMovementInput(Forward);
 }
 
 void ATestFPVPlayerController::MoveBack(const FInputActionValue& Value)
 {
-	ChangeState(EPlayerState::Walk);
+	ChangeStateController(EPlayerState::Walk);
 	FVector Forward = GetPawn()->GetActorForwardVector();
 	GetPawn()->AddMovementInput(-Forward);
 }
 
 void ATestFPVPlayerController::MoveRight(const FInputActionValue& Value)
 {
-	ChangeState(EPlayerState::Walk);
+	ChangeStateController(EPlayerState::Walk);
 	FVector Rightward = GetPawn()->GetActorRightVector();
 	GetPawn()->AddMovementInput(Rightward);
 }
 
 void ATestFPVPlayerController::MoveLeft(const FInputActionValue& Value)
 {
-	ChangeState(EPlayerState::Walk);
+	ChangeStateController(EPlayerState::Walk);
 	FVector Rightward = GetPawn()->GetActorRightVector();
 	GetPawn()->AddMovementInput(-Rightward);
 }
 
 void ATestFPVPlayerController::Jump(const FInputActionValue& Value)
 {
-	ChangeState(EPlayerState::Jump);
+	ChangeStateController(EPlayerState::Jump);
 	ATestFPVCharacter* Ch = GetPawn<ATestFPVCharacter>();
 	Ch->Jump();
 }
 
 void ATestFPVPlayerController::JumpEnd(const FInputActionValue& Value)
 {
-	ChangeState(EPlayerState::Idle);
+	ChangeStateController(EPlayerState::Idle);
 	ATestFPVCharacter* Ch = GetPawn<ATestFPVCharacter>();
 	Ch->StopJumping();
 }
 
 void ATestFPVPlayerController::Fire(const FInputActionValue& Value)
 {
-	ChangeState(EPlayerState::Fire);
+	ChangeStateController(EPlayerState::Fire);
 	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Fire!"));
 }
 
 void ATestFPVPlayerController::FireEnd(const FInputActionValue& Value)
 {
-	ChangeState(EPlayerState::Idle);
+	ChangeStateController(EPlayerState::Idle);
 }
 
 void ATestFPVPlayerController::PickUpItem()
@@ -136,7 +137,7 @@ void ATestFPVPlayerController::PickUpItemEnd()
 	Ch->SetPickUp(false);
 }
 
-void ATestFPVPlayerController::ChangeState(EPlayerState _State)
+void ATestFPVPlayerController::ChangeStateController(EPlayerState _State)
 {
 	ATestFPVCharacter* Ch = GetPawn<ATestFPVCharacter>();
 	Ch->ChangeState(_State);
@@ -146,6 +147,12 @@ void ATestFPVPlayerController::ChangePostureController(EPlayerPosture _Posture)
 {
 	ATestFPVCharacter* Ch = GetPawn<ATestFPVCharacter>();
 	Ch->ChangePosture(_Posture);
+}
+
+void ATestFPVPlayerController::ChangePOVController()
+{
+	ATestFPVCharacter* Ch = GetPawn<ATestFPVCharacter>();
+	Ch->ChangePOV();
 }
 
 FGenericTeamId ATestFPVPlayerController::GetGenericTeamId() const
