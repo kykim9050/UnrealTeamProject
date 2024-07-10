@@ -59,6 +59,15 @@ public:
 		return ResMesh;
 	}
 
+	/// <summary>
+	/// 아이템의 UClass 반환.
+	/// </summary>
+	/// <returns></returns>
+	TSubclassOf<AActor> GetItemUClass() const
+	{
+		return ItemUClass;
+	}
+
 protected:
 
 private:
@@ -91,4 +100,10 @@ private:
 	/// </summary>
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowprivateAccess = "true"))
 	class UStaticMesh* ResMesh = nullptr;
+
+	/// <summary>
+	/// 아이템의 UClass
+	/// </summary>
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowprivateAccess = "true"))
+	TSubclassOf<AActor> ItemUClass = TSubclassOf<AActor>();
 };
