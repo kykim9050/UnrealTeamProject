@@ -45,9 +45,8 @@ ATestFPVCharacter::ATestFPVCharacter()
 		NewMesh->SetCollisionProfileName(TEXT("NoCollision"));
 		NewMesh->SetGenerateOverlapEvents(true);
 		NewMesh->SetOwnerNoSee(true);
-		NewMesh->bCastDynamicShadow = false;
-		NewMesh->CastShadow = false;
 		NewMesh->SetVisibility(false);
+		NewMesh->SetIsReplicated(true);
 		ItemMeshes.Push(NewMesh);
 
 		FString FPVMeshName = Enum->GetNameStringByValue(i) + "FPVMesh";
@@ -59,6 +58,7 @@ ATestFPVCharacter::ATestFPVCharacter()
 		NewFPVMesh->bCastDynamicShadow = false;
 		NewFPVMesh->CastShadow = false;
 		NewFPVMesh->SetVisibility(false);
+		NewFPVMesh->SetIsReplicated(true);
 		FPVItemMeshes.Push(NewFPVMesh);
 
 		// Inventory (for UI Test)
@@ -109,10 +109,7 @@ void ATestFPVCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Ou
 
 	DOREPLIFETIME(ATestFPVCharacter, StateValue);
 	DOREPLIFETIME(ATestFPVCharacter, PostureValue);
-	DOREPLIFETIME(ATestFPVCharacter, ItemMeshes);
-	DOREPLIFETIME(ATestFPVCharacter, FPVItemMeshes);
-	DOREPLIFETIME(ATestFPVCharacter, IsItemMeshOn);
-	DOREPLIFETIME(ATestFPVCharacter, CurItemIndex);
+
 	DOREPLIFETIME(ATestFPVCharacter, PlayerHp);
 }
 
@@ -228,4 +225,45 @@ void ATestFPVCharacter::PickUpItem_Implementation(FName _ItemName)
 	IsItemIn[ItemIndex] = true;
 
 	ChangePosture(ItemType);
+}
+
+void ATestFPVCharacter::ChangePOV()
+{
+	if (IsFPV)
+	{
+		// SpringArm Component
+		SpringArmComponent->TargetArmLength = 500.0f;
+		//SpringArmComponent->SetRelativeLocation();
+
+		// Character Mesh
+		GetMesh()->SetVisibility(true);
+		FPVMesh->SetVisibility(false);
+
+		// Item Meshes
+		for (int i = 0; i < int(EPlayerPosture::Barehand); i++)
+		{
+			ItemMeshes[i]->SetVisibility(true);
+			FPVItemMeshes[i]->SetVisibility(false);
+		}
+
+		IsFPV = false;
+	}
+	else
+	{
+		// SpringArm Component
+		SpringArmComponent->TargetArmLength = 0.0f;
+
+		// Character Mesh
+		GetMesh()->SetOwnerNoSee(true);
+		FPVMesh->SetOnlyOwnerSee(true);
+
+		// Item Meshes
+		for (int i = 0; i < int(EPlayerPosture::Barehand); i++)
+		{
+			ItemMeshes[i]->SetOwnerNoSee(true);
+			FPVItemMeshes[i]->SetOnlyOwnerSee(true);
+		}
+
+		IsFPV = true;
+	}
 }

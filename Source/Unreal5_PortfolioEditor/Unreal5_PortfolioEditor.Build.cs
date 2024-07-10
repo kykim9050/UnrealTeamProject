@@ -10,7 +10,7 @@ public class Unreal5_PortfolioEditor : ModuleRules
 
 		PublicIncludePaths.Add(System.IO.Path.Combine(ModuleDirectory, ""));
 	
-		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "NavigationSystem", "AIModule" , "EnhancedInput", "Unreal5_Portfolio"/*, "Blutility", "UMGEditor", "EditorScriptingUtilities"*/ });
+		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "NavigationSystem", "AIModule" , "EnhancedInput", "Unreal5_Portfolio", "UMG", "ScriptableEditorWidgets" });
 
 		PrivateDependencyModuleNames.AddRange(new string[] {  });
 

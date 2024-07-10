@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFrameWork/Character.h"
-#include "Net/UnrealNetwork.h"
+#include "Components/TimeLineComponent.h"
 #include "Global/DataTable/MonsterDataRow.h"
 #include "TestMonsterBase.generated.h"
 
@@ -53,7 +53,7 @@ public:
 
 	FORCEINLINE float GetAttackDamage()
 	{
-		return AttackDamage;
+		return SettingData->AttackDamage;
 	}
 
 	FORCEINLINE float GetMonsterHp()
@@ -76,7 +76,7 @@ private:
 	void SetDeadCollision();
 	void SetDeadCollision_Implementation();
 
-	void DeadCheck();
+	void OnDead();
 
 private:
 	const FMonsterDataRow* BaseData;
@@ -93,14 +93,15 @@ private:
 	UPROPERTY(Category = "Animation", Replicated, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	class UMainAnimInstance* AnimInst;
 
+	TArray<class UMaterialInterface*> DynamicMaterials;
+	FTimeline DeadTimeLine;
+
+private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
 	UCapsuleComponent* LeftAttackComponent;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
 	UCapsuleComponent* RightAttackComponent;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
-	float AttackDamage = 34.0f;
 
 	bool IsCharacterHit = false;
 };

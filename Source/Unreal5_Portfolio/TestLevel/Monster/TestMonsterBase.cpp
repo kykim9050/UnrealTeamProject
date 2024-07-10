@@ -5,12 +5,12 @@
 #include "TestMonsterBaseAIController.h"
 #include "TestLevel/Character/TestCharacter.h"
 
-#include "BehaviorTree/BlackboardComponent.h"
-#include "Components/CapsuleComponent.h"
 #include "GameFrameWork/CharacterMovementComponent.h"
-#include "Components/SkeletalMeshComponent.h"
 #include "Blueprint/AIBlueprintHelperLibrary.h"
+#include "BehaviorTree/BlackboardComponent.h"
+#include "Components/SkeletalMeshComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "Net/UnrealNetwork.h"
 
 #include "Global/MainGameBlueprintFunctionLibrary.h"
 #include "Global/Animation/MainAnimInstance.h"
@@ -59,6 +59,7 @@ void ATestMonsterBase::BeginPlay()
 	//  몬스터 데이터 세팅
 	SettingData = NewObject<UMonsterData>(this);
 	SettingData->Data = BaseData;
+	SettingData->AttackDamage = 34.0f;
 	SettingData->OriginPos = GetActorLocation();
 
 	// 클라이언트일 경우
@@ -87,7 +88,6 @@ void ATestMonsterBase::Tick(float DeltaTime)
 void ATestMonsterBase::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
 }
 
 void ATestMonsterBase::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -149,7 +149,11 @@ void ATestMonsterBase::Damaged(float Damage)
 	}
 
 	SettingData->Hp -= Damage;
-	DeadCheck();
+
+	if (0.0f >= SettingData->Hp)
+	{
+		OnDead();
+	}	
 }
 
 void ATestMonsterBase::SetActiveAttackCollision(bool Active)
@@ -166,17 +170,24 @@ void ATestMonsterBase::SetActiveAttackCollision(bool Active)
 	}
 }
 
-void ATestMonsterBase::DeadCheck()
+void ATestMonsterBase::OnDead()
 {
-	if (0.0f >= SettingData->Hp)
-	{
-		ATestMonsterBaseAIController* AIController = GetController<ATestMonsterBaseAIController>();
-		if (nullptr != AIController)
-		{
-			AIController->UnPossess();
-		}
+	SetDeadCollision();
+	ChangeAniValue(EMonsterAnim::Dead);
 
-		SetDeadCollision();
-		ChangeAniValue(EMonsterAnim::Dead);
+	ATestMonsterBaseAIController* AIController = GetController<ATestMonsterBaseAIController>();
+	AIController->UnPossess();
+
+	DynamicMaterials.Empty();
+	DynamicMaterials = GetMesh()->GetMaterials();
+
+	int32 DynamicMaterials_Num = DynamicMaterials.Num();
+	for (int32 i = 0; i < DynamicMaterials_Num; i++)
+	{
+		UMaterialInstanceDynamic* MatInstDynamic = GetMesh()->UPrimitiveComponent::CreateDynamicMaterialInstance(i, DynamicMaterials[i], TEXT("None"));
+		DynamicMaterials.Add(MatInstDynamic);
 	}
+
+
+
 }

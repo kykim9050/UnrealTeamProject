@@ -78,7 +78,11 @@ public:
 	float Hp = 100.0f;
 
 	float IdleTime = 0.0f;
-	float AttackTime = 0.0f;
+	
 	float Max_PatrolRange = 800.0f;
+	
+	float AttackTime = 0.0f;
+	float AttackDamage = 0.0f;
 	float AttackBoundary = 200.0f;
+	
 };
