@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Engine/DataTable.h"
+#include "Global/ContentsEnum.h"
 #include "PlayerDataRow.generated.h"
 
 /**
@@ -15,35 +16,39 @@ struct FPlayerDataRow : public FTableRowBase
 	GENERATED_BODY()
 
 public:
-	FString GetName() const
+	FORCEINLINE FString GetName() const
 	{
 		return Name;
 	}
 
-	float GetHp() const
-
+	FORCEINLINE float GetHp() const
 	{
 		return Hp;
 	}
 
-	float GetMoveSpeed() const
+	FORCEINLINE float GetMoveSpeed() const
 	{
 		return MoveSpeed;
 	}
 
-	float GetRotSpeed() const
+	FORCEINLINE float GetRotSpeed() const
 	{
 		return RotSpeed;
 	}
 
-	float GetRunSpeed() const
+	FORCEINLINE float GetRunSpeed() const
 	{
 		return RunSpeed;
 	}
 
-	bool GetJumping() const
+	FORCEINLINE bool GetJumping() const
 	{
 		return Jumping;
+	}
+
+	FORCEINLINE TMap<EPlayerPosture, class UAnimMontage*> GetAnimMontages() const
+	{
+		return AnimMontages;
 	}
 
 protected:
@@ -84,4 +89,11 @@ private:
 	/// </summary>
 	UPROPERTY(Category = "Parameter", EditAnywhere, BlueprintReadWrite, meta = (AllowprivateAccess = "true"))
 	bool Jumping = false;
+
+	/// <summary>
+	/// Player ¸ùÅ¸ÁÖ
+	/// </summary>
+	UPROPERTY(Category = "Animation", EditAnywhere, BlueprintReadWrite, meta = (AllowprivateAccess = "true"))
+	TMap<EPlayerPosture, class UAnimMontage*> AnimMontages = TMap<EPlayerPosture, class UAnimMontage*>();
+
 };
