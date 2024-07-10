@@ -56,7 +56,7 @@ public:
 	void ChangePosture_Implementation(EPlayerPosture _Type);
 
 	// Inventory
-	UPROPERTY()
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	TArray<FItemInformation> ItemSlot;
 	UPROPERTY()
 	TArray<bool> IsItemIn;
