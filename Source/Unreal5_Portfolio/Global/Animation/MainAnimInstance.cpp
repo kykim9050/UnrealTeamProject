@@ -3,6 +3,8 @@
 
 #include "MainAnimInstance.h"
 #include "TestLevel/Character/TestCharacter.h"
+#include "../ContentsLog.h"
+
 
 void UMainAnimInstance::NativeBeginPlay()
 {
@@ -10,7 +12,7 @@ void UMainAnimInstance::NativeBeginPlay()
 
 	OwnerPlayer = Cast<ATestCharacter>(TryGetPawnOwner());
 }
-#include "../ContentsLog.h"
+
 
 void UMainAnimInstance::ChangeAnimation(uint8 _Key)
 {
