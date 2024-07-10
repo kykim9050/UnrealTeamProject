@@ -90,7 +90,7 @@ public:
 	}
 
 	UFUNCTION(BlueprintCallable)
-	void PlayerToDropItem(FName _ItemName, FTransform _Transform);
+	void CharacterPlayerToDropItem(FName _ItemName, FTransform _Transform);
 
 	// Collision
 	UFUNCTION(BlueprintCallable)
