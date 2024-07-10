@@ -9,6 +9,8 @@
 #include "Navigation/PathFollowingComponent.h"
 #include "Kismet/KismetMathLibrary.h"
 
+#include "Global/ContentsLog.h"
+
 EBTNodeResult::Type UBTTaskNode_MonsterChase::ExecuteTask(UBehaviorTreeComponent& _OwnerComp, uint8* _NodeMemory)
 {
 	Super::ExecuteTask(_OwnerComp, _NodeMemory);
@@ -16,7 +18,7 @@ EBTNodeResult::Type UBTTaskNode_MonsterChase::ExecuteTask(UBehaviorTreeComponent
 	ATestMonsterBase* Monster = GetActor<ATestMonsterBase>(_OwnerComp);
 	if (false == Monster->IsValidLowLevel())
 	{
-		UE_LOG(LogTemp, Fatal, TEXT("%S(%u)> Monster Is Not Valid"), __FUNCTION__, __LINE__);
+		LOG(MonsterLog, Fatal, TEXT("%S(%u)> Monster Is Not Valid"));
 		return EBTNodeResult::Type::Aborted;
 	}
 
