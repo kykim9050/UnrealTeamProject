@@ -4,9 +4,10 @@
 #include "PartDevLevel/Character/TestFPVCharacter.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
+#include "Engine/SkeletalMeshSocket.h"
 #include "Global/MainGameBlueprintFunctionLibrary.h"
 #include "Global/DataTable/ItemDataRow.h"
-#include "Engine/SkeletalMeshSocket.h"
+#include "TestLevel/Monster/TestMonsterBase.h"
 
 // Sets default values
 ATestFPVCharacter::ATestFPVCharacter()
@@ -174,6 +175,40 @@ void ATestFPVCharacter::ChangePosture_Implementation(EPlayerPosture _Type)
 	}
 
 	SettingItemMesh(CurItemIndex);
+}
+
+void ATestFPVCharacter::FireStart()
+{
+
+}
+
+void ATestFPVCharacter::Fire_Implementation()
+{
+	FVector Start = GetActorLocation();
+	FVector ForwardVector = CameraComponent->GetForwardVector();
+	Start = FVector(Start.X + (ForwardVector.X * 100), Start.Y + (ForwardVector.Y * 100), Start.Z + (ForwardVector.Z * 100));
+	FVector End = Start + (ForwardVector * 1000.0);
+
+	FHitResult Hit;
+	if (GetWorld())
+	{
+		bool ActorHit = GetWorld()->LineTraceSingleByChannel(Hit, Start, End, ECC_GameTraceChannel2, FCollisionQueryParams(), FCollisionResponseParams());
+		DrawDebugLine(GetWorld(), Start, End, FColor::Red, false, 1.0f, 0.0f, 0.0f);
+
+		if (true == ActorHit && nullptr != Hit.GetActor())
+		{
+			ATestMonsterBase* Monster = Cast<ATestMonsterBase>(Hit.GetActor());
+			if (nullptr != Monster)
+			{
+				Monster->Damaged(50.0f);
+			}
+		}
+	}
+}
+
+void ATestFPVCharacter::FireEnd()
+{
+
 }
 
 void ATestFPVCharacter::SettingItemMesh_Implementation(int _ItemIndex)

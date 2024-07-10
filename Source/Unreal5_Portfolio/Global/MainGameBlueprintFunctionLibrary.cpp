@@ -2,6 +2,7 @@
 
 
 #include "Global/MainGameBlueprintFunctionLibrary.h"
+#include "Kismet/GameplayStatics.h"
 #include "MainGameState.h"
 
 UMainGameInstance* UMainGameBlueprintFunctionLibrary::GetMainGameInstance(const UWorld* WorldContextObject)
@@ -45,4 +46,11 @@ void UMainGameBlueprintFunctionLibrary::PushActor(uint8 _GroupIndex, AActor* _Ac
 	}
 
 	GameState->PushActor(_GroupIndex, _Actor);
+}
+
+void UMainGameBlueprintFunctionLibrary::DebugTextPrint(UWorld* _World, FString _Text)
+{
+	APlayerController* Controller = UGameplayStatics::GetPlayerController(_World, 0);
+
+	//Controller->GetHUD();
 }

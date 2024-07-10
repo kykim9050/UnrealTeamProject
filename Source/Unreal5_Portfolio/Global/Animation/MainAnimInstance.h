@@ -15,8 +15,6 @@ class UNREAL5_PORTFOLIO_API UMainAnimInstance : public UAnimInstance
 	GENERATED_BODY()
 
 public:
-	void NativeBeginPlay() override;
-
 	template<typename EnumType>
 	void ChangeAnimation(EnumType _Key)
 	{
@@ -42,8 +40,6 @@ public:
 	{
 		return AnimMontages[Key];
 	}
-
-	class ATestCharacter* OwnerPlayer = nullptr;
 
 private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))

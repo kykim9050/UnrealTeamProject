@@ -40,11 +40,11 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void Jump(const FInputActionValue& Value);
 	UFUNCTION(BlueprintCallable)
-	void JumpEnd(const FInputActionValue& Value);
+	void JumpEnd();
 	UFUNCTION(BlueprintCallable)
-	void Fire(const FInputActionValue& Value);
+	void FireStartController();
 	UFUNCTION(BlueprintCallable)
-	void FireEnd(const FInputActionValue& Value);
+	void FireEndController();
 	UFUNCTION(BlueprintCallable)
 	void PickUpItem();
 	UFUNCTION(BlueprintCallable)

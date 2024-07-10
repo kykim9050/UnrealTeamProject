@@ -41,16 +41,6 @@ public:
 		ChangeAniValue(static_cast<uint8>(_Type));
 	}
 
-	FORCEINLINE bool GetIsCharacterHit()
-	{
-		return IsCharacterHit;
-	}
-
-	FORCEINLINE void SetIsCharacterHit(bool IsHit)
-	{
-		IsCharacterHit = IsHit;
-	}
-
 	FORCEINLINE float GetAttackDamage()
 	{
 		return SettingData->AttackDamage;
@@ -62,7 +52,7 @@ public:
 	}
 
 	void Damaged(float Damage);
-	void SetActiveAttackCollision(bool Active);
+	void SetActiveAttackCollision(bool LeftActive, bool RightActive);
 
 protected:
 	UFUNCTION()
@@ -98,10 +88,10 @@ private:
 	UPROPERTY(Category = "Data", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	FName BaseDataName;
 
-	UPROPERTY(Category = "Animation", Replicated, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(Replicated)
 	uint8 AniValue;
 
-	UPROPERTY(Category = "Animation", Replicated, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(Replicated)
 	class UMainAnimInstance* AnimInst;
 
 	TArray<class UMaterialInstanceDynamic*> DynamicMaterials;
@@ -121,6 +111,4 @@ private:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
 	UCapsuleComponent* RightAttackComponent;
-
-	bool IsCharacterHit = false;
 };

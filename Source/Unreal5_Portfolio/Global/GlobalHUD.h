@@ -3,18 +3,22 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/GameMode.h"
-
-#include "TestPlayMode.generated.h"
+#include "GameFramework/HUD.h"
+#include "GlobalHUD.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class UNREAL5_PORTFOLIO_API ATestPlayMode : public AGameMode
+class UNREAL5_PORTFOLIO_API AGlobalHUD : public AHUD
 {
 	GENERATED_BODY()
 	
 public:
+
+protected:
 	void BeginPlay() override;
+
+private:
+
 };
