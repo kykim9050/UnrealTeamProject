@@ -41,16 +41,6 @@ public:
 		ChangeAniValue(static_cast<uint8>(_Type));
 	}
 
-	FORCEINLINE bool GetIsCharacterHit()
-	{
-		return IsCharacterHit;
-	}
-
-	FORCEINLINE void SetIsCharacterHit(bool IsHit)
-	{
-		IsCharacterHit = IsHit;
-	}
-
 	FORCEINLINE float GetAttackDamage()
 	{
 		return SettingData->AttackDamage;
@@ -62,7 +52,7 @@ public:
 	}
 
 	void Damaged(float Damage);
-	void SetActiveAttackCollision(bool Active);
+	void SetActiveAttackCollision(bool LeftActive, bool RightActive);
 
 protected:
 	UFUNCTION()
@@ -121,6 +111,4 @@ private:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
 	UCapsuleComponent* RightAttackComponent;
-
-	bool IsCharacterHit = false;
 };
