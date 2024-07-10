@@ -111,6 +111,9 @@ void ATestPlayerController::JumpEnd(const FInputActionValue& Value)
 	ChangeState(EPlayerState::Idle);
 	ATestCharacter* Ch = GetPawn<ATestCharacter>();
 	Ch->StopJumping();
+
+	// 몽타주 변경 예시 (태환)
+	//Ch->ChangeAniValue(EPlayerPosture::Barehand);
 }
 
 //void ATestPlayerController::FireStart(const FInputActionValue& Value)

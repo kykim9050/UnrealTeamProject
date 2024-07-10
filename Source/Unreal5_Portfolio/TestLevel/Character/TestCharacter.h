@@ -55,6 +55,16 @@ public:
 	void ChangePosture(EPlayerPosture _Type);
 	void ChangePosture_Implementation(EPlayerPosture _Type);
 
+
+	// 몽타주 변경 함수 (태환)
+	void ChangeAniValue(uint8 _Type);
+	template<typename EnumType>
+	void ChangeAniValue(EnumType _Type)
+	{
+		ChangeAniValue(static_cast<uint8>(_Type));
+	}
+	//
+
 	// Inventory
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	TArray<FItemInformation> ItemSlot;
@@ -117,6 +127,14 @@ protected:
 private :
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	class USphereComponent* HandAttackComponent = nullptr;
+
+	// 몽타주 변경에 필요한 변수 (태환)
+	UPROPERTY(Replicated)
+	uint8 AniValue;
+
+	UPROPERTY(Replicated)
+	class UPlayerAnimInstance* AnimInst = nullptr;
+	//
 
 public :
 	UFUNCTION(BlueprintCallable)
