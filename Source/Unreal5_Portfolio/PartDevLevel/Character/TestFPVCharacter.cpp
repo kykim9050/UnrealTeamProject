@@ -18,14 +18,15 @@ ATestFPVCharacter::ATestFPVCharacter()
 	SpringArmComponent = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArmComponent"));
 	SpringArmComponent->SetupAttachment(RootComponent);
 	SpringArmComponent->TargetArmLength = 0.0f;
-	SpringArmComponent->bDoCollisionTest = false;
+	SpringArmComponent->bUsePawnControlRotation = true;
+	SpringArmComponent->bDoCollisionTest = true;
 
 	// Camera Component
 	CameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("CameraComponent"));
 	CameraComponent->SetupAttachment(SpringArmComponent);
 	CameraComponent->SetProjectionMode(ECameraProjectionMode::Perspective);
-	CameraComponent->bUsePawnControlRotation = true;
-
+	//CameraComponent->bUsePawnControlRotation = true;
+	
 	// Character Mesh
 	GetMesh()->SetOwnerNoSee(true);
 
@@ -232,18 +233,22 @@ void ATestFPVCharacter::ChangePOV()
 	if (IsFPV)
 	{
 		// SpringArm Component
-		SpringArmComponent->TargetArmLength = 500.0f;
-		//SpringArmComponent->SetRelativeLocation();
+		SpringArmComponent->TargetArmLength = 200.0f;
+		SpringArmComponent->SetRelativeLocation(FVector(0.0f, 0.0f, 80.0f));
 
 		// Character Mesh
-		GetMesh()->SetVisibility(true);
-		FPVMesh->SetVisibility(false);
+		GetMesh()->SetOnlyOwnerSee(true);
+		GetMesh()->SetOwnerNoSee(false);
+		FPVMesh->SetOwnerNoSee(true);
+		FPVMesh->SetOnlyOwnerSee(false);
 
 		// Item Meshes
 		for (int i = 0; i < int(EPlayerPosture::Barehand); i++)
 		{
-			ItemMeshes[i]->SetVisibility(true);
-			FPVItemMeshes[i]->SetVisibility(false);
+			ItemMeshes[i]->SetOnlyOwnerSee(true);
+			ItemMeshes[i]->SetOwnerNoSee(false);
+			FPVItemMeshes[i]->SetOwnerNoSee(true);
+			FPVItemMeshes[i]->SetOnlyOwnerSee(false);
 		}
 
 		IsFPV = false;
@@ -252,16 +257,21 @@ void ATestFPVCharacter::ChangePOV()
 	{
 		// SpringArm Component
 		SpringArmComponent->TargetArmLength = 0.0f;
+		SpringArmComponent->SetRelativeLocation(FVector(20.0f, 0.0f, 67.0f));
 
 		// Character Mesh
 		GetMesh()->SetOwnerNoSee(true);
+		GetMesh()->SetOnlyOwnerSee(false);
 		FPVMesh->SetOnlyOwnerSee(true);
+		FPVMesh->SetOwnerNoSee(false);
 
 		// Item Meshes
 		for (int i = 0; i < int(EPlayerPosture::Barehand); i++)
 		{
 			ItemMeshes[i]->SetOwnerNoSee(true);
+			ItemMeshes[i]->SetOnlyOwnerSee(false);
 			FPVItemMeshes[i]->SetOnlyOwnerSee(true);
+			FPVItemMeshes[i]->SetOwnerNoSee(false);
 		}
 
 		IsFPV = true;
