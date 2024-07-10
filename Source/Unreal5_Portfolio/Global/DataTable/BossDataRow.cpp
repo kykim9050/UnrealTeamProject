@@ -2,4 +2,9 @@
 
 
 #include "Global/DataTable/BossDataRow.h"
+#include "Net/UnrealNetwork.h"
 
+void UBossData::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+}

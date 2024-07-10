@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "Net/UnrealNetwork.h"
-//#include "Global/DataTable/BossDataRow.h"
+#include "Global/DataTable/BossDataRow.h"
 
 #include "TestBossMonsterBase.generated.h"
 
