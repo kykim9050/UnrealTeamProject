@@ -1,9 +1,9 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "TestLevel/Monster/AI/BTTaskNode_MonsterPatrol.h"
-#include "TestLevel/Monster/TestMonsterBaseAIController.h"
-#include "TestLevel/Monster/TestMonsterBase.h"
+#include "PartDevLevel/Monster/AI/BTTaskNode_MonsterPatrol.h"
+#include "PartDevLevel/Monster/TestMonsterBaseAIController.h"
+#include "PartDevLevel/Monster/TestMonsterBase.h"
 #include "Global/ContentsLog.h"
 
 #include "GameFramework/CharacterMovementComponent.h"
@@ -35,7 +35,7 @@ EBTNodeResult::Type UBTTaskNode_MonsterPatrol::ExecuteTask(UBehaviorTreeComponen
 		return EBTNodeResult::Type::Failed;
 	}
 	
-	SetValueAsVector(_OwnerComp, "PatrolLocation", PatrolLocation.Location);
+	SetValueAsVector(_OwnerComp, "DestinationLocation", PatrolLocation.Location);
 
 	Monster->GetCharacterMovement()->MaxWalkSpeed = MonsterData->Data->GetWalkSpeed();
 	Monster->ChangeAniValue(EMonsterAnim::Walk);
@@ -48,7 +48,7 @@ void UBTTaskNode_MonsterPatrol::TickTask(UBehaviorTreeComponent& _OwnerComp, uin
 	Super::TickTask(_OwnerComp, _pNodeMemory, _DeltaSeconds);
 
 	ATestMonsterBase* Monster = GetActor<ATestMonsterBase>(_OwnerComp);
-	FVector PatrolLocation = GetValueAsVector(_OwnerComp, TEXT("PatrolLocation"));
+	FVector PatrolLocation = GetValueAsVector(_OwnerComp, TEXT("DestinationLocation"));
 	EPathFollowingRequestResult::Type IsMove = Monster->GetAIController()->MoveToLocation(PatrolLocation);
 
 	bool CanSee = _OwnerComp.GetBlackboardComponent()->GetValueAsBool(TEXT("CanSeePlayer"));

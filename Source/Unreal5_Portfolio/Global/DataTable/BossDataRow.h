@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Engine/DataTable.h"
+#include "Global/ContentsEnum.h"
 #include "BossDataRow.generated.h"
 
 /**
@@ -30,6 +31,11 @@ public:
 		return RunSpeed;
 	}
 
+	TMap<EBossMonsterAnim, class UAnimMontage*> GetAnimMontage() const
+	{
+		return AnimMontages;
+	}
+
 protected:
 
 private:
@@ -50,12 +56,21 @@ private:
 	/// </summary>
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowprivateAccess = "true"))
 	float RunSpeed = 0.0f;
+
+	/// <summary>
+	/// º¸½º ¸ùÅ¸ÁÖ
+	/// </summary>
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowprivateAccess = "true"))
+	TMap<EBossMonsterAnim, class UAnimMontage*> AnimMontages;
 };
 
 UCLASS()
 class UBossData : public UObject
 {
 	GENERATED_BODY()
+
+protected:
+	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
 public:
 	const FBossDataRow* Data = nullptr;

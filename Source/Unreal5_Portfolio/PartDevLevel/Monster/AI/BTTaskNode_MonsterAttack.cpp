@@ -1,8 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "TestLevel/Monster/AI/BTTaskNode_MonsterAttack.h"
-#include "TestLevel/Monster/TestMonsterBase.h"
+#include "PartDevLevel/Monster/AI/BTTaskNode_MonsterAttack.h"
+#include "PartDevLevel/Monster/TestMonsterBase.h"
 #include "TestLevel/Character/TestCharacter.h"
 
 #include "Global/Animation/MainAnimInstance.h"

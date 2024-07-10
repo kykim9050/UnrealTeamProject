@@ -1,12 +1,14 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "TestLevel/Monster/AI/BTTaskNode_MonsterFall.h"
-#include "TestLevel/Monster/TestMonsterBase.h"
+#include "PartDevLevel/Monster/AI/BTTaskNode_MonsterFall.h"
+#include "PartDevLevel/Monster/TestMonsterBase.h"
 
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
+
+#include "Global/ContentsLog.h"
 
 EBTNodeResult::Type UBTTaskNode_MonsterFall::ExecuteTask(UBehaviorTreeComponent& _OwnerComp, uint8* _NodeMemory)
 {
@@ -15,12 +17,12 @@ EBTNodeResult::Type UBTTaskNode_MonsterFall::ExecuteTask(UBehaviorTreeComponent&
 	ATestMonsterBase* Monster = GetActor<ATestMonsterBase>(_OwnerComp);
 	if (false == Monster->IsValidLowLevel())
 	{
-		UE_LOG(LogTemp, Fatal, TEXT("%S(%u)> Monster Is Not Valid"), __FUNCTION__, __LINE__);
+		LOG(MonsterLog, Fatal, TEXT("%S(%u)> Monster Is Not Valid"));
 		return EBTNodeResult::Type::Aborted;
 	}
 
 	FVector MonsterLocation = Monster->GetActorLocation();
-	FVector LandingLocation = GetValueAsVector(_OwnerComp, TEXT("LandingLocation"));
+	FVector LandingLocation = GetValueAsVector(_OwnerComp, TEXT("DestinationLocation"));
 	FVector Velocity = FVector::ZeroVector;
 	
 	UGameplayStatics::SuggestProjectileVelocity_CustomArc(GetWorld(), Velocity, MonsterLocation, LandingLocation, 0.0f, 0.5f);
@@ -35,7 +37,7 @@ void UBTTaskNode_MonsterFall::TickTask(UBehaviorTreeComponent& _OwnerComp, uint8
 
 	ATestMonsterBase* Monster = GetActor<ATestMonsterBase>(_OwnerComp);
 	FVector MonsterLocation = Monster->GetActorLocation();
-	FVector LandingLocation = GetValueAsVector(_OwnerComp, TEXT("LandingLocation"));
+	FVector LandingLocation = GetValueAsVector(_OwnerComp, TEXT("DestinationLocation"));
 
 	MonsterLocation.Z = 0;
 	LandingLocation.Z = 0;

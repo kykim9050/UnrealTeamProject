@@ -35,6 +35,7 @@ public:
 	{
 		return AnimMontages;
 	}
+
 	UAnimMontage* GetKeyAnimMontage(uint8 Key)
 	{
 		return AnimMontages[Key];
