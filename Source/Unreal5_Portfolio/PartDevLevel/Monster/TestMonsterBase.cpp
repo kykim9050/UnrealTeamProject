@@ -29,6 +29,12 @@ ATestMonsterBase::ATestMonsterBase()
 	AttackComponent = CreateDefaultSubobject<USphereComponent>(TEXT("Attack Comp"));
 	AttackComponent->SetupAttachment(RootComponent);
 
+	LeftClimbComponent = CreateDefaultSubobject<USphereComponent>(TEXT("Left Climb"));
+	LeftClimbComponent->SetupAttachment(GetMesh(),  "LeftClimbCheck");
+
+	RightClimbComponent = CreateDefaultSubobject<USphereComponent>(TEXT("Right Climb"));
+	RightClimbComponent->SetupAttachment(GetMesh(), "RightClimbCheck");
+
 	GetMesh()->SetCollisionEnabled(ECollisionEnabled::Type::NoCollision);
 
 	DeadTimelineFinish.BindUFunction(this, FName("OnDeadFinish"));
@@ -74,7 +80,11 @@ void ATestMonsterBase::BeginPlay()
 	AIController->GetBlackboardComponent()->SetValueAsObject(TEXT("MonsterData"), SettingData);
 
 	AttackComponent->OnComponentEndOverlap.AddDynamic(this, &ATestMonsterBase::OnOverlapEnd);
+	// 바인딩 함수 만들기
+	//LeftClimbComponent->OnComponentEndOverlap.AddDynamic(this, &ATestMonsterBase::OnOverlapEnd);
+	//RightClimbComponent->OnComponentEndOverlap.AddDynamic(this, &ATestMonsterBase::OnOverlapEnd);
 	SetAttackCollision(false);
+	SetClimbCollision(false);
 }
 
 // Called every frame
@@ -151,6 +161,18 @@ void ATestMonsterBase::Damaged(float Damage)
 }
 
 void ATestMonsterBase::SetAttackCollision(bool Active)
+{
+	if (true == Active)
+	{
+		AttackComponent->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+	}
+	else
+	{
+		AttackComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	}
+}
+
+void ATestMonsterBase::SetClimbCollision(bool Active)
 {
 	if (true == Active)
 	{
