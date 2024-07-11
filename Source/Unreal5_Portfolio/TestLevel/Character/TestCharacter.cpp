@@ -70,7 +70,7 @@ ATestCharacter::ATestCharacter()
 
 }
 
-void ATestCharacter::CharacterPlayerToDropItem(FName _ItemName, FTransform _Transform)
+void ATestCharacter::CharacterPlayerToDropItem_Implementation(FName _ItemName, FTransform _Transform)
 {
 	UMainGameInstance* MainGameInst = GetWorld()->GetGameInstanceChecked<UMainGameInstance>();
 	//const FItemDataRow* ItemBase = MainGameInst->GetItemData(_ItemName);
