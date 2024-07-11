@@ -101,6 +101,7 @@ enum class EInGameUIType : uint8
 	WeaponSlot,
 	MiniMap,
 	Leaderboard,
+	Crosshair,
 };
 
 
