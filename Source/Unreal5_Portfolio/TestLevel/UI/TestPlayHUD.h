@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Global/GlobalHUD.h"
+#include "Global/ContentsEnum.h"
 #include "TestPlayHUD.generated.h"
 
 /**
@@ -19,5 +20,12 @@ protected:
 
 private:
 	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-	TMap<FString, UUserWidget*> AllTestPlayWidgets;
+	TMap<EInGameUIType, UUserWidget*> AllTestPlayWidgets;
+
+public:
+	UFUNCTION(BlueprintCallable)
+	void UIOn(EInGameUIType _Type);
+
+	UFUNCTION(BlueprintCallable)
+	void UIOff(EInGameUIType _Type);
 };
