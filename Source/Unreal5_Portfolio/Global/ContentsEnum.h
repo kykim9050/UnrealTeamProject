@@ -94,6 +94,17 @@ enum class EBossMonsterAnim : uint8
 	Dead	UMETA(DisplayName = "Dead")
 };
 
+UENUM(BlueprintType)
+enum class EInGameUIType : uint8
+{
+	HpBar,
+	WeaponSlot,
+	MiniMap,
+	Leaderboard,
+	Crosshair,
+};
+
+
 UCLASS()
 class UNREAL5_PORTFOLIO_API UContentsEnum : public UObject
 {
