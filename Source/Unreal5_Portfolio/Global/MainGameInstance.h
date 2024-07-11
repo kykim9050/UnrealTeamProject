@@ -61,7 +61,21 @@ public:
 	/// </summary>
 	const struct FInGameUserWidgetDataRow* GetInGameUserWidgetDataTable(FName _Name);
 
+	/// <summary>
+	/// BossDataTable 포인터를 받아오는 함수
+	/// FName은 생성한 BossDataTable 행 이름
+	/// </summary>
+	/// <param name="_Name"></param>
+	/// <returns></returns>
 	const struct FBossDataRow* GetBossDataTable(FName _Name);
+
+	/// <summary>
+	/// GlobalObjectTable 포인터를 받아오는 함수
+	/// FName은 생성한 GlobalObjectTable 행 이름
+	/// </summary>
+	/// <param name="_Name"></param>
+	/// <returns></returns>
+	const TSubclassOf<UObject> GetGlobalObjectClass(FName _Name);
 
 	/// <summary>
 	/// TestInGameWidgets 를 받아오는 함수
@@ -75,26 +89,29 @@ public:
 protected:
 
 private:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowprivateAccess = "true"));
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowprivateAccess = "true"))
 	UDataTable* PlayerDataTable = nullptr;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowprivateAccess = "true"));
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowprivateAccess = "true"))
 	UDataTable* NetDataTable = nullptr;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowprivateAccess = "true"));
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowprivateAccess = "true"))
 	UDataTable* MonsterDataTable = nullptr;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowprivateAccess = "true"));
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowprivateAccess = "true"))
 	UDataTable* MonsterSpawnerDataTable = nullptr;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowprivateAccess = "true"));
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowprivateAccess = "true"))
 	UDataTable* ItemDataTable = nullptr;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowprivateAccess = "true"));
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowprivateAccess = "true"))
 	UDataTable* InGameUserWidgetDataTable = nullptr;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowprivateAccess = "true"));
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowprivateAccess = "true"))
 	UDataTable* BossDataTable = nullptr;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowprivateAccess = "true"))
+	UDataTable* GlobalObjectTable = nullptr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	TMap<FString, TSubclassOf<UUserWidget>> TestInGameWidgets;
