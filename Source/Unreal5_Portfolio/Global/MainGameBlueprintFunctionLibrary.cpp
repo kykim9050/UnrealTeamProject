@@ -50,9 +50,10 @@ void UMainGameBlueprintFunctionLibrary::PushActor(uint8 _GroupIndex, AActor* _Ac
 	GameState->PushActor(_GroupIndex, _Actor);
 }
 
-#if WITH_EDITOR
+
 void UMainGameBlueprintFunctionLibrary::DebugTextPrint(UWorld* _World, FString _Text)
 {
+#if WITH_EDITOR
 	APlayerController* Controller = UGameplayStatics::GetPlayerController(_World, 0);
 
 	if (nullptr == Controller)
@@ -64,5 +65,5 @@ void UMainGameBlueprintFunctionLibrary::DebugTextPrint(UWorld* _World, FString _
 	AGlobalHUD* GlobalHUD = Cast<AGlobalHUD>(Controller->GetHUD());
 
 	GlobalHUD->AddDebugString(_Text);
-}
 #endif
+}

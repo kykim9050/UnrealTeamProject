@@ -36,7 +36,6 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Game", meta = ( UnsafeDuringActorConstruction = "true"))
 	static void PushActor(uint8 _GroupIndex, AActor* _Actor);
 
-#if WITH_EDITOR
 	/// <summary>
 	/// 에디터 상황에서 원하는 디버깅 메시지를 출력하기 위한 함수
 	/// </summary>
@@ -44,5 +43,4 @@ public:
 	/// <param name="_Text"></param>
 	UFUNCTION(BlueprintCallable)
 	static void DebugTextPrint(UWorld* _World, FString _Text);
-#endif
 };
