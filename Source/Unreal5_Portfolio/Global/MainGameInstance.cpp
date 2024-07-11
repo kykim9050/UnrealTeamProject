@@ -9,6 +9,7 @@
 #include "Global/DataTable/InGameUserWidgetDataRow.h"
 #include "Global/DataTable/ItemDataRow.h"
 #include "Global/DataTable/BossDataRow.h"
+#include "Global/DataTable/GlobalObjectRow.h"
 
 UMainGameInstance::UMainGameInstance()
 {
@@ -160,4 +161,22 @@ const FBossDataRow* UMainGameInstance::GetBossDataTable(FName _Name)
 	}
 
 	return Data;
+}
+
+const TSubclassOf<UObject> UMainGameInstance::GetGlobalObjectClass(FName _Name)
+{
+	if (nullptr == GlobalObjectTable)
+	{
+		UE_LOG(GlobalLog, Fatal, TEXT("%S(%u)> if (nullptr == GlobalObjectTable)"), __FUNCTION__, __LINE__);
+	}
+
+	FGlobalObjectRow* Data = GlobalObjectTable->FindRow<FGlobalObjectRow>(_Name, nullptr);
+
+	if (nullptr == Data)
+	{
+		UE_LOG(UILog, Error, TEXT("%S(%u)> %s Name Data Is Nullptr"), __FUNCTION__, __LINE__, *_Name.ToString());
+		return nullptr;
+	}
+
+	return Data->GetObject();
 }

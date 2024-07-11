@@ -12,11 +12,25 @@ void ATestPlayHUD::BeginPlay()
 	UMainGameInstance* Inst = UMainGameBlueprintFunctionLibrary::GetMainGameInstance(GetWorld());
 
 	TMap<FString, TSubclassOf<UUserWidget>>& AllUI = Inst->GetInGameWidgets();
+	UEnum* Enum = StaticEnum<EInGameUIType>();
 
 	for (TPair<FString, TSubclassOf<UUserWidget>> Pair : AllUI)
 	{
 		UUserWidget* Widget = CreateWidget<UUserWidget>(GetWorld(), Pair.Value);
 		Widget->AddToViewport();
-		AllTestPlayWidgets.Add(Pair.Key, Widget);
+
+		EInGameUIType Type = static_cast<EInGameUIType>(Enum->GetValueByName(*Pair.Key));
+
+		AllTestPlayWidgets.Add(Type, Widget);
 	}
+}
+
+void ATestPlayHUD::UIOn(EInGameUIType _Type)
+{
+	AllTestPlayWidgets[_Type]->SetVisibility(ESlateVisibility::Visible);
+}
+
+void ATestPlayHUD::UIOff(EInGameUIType _Type)
+{
+	AllTestPlayWidgets[_Type]->SetVisibility(ESlateVisibility::Collapsed);
 }

@@ -17,4 +17,12 @@ class UNREAL5_PORTFOLIO_API ATestPlayMode : public AGameMode
 	
 public:
 	void BeginPlay() override;
+
+	UFUNCTION(Reliable, Server, BlueprintCallable)
+	void GPlayerToDropItem(FName _ItemName, FTransform _Transform);
+	void GPlayerToDropItem_Implementation(FName _ItemName, FTransform _Transform);
+
+protected :
+	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 };
+	

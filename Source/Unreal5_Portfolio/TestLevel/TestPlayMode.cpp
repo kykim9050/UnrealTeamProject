@@ -21,3 +21,20 @@ void ATestPlayMode::BeginPlay()
 		GetWorld()->SpawnActor<AActor>(MonsterData->GetMonsterUClass(), Transform);
 	}
 }
+
+void ATestPlayMode::GPlayerToDropItem_Implementation(FName _ItemName, FTransform _Transform)
+{
+	UMainGameInstance* MainGameInst = GetWorld()->GetGameInstanceChecked<UMainGameInstance>();
+	//const FItemDataRow* ItemBase = MainGameInst->GetItemData(_ItemName);
+
+
+	const FItemDataRow* ItemBase = MainGameInst->GetItemData(FName("TestRifle"));
+	GetWorld()->SpawnActor<AActor>(ItemBase->GetItemUClass(), _Transform);
+}
+
+void ATestPlayMode::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	//DOREPLIFETIME(ATestPlayMode, Value);
+}

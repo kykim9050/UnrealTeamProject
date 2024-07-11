@@ -3,14 +3,15 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/HUD.h"
+#include "Global/GlobalHUD.h"
+#include "Global/ContentsEnum.h"
 #include "TestPlayHUD.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class UNREAL5_PORTFOLIO_API ATestPlayHUD : public AHUD
+class UNREAL5_PORTFOLIO_API ATestPlayHUD : public AGlobalHUD
 {
 	GENERATED_BODY()
 	
@@ -19,5 +20,12 @@ protected:
 
 private:
 	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-	TMap<FString, UUserWidget*> AllTestPlayWidgets;
+	TMap<EInGameUIType, UUserWidget*> AllTestPlayWidgets;
+
+public:
+	UFUNCTION(BlueprintCallable)
+	void UIOn(EInGameUIType _Type);
+
+	UFUNCTION(BlueprintCallable)
+	void UIOff(EInGameUIType _Type);
 };

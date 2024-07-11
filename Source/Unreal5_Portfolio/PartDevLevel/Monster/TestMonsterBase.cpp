@@ -17,18 +17,23 @@
 #include "Global/ContentsEnum.h"
 #include "Global/ContentsLog.h"
 
+#include "Components/SphereComponent.h"
+
 
 // Sets default values
 ATestMonsterBase::ATestMonsterBase()
 {
- 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	LeftAttackComponent = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Left Attack Comp"));
-	LeftAttackComponent->SetupAttachment(GetMesh(), FName("LeftAttackPos"));
-	
-	RightAttackComponent = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Right Attack Comp"));
-	RightAttackComponent->SetupAttachment(GetMesh(), FName("RightAttackPos"));
+	AttackComponent = CreateDefaultSubobject<USphereComponent>(TEXT("Attack Comp"));
+	AttackComponent->SetupAttachment(RootComponent);
+
+	LeftClimbComponent = CreateDefaultSubobject<USphereComponent>(TEXT("Left Climb"));
+	LeftClimbComponent->SetupAttachment(GetMesh(),  "LeftClimbCheck");
+
+	RightClimbComponent = CreateDefaultSubobject<USphereComponent>(TEXT("Right Climb"));
+	RightClimbComponent->SetupAttachment(GetMesh(), "RightClimbCheck");
 
 	GetMesh()->SetCollisionEnabled(ECollisionEnabled::Type::NoCollision);
 
@@ -74,9 +79,12 @@ void ATestMonsterBase::BeginPlay()
 
 	AIController->GetBlackboardComponent()->SetValueAsObject(TEXT("MonsterData"), SettingData);
 
-	LeftAttackComponent->OnComponentEndOverlap.AddDynamic(this, &ATestMonsterBase::OnOverlapEnd);
-	RightAttackComponent->OnComponentEndOverlap.AddDynamic(this, &ATestMonsterBase::OnOverlapEnd);
-	SetActiveAttackCollision(false);
+	AttackComponent->OnComponentEndOverlap.AddDynamic(this, &ATestMonsterBase::OnOverlapEnd);
+	// 바인딩 함수 만들기
+	//LeftClimbComponent->OnComponentEndOverlap.AddDynamic(this, &ATestMonsterBase::OnOverlapEnd);
+	//RightClimbComponent->OnComponentEndOverlap.AddDynamic(this, &ATestMonsterBase::OnOverlapEnd);
+	SetAttackCollision(false);
+	SetClimbCollision(false);
 }
 
 // Called every frame
@@ -128,12 +136,12 @@ void ATestMonsterBase::Attack(AActor* _OtherActor, UPrimitiveComponent* _Collisi
 	{
 		return;
 	}
-	
+
 	EMonsterState MonsterState = static_cast<EMonsterState>(BlackBoard->GetValueAsEnum(TEXT("State")));
 	ATestCharacter* HitCharacter = Cast<ATestCharacter>(_OtherActor);
 	if (nullptr != HitCharacter && EMonsterState::Attack == MonsterState)
 	{
-		IsCharacterHit = true;
+		HitCharacter->GetDamage(SettingData->AttackDamage);
 	}
 }
 
@@ -149,28 +157,37 @@ void ATestMonsterBase::Damaged(float Damage)
 	if (0.0f >= SettingData->Hp)
 	{
 		OnDead();
-	}	
+	}
 }
 
-void ATestMonsterBase::SetActiveAttackCollision(bool Active)
+void ATestMonsterBase::SetAttackCollision(bool Active)
 {
-	if (false == Active)
+	if (true == Active)
 	{
-		LeftAttackComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-		RightAttackComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		AttackComponent->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 	}
 	else
 	{
-		LeftAttackComponent->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
-		RightAttackComponent->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+		AttackComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	}
+}
+
+void ATestMonsterBase::SetClimbCollision(bool Active)
+{
+	if (true == Active)
+	{
+		AttackComponent->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+	}
+	else
+	{
+		AttackComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	}
 }
 
 void ATestMonsterBase::SetDeadCollision_Implementation()
 {
 	GetCapsuleComponent()->SetCollisionObjectType(ECC_GameTraceChannel5);
-	RightAttackComponent->SetCollisionObjectType(ECC_GameTraceChannel5);
-	LeftAttackComponent->SetCollisionObjectType(ECC_GameTraceChannel5);
+	AttackComponent->SetCollisionObjectType(ECC_GameTraceChannel5);
 	GetCharacterMovement()->SetActive(false);
 }
 

@@ -23,7 +23,6 @@ EBTNodeResult::Type UBTTaskNode_MonsterAttack::ExecuteTask(UBehaviorTreeComponen
 	UMonsterData* MonsterData = GetValueAsObject<UMonsterData>(_OwnerComp, TEXT("MonsterData"));
 	MonsterData->IdleTime = 0.0f;
 	Monster->ChangeAniValue(EMonsterAnim::Attack);
-	Monster->SetActiveAttackCollision(true);
 	MonsterData->AttackTime = Monster->GetAnimInstance()->GetKeyAnimMontage(static_cast<uint8>(EMonsterAnim::Attack))->GetPlayLength();
 
 	return EBTNodeResult::Type::InProgress;
@@ -49,8 +48,6 @@ void UBTTaskNode_MonsterAttack::TickTask(UBehaviorTreeComponent& _OwnerComp, uin
 		ATestCharacter* TargetCharacter = Cast<ATestCharacter>(TargetActor);
 		if (0.0f >= TargetCharacter->GetPlayerHp())
 		{
-			Monster->SetActiveAttackCollision(false);
-			Monster->SetIsCharacterHit(false);
 			StateChange(_OwnerComp, EMonsterState::Idle);
 			_OwnerComp.GetBlackboardComponent()->SetValueAsObject(TEXT("TargetActor"), nullptr);
 			_OwnerComp.GetBlackboardComponent()->SetValueAsBool(TEXT("CanSeePlayer"), false);
@@ -58,12 +55,6 @@ void UBTTaskNode_MonsterAttack::TickTask(UBehaviorTreeComponent& _OwnerComp, uin
 		}
 		else
 		{
-			if (true == Monster->GetIsCharacterHit())
-			{
-				TargetCharacter->GetDamage(Monster->GetAttackDamage());
-				Monster->SetIsCharacterHit(false);
-			}
-
 			FVector LocationDiff = TargetLocation - MonsterLocation;
 			float Dist = LocationDiff.Size();
 			if (MonsterData->AttackBoundary >= Dist)
@@ -73,7 +64,6 @@ void UBTTaskNode_MonsterAttack::TickTask(UBehaviorTreeComponent& _OwnerComp, uin
 			else
 			{
 				MonsterData->AttackTime = 0.0f;
-				Monster->SetActiveAttackCollision(false);
 				StateChange(_OwnerComp, EMonsterState::Chase);
 				return;
 			}
