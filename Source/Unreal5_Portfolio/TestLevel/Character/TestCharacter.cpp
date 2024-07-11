@@ -147,6 +147,9 @@ void ATestCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLi
 
 	// 플레이어 H
 	DOREPLIFETIME(ATestCharacter, PlayerHp);
+
+	// LowerState (태환)
+	DOREPLIFETIME(ATestCharacter, LowerStateValue);
 }
 
 void ATestCharacter::TestRayCast(float _DeltaTime, FVector _StartPos, FVector _EndPos, FRotator _CameraRot)
@@ -297,6 +300,16 @@ void ATestCharacter::ChangePosture_Implementation(EPlayerPosture _Type)
 			}
 		}
 	}
+}
+
+void ATestCharacter::ChangeLowerState_Implementation(EPlayerLowerState _State)
+{
+	LowerStateValue = _State;
+}
+
+void ATestCharacter::ChangePlayerDir_Implementation(EPlayerMoveDir _Dir)
+{
+	DirValue = _Dir;
 }
 
 void ATestCharacter::ChangeAniValue(uint8 _Type)

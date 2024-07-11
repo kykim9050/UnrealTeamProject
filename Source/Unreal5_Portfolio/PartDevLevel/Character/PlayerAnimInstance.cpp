@@ -20,4 +20,8 @@ void UPlayerAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 	{
 		return;
 	}
+
+	PlayerLowerState = OwnerPlayer->LowerStateValue;
+	PlayerPosture = OwnerPlayer->PostureValue;
+	PlayerDir = OwnerPlayer->DirValue;
 }

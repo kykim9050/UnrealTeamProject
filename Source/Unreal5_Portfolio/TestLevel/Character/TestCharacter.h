@@ -48,12 +48,30 @@ public:
 	UPROPERTY(Category = "Contents", Replicated, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	EPlayerPosture PostureValue = EPlayerPosture::Barehand;
 
+	// LowerState (태환)
+	UPROPERTY(Category = "Contents", Replicated, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	EPlayerLowerState LowerStateValue = EPlayerLowerState::Idle;
+
+	// Dir
+	UPROPERTY(Category = "Contents", Replicated, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	EPlayerMoveDir DirValue = EPlayerMoveDir::Forward;
+
 	UFUNCTION(Reliable, Server)
 	void ChangeState(EPlayerState _Type);
 	void ChangeState_Implementation(EPlayerState _Type);
 	UFUNCTION(Reliable, Server)
 	void ChangePosture(EPlayerPosture _Type);
 	void ChangePosture_Implementation(EPlayerPosture _Type);
+
+	// LowerStateChange 함수 (태환)
+	UFUNCTION(Reliable, Server)
+	void ChangeLowerState(EPlayerLowerState _State);
+	void ChangeLowerState_Implementation(EPlayerLowerState _State);
+
+	// DirChange 함수 (태환)
+	UFUNCTION(Reliable, Server)
+	void ChangePlayerDir(EPlayerMoveDir _Dir);
+	void ChangePlayerDir_Implementation(EPlayerMoveDir _Dir);
 
 	// 몽타주 변경 함수 (태환)
 	void ChangeAniValue(uint8 _Type);
@@ -107,7 +125,7 @@ public:
 	{
 		return PlayerHp;
 	}
-	
+
 	UFUNCTION(BlueprintCallable)
 	void GetDamage(float _Damage);
 
@@ -127,7 +145,7 @@ protected:
 	UPROPERTY(Category = "Contents", Replicated, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	float PlayerHp = 100.0f;
 
-private :
+private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	class USphereComponent* HandAttackComponent = nullptr;
 
@@ -139,7 +157,7 @@ private :
 	class UPlayerAnimInstance* AnimInst = nullptr;
 	//
 
-public :
+public:
 	UFUNCTION(BlueprintCallable)
 	void TestRayCast(float _DeltaTime, FVector _StartPos, FVector _EndPos, FRotator _CameraRot);
 

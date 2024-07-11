@@ -25,4 +25,13 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	USkeletalMeshComponent* PlayerMesh = nullptr;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	EPlayerLowerState PlayerLowerState = EPlayerLowerState::Idle;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	EPlayerPosture PlayerPosture = EPlayerPosture::Rifle;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	EPlayerMoveDir PlayerDir = EPlayerMoveDir::Forward;
 };

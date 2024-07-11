@@ -37,10 +37,14 @@ public:
 	void MoveRight(const FInputActionValue& Value);
 	UFUNCTION(BlueprintCallable)
 	void MoveLeft(const FInputActionValue& Value);
+
+	//UFUNCTION(BlueprintCallable)
+	//void Jump(const FInputActionValue& Value);
+	//UFUNCTION(BlueprintCallable)
+	//void JumpEnd(const FInputActionValue& Value);
+
 	UFUNCTION(BlueprintCallable)
-	void Jump(const FInputActionValue& Value);
-	UFUNCTION(BlueprintCallable)
-	void JumpEnd(const FInputActionValue& Value);
+	void Crouch(const FInputActionValue& Value);
 	
 	//UFUNCTION(BlueprintCallable)
 	//void FireStart(const FInputActionValue& Value);
@@ -65,6 +69,14 @@ public:
 	void ChangeState(EPlayerState _State);
 	UFUNCTION(BlueprintCallable)
 	void ChangePosture(EPlayerPosture _Posture);
+
+	// LowerStateChange 함수 (태환)
+	UFUNCTION(BlueprintCallable)
+	void ChangeLowerState(EPlayerLowerState _State);
+
+	// PlayerDirChange 함수 (태환)
+	UFUNCTION(BlueprintCallable)
+	void ChangePlayerDir(EPlayerMoveDir _Dir);
 
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "TeamId", meta = (AllowPrivateAccess = true))
