@@ -94,6 +94,23 @@ enum class EBossMonsterAnim : uint8
 	Dead	UMETA(DisplayName = "Dead")
 };
 
+UENUM(BlueprintType)
+enum class EPlayerLowerState : uint8
+{
+	Idle	UMETA(DisplayName = "Idle"),
+	Jump	UMETA(DisplayName = "Jump"),
+	Crouch	UMETA(DisplayName = "CrouchIdle"),
+};
+
+UENUM(BlueprintType)
+enum class EPlayerMoveDir : uint8
+{
+	Forward	UMETA(DisplayName = "Forward"),
+	Back	UMETA(DisplayName = "Back"),
+	Left	UMETA(DisplayName = "Left"),
+	Right	UMETA(DisplayName = "Right"),
+};
+
 UCLASS()
 class UNREAL5_PORTFOLIO_API UContentsEnum : public UObject
 {

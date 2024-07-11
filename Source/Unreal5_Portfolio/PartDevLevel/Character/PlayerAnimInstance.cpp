@@ -20,6 +20,4 @@ void UPlayerAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 	{
 		return;
 	}
-
-	PlayerState = OwnerPlayer->StateValue;
 }

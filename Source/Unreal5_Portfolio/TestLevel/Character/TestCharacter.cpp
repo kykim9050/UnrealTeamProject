@@ -117,7 +117,7 @@ void ATestCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	UMainGameBlueprintFunctionLibrary::PushActor(EObjectType::Player, this);
-	
+
 	// 몽타주 변경에 필요한 세팅 추가 필요 (태환)
 	//UAnimInstance* Inst = GetMesh()->GetAnimInstance();
 	//AnimInst = Cast<UPlayerAnimInstance>(GetMesh()->GetAnimInstance());

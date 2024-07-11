@@ -55,7 +55,6 @@ public:
 	void ChangePosture(EPlayerPosture _Type);
 	void ChangePosture_Implementation(EPlayerPosture _Type);
 
-
 	// 몽타주 변경 함수 (태환)
 	void ChangeAniValue(uint8 _Type);
 	template<typename EnumType>
