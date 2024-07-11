@@ -15,9 +15,16 @@ class UNREAL5_PORTFOLIO_API UTextDebugWidget : public UUserWidget
 	GENERATED_BODY()
 	
 public:
+	UFUNCTION(BlueprintCallable)
+	void AddDebugString(FString _Text);
+
+	void NativeConstruct() override;
+
+	void NativeTick(const FGeometry& _MyGeometry, float _InDeltaTime) override;
 
 protected:
 
 private:
-
+	FString AllDebugText = TEXT("");
+	class UTextBlock* DebugText = nullptr;
 };

@@ -28,8 +28,8 @@ private:
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<UUserWidget> DebugWidgetClass = TSubclassOf<UUserWidget>();
 
-	//UPROPERTY(EditAnywhere)
-	//class UDebugWidget* DebugWidget = nullptr;
+	UPROPERTY(EditAnywhere)
+	class UTextDebugWidget* TextDebugWidget = nullptr;
 
 #endif
 
