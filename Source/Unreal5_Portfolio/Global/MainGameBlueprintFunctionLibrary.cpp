@@ -4,6 +4,8 @@
 #include "Global/MainGameBlueprintFunctionLibrary.h"
 #include "Kismet/GameplayStatics.h"
 #include "MainGameState.h"
+#include "Global/GlobalHUD.h"
+#include "Global/ContentsLog.h"
 
 UMainGameInstance* UMainGameBlueprintFunctionLibrary::GetMainGameInstance(const UWorld* WorldContextObject)
 {
@@ -52,5 +54,13 @@ void UMainGameBlueprintFunctionLibrary::DebugTextPrint(UWorld* _World, FString _
 {
 	APlayerController* Controller = UGameplayStatics::GetPlayerController(_World, 0);
 
-	//Controller->GetHUD();
+	if (nullptr == Controller)
+	{
+		UE_LOG(PlayerLog, Warning, TEXT("%s(%u)> if(nullptr == Controller)"), __FUNCTION__, __LINE__);
+		return;
+	}
+
+	AGlobalHUD* GlobalHUD = Cast<AGlobalHUD>(Controller->GetHUD());
+
+	GlobalHUD->AddDebugString(_Text);
 }

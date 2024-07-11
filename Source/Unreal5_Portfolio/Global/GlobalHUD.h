@@ -15,6 +15,10 @@ class UNREAL5_PORTFOLIO_API AGlobalHUD : public AHUD
 	GENERATED_BODY()
 	
 public:
+#if WITH_EDITOR
+	UFUNCTION(BlueprintCallable)
+	void AddDebugString(FString _Text);
+#endif
 
 protected:
 	void BeginPlay() override;

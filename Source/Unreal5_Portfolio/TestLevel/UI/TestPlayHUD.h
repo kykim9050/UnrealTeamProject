@@ -3,14 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/HUD.h"
+#include "Global/GlobalHUD.h"
 #include "TestPlayHUD.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class UNREAL5_PORTFOLIO_API ATestPlayHUD : public AHUD
+class UNREAL5_PORTFOLIO_API ATestPlayHUD : public AGlobalHUD
 {
 	GENERATED_BODY()
 	
