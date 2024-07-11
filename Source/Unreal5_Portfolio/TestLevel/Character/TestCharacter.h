@@ -89,8 +89,9 @@ public:
 		PickUp = _PickUp;
 	}
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(Reliable, Server, BlueprintCallable)
 	void CharacterPlayerToDropItem(FName _ItemName, FTransform _Transform);
+	void CharacterPlayerToDropItem_Implementation(FName _ItemName, FTransform _Transform);
 
 	// Collision
 	UFUNCTION(BlueprintCallable)
