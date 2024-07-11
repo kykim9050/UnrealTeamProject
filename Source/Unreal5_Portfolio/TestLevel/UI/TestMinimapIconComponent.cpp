@@ -23,6 +23,8 @@ UTestMinimapIconComponent::UTestMinimapIconComponent()
 	FQuat Q;
 	UKismetMathLibrary::Quat_SetFromEuler(Q, FVector(90.f, 0.f, 90.f));
 	SetRelativeRotation(Q);
+
+	SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 
 void UTestMinimapIconComponent::BeginPlay()
