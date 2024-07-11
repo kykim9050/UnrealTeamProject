@@ -35,8 +35,10 @@ public:
 	class USpringArmComponent* SpringArmComponent = nullptr;
 	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	class UCameraComponent* CameraComponent = nullptr;
+	//UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	//class UTestMinimapIconComponent* MinimapIconComponent = nullptr;
 	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-	class UTestMinimapIconComponent* MinimapIconComponent = nullptr;
+	class USceneComponent* CreateItemComponent = nullptr;
 
 	// State, Posture
 	UPROPERTY(Category = "Contents", Replicated, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
