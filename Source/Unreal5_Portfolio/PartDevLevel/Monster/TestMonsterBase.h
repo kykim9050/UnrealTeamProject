@@ -8,6 +8,8 @@
 #include "Global/DataTable/MonsterDataRow.h"
 #include "TestMonsterBase.generated.h"
 
+class USphereComponent;
+
 UCLASS()
 class UNREAL5_PORTFOLIO_API ATestMonsterBase : public ACharacter
 {
@@ -52,7 +54,7 @@ public:
 	}
 
 	void Damaged(float Damage);
-	void SetActiveAttackCollision(bool LeftActive, bool RightActive);
+	void SetAttackCollision(bool Active);
 
 protected:
 	UFUNCTION()
@@ -107,8 +109,5 @@ private:
 
 private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
-	UCapsuleComponent* LeftAttackComponent;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
-	UCapsuleComponent* RightAttackComponent;
+	USphereComponent* AttackComponent;
 };

@@ -17,6 +17,8 @@
 #include "Global/ContentsEnum.h"
 #include "Global/ContentsLog.h"
 
+#include "Components/SphereComponent.h"
+
 
 // Sets default values
 ATestMonsterBase::ATestMonsterBase()
@@ -24,11 +26,8 @@ ATestMonsterBase::ATestMonsterBase()
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	LeftAttackComponent = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Left Attack Comp"));
-	LeftAttackComponent->SetupAttachment(GetMesh(), FName("LeftAttackPos"));
-
-	RightAttackComponent = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Right Attack Comp"));
-	RightAttackComponent->SetupAttachment(GetMesh(), FName("RightAttackPos"));
+	AttackComponent = CreateDefaultSubobject<USphereComponent>(TEXT("Attack Comp"));
+	AttackComponent->SetupAttachment(RootComponent);
 
 	GetMesh()->SetCollisionEnabled(ECollisionEnabled::Type::NoCollision);
 
@@ -74,9 +73,8 @@ void ATestMonsterBase::BeginPlay()
 
 	AIController->GetBlackboardComponent()->SetValueAsObject(TEXT("MonsterData"), SettingData);
 
-	LeftAttackComponent->OnComponentEndOverlap.AddDynamic(this, &ATestMonsterBase::OnOverlapEnd);
-	RightAttackComponent->OnComponentEndOverlap.AddDynamic(this, &ATestMonsterBase::OnOverlapEnd);
-	SetActiveAttackCollision(false, false);
+	AttackComponent->OnComponentEndOverlap.AddDynamic(this, &ATestMonsterBase::OnOverlapEnd);
+	SetAttackCollision(false);
 }
 
 // Called every frame
@@ -152,32 +150,22 @@ void ATestMonsterBase::Damaged(float Damage)
 	}
 }
 
-void ATestMonsterBase::SetActiveAttackCollision(bool LeftActive, bool RightActive)
+void ATestMonsterBase::SetAttackCollision(bool Active)
 {
-	if (false == LeftActive)
+	if (true == Active)
 	{
-		LeftAttackComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		AttackComponent->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 	}
 	else
 	{
-		LeftAttackComponent->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
-	}
-	if (false == RightActive)
-	{
-		RightAttackComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-	}
-	else
-	{
-		RightAttackComponent->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
-
+		AttackComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	}
 }
 
 void ATestMonsterBase::SetDeadCollision_Implementation()
 {
 	GetCapsuleComponent()->SetCollisionObjectType(ECC_GameTraceChannel5);
-	RightAttackComponent->SetCollisionObjectType(ECC_GameTraceChannel5);
-	LeftAttackComponent->SetCollisionObjectType(ECC_GameTraceChannel5);
+	AttackComponent->SetCollisionObjectType(ECC_GameTraceChannel5);
 	GetCharacterMovement()->SetActive(false);
 }
 

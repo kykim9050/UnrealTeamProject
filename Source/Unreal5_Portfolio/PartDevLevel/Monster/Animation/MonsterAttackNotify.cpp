@@ -9,7 +9,7 @@ void UMonsterAttackNotify::NotifyBegin(USkeletalMeshComponent* MeshComp, UAnimSe
 	ATestMonsterBase* Monster = Cast<ATestMonsterBase>(MeshComp->GetOwner());
 	if (nullptr != Monster)
 	{
-		Monster->SetActiveAttackCollision(false, true);
+		Monster->SetAttackCollision(true);
 	}
 }
 
@@ -18,6 +18,6 @@ void UMonsterAttackNotify::NotifyEnd(USkeletalMeshComponent* MeshComp, UAnimSequ
 	ATestMonsterBase* Monster = Cast<ATestMonsterBase>(MeshComp->GetOwner());
 	if (nullptr != Monster)
 	{
-		Monster->SetActiveAttackCollision(false, false);
+		Monster->SetAttackCollision(false);
 	}
 }
