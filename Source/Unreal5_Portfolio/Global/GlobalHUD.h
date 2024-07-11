@@ -24,5 +24,13 @@ protected:
 	void BeginPlay() override;
 
 private:
+#if WITH_EDITORONLY_DATA
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<UUserWidget> DebugWidgetClass = TSubclassOf<UUserWidget>();
+
+	UPROPERTY(EditAnywhere)
+	class UTextDebugWidget* TextDebugWidget = nullptr;
+
+#endif
 
 };

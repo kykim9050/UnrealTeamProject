@@ -55,6 +55,7 @@ public:
 
 	void Damaged(float Damage);
 	void SetAttackCollision(bool Active);
+	void SetClimbCollision(bool Active);
 
 protected:
 	UFUNCTION()
@@ -110,4 +111,10 @@ private:
 private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
 	USphereComponent* AttackComponent;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
+	USphereComponent* LeftClimbComponent;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
+	USphereComponent* RightClimbComponent;
 };

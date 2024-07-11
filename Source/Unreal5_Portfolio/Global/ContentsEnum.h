@@ -95,6 +95,17 @@ enum class EBossMonsterAnim : uint8
 };
 
 UENUM(BlueprintType)
+enum class EInGameUIType : uint8
+{
+	HpBar,
+	WeaponSlot,
+	MiniMap,
+	Leaderboard,
+	Crosshair,
+};
+
+
+UENUM(BlueprintType)
 enum class EPlayerLowerState : uint8
 {
 	Idle	UMETA(DisplayName = "Idle"),

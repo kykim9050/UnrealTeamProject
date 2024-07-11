@@ -49,7 +49,7 @@ void ATestFPVPlayerController::SetupInputComponent()
 			EnhancedInputComponent->BindAction(InputData->Actions[4], ETriggerEvent::Triggered, this, &ATestFPVPlayerController::MoveLeft);
 			EnhancedInputComponent->BindAction(InputData->Actions[5], ETriggerEvent::Triggered, this, &ATestFPVPlayerController::Jump);
 			EnhancedInputComponent->BindAction(InputData->Actions[5], ETriggerEvent::Completed, this, &ATestFPVPlayerController::JumpEnd);
-			EnhancedInputComponent->BindAction(InputData->Actions[6], ETriggerEvent::Triggered, this, &ATestFPVPlayerController::FireStartController);
+			EnhancedInputComponent->BindAction(InputData->Actions[6], ETriggerEvent::Started, this, &ATestFPVPlayerController::FireStartController);
 			EnhancedInputComponent->BindAction(InputData->Actions[6], ETriggerEvent::Completed, this, &ATestFPVPlayerController::FireEndController);
 			EnhancedInputComponent->BindAction(InputData->Actions[7], ETriggerEvent::Triggered, this, &ATestFPVPlayerController::ChangePostureController, static_cast<EPlayerPosture>(0));
 			EnhancedInputComponent->BindAction(InputData->Actions[8], ETriggerEvent::Triggered, this, &ATestFPVPlayerController::ChangePostureController, static_cast<EPlayerPosture>(1));

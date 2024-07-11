@@ -5,9 +5,11 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
 #include "Engine/SkeletalMeshSocket.h"
+#include "TimerManager.h"
 #include "Global/MainGameBlueprintFunctionLibrary.h"
 #include "Global/DataTable/ItemDataRow.h"
 #include "PartDevLevel/Monster/TestMonsterBase.h"
+#include "PartDevLevel/Character/TestFPVPlayerController.h"
 
 // Sets default values
 ATestFPVCharacter::ATestFPVCharacter()
@@ -26,7 +28,6 @@ ATestFPVCharacter::ATestFPVCharacter()
 	CameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("CameraComponent"));
 	CameraComponent->SetupAttachment(SpringArmComponent);
 	CameraComponent->SetProjectionMode(ECameraProjectionMode::Perspective);
-	//CameraComponent->bUsePawnControlRotation = true;
 	
 	// Character Mesh
 	GetMesh()->SetOwnerNoSee(true);
@@ -71,6 +72,11 @@ ATestFPVCharacter::ATestFPVCharacter()
 		ItemSlot.Push(NewSlot);
 		IsItemIn.Push(false);
 	}
+
+	// Raycast
+	RayStartLocComponent = CreateDefaultSubobject<USceneComponent>(TEXT("RayStartLocComponent"));
+	RayStartLocComponent->SetupAttachment(RootComponent);
+	RayStartLocComponent->SetRelativeLocation(FVector(10.0f, 10.0f, 70.0f));
 }
 
 void ATestFPVCharacter::Collision(AActor* _OtherActor, UPrimitiveComponent* _Collision)
@@ -179,27 +185,52 @@ void ATestFPVCharacter::ChangePosture_Implementation(EPlayerPosture _Type)
 
 void ATestFPVCharacter::FireStart()
 {
+	if (CurItemIndex == -1)
+	{
+		return;
+	}
 
+	BulletRemainCnt = 30;
+
+	GetWorldTimerManager().SetTimer(FireTimerHandle, this, &ATestFPVCharacter::Fire, FireIntervalTime, true);
 }
 
 void ATestFPVCharacter::Fire_Implementation()
 {
-	FVector Start = GetActorLocation();
-	FVector ForwardVector = CameraComponent->GetForwardVector();
-	Start = FVector(Start.X + (ForwardVector.X * 100), Start.Y + (ForwardVector.Y * 100), Start.Z + (ForwardVector.Z * 100));
-	FVector End = Start + (ForwardVector * 1000.0);
+	ATestFPVPlayerController* Con = Cast<ATestFPVPlayerController>(GetController());
+
+	if (BulletRemainCnt <= 0)
+	{
+		Con->FireEndController();
+		return;
+	}
+
+	BulletRemainCnt -= 1;
+	GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, FString::Printf(TEXT("Bullet left : %d / %d"), BulletRemainCnt, 30));
 
 	FHitResult Hit;
+	FVector Start = RayStartLocComponent->GetComponentLocation();
+	FVector End;
+	if (IsFPV)
+	{
+		End = (Con->GetControlRotation().Vector() * 2000.0f) + Start;
+	}
+	else
+	{
+		End = (GetActorForwardVector() * 2000.0f) + Start;
+	}
+
 	if (GetWorld())
 	{
-		bool ActorHit = GetWorld()->LineTraceSingleByChannel(Hit, Start, End, ECC_GameTraceChannel2, FCollisionQueryParams(), FCollisionResponseParams());
-		DrawDebugLine(GetWorld(), Start, End, FColor::Red, false, 1.0f, 0.0f, 0.0f);
+		bool IsActorHit = GetWorld()->LineTraceSingleByChannel(Hit, Start, End, ECC_GameTraceChannel2, FCollisionQueryParams(), FCollisionResponseParams());
+		DrawDebugLine(GetWorld(), Start, End, FColor::Red, false, 1.0f);
 
-		if (true == ActorHit && nullptr != Hit.GetActor())
+		if (true == IsActorHit && nullptr != Hit.GetActor())
 		{
 			ATestMonsterBase* Monster = Cast<ATestMonsterBase>(Hit.GetActor());
 			if (nullptr != Monster)
 			{
+				GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, FString::Printf(TEXT("%s got damage : -50"), *Monster->GetName()));
 				Monster->Damaged(50.0f);
 			}
 		}
@@ -208,7 +239,10 @@ void ATestFPVCharacter::Fire_Implementation()
 
 void ATestFPVCharacter::FireEnd()
 {
-
+	if (FireTimerHandle.IsValid())
+	{
+		GetWorldTimerManager().ClearTimer(FireTimerHandle);
+	}
 }
 
 void ATestFPVCharacter::SettingItemMesh_Implementation(int _ItemIndex)

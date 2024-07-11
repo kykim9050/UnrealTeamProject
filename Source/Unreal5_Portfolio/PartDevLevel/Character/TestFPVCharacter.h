@@ -30,6 +30,8 @@ public:
 	TArray<UStaticMeshComponent*> ItemMeshes;
 	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	TArray<UStaticMeshComponent*> FPVItemMeshes;
+	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	USceneComponent* RayStartLocComponent = nullptr;
 
 	// State, Posture
 	UPROPERTY(Category = "Contents", Replicated, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
@@ -57,13 +59,11 @@ public:
 	UPROPERTY()
 	FTimerHandle FireTimerHandle;
 	UPROPERTY()
-	int BulletMaxCnt = 0;
-	UPROPERTY()
 	int BulletRemainCnt = 0;
 	UPROPERTY()
-	float ReloadDelayTime = 0.0f;
+	float ReloadDelayTime = 3.0f;
 	UPROPERTY()
-	float FireIntervalTime = 0.0f;
+	float FireIntervalTime = 0.15f;
 	UFUNCTION()
 	void FireStart();
 	UFUNCTION(Reliable, Server, BlueprintCallable)
