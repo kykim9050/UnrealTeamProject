@@ -266,11 +266,14 @@ void ATestCharacter::FireRayCast_Implementation(float _DeltaTime)
 		ItemSlot[CurItemIndex].ReloadLeftNum -= 1;
 		GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, FString::Printf(TEXT("Bullet left : %d / %d"), ItemSlot[CurItemIndex].ReloadLeftNum, ItemSlot[CurItemIndex].ReloadMaxNum));
 
-		bool ActorHit = GetWorld()->LineTraceSingleByChannel(Hit, Start, End, ECC_GameTraceChannel2, FCollisionQueryParams(), FCollisionResponseParams());
+		bool ActorHit = GetWorld()->LineTraceSingleByChannel(Hit, Start, End, ECC_GameTraceChannel9, FCollisionQueryParams(), FCollisionResponseParams());
 		DrawDebugLine(GetWorld(), Start, End, FColor::Red, false, _DeltaTime, 0.0f, 0.0f);
 
 		if (true == ActorHit && nullptr != Hit.GetActor())
 		{
+
+			FString BoneName = Hit.BoneName.ToString();
+			UE_LOG(LogTemp, Warning, TEXT("Bone Name : %s"), *BoneName);
 			ATestMonsterBase* Monster = Cast<ATestMonsterBase>(Hit.GetActor());
 			if (nullptr != Monster)
 			{
