@@ -109,7 +109,6 @@ UENUM(BlueprintType)
 enum class EPlayerLowerState : uint8
 {
 	Idle	UMETA(DisplayName = "Idle"),
-	Jump	UMETA(DisplayName = "Jump"),
 	Crouch	UMETA(DisplayName = "CrouchIdle"),
 };
 
