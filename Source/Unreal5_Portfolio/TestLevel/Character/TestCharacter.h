@@ -52,6 +52,10 @@ public:
 	UPROPERTY(Category = "Contents", Replicated, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	EPlayerLowerState LowerStateValue = EPlayerLowerState::Idle;
 
+	// LowerState (태환)
+	UPROPERTY(Category = "Contents", Replicated, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	EPlayerUpperState UpperStateValue = EPlayerUpperState::Barehand_Idle;
+
 	// Dir
 	UPROPERTY(Category = "Contents", Replicated, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	EPlayerMoveDir DirValue = EPlayerMoveDir::Forward;
@@ -65,8 +69,13 @@ public:
 
 	// LowerStateChange 함수 (태환)
 	UFUNCTION(Reliable, Server)
-	void ChangeLowerState(EPlayerLowerState _State);
-	void ChangeLowerState_Implementation(EPlayerLowerState _State);
+	void ChangeLowerState(EPlayerLowerState _LowerState);
+	void ChangeLowerState_Implementation(EPlayerLowerState _LowerState);
+
+	// UpperStateChange 함수 (태환)
+	UFUNCTION(Reliable, Server)
+	void ChangeUpperState(EPlayerUpperState _State);
+	void ChangeUpperState_Implementation(EPlayerUpperState _UpperState);
 
 	// DirChange 함수 (태환)
 	UFUNCTION(Reliable, Server)
@@ -152,9 +161,6 @@ private:
 	// 몽타주 변경에 필요한 변수 (태환)
 	UPROPERTY(Replicated)
 	uint8 AniValue;
-
-	UPROPERTY(Replicated)
-	class UPlayerAnimInstance* AnimInst = nullptr;
 	//
 
 public:

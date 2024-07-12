@@ -37,6 +37,8 @@ public:
 	void MoveRight(const FInputActionValue& Value);
 	UFUNCTION(BlueprintCallable)
 	void MoveLeft(const FInputActionValue& Value);
+	UFUNCTION(BlueprintCallable)
+	void MoveEnd(const FInputActionValue& Value);
 
 	//UFUNCTION(BlueprintCallable)
 	//void Jump(const FInputActionValue& Value);
