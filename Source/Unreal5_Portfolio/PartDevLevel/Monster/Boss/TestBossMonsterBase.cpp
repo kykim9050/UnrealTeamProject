@@ -52,6 +52,14 @@ void ATestBossMonsterBase::BeginPlay()
 	SettingBossData = NewObject<UBossData>(this);
 	SettingBossData->Data = BossData;
 
+	// 클라이언트일 경우
+	ATestBossMonsterAIControllerBase* AIController = GetController<ATestBossMonsterAIControllerBase>();
+	if (nullptr == AIController)
+	{
+		return;
+	}
+
+	AIController->GetBlackboardComponent()->SetValueAsObject(TEXT("BossMonsterData"), SettingBossData);
 
 }
 
@@ -72,6 +80,7 @@ void ATestBossMonsterBase::SetupPlayerInputComponent(UInputComponent* PlayerInpu
 void ATestBossMonsterBase::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+	DOREPLIFETIME(ATestBossMonsterBase, AniValue);
 }
 
 void ATestBossMonsterBase::ChangeAniValue(uint8 _Type)
