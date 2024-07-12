@@ -20,7 +20,7 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-
+	
 	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
 public:	
@@ -32,13 +32,17 @@ public:
 
 
 	// == Components ==
-	// 스프링 암.
+	
+	// 스프링암
 	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	class USpringArmComponent* SpringArmComponent = nullptr;
 	// 카메라
 	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	class UCameraComponent* CameraComponent = nullptr;
-	// 미니맵
+	// 일인칭 메시
+	UPROPERTY(Category = "Contents", VisibleDefaultsOnly)
+	USkeletalMeshComponent* FPVMesh = nullptr;
+	// 미니맵 아이콘
 	//UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	//class UTestMinimapIconComponent* MinimapIconComponent = nullptr;
 	// 맵에 있는 아이템 탐색 콜리전
@@ -48,18 +52,28 @@ public:
 	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	class USceneComponent* CreateItemComponent = nullptr;
 
+
 	// == State, Posture ==
 	
-	// 선택 무기 상태
+	// 플레이어 자세 유형
 	UPROPERTY(Category = "Contents", Replicated, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	EPlayerPosture PostureValue = EPlayerPosture::Barehand;
-	// 맵에 있는 무기 Data
-	UPROPERTY(Category = "Contents", VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	AActor* GetMapItemData = nullptr;
+
 
 	// == 인칭 변경 변수 ==
 	UPROPERTY()
 	bool IsFPV = true;
+
+	// == Inventory ==
+
+
+
+
+	// 맵에 있는 무기 Data
+	UPROPERTY(Category = "Contents", VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	AActor* GetMapItemData = nullptr;
+
+	
 
 	
 	// == Server ==
@@ -86,7 +100,7 @@ public:
 	void MapItemOverlapStart(AActor* _OtherActor, UPrimitiveComponent* _Collision);
 	UFUNCTION(BlueprintCallable)
 	void MapItemOverlapEnd();
-
+	
 	// == 인칭 변경 함수 ==
 	UFUNCTION()
 	void ChangePOV();

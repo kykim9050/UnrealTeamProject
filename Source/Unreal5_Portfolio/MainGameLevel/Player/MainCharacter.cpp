@@ -20,17 +20,31 @@ AMainCharacter::AMainCharacter()
 	// SpringArm Component
 	SpringArmComponent = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArmComponent"));
 	SpringArmComponent->SetupAttachment(RootComponent);
-	SpringArmComponent->SetRelativeLocation(FVector(0.0, 0.0, 80.0));
-	SpringArmComponent->TargetArmLength = 200.0f;
+	SpringArmComponent->SetRelativeLocation(FVector(20.0f, 0.0f, 67.0f));
+	SpringArmComponent->TargetArmLength = 0.0f;
+	SpringArmComponent->bUsePawnControlRotation = true;
 	SpringArmComponent->bDoCollisionTest = false;
 
 	// Camera Component
 	CameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("CameraComponent"));
 	CameraComponent->SetupAttachment(SpringArmComponent);
 	CameraComponent->SetProjectionMode(ECameraProjectionMode::Perspective);
-	CameraComponent->bUsePawnControlRotation = true;
+
+	// Character Mesh
+	GetMesh()->SetOwnerNoSee(true);
+	GetMesh()->bHiddenInSceneCapture = true;
+
+	// FPV Character Mesh
+	FPVMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("FirstPersonMesh"));
+	FPVMesh->SetupAttachment(CameraComponent);
+	FPVMesh->SetOnlyOwnerSee(true);
+	FPVMesh->bCastDynamicShadow = false;
+	FPVMesh->CastShadow = false;
 
 	// MinimapIcon Component
+	//MinimapIconComponent = CreateDefaultSubobject<UTestMinimapIconComponent>(TEXT("MinimapPlayerIcon"));
+	//MinimapIconComponent->SetupAttachment(RootComponent);
+	//MinimapIconComponent->bVisibleInSceneCaptureOnly = true;
 
 	// Item Create Component
 	CreateItemComponent = CreateDefaultSubobject<USceneComponent>(TEXT("CreateItemComponent"));
@@ -42,6 +56,20 @@ AMainCharacter::AMainCharacter()
 	GetMapItemCollisonComponent->SetupAttachment(RootComponent);
 	GetMapItemCollisonComponent->SetRelativeLocation(FVector(100.0, 0.0, -70.0f));
 	GetMapItemCollisonComponent->SetCollisionProfileName(FName("MapItemSearch"));
+
+	// Inventory
+	UEnum* Enum = StaticEnum<EPlayerPosture>();
+	for (size_t i = 0; i < static_cast<size_t>(EPlayerPosture::Barehand); i++)
+	{
+		/*
+		FItemInformation NewSlot;
+		NewSlot.Name = "";
+		NewSlot.ReloadMaxNum = -1;
+		NewSlot.ReloadLeftNum = -1;
+		ItemSlot.Push(NewSlot);
+		IsItemIn.Push(false);
+		*/
+	}
 }
 
 // Called when the game starts or when spawned
@@ -135,21 +163,34 @@ void AMainCharacter::MapItemOverlapEnd()
 
 void AMainCharacter::ChangePOV()
 {
-	if (true == IsFPV)
+	if (IsFPV)
 	{
-		// 스프링 암 Component 수정.
+		// SpringArm 위치 수정
 		SpringArmComponent->TargetArmLength = 200.0f;
 		SpringArmComponent->SetRelativeLocation(FVector(0.0f, 0.0f, 80.0f));
 
+		// Character Mesh 전환
+		GetMesh()->SetOnlyOwnerSee(true);
+		GetMesh()->SetOwnerNoSee(false);
+		FPVMesh->SetOwnerNoSee(true);
+		FPVMesh->SetOnlyOwnerSee(false);
 
+		// 일인칭 -> 삼인칭
 		IsFPV = false;
 	}
 	else
 	{
+		// SpringArm 위치 수정
+		SpringArmComponent->TargetArmLength = 0.0f;
+		SpringArmComponent->SetRelativeLocation(FVector(20.0f, 0.0f, 67.0f));
 
+		// Character Mesh 전환
+		GetMesh()->SetOwnerNoSee(true);
+		GetMesh()->SetOnlyOwnerSee(false);
+		FPVMesh->SetOnlyOwnerSee(true);
+		FPVMesh->SetOwnerNoSee(false);
 
-
+		// 삼인칭 -> 일인칭
 		IsFPV = true;
 	}
 }
-
