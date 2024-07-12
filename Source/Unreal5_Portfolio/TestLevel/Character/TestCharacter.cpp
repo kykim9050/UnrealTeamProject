@@ -5,6 +5,7 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
 #include "Engine/SkeletalMeshSocket.h"
+#include "Engine/StaticMeshSocket.h"
 #include "Global/MainGameBlueprintFunctionLibrary.h"
 #include "Global/DataTable/ItemDataRow.h"
 #include "Components/SphereComponent.h"
@@ -255,9 +256,18 @@ void ATestCharacter::FireRayCast_Implementation(float _DeltaTime)
 		ItemSlot[CurItemIndex].ReloadLeftNum = ItemSlot[CurItemIndex].ReloadMaxNum;
 	}
 
-	FVector Start = GetActorLocation();
+	UMainGameInstance* Inst = GetGameInstance<UMainGameInstance>();
+	const FItemDataRow* ItemData = Inst->GetItemData(ItemSlot[CurItemIndex].Name);
+	UStaticMesh* ItemMesh = ItemData->GetResMesh();
+
+	FVector MuzzleLoc = ItemMesh->FindSocket("Muzzle")->RelativeLocation;
+	FVector PlayerLoc = GetActorLocation();
+
 	FVector ForwardVector = CameraComponent->GetForwardVector();
-	Start = FVector(Start.X + (ForwardVector.X * 100), Start.Y + (ForwardVector.Y * 100), Start.Z + (ForwardVector.Z * 100));
+	FVector RightVector = CameraComponent->GetRightVector();
+	FVector UpVector = CameraComponent->GetUpVector();
+
+	FVector Start = FVector((PlayerLoc.X + (ForwardVector.X * MuzzleLoc.X)), (PlayerLoc.Y + (RightVector.Y * MuzzleLoc.Y)), (PlayerLoc.Z + (UpVector.Z * MuzzleLoc.Z)));
 	FVector End = Start + (ForwardVector * 1000.0);
 
 	FHitResult Hit;
@@ -387,7 +397,7 @@ void ATestCharacter::PickUpItem_Implementation()
 	uint8 ItemIndex = static_cast<uint8>(ItemType); // 사용할 소켓 번호.
 
 	// Attaching Item => 액터로 가져가는 방식 (이걸 가져가주세요!)
-	const USkeletalMeshSocket* WeaponSocket = GetMesh()->GetSocketByName("ItemSocket");
+	WeaponSocket = GetMesh()->GetSocketByName("ItemSocket");
 	WeaponSocket->AttachActor(GetMapItem, GetMesh());
 
 	// Setting Weapon Mesh => 스태틱메시로 가져가는 방식 (삭제해주세요)

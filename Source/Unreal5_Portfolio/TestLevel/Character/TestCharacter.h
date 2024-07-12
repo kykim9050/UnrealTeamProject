@@ -32,6 +32,13 @@ public:
 	// Sets default values for this character's properties
 	ATestCharacter();
 
+
+
+	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	class AActor* CurItem = nullptr;
+
+
+
 	// Components
 	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	class USpringArmComponent* SpringArmComponent = nullptr;
@@ -41,6 +48,8 @@ public:
 	class UTestMinimapIconComponent* MinimapIconComponent = nullptr;
 	//UPROPERTY(Category = "Contents", VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	//TArray<UStaticMeshComponent*> ItemMeshes;
+	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	const class USkeletalMeshSocket* WeaponSocket = nullptr;
 
 	// State, Posture
 	UPROPERTY(Category = "Contents", Replicated, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
