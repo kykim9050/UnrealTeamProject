@@ -3,6 +3,7 @@
 
 #include "PartDevLevel/Character/PlayerAnimInstance.h"
 #include "TestLevel/Character/TestCharacter.h"
+#include "Global/MainGameBlueprintFunctionLibrary.h"
 
 void UPlayerAnimInstance::NativeBeginPlay()
 {
@@ -10,6 +11,13 @@ void UPlayerAnimInstance::NativeBeginPlay()
 	OwnerPlayer = Cast<ATestCharacter>(GetOwningActor());
 	PlayerMesh = OwnerPlayer->GetMesh();
 
+	// MainGameInst의 PlayerData에 저장된 Montages를 PlayerUpperMontages로 Add
+	MainGameInst = UMainGameBlueprintFunctionLibrary::GetMainGameInstance(GetWorld());
+	TMap<EPlayerUpperState, class UAnimMontage*> PlayerUpperMontages = MainGameInst->GetPlayerData(FName("TestPlayer"))->GetAnimMontages();
+	for (TPair<EPlayerUpperState, class UAnimMontage*> Montage : PlayerUpperMontages)
+	{
+		PushAnimation(Montage.Key, Montage.Value);
+	}
 }
 
 void UPlayerAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
@@ -22,6 +30,14 @@ void UPlayerAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 	}
 
 	PlayerLowerState = OwnerPlayer->LowerStateValue;
-	PlayerPosture = OwnerPlayer->PostureValue;
+	PlayerUpperState = OwnerPlayer->UpperStateValue;
 	PlayerDir = OwnerPlayer->DirValue;
+
+
+	ChangeAnimation(PlayerUpperState);
+}
+
+void UPlayerAnimInstance::ChangeAnimation(EPlayerUpperState _Posture)
+{
+	UMainAnimInstance::ChangeAnimation(static_cast<int>(_Posture));
 }

@@ -156,6 +156,7 @@ void ATestCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLi
 
 	// LowerState (ÅÂÈ¯)
 	DOREPLIFETIME(ATestCharacter, LowerStateValue);
+	DOREPLIFETIME(ATestCharacter, UpperStateValue);
 	DOREPLIFETIME(ATestCharacter, DirValue);
 }
 
@@ -322,11 +323,28 @@ void ATestCharacter::ChangePosture_Implementation(EPlayerPosture _Type)
 		}
 		*/
 	}
+
+	switch (_Type)
+	{
+	case EPlayerPosture::Barehand:
+		UpperStateValue = EPlayerUpperState::Barehand_Idle;
+		break;
+	case EPlayerPosture::Rifle:
+		UpperStateValue = EPlayerUpperState::Rifle_Idle;
+		break;
+	default:
+		break;
+	}
 }
 
-void ATestCharacter::ChangeLowerState_Implementation(EPlayerLowerState _State)
+void ATestCharacter::ChangeLowerState_Implementation(EPlayerLowerState _LowerState)
 {
-	LowerStateValue = _State;
+	LowerStateValue = _LowerState;
+}
+
+void ATestCharacter::ChangeUpperState_Implementation(EPlayerUpperState _UpperState)
+{
+	UpperStateValue = _UpperState;
 }
 
 void ATestCharacter::ChangePlayerDir_Implementation(EPlayerMoveDir _Dir)

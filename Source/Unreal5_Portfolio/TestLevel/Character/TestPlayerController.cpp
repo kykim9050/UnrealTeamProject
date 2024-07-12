@@ -47,6 +47,10 @@ void ATestPlayerController::SetupInputComponent()
 			EnhancedInputComponent->BindAction(InputData->Actions[2], ETriggerEvent::Triggered, this, &ATestPlayerController::MoveBack);
 			EnhancedInputComponent->BindAction(InputData->Actions[3], ETriggerEvent::Triggered, this, &ATestPlayerController::MoveRight);
 			EnhancedInputComponent->BindAction(InputData->Actions[4], ETriggerEvent::Triggered, this, &ATestPlayerController::MoveLeft);
+			EnhancedInputComponent->BindAction(InputData->Actions[1], ETriggerEvent::Completed, this, &ATestPlayerController::MoveEnd);
+			EnhancedInputComponent->BindAction(InputData->Actions[2], ETriggerEvent::Completed, this, &ATestPlayerController::MoveEnd);
+			EnhancedInputComponent->BindAction(InputData->Actions[3], ETriggerEvent::Completed, this, &ATestPlayerController::MoveEnd);
+			EnhancedInputComponent->BindAction(InputData->Actions[4], ETriggerEvent::Completed, this, &ATestPlayerController::MoveEnd);
 			//EnhancedInputComponent->BindAction(InputData->Actions[5], ETriggerEvent::Started, this, &ATestPlayerController::Jump);
 			//EnhancedInputComponent->BindAction(InputData->Actions[5], ETriggerEvent::Completed, this, &ATestPlayerController::JumpEnd);
 			//EnhancedInputComponent->BindAction(InputData->Actions[6], ETriggerEvent::Started, this, &ATestPlayerController::FireStart);
@@ -80,6 +84,11 @@ void ATestPlayerController::MoveFront(const FInputActionValue& Value)
 
 	//
 	ChangePlayerDir(EPlayerMoveDir::Forward);
+	ATestCharacter* Ch = GetPawn<ATestCharacter>();
+	if (Ch->PostureValue == EPlayerPosture::Barehand)
+	{
+		Ch->ChangeUpperState(EPlayerUpperState::Barehand_Walk);
+	}
 }
 
 void ATestPlayerController::MoveBack(const FInputActionValue& Value)
@@ -90,6 +99,11 @@ void ATestPlayerController::MoveBack(const FInputActionValue& Value)
 
 	//
 	ChangePlayerDir(EPlayerMoveDir::Back);
+	ATestCharacter* Ch = GetPawn<ATestCharacter>();
+	if (Ch->PostureValue == EPlayerPosture::Barehand)
+	{
+		Ch->ChangeUpperState(EPlayerUpperState::Barehand_Walk);
+	}
 }
 
 void ATestPlayerController::MoveRight(const FInputActionValue& Value)
@@ -100,6 +114,11 @@ void ATestPlayerController::MoveRight(const FInputActionValue& Value)
 
 	//
 	ChangePlayerDir(EPlayerMoveDir::Right);
+	ATestCharacter* Ch = GetPawn<ATestCharacter>();
+	if (Ch->PostureValue == EPlayerPosture::Barehand)
+	{
+		Ch->ChangeUpperState(EPlayerUpperState::Barehand_Walk);
+	}
 }
 
 void ATestPlayerController::MoveLeft(const FInputActionValue& Value)
@@ -110,6 +129,27 @@ void ATestPlayerController::MoveLeft(const FInputActionValue& Value)
 
 	//
 	ChangePlayerDir(EPlayerMoveDir::Left);
+	ATestCharacter* Ch = GetPawn<ATestCharacter>();
+	if (Ch->PostureValue == EPlayerPosture::Barehand)
+	{
+		Ch->ChangeUpperState(EPlayerUpperState::Barehand_Walk);
+	}
+}
+
+void ATestPlayerController::MoveEnd(const FInputActionValue& Value)
+{
+	ATestCharacter* Ch = GetPawn<ATestCharacter>();
+	switch (Ch->PostureValue)
+	{
+	case EPlayerPosture::Barehand:
+		Ch->ChangeUpperState(EPlayerUpperState::Barehand_Idle);
+		break;
+	case EPlayerPosture::Rifle:
+		Ch->ChangeUpperState(EPlayerUpperState::Rifle_Idle);
+		break;
+	default:
+		break;
+	}
 }
 
 //void ATestPlayerController::Jump(const FInputActionValue& Value)
@@ -161,8 +201,18 @@ void ATestPlayerController::FireStart(float _DeltaTime)
 	ATestCharacter* Ch = GetPawn<ATestCharacter>();
 	Ch->FireRayCast(_DeltaTime);
 
-	// 몽타주 변경 예시 (태환)
-	//Ch->ChangeAniValue(EPlayerPosture::Rifle);
+	// 몽타주 변경 (태환)
+	switch (Ch->PostureValue)
+	{
+	case EPlayerPosture::Barehand:
+		Ch->ChangeUpperState(EPlayerUpperState::Barehand_Attack);
+		break;
+	case EPlayerPosture::Rifle:
+		Ch->ChangeUpperState(EPlayerUpperState::Rifle_Attack);
+		break;
+	default:
+		break;
+	}
 }
 
 void ATestPlayerController::FireTick(float _DeltaTime)
@@ -174,6 +224,20 @@ void ATestPlayerController::FireTick(float _DeltaTime)
 void ATestPlayerController::FireEnd()
 {
 	ChangeState(EPlayerState::Idle);
+	ATestCharacter* Ch = GetPawn<ATestCharacter>();
+
+	// 몽타주 변경 (태환)
+	switch (Ch->PostureValue)
+	{
+	case EPlayerPosture::Barehand:
+		Ch->ChangeUpperState(EPlayerUpperState::Barehand_Idle);
+		break;
+	case EPlayerPosture::Rifle:
+		Ch->ChangeUpperState(EPlayerUpperState::Rifle_Idle);
+		break;
+	default:
+		break;
+	}
 }
 
 void ATestPlayerController::PickUpItem()
