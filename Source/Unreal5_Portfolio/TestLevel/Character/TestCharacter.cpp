@@ -133,6 +133,9 @@ void ATestCharacter::Tick(float DeltaTime)
 
 	DefaultRayCast(DeltaTime);
 
+	TArray<FItemInformation> I = ItemSlot;
+	AGameModeBase* Ptr = GetWorld()->GetAuthGameMode();
+
 	// 몽타주 Tick에서 실행 (태환)
 	//AnimInst->ChangeAnimation(AniValue);
 }
@@ -237,6 +240,11 @@ void ATestCharacter::DefaultRayCast(float _DeltaTime)
 
 void ATestCharacter::FireRayCast_Implementation(float _DeltaTime)
 {
+	if (ItemSlot[CurItemIndex].ReloadLeftNum <= 0)
+	{
+		ItemSlot[CurItemIndex].ReloadLeftNum = ItemSlot[CurItemIndex].ReloadMaxNum;
+	}
+
 	FVector Start = GetActorLocation();
 	FVector ForwardVector = CameraComponent->GetForwardVector();
 	Start = FVector(Start.X + (ForwardVector.X * 100), Start.Y + (ForwardVector.Y * 100), Start.Z + (ForwardVector.Z * 100));
@@ -245,6 +253,9 @@ void ATestCharacter::FireRayCast_Implementation(float _DeltaTime)
 	FHitResult Hit;
 	if (GetWorld())
 	{
+		ItemSlot[CurItemIndex].ReloadLeftNum -= 1;
+		GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, FString::Printf(TEXT("Bullet left : %d / %d"), ItemSlot[CurItemIndex].ReloadLeftNum, ItemSlot[CurItemIndex].ReloadMaxNum));
+
 		bool ActorHit = GetWorld()->LineTraceSingleByChannel(Hit, Start, End, ECC_GameTraceChannel2, FCollisionQueryParams(), FCollisionResponseParams());
 		DrawDebugLine(GetWorld(), Start, End, FColor::Red, false, _DeltaTime, 0.0f, 0.0f);
 
