@@ -80,6 +80,10 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void ChangePlayerDir(EPlayerMoveDir _Dir);
 
+	// AttackTest (ÅÂÈ¯)
+	UFUNCTION(BlueprintCallable)
+	void AttackTest(EPlayerMoveDir _Dir);
+
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "TeamId", meta = (AllowPrivateAccess = true))
 	FGenericTeamId TeamId;

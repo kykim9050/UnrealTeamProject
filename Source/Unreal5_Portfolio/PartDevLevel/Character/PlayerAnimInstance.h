@@ -21,7 +21,7 @@ public:
 
 	void NativeUpdateAnimation(float DeltaSeconds) override;
 
-	void ChangeAnimation(EPlayerUpperState _Posture);
+	void ChangeAnimation(EPlayerPosture _Posture);
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	class ATestCharacter* OwnerPlayer = nullptr;
@@ -30,10 +30,10 @@ public:
 	USkeletalMeshComponent* PlayerMesh = nullptr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-	EPlayerLowerState PlayerLowerState = EPlayerLowerState::Idle;
+	EPlayerPosture PlayerPosture = EPlayerPosture::Barehand;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-	EPlayerUpperState PlayerUpperState = EPlayerUpperState::Barehand_Idle;
+	EPlayerLowerState PlayerLowerState = EPlayerLowerState::Idle;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	EPlayerMoveDir PlayerDir = EPlayerMoveDir::Forward;

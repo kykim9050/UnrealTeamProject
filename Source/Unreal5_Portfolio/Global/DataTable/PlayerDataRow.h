@@ -46,7 +46,7 @@ public:
 		return Jumping;
 	}
 
-	FORCEINLINE TMap<EPlayerUpperState, class UAnimMontage*> GetAnimMontages() const
+	FORCEINLINE TMap<EPlayerPosture, class UAnimMontage*> GetAnimMontages() const
 	{
 		return AnimMontages;
 	}
@@ -94,6 +94,6 @@ private:
 	/// Player ¸ùÅ¸ÁÖ
 	/// </summary>
 	UPROPERTY(Category = "Animation", EditAnywhere, BlueprintReadWrite, meta = (AllowprivateAccess = "true"))
-	TMap<EPlayerUpperState, class UAnimMontage*> AnimMontages = TMap<EPlayerUpperState, class UAnimMontage*>();
+	TMap<EPlayerPosture, class UAnimMontage*> AnimMontages = TMap<EPlayerPosture, class UAnimMontage*>();
 
 };
