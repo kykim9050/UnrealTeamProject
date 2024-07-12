@@ -153,6 +153,7 @@ void ATestCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLi
 
 	// LowerState (ÅÂÈ¯)
 	DOREPLIFETIME(ATestCharacter, LowerStateValue);
+	DOREPLIFETIME(ATestCharacter, DirValue);
 }
 
 void ATestCharacter::TestRayCast(float _DeltaTime, FVector _StartPos, FVector _EndPos, FRotator _CameraRot)
@@ -240,6 +241,11 @@ void ATestCharacter::DefaultRayCast(float _DeltaTime)
 
 void ATestCharacter::FireRayCast_Implementation(float _DeltaTime)
 {
+	if (CurItemIndex == -1 || ItemSlot[CurItemIndex].ReloadMaxNum == -1)
+	{
+		return;
+	}
+
 	if (ItemSlot[CurItemIndex].ReloadLeftNum <= 0)
 	{
 		ItemSlot[CurItemIndex].ReloadLeftNum = ItemSlot[CurItemIndex].ReloadMaxNum;

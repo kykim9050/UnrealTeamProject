@@ -26,6 +26,7 @@ ADestinationSpriteActor::ADestinationSpriteActor()
 	}
 
 	sprite->bVisibleInSceneCaptureOnly = true;
+	SetActorEnableCollision(false);
 }
 
 // Called when the game starts or when spawned
