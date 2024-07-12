@@ -38,13 +38,15 @@ public :
 	UFUNCTION(BlueprintCallable)
 	void JumpEnd(const FInputActionValue& Value);
 	UFUNCTION(BlueprintCallable)
-	void FireStart(float _DeltaTime);
+	void FireStart();
 	UFUNCTION(BlueprintCallable)
 	void FireTick(float _DeltaTime);
 	UFUNCTION(BlueprintCallable)
 	void FireEnd();
 	UFUNCTION(BlueprintCallable)
 	void PickUpItem();
+	UFUNCTION(BlueprintCallable)
+	void ChangePOVController();
 
 	// State, Posture
 	UFUNCTION(BlueprintCallable)
