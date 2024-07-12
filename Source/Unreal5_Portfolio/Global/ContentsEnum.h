@@ -109,8 +109,22 @@ UENUM(BlueprintType)
 enum class EPlayerLowerState : uint8
 {
 	Idle	UMETA(DisplayName = "Idle"),
-	Jump	UMETA(DisplayName = "Jump"),
 	Crouch	UMETA(DisplayName = "CrouchIdle"),
+};
+
+UENUM(BlueprintType)
+enum class EPlayerUpperState : uint8
+{
+	Barehand_Idle	UMETA(DisplayName = "Barehand_Idle"),		// 맨손
+	Barehand_Walk	UMETA(DisplayName = "Barehand_Walk"),		// 맨손 이동
+	Barehand_Attack	UMETA(DisplayName = "Barehand_Attack"),		// 맨손 공격
+	Rifle_Idle		UMETA(DisplayName = "Rifle_Idle"),			// 주무기
+	Rifle_Attack		UMETA(DisplayName = "Rifle_Attack"),	// 주무기 공격
+	//Pistol		UMETA(DisplayName = "PistolAttack"),		// 보조무기
+	//Melee		UMETA(DisplayName = "MeleeAttack"),				// 근거리무기
+	//Throwing	UMETA(DisplayName = "ThrowingAttack"),			// 투척무기
+	//Supply		UMETA(DisplayName = "Supplies"),			// 그 외 소모품 아이템
+	//SlotMax
 };
 
 UENUM(BlueprintType)

@@ -3,7 +3,7 @@
 
 #include "Global/Debug/TextDebugWidget.h"
 #include "Components/TextBlock.h"
-#include "Unreal5_Portfolio/Global/ContentsLog.h"
+#include "Global/ContentsLog.h"
 
 void UTextDebugWidget::NativeConstruct()
 {

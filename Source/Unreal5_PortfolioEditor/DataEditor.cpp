@@ -3,7 +3,8 @@
 
 #include "DataEditor.h"
 #include "Components/DetailsView.h"
-#include "Global/ContentsLog.h"
+#include "Unreal5_PortfolioEditor.h"
+#include "../Unreal5_Portfolio/Global/MainGameBlueprintFunctionLibrary.h"
 
 UDataEditor::UDataEditor()
 {
@@ -18,15 +19,36 @@ void UDataEditor::NativeConstruct()
 
 	if (nullptr == DetailView)
 	{
-		//UE_LOG(UILog, Fatal, TEXT("%s(%u) if (nullptr == DetailView)"), __FUNCTION__, __LINE__);
-		UE_LOG(LogType, Fatal, TEXT("%s(%u) if (nullptr == DetailView)"), __FUNCTION__, __LINE__);
+		UE_LOG(EditorLog, Fatal, TEXT("%s(%u) if (nullptr == DetailView)"), __FUNCTION__, __LINE__);
 		return;
 	}
 
-	FString ItemStr = "DataEditor";
-	FName ItemName = FName(ItemStr);
-	DetailView->CategoriesToShow.Add(ItemName);
-	DetailView->Modify();
+	//TArray<FString> FileList = TArray<FString>();
 
-	int a = 0;
+	//FString Path = FPaths::ProjectContentDir();
+	//FString DataTablePath = "Resources/Global/DataTable";
+	//Path = Path + DataTablePath + TEXT("/*.*");
+
+	//IFileManager::Get().FindFiles(FileList, *Path, true, false);
+
+	//UMainGameInstance* Inst = UMainGameBlueprintFunctionLibrary::GetMainGameInstance(GetWorld());
+
+	//if (nullptr == Inst)
+	//{
+	//	UE_LOG(EditorLog, Fatal, TEXT("%s(%u)> if (nullptr == DebugText)"), __FUNCTION__, __LINE__);
+	//	return;
+	//}
+
+	//for (size_t i = 0; i < FileList.Num(); i++)
+	//{
+	//	// "/Script / Engine.DataTable'/Game/Resources/Global/DataTable/" + 
+
+	//	//TSubclassOf<UDataTable> DataTable =
+	//	//	DataTables.Add(DataTable);
+	//}
+
+	FString ItemStr = "DataTables";
+	FName ItemName = FName(ItemStr);
+	DetailView->PropertiesToShow.Add(ItemName);
+	DetailView->Modify();
 }

@@ -4,6 +4,7 @@
 #include "TestCharacter.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
+#include "Engine/SkeletalMeshSocket.h"
 #include "Global/MainGameBlueprintFunctionLibrary.h"
 #include "Global/DataTable/ItemDataRow.h"
 #include "Components/SphereComponent.h"
@@ -41,6 +42,7 @@ ATestCharacter::ATestCharacter()
 	UEnum* Enum = StaticEnum<EPlayerPosture>();
 	for (size_t i = 0; i < static_cast<size_t>(EPlayerPosture::Barehand); i++)
 	{
+		/*
 		// Weapon Meshes
 		FString Name = Enum->GetNameStringByValue(i) + "Socket";
 		UStaticMeshComponent* NewSocketMesh = CreateDefaultSubobject<UStaticMeshComponent>(*Name);
@@ -50,6 +52,7 @@ ATestCharacter::ATestCharacter()
 		NewSocketMesh->SetVisibility(false);
 		NewSocketMesh->SetIsReplicated(true);
 		ItemMeshes.Push(NewSocketMesh);
+		*/
 
 		// Inventory (for UI Test)
 		FItemInformation NewSlot;
@@ -133,6 +136,9 @@ void ATestCharacter::Tick(float DeltaTime)
 
 	DefaultRayCast(DeltaTime);
 
+	TArray<FItemInformation> I = ItemSlot;
+	AGameModeBase* Ptr = GetWorld()->GetAuthGameMode();
+
 	// 몽타주 Tick에서 실행 (태환)
 	//AnimInst->ChangeAnimation(AniValue);
 }
@@ -150,6 +156,8 @@ void ATestCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLi
 
 	// LowerState (태환)
 	DOREPLIFETIME(ATestCharacter, LowerStateValue);
+	DOREPLIFETIME(ATestCharacter, UpperStateValue);
+	DOREPLIFETIME(ATestCharacter, DirValue);
 }
 
 void ATestCharacter::TestRayCast(float _DeltaTime, FVector _StartPos, FVector _EndPos, FRotator _CameraRot)
@@ -237,6 +245,16 @@ void ATestCharacter::DefaultRayCast(float _DeltaTime)
 
 void ATestCharacter::FireRayCast_Implementation(float _DeltaTime)
 {
+	if (CurItemIndex == -1 || ItemSlot[CurItemIndex].ReloadMaxNum == -1)
+	{
+		return;
+	}
+
+	if (ItemSlot[CurItemIndex].ReloadLeftNum <= 0)
+	{
+		ItemSlot[CurItemIndex].ReloadLeftNum = ItemSlot[CurItemIndex].ReloadMaxNum;
+	}
+
 	FVector Start = GetActorLocation();
 	FVector ForwardVector = CameraComponent->GetForwardVector();
 	Start = FVector(Start.X + (ForwardVector.X * 100), Start.Y + (ForwardVector.Y * 100), Start.Z + (ForwardVector.Z * 100));
@@ -245,6 +263,9 @@ void ATestCharacter::FireRayCast_Implementation(float _DeltaTime)
 	FHitResult Hit;
 	if (GetWorld())
 	{
+		ItemSlot[CurItemIndex].ReloadLeftNum -= 1;
+		GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, FString::Printf(TEXT("Bullet left : %d / %d"), ItemSlot[CurItemIndex].ReloadLeftNum, ItemSlot[CurItemIndex].ReloadMaxNum));
+
 		bool ActorHit = GetWorld()->LineTraceSingleByChannel(Hit, Start, End, ECC_GameTraceChannel2, FCollisionQueryParams(), FCollisionResponseParams());
 		DrawDebugLine(GetWorld(), Start, End, FColor::Red, false, _DeltaTime, 0.0f, 0.0f);
 
@@ -270,11 +291,12 @@ void ATestCharacter::ChangePosture_Implementation(EPlayerPosture _Type)
 	{
 		PostureValue = _Type;
 		CurItemIndex = -1;
-
+		/*
 		for (size_t i = 0; i < static_cast<size_t>(EPlayerPosture::Barehand); i++)
 		{
 			ItemMeshes[i]->SetVisibility(false);
 		}
+		*/
 	}
 	else
 	{
@@ -287,7 +309,7 @@ void ATestCharacter::ChangePosture_Implementation(EPlayerPosture _Type)
 
 		PostureValue = _Type;
 		CurItemIndex = ItemSlotIndex;
-
+		/*
 		for (size_t i = 0; i < static_cast<size_t>(EPlayerPosture::Barehand); i++)
 		{
 			if (i == static_cast<size_t>(_Type))
@@ -299,12 +321,30 @@ void ATestCharacter::ChangePosture_Implementation(EPlayerPosture _Type)
 				ItemMeshes[i]->SetVisibility(false);
 			}
 		}
+		*/
+	}
+
+	switch (_Type)
+	{
+	case EPlayerPosture::Barehand:
+		UpperStateValue = EPlayerUpperState::Barehand_Idle;
+		break;
+	case EPlayerPosture::Rifle:
+		UpperStateValue = EPlayerUpperState::Rifle_Idle;
+		break;
+	default:
+		break;
 	}
 }
 
-void ATestCharacter::ChangeLowerState_Implementation(EPlayerLowerState _State)
+void ATestCharacter::ChangeLowerState_Implementation(EPlayerLowerState _LowerState)
 {
-	LowerStateValue = _State;
+	LowerStateValue = _LowerState;
+}
+
+void ATestCharacter::ChangeUpperState_Implementation(EPlayerUpperState _UpperState)
+{
+	UpperStateValue = _UpperState;
 }
 
 void ATestCharacter::ChangePlayerDir_Implementation(EPlayerMoveDir _Dir)
@@ -343,9 +383,15 @@ void ATestCharacter::PickUpItem_Implementation()
 
 	uint8 ItemIndex = static_cast<uint8>(ItemType); // 사용할 소켓 번호.
 
+	// Attaching Item
+	const USkeletalMeshSocket* WeaponSocket = GetMesh()->GetSocketByName("ItemSocket");
+	WeaponSocket->AttachActor(GetMapItem, GetMesh());
+
+	/*
 	// Setting Weapon Mesh
 	ItemMeshes[ItemIndex]->SetStaticMesh(ItemMesh); // Static Mesh 적용.
 	GetMapItem->Destroy(); // Map에 있는 아이템 삭제.
+	*/
 
 	// Setting Inventory
 	ItemSlot[ItemIndex].Name = ItemStringToName;

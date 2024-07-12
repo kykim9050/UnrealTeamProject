@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Global/Animation/MainAnimInstance.h"
 #include "Global/ContentsEnum.h"
+#include "Global/DataTable/PlayerDataRow.h"
 #include "PlayerAnimInstance.generated.h"
 
 /**
@@ -20,6 +21,8 @@ public:
 
 	void NativeUpdateAnimation(float DeltaSeconds) override;
 
+	void ChangeAnimation(EPlayerUpperState _Posture);
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	class ATestCharacter* OwnerPlayer = nullptr;
 
@@ -30,8 +33,10 @@ public:
 	EPlayerLowerState PlayerLowerState = EPlayerLowerState::Idle;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-	EPlayerPosture PlayerPosture = EPlayerPosture::Rifle;
+	EPlayerUpperState PlayerUpperState = EPlayerUpperState::Barehand_Idle;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	EPlayerMoveDir PlayerDir = EPlayerMoveDir::Forward;
+
+	class UMainGameInstance* MainGameInst;
 };
