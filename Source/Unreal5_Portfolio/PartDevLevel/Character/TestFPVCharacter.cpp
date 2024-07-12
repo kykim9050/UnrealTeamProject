@@ -197,6 +197,12 @@ void ATestFPVCharacter::FireStart()
 
 void ATestFPVCharacter::Fire_Implementation()
 {
+	AGameModeBase* Ptr = GetWorld()->GetAuthGameMode();
+	if (Ptr == nullptr)
+	{
+		int a = 0;
+	}
+
 	ATestFPVPlayerController* Con = Cast<ATestFPVPlayerController>(GetController());
 
 	if (BulletRemainCnt <= 0)
