@@ -117,7 +117,7 @@ void ATestCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	UMainGameBlueprintFunctionLibrary::PushActor(EObjectType::Player, this);
-	
+
 	// 몽타주 변경에 필요한 세팅 추가 필요 (태환)
 	//UAnimInstance* Inst = GetMesh()->GetAnimInstance();
 	//AnimInst = Cast<UPlayerAnimInstance>(GetMesh()->GetAnimInstance());
@@ -150,6 +150,9 @@ void ATestCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLi
 
 	// 플레이어 H
 	DOREPLIFETIME(ATestCharacter, PlayerHp);
+
+	// LowerState (태환)
+	DOREPLIFETIME(ATestCharacter, LowerStateValue);
 }
 
 void ATestCharacter::TestRayCast(float _DeltaTime, FVector _StartPos, FVector _EndPos, FRotator _CameraRot)
@@ -308,6 +311,16 @@ void ATestCharacter::ChangePosture_Implementation(EPlayerPosture _Type)
 			}
 		}
 	}
+}
+
+void ATestCharacter::ChangeLowerState_Implementation(EPlayerLowerState _State)
+{
+	LowerStateValue = _State;
+}
+
+void ATestCharacter::ChangePlayerDir_Implementation(EPlayerMoveDir _Dir)
+{
+	DirValue = _Dir;
 }
 
 void ATestCharacter::ChangeAniValue(uint8 _Type)
