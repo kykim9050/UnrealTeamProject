@@ -383,15 +383,13 @@ void ATestCharacter::PickUpItem_Implementation()
 
 	uint8 ItemIndex = static_cast<uint8>(ItemType); // 사용할 소켓 번호.
 
-	// Attaching Item
+	// Attaching Item => 액터로 가져가는 방식 (이걸 가져가주세요!)
 	const USkeletalMeshSocket* WeaponSocket = GetMesh()->GetSocketByName("ItemSocket");
 	WeaponSocket->AttachActor(GetMapItem, GetMesh());
 
-	/*
-	// Setting Weapon Mesh
-	ItemMeshes[ItemIndex]->SetStaticMesh(ItemMesh); // Static Mesh 적용.
-	GetMapItem->Destroy(); // Map에 있는 아이템 삭제.
-	*/
+	// Setting Weapon Mesh => 스태틱메시로 가져가는 방식 (삭제해주세요)
+	//ItemMeshes[ItemIndex]->SetStaticMesh(ItemMesh); // Static Mesh 적용.
+	//GetMapItem->Destroy(); // Map에 있는 아이템 삭제.
 
 	// Setting Inventory
 	ItemSlot[ItemIndex].Name = ItemStringToName;
