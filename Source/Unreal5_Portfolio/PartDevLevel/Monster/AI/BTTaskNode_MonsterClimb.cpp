@@ -23,6 +23,7 @@ EBTNodeResult::Type UBTTaskNode_MonsterClimb::ExecuteTask(UBehaviorTreeComponent
 	}
 
 	Monster->GetMovementComponent()->SetActive(false);
+	Monster->ChangeAniValue(EMonsterAnim::Climb);
 	return EBTNodeResult::InProgress;
 }
 
