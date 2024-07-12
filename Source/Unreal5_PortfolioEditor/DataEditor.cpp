@@ -3,6 +3,8 @@
 
 #include "DataEditor.h"
 #include "Components/DetailsView.h"
+#include "Global/ContentsLog.h"
+
 UDataEditor::UDataEditor()
 {
 
@@ -12,7 +14,19 @@ void UDataEditor::NativeConstruct()
 {
 	Super::NativeConstruct();
 
-	FName Name = FName(TEXT("TestDataTable"));
+	DetailView = Cast<UDetailsView>(GetWidgetFromName(TEXT("DataView")));
 
-	DataView->PropertiesToShow.Add(Name);
+	if (nullptr == DetailView)
+	{
+		//UE_LOG(UILog, Fatal, TEXT("%s(%u) if (nullptr == DetailView)"), __FUNCTION__, __LINE__);
+		UE_LOG(LogType, Fatal, TEXT("%s(%u) if (nullptr == DetailView)"), __FUNCTION__, __LINE__);
+		return;
+	}
+
+	FString ItemStr = "DataEditor";
+	FName ItemName = FName(ItemStr);
+	DetailView->CategoriesToShow.Add(ItemName);
+	DetailView->Modify();
+
+	int a = 0;
 }
