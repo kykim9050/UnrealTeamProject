@@ -62,7 +62,8 @@ enum class EMonsterAnim : uint8
 	Walk	UMETA(DisplayName = "Walk"),
 	Run		UMETA(DisplayName = "Run"),
 	Attack	UMETA(DisplayName = "Attack"),
-	Dead	UMETA(DisplayName = "Dead")
+	Dead	UMETA(DisplayName = "Dead"),
+	Climb	UMETA(DisplayName = "Climb")
 };
 
 UENUM()

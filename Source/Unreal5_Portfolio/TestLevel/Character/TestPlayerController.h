@@ -84,4 +84,6 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "TeamId", meta = (AllowPrivateAccess = true))
 	FGenericTeamId TeamId;
 	virtual FGenericTeamId GetGenericTeamId() const override;
+
+	bool IsFire = false;
 };

@@ -85,7 +85,7 @@ void ATestPlayerController::MoveFront(const FInputActionValue& Value)
 	//
 	ChangePlayerDir(EPlayerMoveDir::Forward);
 	ATestCharacter* Ch = GetPawn<ATestCharacter>();
-	if (Ch->PostureValue == EPlayerPosture::Barehand)
+	if (Ch->PostureValue == EPlayerPosture::Barehand && IsFire == false)
 	{
 		Ch->ChangeUpperState(EPlayerUpperState::Barehand_Walk);
 	}
@@ -100,7 +100,7 @@ void ATestPlayerController::MoveBack(const FInputActionValue& Value)
 	//
 	ChangePlayerDir(EPlayerMoveDir::Back);
 	ATestCharacter* Ch = GetPawn<ATestCharacter>();
-	if (Ch->PostureValue == EPlayerPosture::Barehand)
+	if (Ch->PostureValue == EPlayerPosture::Barehand && IsFire == false)
 	{
 		Ch->ChangeUpperState(EPlayerUpperState::Barehand_Walk);
 	}
@@ -115,7 +115,7 @@ void ATestPlayerController::MoveRight(const FInputActionValue& Value)
 	//
 	ChangePlayerDir(EPlayerMoveDir::Right);
 	ATestCharacter* Ch = GetPawn<ATestCharacter>();
-	if (Ch->PostureValue == EPlayerPosture::Barehand)
+	if (Ch->PostureValue == EPlayerPosture::Barehand && IsFire == false)
 	{
 		Ch->ChangeUpperState(EPlayerUpperState::Barehand_Walk);
 	}
@@ -130,7 +130,7 @@ void ATestPlayerController::MoveLeft(const FInputActionValue& Value)
 	//
 	ChangePlayerDir(EPlayerMoveDir::Left);
 	ATestCharacter* Ch = GetPawn<ATestCharacter>();
-	if (Ch->PostureValue == EPlayerPosture::Barehand)
+	if (Ch->PostureValue == EPlayerPosture::Barehand && IsFire == false)
 	{
 		Ch->ChangeUpperState(EPlayerUpperState::Barehand_Walk);
 	}
@@ -139,6 +139,12 @@ void ATestPlayerController::MoveLeft(const FInputActionValue& Value)
 void ATestPlayerController::MoveEnd(const FInputActionValue& Value)
 {
 	ATestCharacter* Ch = GetPawn<ATestCharacter>();
+
+	if (IsFire == true)
+	{
+		return;
+	}
+
 	switch (Ch->PostureValue)
 	{
 	case EPlayerPosture::Barehand:
@@ -197,6 +203,7 @@ void ATestPlayerController::Crouch(const FInputActionValue& Value)
 
 void ATestPlayerController::FireStart(float _DeltaTime)
 {
+	IsFire = true;
 	ChangeState(EPlayerState::Fire);
 	ATestCharacter* Ch = GetPawn<ATestCharacter>();
 	Ch->FireRayCast(_DeltaTime);
@@ -223,6 +230,7 @@ void ATestPlayerController::FireTick(float _DeltaTime)
 
 void ATestPlayerController::FireEnd()
 {
+	IsFire = false;
 	ChangeState(EPlayerState::Idle);
 	ATestCharacter* Ch = GetPawn<ATestCharacter>();
 
