@@ -23,9 +23,9 @@ void UDataEditor::NativeConstruct()
 		return;
 	}
 
-	FString ItemStr = "DataEditor";
+	FString ItemStr = "DataTables";
 	FName ItemName = FName(ItemStr);
-	DetailView->CategoriesToShow.Add(ItemName);
+	DetailView->PropertiesToShow.Add(ItemName);
 	DetailView->Modify();
 
 	int a = 0;

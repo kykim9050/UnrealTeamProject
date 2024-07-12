@@ -27,9 +27,9 @@ protected:
 	void NativeConstruct() override;
 
 private:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowprivateAccess = "true"));
-	UDataTable* TestDataTable = nullptr;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowprivateAccess = "true"))
+	TArray<UDataTable*> DataTables = TArray<UDataTable*>();
 
-	UPROPERTY()
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowprivateAccess = "true"))
 	class UDetailsView* DetailView = nullptr;
 };
