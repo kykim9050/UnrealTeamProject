@@ -21,7 +21,7 @@ public:
 		ChangeAnimation(static_cast<uint8>(_Key));
 	}
 
-	void ChangeAnimation(uint8 _Key);
+	virtual void ChangeAnimation(uint8 _Key);
 
 	template<typename EnumType>
 	void PushAnimation(EnumType _Key, class UAnimMontage* _Montage)

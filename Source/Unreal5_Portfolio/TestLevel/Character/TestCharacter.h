@@ -39,8 +39,8 @@ public:
 	class UCameraComponent* CameraComponent = nullptr;
 	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	class UTestMinimapIconComponent* MinimapIconComponent = nullptr;
-	UPROPERTY(Category = "Contents", VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	TArray<UStaticMeshComponent*> ItemMeshes;
+	//UPROPERTY(Category = "Contents", VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	//TArray<UStaticMeshComponent*> ItemMeshes;
 
 	// State, Posture
 	UPROPERTY(Category = "Contents", Replicated, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
@@ -51,6 +51,10 @@ public:
 	// LowerState (태환)
 	UPROPERTY(Category = "Contents", Replicated, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	EPlayerLowerState LowerStateValue = EPlayerLowerState::Idle;
+
+	// LowerState (태환)
+	UPROPERTY(Category = "Contents", Replicated, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	EPlayerUpperState UpperStateValue = EPlayerUpperState::Barehand_Idle;
 
 	// Dir
 	UPROPERTY(Category = "Contents", Replicated, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
@@ -65,8 +69,13 @@ public:
 
 	// LowerStateChange 함수 (태환)
 	UFUNCTION(Reliable, Server)
-	void ChangeLowerState(EPlayerLowerState _State);
-	void ChangeLowerState_Implementation(EPlayerLowerState _State);
+	void ChangeLowerState(EPlayerLowerState _LowerState);
+	void ChangeLowerState_Implementation(EPlayerLowerState _LowerState);
+
+	// UpperStateChange 함수 (태환)
+	UFUNCTION(Reliable, Server)
+	void ChangeUpperState(EPlayerUpperState _State);
+	void ChangeUpperState_Implementation(EPlayerUpperState _UpperState);
 
 	// DirChange 함수 (태환)
 	UFUNCTION(Reliable, Server)
@@ -91,6 +100,11 @@ public:
 	int CurItemIndex = -1;
 	
 	// Item
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	AActor* GetMapItem = nullptr;
+	//UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	UPROPERTY(Category = "Contents", Replicated, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	FString RayCastToItemName = "";
 	UFUNCTION(Reliable, Server)
 	void PickUpItem();
 	void PickUpItem_Implementation();
@@ -152,9 +166,6 @@ private:
 	// 몽타주 변경에 필요한 변수 (태환)
 	UPROPERTY(Replicated)
 	uint8 AniValue;
-
-	UPROPERTY(Replicated)
-	class UPlayerAnimInstance* AnimInst = nullptr;
 	//
 
 public:
@@ -167,12 +178,4 @@ public:
 	UFUNCTION(Reliable, Server, BlueprintCallable)
 	void FireRayCast(float _DeltaTime);
 	void FireRayCast_Implementation(float _DeltaTime);
-
-
-	//UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	UPROPERTY(Category = "Contents", Replicated, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	FString RayCastToItemName = "";
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	AActor* GetMapItem = nullptr;
 };

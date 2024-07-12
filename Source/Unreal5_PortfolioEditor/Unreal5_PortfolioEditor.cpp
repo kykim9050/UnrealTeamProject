@@ -4,3 +4,5 @@
 #include "Modules/ModuleManager.h"
 
 IMPLEMENT_PRIMARY_GAME_MODULE( FDefaultGameModuleImpl, Unreal5_PortfolioEditor, "Unreal5_PortfolioEditor" );
+
+DEFINE_LOG_CATEGORY(EditorLog);
