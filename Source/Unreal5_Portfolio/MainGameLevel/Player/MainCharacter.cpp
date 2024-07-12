@@ -21,7 +21,7 @@ AMainCharacter::AMainCharacter()
 	SpringArmComponent = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArmComponent"));
 	SpringArmComponent->SetupAttachment(RootComponent);
 	SpringArmComponent->SetRelativeLocation(FVector(0.0, 0.0, 80.0));
-	SpringArmComponent->TargetArmLength = 500.0f;
+	SpringArmComponent->TargetArmLength = 200.0f;
 	SpringArmComponent->bDoCollisionTest = false;
 
 	// Camera Component
