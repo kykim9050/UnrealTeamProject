@@ -153,6 +153,7 @@ void ATestCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLi
 
 	// LowerState (ÅÂÈ¯)
 	DOREPLIFETIME(ATestCharacter, LowerStateValue);
+	DOREPLIFETIME(ATestCharacter, DirValue);
 }
 
 void ATestCharacter::TestRayCast(float _DeltaTime, FVector _StartPos, FVector _EndPos, FRotator _CameraRot)
