@@ -4,6 +4,7 @@
 #include "TestCharacter.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
+#include "Engine/SkeletalMeshSocket.h"
 #include "Global/MainGameBlueprintFunctionLibrary.h"
 #include "Global/DataTable/ItemDataRow.h"
 #include "Components/SphereComponent.h"
@@ -41,6 +42,7 @@ ATestCharacter::ATestCharacter()
 	UEnum* Enum = StaticEnum<EPlayerPosture>();
 	for (size_t i = 0; i < static_cast<size_t>(EPlayerPosture::Barehand); i++)
 	{
+		/*
 		// Weapon Meshes
 		FString Name = Enum->GetNameStringByValue(i) + "Socket";
 		UStaticMeshComponent* NewSocketMesh = CreateDefaultSubobject<UStaticMeshComponent>(*Name);
@@ -50,6 +52,7 @@ ATestCharacter::ATestCharacter()
 		NewSocketMesh->SetVisibility(false);
 		NewSocketMesh->SetIsReplicated(true);
 		ItemMeshes.Push(NewSocketMesh);
+		*/
 
 		// Inventory (for UI Test)
 		FItemInformation NewSlot;
@@ -288,11 +291,12 @@ void ATestCharacter::ChangePosture_Implementation(EPlayerPosture _Type)
 	{
 		PostureValue = _Type;
 		CurItemIndex = -1;
-
+		/*
 		for (size_t i = 0; i < static_cast<size_t>(EPlayerPosture::Barehand); i++)
 		{
 			ItemMeshes[i]->SetVisibility(false);
 		}
+		*/
 	}
 	else
 	{
@@ -305,7 +309,7 @@ void ATestCharacter::ChangePosture_Implementation(EPlayerPosture _Type)
 
 		PostureValue = _Type;
 		CurItemIndex = ItemSlotIndex;
-
+		/*
 		for (size_t i = 0; i < static_cast<size_t>(EPlayerPosture::Barehand); i++)
 		{
 			if (i == static_cast<size_t>(_Type))
@@ -317,6 +321,7 @@ void ATestCharacter::ChangePosture_Implementation(EPlayerPosture _Type)
 				ItemMeshes[i]->SetVisibility(false);
 			}
 		}
+		*/
 	}
 
 	switch (_Type)
@@ -378,9 +383,15 @@ void ATestCharacter::PickUpItem_Implementation()
 
 	uint8 ItemIndex = static_cast<uint8>(ItemType); // 사용할 소켓 번호.
 
+	// Attaching Item
+	const USkeletalMeshSocket* WeaponSocket = GetMesh()->GetSocketByName("ItemSocket");
+	WeaponSocket->AttachActor(GetMapItem, GetMesh());
+
+	/*
 	// Setting Weapon Mesh
 	ItemMeshes[ItemIndex]->SetStaticMesh(ItemMesh); // Static Mesh 적용.
 	GetMapItem->Destroy(); // Map에 있는 아이템 삭제.
+	*/
 
 	// Setting Inventory
 	ItemSlot[ItemIndex].Name = ItemStringToName;

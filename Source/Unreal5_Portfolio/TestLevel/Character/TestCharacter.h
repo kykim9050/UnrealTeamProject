@@ -39,8 +39,8 @@ public:
 	class UCameraComponent* CameraComponent = nullptr;
 	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	class UTestMinimapIconComponent* MinimapIconComponent = nullptr;
-	UPROPERTY(Category = "Contents", VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	TArray<UStaticMeshComponent*> ItemMeshes;
+	//UPROPERTY(Category = "Contents", VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	//TArray<UStaticMeshComponent*> ItemMeshes;
 
 	// State, Posture
 	UPROPERTY(Category = "Contents", Replicated, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
@@ -100,6 +100,11 @@ public:
 	int CurItemIndex = -1;
 	
 	// Item
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	AActor* GetMapItem = nullptr;
+	//UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	UPROPERTY(Category = "Contents", Replicated, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	FString RayCastToItemName = "";
 	UFUNCTION(Reliable, Server)
 	void PickUpItem();
 	void PickUpItem_Implementation();
@@ -173,12 +178,4 @@ public:
 	UFUNCTION(Reliable, Server, BlueprintCallable)
 	void FireRayCast(float _DeltaTime);
 	void FireRayCast_Implementation(float _DeltaTime);
-
-
-	//UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	UPROPERTY(Category = "Contents", Replicated, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	FString RayCastToItemName = "";
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	AActor* GetMapItem = nullptr;
 };
