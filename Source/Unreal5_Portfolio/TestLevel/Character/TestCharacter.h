@@ -85,11 +85,11 @@ public:
 	// Inventory
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	TArray<FItemInformation> ItemSlot;
-	UPROPERTY()
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	TArray<bool> IsItemIn;
-	UPROPERTY()
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	int CurItemIndex = -1;
-
+	
 	// Item
 	UFUNCTION(Reliable, Server)
 	void PickUpItem();

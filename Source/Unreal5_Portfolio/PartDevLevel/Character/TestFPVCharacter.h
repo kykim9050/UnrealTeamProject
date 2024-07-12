@@ -66,7 +66,7 @@ public:
 	float FireIntervalTime = 0.15f;
 	UFUNCTION()
 	void FireStart();
-	UFUNCTION(Reliable, Server, BlueprintCallable)
+	UFUNCTION(Reliable, Server)
 	void Fire();
 	void Fire_Implementation();
 	UFUNCTION()

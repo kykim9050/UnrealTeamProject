@@ -17,13 +17,19 @@ class UNREAL5_PORTFOLIOEDITOR_API UDataEditor : public UEditorUtilityWidget
 public:
 	UDataEditor();
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (BindWidget))
-	class UDetailsView* DataView = nullptr;
+	UFUNCTION(BlueprintCallable)
+	FORCEINLINE class UDetailsView* GetDataView() const
+	{
+		return DetailView;
+	}
 
 protected:
 	void NativeConstruct() override;
 
 private:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowprivateAccess = "true"));
-	UDataTable* TestDataTable = nullptr;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowprivateAccess = "true"))
+	TArray<UDataTable*> DataTables = TArray<UDataTable*>();
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowprivateAccess = "true"))
+	class UDetailsView* DetailView = nullptr;
 };
