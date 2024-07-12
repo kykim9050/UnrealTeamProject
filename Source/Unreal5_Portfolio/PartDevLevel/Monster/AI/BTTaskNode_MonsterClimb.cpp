@@ -3,8 +3,13 @@
 
 #include "PartDevLevel/Monster/AI/BTTaskNode_MonsterClimb.h"
 #include "PartDevLevel/Monster/TestMonsterBase.h"
+#include "TestLevel/Character/TestCharacter.h"
 
+#include "Global/Animation/MainAnimInstance.h"
 #include "Global/ContentsLog.h"
+#include "Kismet/KismetMathLibrary.h"
+#include "GameFramework/CharacterMovementComponent.h"
+#include "PartDevLevel/Monster/TestMonsterBaseAIController.h"
 
 EBTNodeResult::Type UBTTaskNode_MonsterClimb::ExecuteTask(UBehaviorTreeComponent& _OwnerComp, uint8* _NodeMemory)
 {
@@ -17,6 +22,8 @@ EBTNodeResult::Type UBTTaskNode_MonsterClimb::ExecuteTask(UBehaviorTreeComponent
 		return EBTNodeResult::Type::Aborted;
 	}
 
+	Monster->GetMovementComponent()->SetActive(false);
+	Monster->ChangeAniValue(EMonsterAnim::Climb);
 	return EBTNodeResult::InProgress;
 }
 
@@ -24,5 +31,20 @@ void UBTTaskNode_MonsterClimb::TickTask(UBehaviorTreeComponent& _OwnerComp, uint
 {
 	Super::TickTask(_OwnerComp, _pNodeMemory, _DeltaSeconds);
 
-
+	ATestMonsterBase* Monster = GetActor<ATestMonsterBase>(_OwnerComp);
+	ATestMonsterBaseAIController* Controller = Cast<ATestMonsterBaseAIController>(Monster->GetController());
+	FVector Dest = Controller->GetBlackboardComponent()->GetValueAsVector("DestinationLocation");
+	FVector CurPos = Monster->GetActorLocation();
+	FVector UpVector = Monster->GetActorUpVector();
+	if (CurPos.Z < Dest.Z)
+	{
+		FTransform AddTransform;
+		AddTransform.SetLocation(UpVector * 500.0f * _DeltaSeconds);
+		Monster->AddActorWorldTransform(AddTransform);
+	}
+	else
+	{
+		StateChange(_OwnerComp, EMonsterState::Chase);
+		return;
+	}
 }

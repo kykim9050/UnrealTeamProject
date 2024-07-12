@@ -23,27 +23,29 @@ void UDataEditor::NativeConstruct()
 		return;
 	}
 
-	TArray<FString> FileList = TArray<FString>();
+	//TArray<FString> FileList = TArray<FString>();
 
-	FString Path = FPaths::ProjectContentDir();
-	FString DataTablePath = "Resources/Global/DataTable";
-	Path = Path + DataTablePath + TEXT("/*.*");
+	//FString Path = FPaths::ProjectContentDir();
+	//FString DataTablePath = "Resources/Global/DataTable";
+	//Path = Path + DataTablePath + TEXT("/*.*");
 
-	IFileManager::Get().FindFiles(FileList, *Path, true, false);
+	//IFileManager::Get().FindFiles(FileList, *Path, true, false);
 
 	//UMainGameInstance* Inst = UMainGameBlueprintFunctionLibrary::GetMainGameInstance(GetWorld());
 
 	//if (nullptr == Inst)
 	//{
-	//	UE_LOG(UILog, Fatal, TEXT("%s(%u)> if (nullptr == DebugText)"), __FUNCTION__, __LINE__);
+	//	UE_LOG(EditorLog, Fatal, TEXT("%s(%u)> if (nullptr == DebugText)"), __FUNCTION__, __LINE__);
 	//	return;
 	//}
 
-	for (size_t i = 0; i < FileList.Num(); i++)
-	{
-		//TSubclassOf<UDataTable> DataTable =
-		//	DataTables.Add(DataTable);
-	}
+	//for (size_t i = 0; i < FileList.Num(); i++)
+	//{
+	//	// "/Script / Engine.DataTable'/Game/Resources/Global/DataTable/" + 
+
+	//	//TSubclassOf<UDataTable> DataTable =
+	//	//	DataTables.Add(DataTable);
+	//}
 
 	FString ItemStr = "DataTables";
 	FName ItemName = FName(ItemStr);
