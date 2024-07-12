@@ -3,8 +3,8 @@
 
 #include "DataEditor.h"
 #include "Components/DetailsView.h"
-#include "Unreal5_Portfolio/Global/ContentsLog.h"
-//#include "Unreal5_Portfolio/Global/MainGameBlueprintFunctionLibrary.h"
+#include "Unreal5_PortfolioEditor.h"
+#include "../Unreal5_Portfolio/Global/MainGameBlueprintFunctionLibrary.h"
 
 UDataEditor::UDataEditor()
 {
@@ -19,8 +19,7 @@ void UDataEditor::NativeConstruct()
 
 	if (nullptr == DetailView)
 	{
-		//UE_LOG(UILog, Fatal, TEXT("%s(%u) if (nullptr == DetailView)"), __FUNCTION__, __LINE__);
-		UE_LOG(LogType, Fatal, TEXT("%s(%u) if (nullptr == DetailView)"), __FUNCTION__, __LINE__);
+		UE_LOG(EditorLog, Fatal, TEXT("%s(%u) if (nullptr == DetailView)"), __FUNCTION__, __LINE__);
 		return;
 	}
 
