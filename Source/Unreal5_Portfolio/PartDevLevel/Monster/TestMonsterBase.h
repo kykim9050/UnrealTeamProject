@@ -66,12 +66,8 @@ protected:
 
 private:
 	UFUNCTION(Reliable, NetMulticast)
-	void SetDeadCollision();
-	void SetDeadCollision_Implementation();
-
-	UFUNCTION(Reliable, NetMulticast)
-	void SetDeadTimeline();
-	void SetDeadTimeline_Implementation();
+	void SetOnDead();
+	void SetOnDead_Implementation();
 
 	void OnDead();
 	UFUNCTION()
@@ -117,4 +113,7 @@ private:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
 	USphereComponent* RightClimbComponent;
+
+	UPROPERTY(EditAnywhere, Category = "Particle", meta = (AllowPrivateAccess = true))
+	UParticleSystem* BloodParticle;
 };

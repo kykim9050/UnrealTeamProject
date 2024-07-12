@@ -8,6 +8,7 @@
 #include "GameFrameWork/CharacterMovementComponent.h"
 #include "Blueprint/AIBlueprintHelperLibrary.h"
 #include "BehaviorTree/BlackboardComponent.h"
+#include "Kismet/GameplayStatics.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Net/UnrealNetwork.h"
@@ -39,6 +40,7 @@ ATestMonsterBase::ATestMonsterBase()
 
 	DeadTimelineFinish.BindUFunction(this, FName("OnDeadFinish"));
 	DeadDissolveCallBack.BindUFunction(this, FName("OnDeadDissolveInterp"));
+
 }
 
 // Called when the game starts or when spawned
@@ -184,15 +186,12 @@ void ATestMonsterBase::SetClimbCollision(bool Active)
 	}
 }
 
-void ATestMonsterBase::SetDeadCollision_Implementation()
+void ATestMonsterBase::SetOnDead_Implementation()
 {
-	GetCapsuleComponent()->SetCollisionObjectType(ECC_GameTraceChannel5);
-	AttackComponent->SetCollisionObjectType(ECC_GameTraceChannel5);
-	GetCharacterMovement()->SetActive(false);
-}
+	// Effect Setting
+	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), BloodParticle, GetActorTransform());
 
-void ATestMonsterBase::SetDeadTimeline_Implementation()
-{
+	// Dissolve Setting
 	TArray<class UMaterialInterface*> MaterialsInterface = GetMesh()->GetMaterials();
 
 	DynamicMaterials.Empty();
@@ -207,12 +206,16 @@ void ATestMonsterBase::SetDeadTimeline_Implementation()
 	DeadTimeLine.SetTimelineLength(3.0f);
 	DeadTimeLine.SetLooping(false);
 	DeadTimeLine.PlayFromStart();
+
+	// Collision Setting
+	GetCapsuleComponent()->SetCollisionObjectType(ECC_GameTraceChannel5);
+	AttackComponent->SetCollisionObjectType(ECC_GameTraceChannel5);
+	GetCharacterMovement()->SetActive(false);
 }
 
 void ATestMonsterBase::OnDead()
 {
-	SetDeadTimeline();
-	SetDeadCollision();
+	SetOnDead();
 	ChangeAniValue(EMonsterAnim::Dead);
 
 	ATestMonsterBaseAIController* AIController = GetController<ATestMonsterBaseAIController>();
