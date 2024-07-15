@@ -17,6 +17,7 @@ class UNREAL5_PORTFOLIO_API AMainGameMode : public AGameMode
 protected:
 	void BeginPlay() override;
 	void Tick(float _DeltaTime) override;
+	//void PostLogin(APlayerController* NewPlayer) override;
 
 public:
 	void CreateMonsterSpawner(FName _DataTableRowName);
