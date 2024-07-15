@@ -175,12 +175,25 @@ void ATestPlayerController::FireStart(float _DeltaTime)
 	ChangeState(EPlayerState::Fire);
 	ATestCharacter* Ch = GetPawn<ATestCharacter>();
 	Ch->FireRayCast(_DeltaTime);
+
+	GEngine->AddOnScreenDebugMessage(-1, 0.2f, FColor::Red, TEXT("Start"));
+	GetWorld()->GetTimerManager().SetTimer(MyTimeHandle, FTimerDelegate::CreateLambda([&]()
+		{
+			FireTick(_DeltaTime);
+		}), 0.2f, true);
 }
 
 void ATestPlayerController::FireTick(float _DeltaTime)
 {
 	ATestCharacter* Ch = GetPawn<ATestCharacter>();
 	Ch->FireRayCast(_DeltaTime);
+	
+	if (false == IsFire)
+	{
+		return;
+	}
+	++Count;
+	GEngine->AddOnScreenDebugMessage(-1, 0.2f, FColor::Red, FString::Printf(TEXT("Tick Count : %d"), Count));
 }
 
 void ATestPlayerController::FireEnd()
@@ -188,6 +201,9 @@ void ATestPlayerController::FireEnd()
 	IsFire = false;
 	ChangeState(EPlayerState::Idle);
 	ATestCharacter* Ch = GetPawn<ATestCharacter>();
+
+	GetWorld()->GetTimerManager().ClearTimer(MyTimeHandle);
+	GEngine->AddOnScreenDebugMessage(-1, 0.2f, FColor::Red, TEXT("End"));
 }
 
 void ATestPlayerController::PickUpItem()
