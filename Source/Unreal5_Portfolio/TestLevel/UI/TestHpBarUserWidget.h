@@ -20,8 +20,8 @@ class UNREAL5_PORTFOLIO_API UTestHpBarUserWidget : public UUserWidget
 	class UProgressBar* PB_HpBar;
 
 public:
-	void NativeConstruct();
-	void NativeTick(const FGeometry& _MyGeometry, float _InDeltaTime);
+	void NativeConstruct() override;
+	void NativeTick(const FGeometry& _MyGeometry, float _InDeltaTime) override;
 
 	UFUNCTION(BlueprintCallable)
 	float HPUpdate();

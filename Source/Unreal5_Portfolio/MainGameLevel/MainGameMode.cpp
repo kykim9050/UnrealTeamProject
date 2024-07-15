@@ -5,6 +5,7 @@
 #include "Global/MainGameBlueprintFunctionLibrary.h"
 #include "Global/MainGameInstance.h"
 #include "Global/DataTable/MonsterSpawnerDataRow.h"
+#include "Player/MainPlayerState.h"
 #include "Monster/MonsterSpawner.h"
 
 void AMainGameMode::BeginPlay()
@@ -18,6 +19,14 @@ void AMainGameMode::Tick(float _DeltaTime)
 {
 	Super::Tick(_DeltaTime);
 }
+
+//void AMainGameMode::PostLogin(APlayerController* NewPlayer)
+//{
+//	Super::PostLogin(NewPlayer);
+//
+//	AMainPlayerState* MainPlayerController = Cast<AMainPlayerState>(NewPlayer->PlayerState);
+//	MainPlayerController->InitPlayerData();
+//}
 
 void AMainGameMode::CreateMonsterSpawner(FName _DataTableRowName)
 {

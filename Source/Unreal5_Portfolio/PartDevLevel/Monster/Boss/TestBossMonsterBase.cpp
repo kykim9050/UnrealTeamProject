@@ -88,3 +88,7 @@ void ATestBossMonsterBase::ChangeAniValue(uint8 _Type)
 	AniValue = _Type;
 }
 
+ATestBossMonsterAIControllerBase* ATestBossMonsterBase::GetBossAIController()
+{
+	return Cast<ATestBossMonsterAIControllerBase>(GetController());
+}

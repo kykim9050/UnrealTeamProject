@@ -72,6 +72,10 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void ChangePosture(EPlayerPosture _Posture);
 
+	// POV
+	UFUNCTION(BlueprintCallable)
+	void ChangePOVController();
+
 	// LowerStateChange 함수 (태환)
 	UFUNCTION(BlueprintCallable)
 	void ChangeLowerState(EPlayerLowerState _State);
@@ -93,4 +97,8 @@ private:
 	virtual FGenericTeamId GetGenericTeamId() const override;
 
 	bool IsFire = false;
+
+
+	FTimerHandle MyTimeHandle;
+	int Count = 0;
 };

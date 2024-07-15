@@ -3,6 +3,7 @@
 
 #include "PartDevLevel/Monster/AI/BTTaskNode_MonsterAttack.h"
 #include "PartDevLevel/Monster/TestMonsterBase.h"
+#include "TestLevel/Character/TestPlayerState.h"
 #include "TestLevel/Character/TestCharacter.h"
 
 #include "Global/Animation/MainAnimInstance.h"
@@ -45,8 +46,10 @@ void UBTTaskNode_MonsterAttack::TickTask(UBehaviorTreeComponent& _OwnerComp, uin
 
 	if (0.0f >= MonsterData->AttackTime)
 	{
-		ATestCharacter* TargetCharacter = Cast<ATestCharacter>(TargetActor);
-		if (0.0f >= TargetCharacter->GetPlayerHp())
+		ATestCharacter* TargetPlayer = Cast<ATestCharacter>(TargetActor);
+		ATestPlayerState* TargetPlayerState = Cast<ATestPlayerState>(TargetPlayer->GetPlayerState());
+
+		if (0.0f >= TargetPlayerState->GetPlayerHp())
 		{
 			StateChange(_OwnerComp, EMonsterState::Idle);
 			_OwnerComp.GetBlackboardComponent()->SetValueAsObject(TEXT("TargetActor"), nullptr);

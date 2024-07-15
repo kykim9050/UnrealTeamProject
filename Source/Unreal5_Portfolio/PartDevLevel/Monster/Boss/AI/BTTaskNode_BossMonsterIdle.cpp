@@ -18,7 +18,7 @@ EBTNodeResult::Type UBTTaskNode_BossMonsterIdle::ExecuteTask(UBehaviorTreeCompon
 		return EBTNodeResult::Type::Aborted;
 	}
 
-	UBossData* BossData = GetValueAsObject<UBossData>(_OwnerComponent, TEXT("BossData"));
+	UBossData* BossData = GetValueAsObject<UBossData>(_OwnerComponent, TEXT("BossMonsterData"));
 	
 	BossMonster->ChangeAniValue(EBossMonsterAnim::Idle);
 
@@ -29,10 +29,15 @@ void UBTTaskNode_BossMonsterIdle::TickTask(UBehaviorTreeComponent& _OwnerCompone
 {
 	Super::TickTask(_OwnerComponent, _pNodeMemory, _DeltaSeconds);
 
-	UBossData* BossData = GetValueAsObject<UBossData>(_OwnerComponent, TEXT("BossData"));
+	UBossData* BossData = GetValueAsObject<UBossData>(_OwnerComponent, TEXT("BossMonsterData"));
 
 	AMainGameState* GameState = UMainGameBlueprintFunctionLibrary::GetMainGameState(GetWorld());
 	UActorGroup* Players = GameState->GetActorGroup(EObjectType::Player);
 
-
+	bool CanSee = _OwnerComponent.GetBlackboardComponent()->GetValueAsBool(TEXT("CanSeePlayer"));
+	if (true == CanSee)
+	{
+		StateChange(_OwnerComponent, EBossMonsterState::Chase);
+		return;
+	}
 }

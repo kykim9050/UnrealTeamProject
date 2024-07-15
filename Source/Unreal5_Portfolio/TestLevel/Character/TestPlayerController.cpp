@@ -64,6 +64,7 @@ void ATestPlayerController::SetupInputComponent()
 			EnhancedInputComponent->BindAction(InputData->Actions[12], ETriggerEvent::Triggered, this, &ATestPlayerController::ChangePosture, static_cast<EPlayerPosture>(5));
 			EnhancedInputComponent->BindAction(InputData->Actions[13], ETriggerEvent::Triggered, this, &ATestPlayerController::PickUpItem);
 			EnhancedInputComponent->BindAction(InputData->Actions[13], ETriggerEvent::Completed, this, &ATestPlayerController::PickUpItemEnd);
+			EnhancedInputComponent->BindAction(InputData->Actions[14], ETriggerEvent::Triggered, this, &ATestPlayerController::ChangePOVController);
 			EnhancedInputComponent->BindAction(InputData->Actions[15], ETriggerEvent::Started, this, &ATestPlayerController::Crouch);
 		}
 	}
@@ -175,12 +176,25 @@ void ATestPlayerController::FireStart(float _DeltaTime)
 	ChangeState(EPlayerState::Fire);
 	ATestCharacter* Ch = GetPawn<ATestCharacter>();
 	Ch->FireRayCast(_DeltaTime);
+
+	GEngine->AddOnScreenDebugMessage(-1, 0.2f, FColor::Red, TEXT("Start"));
+	GetWorld()->GetTimerManager().SetTimer(MyTimeHandle, FTimerDelegate::CreateLambda([&]()
+		{
+			FireTick(_DeltaTime);
+		}), 0.2f, true);
 }
 
 void ATestPlayerController::FireTick(float _DeltaTime)
 {
 	ATestCharacter* Ch = GetPawn<ATestCharacter>();
 	Ch->FireRayCast(_DeltaTime);
+	
+	if (false == IsFire)
+	{
+		return;
+	}
+	++Count;
+	GEngine->AddOnScreenDebugMessage(-1, 0.2f, FColor::Red, FString::Printf(TEXT("Tick Count : %d"), Count));
 }
 
 void ATestPlayerController::FireEnd()
@@ -188,6 +202,9 @@ void ATestPlayerController::FireEnd()
 	IsFire = false;
 	ChangeState(EPlayerState::Idle);
 	ATestCharacter* Ch = GetPawn<ATestCharacter>();
+
+	GetWorld()->GetTimerManager().ClearTimer(MyTimeHandle);
+	GEngine->AddOnScreenDebugMessage(-1, 0.2f, FColor::Red, TEXT("End"));
 }
 
 void ATestPlayerController::PickUpItem()
@@ -220,6 +237,12 @@ void ATestPlayerController::ChangePosture(EPlayerPosture _Posture)
 {
 	ATestCharacter* Ch = GetPawn<ATestCharacter>();
 	Ch->ChangePosture(_Posture);
+}
+
+void ATestPlayerController::ChangePOVController()
+{
+	ATestCharacter* Ch = GetPawn<ATestCharacter>();
+	Ch->ChangePOV();
 }
 
 void ATestPlayerController::ChangeLowerState(EPlayerLowerState _State)

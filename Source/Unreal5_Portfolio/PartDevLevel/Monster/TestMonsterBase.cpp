@@ -3,14 +3,15 @@
 
 #include "PartDevLevel/Monster/TestMonsterBase.h"
 #include "TestMonsterBaseAIController.h"
+#include "TestLevel/Character/TestPlayerState.h"
 #include "TestLevel/Character/TestCharacter.h"
 
 #include "GameFrameWork/CharacterMovementComponent.h"
 #include "Blueprint/AIBlueprintHelperLibrary.h"
 #include "BehaviorTree/BlackboardComponent.h"
-#include "Kismet/GameplayStatics.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "Kismet/GameplayStatics.h"
 #include "Net/UnrealNetwork.h"
 
 #include "Global/MainGameBlueprintFunctionLibrary.h"
@@ -139,7 +140,14 @@ void ATestMonsterBase::Attack(AActor* _OtherActor, UPrimitiveComponent* _Collisi
 	ATestCharacter* HitCharacter = Cast<ATestCharacter>(_OtherActor);
 	if (nullptr != HitCharacter && EMonsterState::Attack == MonsterState)
 	{
-		HitCharacter->GetDamage(SettingData->AttackDamage);
+		ATestPlayerState* HitPlayerState = Cast<ATestPlayerState>(HitCharacter->GetPlayerState());
+
+		if (nullptr == HitPlayerState)
+		{
+			LOG(MonsterLog, Fatal, TEXT("HitPlayerState Is Not Valid"));
+		}
+
+		HitPlayerState->AddDamage(SettingData->AttackDamage);
 	}
 }
 
