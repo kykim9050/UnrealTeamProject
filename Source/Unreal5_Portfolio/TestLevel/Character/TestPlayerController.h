@@ -82,7 +82,10 @@ public:
 
 	// AttackTest (ÅÂÈ¯)
 	UFUNCTION(BlueprintCallable)
-	void AttackTest(EPlayerMoveDir _Dir);
+	void AttackStart();
+
+	UFUNCTION(BlueprintCallable)
+	void AttackEnd();
 
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "TeamId", meta = (AllowPrivateAccess = true))

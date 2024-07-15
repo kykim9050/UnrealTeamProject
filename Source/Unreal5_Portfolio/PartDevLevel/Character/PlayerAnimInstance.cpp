@@ -32,12 +32,9 @@ void UPlayerAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 	PlayerPosture = OwnerPlayer->PostureValue;
 	PlayerLowerState = OwnerPlayer->LowerStateValue;
 	PlayerDir = OwnerPlayer->DirValue;
-
-
-	//ChangeAnimation(PlayerUpperState);
 }
 
 void UPlayerAnimInstance::ChangeAnimation(EPlayerPosture _Posture)
 {
-	UMainAnimInstance::ChangeAnimation(static_cast<int>(_Posture));
+	Super::ChangeAnimation(_Posture);
 }

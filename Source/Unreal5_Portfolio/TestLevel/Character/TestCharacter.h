@@ -89,7 +89,7 @@ public:
 	TArray<bool> IsItemIn;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	int CurItemIndex = -1;
-	
+
 	// Item
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	AActor* GetMapItem = nullptr;
@@ -154,12 +154,9 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	class USphereComponent* HandAttackComponent = nullptr;
 
-	// 몽타주 변경에 필요한 변수 (태환)
-	UPROPERTY(Replicated)
-	uint8 PlayerMontageAniValue;
 
-	UPROPERTY(Replicated)
-	class UMainAnimInstance* PlayerAnimInst;
+	UPROPERTY()
+	class UPlayerAnimInstance* PlayerAnimInst;
 	//
 
 public:
@@ -173,7 +170,11 @@ public:
 	void FireRayCast(float _DeltaTime);
 	void FireRayCast_Implementation(float _DeltaTime);
 
-	UFUNCTION(Reliable, Server, BlueprintCallable)
-	void ChangeMontage(EPlayerPosture _Posture);
-	void ChangeMontage_Implementation(EPlayerPosture _Posture);
+	//UFUNCTION(Reliable, Server)
+	//void ChangeMontage();
+	//void ChangeMontage_Implementation();
+
+	//UFUNCTION(Reliable, NetMulticast)
+	//void ClientChangeMontage();
+	//void ClientChangeMontage_Implementation();
 };
