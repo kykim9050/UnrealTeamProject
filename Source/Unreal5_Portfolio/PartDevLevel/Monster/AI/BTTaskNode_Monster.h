@@ -37,12 +37,12 @@ public:
 	uint8 GetCurState(UBehaviorTreeComponent& _OwnerComp);
 
 	template<typename EnumType>
-	void StateChange(UBehaviorTreeComponent& _OwnerComp, EnumType _StateChange)
+	void StateChange(UBehaviorTreeComponent& _OwnerComp, EnumType _StateChange, EBTNodeResult::Type _EBTNodeResult = EBTNodeResult::Failed)
 	{
-		StateChange(_OwnerComp, static_cast<uint8>(_StateChange));
+		StateChange(_OwnerComp, static_cast<uint8>(_StateChange), _EBTNodeResult);
 	}
 
-	void StateChange(UBehaviorTreeComponent& _OwnerComp, uint8 _StateChange);
+	void StateChange(UBehaviorTreeComponent& _OwnerComp, uint8 _StateChange, EBTNodeResult::Type _EBTNodeResult = EBTNodeResult::Failed);
 
 	template<typename ObjectType>
 	ObjectType* GetValueAsObject(UBehaviorTreeComponent& _OwnerComp, FName _Name)
