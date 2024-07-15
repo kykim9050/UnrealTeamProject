@@ -1,11 +1,10 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "MainAnimInstance.h"
-#include "TestLevel/Character/TestCharacter.h"
-#include "../ContentsLog.h"
+#include "Global/Animation/MainRandomAnimInstance.h"
+#include "Global/ContentsLog.h"
 
-void UMainAnimInstance::ChangeAnimation(uint8 _Key)
+void UMainRandomAnimInstance::ChangeAnimation(uint8 _Key)
 {
 	if (false == AnimMontages.Contains(_Key))
 	{
@@ -29,7 +28,7 @@ void UMainAnimInstance::ChangeAnimation(uint8 _Key)
 	}
 }
 
-void UMainAnimInstance::PushAnimation(uint8 _Key, UAnimMontage* _Montage)
+void UMainRandomAnimInstance::PushAnimation(uint8 _Key, UAnimMontage* _Montage)
 {
 	if (true == AnimMontages.Contains(_Key))
 	{
@@ -38,4 +37,3 @@ void UMainAnimInstance::PushAnimation(uint8 _Key, UAnimMontage* _Montage)
 
 	AnimMontages.Add(_Key, _Montage);
 }
-
