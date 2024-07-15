@@ -6,6 +6,7 @@
 #include "Global/DataTable/ItemDataRow.h"
 #include "Item/RangedWP.h"
 #include "Global/MainGameInstance.h"
+#include "Character/TestPlayerState.h"
 
 void ATestPlayMode::BeginPlay()
 {
@@ -20,6 +21,14 @@ void ATestPlayMode::BeginPlay()
 		Transform.SetLocation({ 500.0f, -200.0f + (100.0f * i), 500.0f});
 		GetWorld()->SpawnActor<AActor>(MonsterData->GetMonsterUClass(), Transform);
 	}
+}
+
+void ATestPlayMode::PostLogin(APlayerController* NewPlayer)
+{
+	Super::PostLogin(NewPlayer);
+
+	// 새로 로그인한 플레이어의 데이터 초기화 
+	NewPlayer->GetPlayerState<ATestPlayerState>()->InitPlayerData();
 }
 
 void ATestPlayMode::GPlayerToDropItem_Implementation(FName _ItemName, FTransform _Transform)
