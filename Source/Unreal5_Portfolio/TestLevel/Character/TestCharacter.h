@@ -58,10 +58,6 @@ public:
 	UPROPERTY(Category = "Contents", Replicated, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	EPlayerLowerState LowerStateValue = EPlayerLowerState::Idle;
 
-	// LowerState (태환)
-	UPROPERTY(Category = "Contents", Replicated, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	EPlayerUpperState UpperStateValue = EPlayerUpperState::Barehand_Idle;
-
 	// Dir
 	UPROPERTY(Category = "Contents", Replicated, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	EPlayerMoveDir DirValue = EPlayerMoveDir::Forward;
@@ -78,11 +74,6 @@ public:
 	void ChangeLowerState(EPlayerLowerState _LowerState);
 	void ChangeLowerState_Implementation(EPlayerLowerState _LowerState);
 
-	// UpperStateChange 함수 (태환)
-	UFUNCTION(Reliable, Server)
-	void ChangeUpperState(EPlayerUpperState _State);
-	void ChangeUpperState_Implementation(EPlayerUpperState _UpperState);
-
 	// DirChange 함수 (태환)
 	UFUNCTION(Reliable, Server)
 	void ChangePlayerDir(EPlayerMoveDir _Dir);
@@ -95,11 +86,7 @@ public:
 	{
 		ChangeAniValue(static_cast<uint8>(_Type));
 	}
-	
-	// POV
-	bool IsFPV = true;
-	UFUNCTION()
-	void ChangePOV();
+	//
 
 	// Inventory
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
@@ -175,7 +162,10 @@ private:
 
 	// 몽타주 변경에 필요한 변수 (태환)
 	UPROPERTY(Replicated)
-	uint8 AniValue;
+	uint8 PlayerMontageAniValue;
+
+	UPROPERTY(Replicated)
+	class UMainAnimInstance* PlayerAnimInst;
 	//
 
 public:
@@ -188,4 +178,8 @@ public:
 	UFUNCTION(Reliable, Server, BlueprintCallable)
 	void FireRayCast(float _DeltaTime);
 	void FireRayCast_Implementation(float _DeltaTime);
+
+	UFUNCTION(Reliable, Server, BlueprintCallable)
+	void ChangeMontage(EPlayerPosture _Posture);
+	void ChangeMontage_Implementation(EPlayerPosture _Posture);
 };

@@ -153,9 +153,9 @@ void ATestCharacter::BeginPlay()
 	UMainGameBlueprintFunctionLibrary::PushActor(EObjectType::Player, this);
 
 	// 몽타주 변경에 필요한 세팅 추가 필요 (태환)
-	//UAnimInstance* Inst = GetMesh()->GetAnimInstance();
-	//AnimInst = Cast<UPlayerAnimInstance>(GetMesh()->GetAnimInstance());
-	//UMainGameInstance* MainGameInst = UMainGameBlueprintFunctionLibrary::GetMainGameInstance(GetWorld());
+	UAnimInstance* Inst = GetMesh()->GetAnimInstance();
+	PlayerAnimInst = Cast<UPlayerAnimInstance>(GetMesh()->GetAnimInstance());
+	UMainGameInstance* MainGameInst = UMainGameBlueprintFunctionLibrary::GetMainGameInstance(GetWorld());
 
 	HandAttackComponent->SetCollisionProfileName(TEXT("NoCollision"));
 }
@@ -169,9 +169,6 @@ void ATestCharacter::Tick(float DeltaTime)
 
 	TArray<FItemInformation> I = ItemSlot;
 	AGameModeBase* Ptr = GetWorld()->GetAuthGameMode();
-
-	// 몽타주 Tick에서 실행 (태환)
-	//AnimInst->ChangeAnimation(AniValue);
 }
 
 void ATestCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -187,7 +184,6 @@ void ATestCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLi
 
 	// LowerState (태환)
 	DOREPLIFETIME(ATestCharacter, LowerStateValue);
-	DOREPLIFETIME(ATestCharacter, UpperStateValue);
 	DOREPLIFETIME(ATestCharacter, DirValue);
 }
 
@@ -311,6 +307,11 @@ void ATestCharacter::FireRayCast_Implementation(float _DeltaTime)
 	}
 }
 
+void ATestCharacter::ChangeMontage_Implementation(EPlayerPosture _Posture)
+{
+	PlayerAnimInst->ChangeAnimation(_Posture);
+}
+
 void ATestCharacter::ChangeState_Implementation(EPlayerState _Type)
 {
 	StateValue = _Type;
@@ -348,18 +349,6 @@ void ATestCharacter::ChangePosture_Implementation(EPlayerPosture _Type)
 		ItemSocket->SetVisibility(true);
 		FPVItemSocket->SetVisibility(true);
 	}
-
-	switch (_Type)
-	{
-	case EPlayerPosture::Barehand:
-		UpperStateValue = EPlayerUpperState::Barehand_Idle;
-		break;
-	case EPlayerPosture::Rifle:
-		UpperStateValue = EPlayerUpperState::Rifle_Idle;
-		break;
-	default:
-		break;
-	}
 }
 
 void ATestCharacter::ChangeLowerState_Implementation(EPlayerLowerState _LowerState)
@@ -367,19 +356,9 @@ void ATestCharacter::ChangeLowerState_Implementation(EPlayerLowerState _LowerSta
 	LowerStateValue = _LowerState;
 }
 
-void ATestCharacter::ChangeUpperState_Implementation(EPlayerUpperState _UpperState)
-{
-	UpperStateValue = _UpperState;
-}
-
 void ATestCharacter::ChangePlayerDir_Implementation(EPlayerMoveDir _Dir)
 {
 	DirValue = _Dir;
-}
-
-void ATestCharacter::ChangeAniValue(uint8 _Type)
-{
-	AniValue = _Type;
 }
 
 void ATestCharacter::PickUpItem_Implementation()
