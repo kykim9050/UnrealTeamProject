@@ -7,6 +7,8 @@
 #include "Global/MainGameBlueprintFunctionLibrary.h"
 #include "Global/DataTable/PlayerDataRow.h"
 #include "Components/ProgressBar.h"
+#include "TestLevel/Character/TestPlayerState.h"
+
 
 void UTestHpBarUserWidget::NativeConstruct()
 {
@@ -26,7 +28,9 @@ void UTestHpBarUserWidget::NativeTick(const FGeometry& _MyGeometry, float _InDel
 
 float UTestHpBarUserWidget::HPUpdate()
 {
-	CurHp = static_cast<float>(MyCharacter->GetPlayerHp());
+	//CurHp = static_cast<float>(MyCharacter->GetPlayerHp());
+	ATestPlayerState* MyPlayerState = Cast<ATestPlayerState>(UGameplayStatics::GetPlayerState(GetWorld(), 0));
+	CurHp = MyPlayerState->GetPlayerHp();
 
 	// 현재 체력 / MAX 체력 
 	return CurHp / MaxHp;

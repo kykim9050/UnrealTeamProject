@@ -18,6 +18,8 @@ public:
 	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	FName Name = "";
 	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	class UStaticMesh* MeshRes = nullptr;
+	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	int ReloadMaxNum = -1;
 	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	int ReloadLeftNum = -1;
@@ -32,24 +34,19 @@ public:
 	// Sets default values for this character's properties
 	ATestCharacter();
 
-
-
-	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-	class AActor* CurItem = nullptr;
-
-
-
 	// Components
 	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	class USpringArmComponent* SpringArmComponent = nullptr;
 	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	class UCameraComponent* CameraComponent = nullptr;
+	UPROPERTY(Category = "Contents", VisibleDefaultsOnly)
+	USkeletalMeshComponent* FPVMesh = nullptr;
+	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	class UStaticMeshComponent* ItemSocket = nullptr;
+	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	class UStaticMeshComponent* FPVItemSocket = nullptr;
 	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	class UTestMinimapIconComponent* MinimapIconComponent = nullptr;
-	//UPROPERTY(Category = "Contents", VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	//TArray<UStaticMeshComponent*> ItemMeshes;
-	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-	const class USkeletalMeshSocket* WeaponSocket = nullptr;
 
 	// State, Posture
 	UPROPERTY(Category = "Contents", Replicated, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
@@ -81,6 +78,20 @@ public:
 	UFUNCTION(Reliable, Server)
 	void ChangePlayerDir(EPlayerMoveDir _Dir);
 	void ChangePlayerDir_Implementation(EPlayerMoveDir _Dir);
+
+	// 몽타주 변경 함수 (태환)
+	void ChangeAniValue(uint8 _Type);
+	template<typename EnumType>
+	void ChangeAniValue(EnumType _Type)
+	{
+		ChangeAniValue(static_cast<uint8>(_Type));
+	}
+	
+	// POV
+	bool IsFPV = true;
+
+	UFUNCTION()
+	void ChangePOV();
 
 	// Inventory
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)

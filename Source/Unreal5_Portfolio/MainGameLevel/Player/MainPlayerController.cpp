@@ -41,6 +41,8 @@ void AMainPlayerController::SetupInputComponent()
 		EnhancedInputComponent->BindAction(InputData->Actions[4], ETriggerEvent::Triggered, this, &AMainPlayerController::MoveLeft);
 		EnhancedInputComponent->BindAction(InputData->Actions[5], ETriggerEvent::Triggered, this, &AMainPlayerController::Jump);
 		EnhancedInputComponent->BindAction(InputData->Actions[5], ETriggerEvent::Completed, this, &AMainPlayerController::JumpEnd);
+		EnhancedInputComponent->BindAction(InputData->Actions[6], ETriggerEvent::Started, this, &AMainPlayerController::FireStart);
+		EnhancedInputComponent->BindAction(InputData->Actions[6], ETriggerEvent::Completed, this, &AMainPlayerController::FireEnd);
 		EnhancedInputComponent->BindAction(InputData->Actions[7], ETriggerEvent::Triggered, this, &AMainPlayerController::ChangePosture, static_cast<EPlayerPosture>(0));
 		EnhancedInputComponent->BindAction(InputData->Actions[8], ETriggerEvent::Triggered, this, &AMainPlayerController::ChangePosture, static_cast<EPlayerPosture>(1));
 		EnhancedInputComponent->BindAction(InputData->Actions[9], ETriggerEvent::Triggered, this, &AMainPlayerController::ChangePosture, static_cast<EPlayerPosture>(2));
@@ -95,20 +97,26 @@ void AMainPlayerController::JumpEnd(const FInputActionValue& Value)
 {
 }
 
-void AMainPlayerController::FireStart()
+void AMainPlayerController::FireStart(const FInputActionValue& Value)
 {
 	ChangeState(EPlayerState::Fire);
 
+	GetWorld()->GetTimerManager().SetTimer(MyTimeHandle, FTimerDelegate::CreateLambda([&]()
+		{
+			FireTick(GetWorld()->GetTimeSeconds());
+		}), 0.2f, true);
 }
 
 void AMainPlayerController::FireTick(float _DeltaTime)
 {
+
 }
 
-void AMainPlayerController::FireEnd()
+void AMainPlayerController::FireEnd(const FInputActionValue& Value)
 {
 	ChangeState(EPlayerState::Idle);
 
+	GetWorld()->GetTimerManager().ClearTimer(MyTimeHandle);
 }
 
 void AMainPlayerController::PickUpItem()

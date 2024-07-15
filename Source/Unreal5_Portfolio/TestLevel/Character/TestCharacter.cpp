@@ -4,6 +4,7 @@
 #include "TestCharacter.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
+//#include "Engine/StaticMesh.h"
 #include "Engine/SkeletalMeshSocket.h"
 #include "Engine/StaticMeshSocket.h"
 #include "Global/MainGameBlueprintFunctionLibrary.h"
@@ -23,22 +24,52 @@ ATestCharacter::ATestCharacter()
 	// SpringArm Component
 	SpringArmComponent = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArmComponent"));
 	SpringArmComponent->SetupAttachment(RootComponent);
-	SpringArmComponent->TargetArmLength = 500.0f;
-	SpringArmComponent->bDoCollisionTest = false;
+	SpringArmComponent->SetRelativeLocation(FVector(20.0f, 0.0f, 67.0f));
+	SpringArmComponent->TargetArmLength = 0.0f;
+	SpringArmComponent->bUsePawnControlRotation = true;
+	SpringArmComponent->bDoCollisionTest = true;
 
 	// Camera Component
 	CameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("CameraComponent"));
 	CameraComponent->SetupAttachment(SpringArmComponent);
 	CameraComponent->SetProjectionMode(ECameraProjectionMode::Perspective);
-	CameraComponent->bUsePawnControlRotation = true;
 
 	// MinimapIcon Component
 	MinimapIconComponent = CreateDefaultSubobject<UTestMinimapIconComponent>(TEXT("MinimapPlayerIcon"));
 	MinimapIconComponent->SetupAttachment(RootComponent);
 	MinimapIconComponent->bVisibleInSceneCaptureOnly = true;
 
-	// Mesh
+	// Character Mesh
 	GetMesh()->bHiddenInSceneCapture = true;
+	GetMesh()->SetOwnerNoSee(true);
+
+	// FPV Character Mesh
+	FPVMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("FirstPersonMesh"));
+	FPVMesh->SetupAttachment(CameraComponent);
+	FPVMesh->SetOnlyOwnerSee(true);
+	FPVMesh->bCastDynamicShadow = false;
+	FPVMesh->CastShadow = false;
+
+	// Item Mesh
+	ItemSocket = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ItemSocket"));
+	ItemSocket->SetupAttachment(GetMesh(), "ItemSocket");
+	ItemSocket->SetCollisionProfileName(TEXT("NoCollision"));
+	ItemSocket->SetGenerateOverlapEvents(true);
+	ItemSocket->SetOwnerNoSee(true);
+	ItemSocket->SetVisibility(false);
+	ItemSocket->SetIsReplicated(true);
+
+	// FPV Item Mesh
+	FPVItemSocket = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("FPVItemSocket"));
+	FPVItemSocket->SetupAttachment(FPVMesh, "FPVItemSocket");
+	FPVItemSocket->SetCollisionProfileName(TEXT("NoCollision"));
+	FPVItemSocket->SetGenerateOverlapEvents(true);
+	FPVItemSocket->SetOnlyOwnerSee(true);
+	FPVItemSocket->bCastDynamicShadow = false;
+	FPVItemSocket->CastShadow = false;
+	FPVItemSocket->SetVisibility(false);
+	FPVItemSocket->SetIsReplicated(true);
+
 
 	UEnum* Enum = StaticEnum<EPlayerPosture>();
 	for (size_t i = 0; i < static_cast<size_t>(EPlayerPosture::Barehand); i++)
@@ -71,7 +102,6 @@ ATestCharacter::ATestCharacter()
 	HandAttackComponent->SetupAttachment(GetMesh());
 	HandAttackComponent->SetRelativeLocation({ 0.0f, 80.0f, 120.0f });
 	//HandAttackComponent->SetCollisionProfileName(TEXT("NoCollision"));
-
 }
 
 void ATestCharacter::CharacterPlayerToDropItem_Implementation(FName _ItemName, FTransform _Transform)
@@ -149,7 +179,7 @@ void ATestCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLi
 	DOREPLIFETIME(ATestCharacter, PostureValue);
 	DOREPLIFETIME(ATestCharacter, RayCastToItemName);
 
-	// 플레이어 H
+	// HP (for UI, Monster test)
 	DOREPLIFETIME(ATestCharacter, PlayerHp);
 
 	// LowerState (태환)
@@ -252,21 +282,12 @@ void ATestCharacter::FireRayCast_Implementation(float _DeltaTime)
 		ItemSlot[CurItemIndex].ReloadLeftNum = ItemSlot[CurItemIndex].ReloadMaxNum;
 	}
 
-	UMainGameInstance* Inst = GetGameInstance<UMainGameInstance>();
-	const FItemDataRow* ItemData = Inst->GetItemData(ItemSlot[CurItemIndex].Name);
-	UStaticMesh* ItemMesh = ItemData->GetResMesh();
-
-	FVector MuzzleLoc = ItemMesh->FindSocket("Muzzle")->RelativeLocation;
-	FVector PlayerLoc = GetActorLocation();
-
-	FVector ForwardVector = CameraComponent->GetForwardVector();
-	FVector RightVector = CameraComponent->GetRightVector();
-	FVector UpVector = CameraComponent->GetUpVector();
-
-	FVector Start = FVector((PlayerLoc.X + (ForwardVector.X * MuzzleLoc.X)), (PlayerLoc.Y + (RightVector.Y * MuzzleLoc.Y)), (PlayerLoc.Z + (UpVector.Z * MuzzleLoc.Z)));
-	FVector End = Start + (ForwardVector * 1000.0);
-
+	ATestPlayerController* Con = Cast<ATestPlayerController>(GetController());
+	FVector Start = GetMesh()->GetSocketLocation(FName("weapon_r_muzzle"));
+	Start.Z -= 20.0f;
+	FVector End = (Con->GetControlRotation().Vector() * 2000.0f) + Start;
 	FHitResult Hit;
+
 	if (GetWorld())
 	{
 		ItemSlot[CurItemIndex].ReloadLeftNum -= 1;
@@ -277,13 +298,13 @@ void ATestCharacter::FireRayCast_Implementation(float _DeltaTime)
 
 		if (true == ActorHit && nullptr != Hit.GetActor())
 		{
-
 			FString BoneName = Hit.BoneName.ToString();
 			UE_LOG(LogTemp, Warning, TEXT("Bone Name : %s"), *BoneName);
 			ATestMonsterBase* Monster = Cast<ATestMonsterBase>(Hit.GetActor());
 			if (nullptr != Monster)
 			{
 				Monster->Damaged(50.0f);
+				GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, FString::Printf(TEXT("%s got damage : -50"), *Monster->GetName()));
 			}
 		}
 	}
@@ -305,12 +326,10 @@ void ATestCharacter::ChangePosture_Implementation(EPlayerPosture _Type)
 	{
 		PostureValue = _Type;
 		CurItemIndex = -1;
-		/*
-		for (size_t i = 0; i < static_cast<size_t>(EPlayerPosture::Barehand); i++)
-		{
-			ItemMeshes[i]->SetVisibility(false);
-		}
-		*/
+
+		// 아이템 메시 visibility 끄기
+		ItemSocket->SetVisibility(false);
+		FPVItemSocket->SetVisibility(false);
 	}
 	else
 	{
@@ -320,22 +339,18 @@ void ATestCharacter::ChangePosture_Implementation(EPlayerPosture _Type)
 			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("The item slot is empty."));
 			return;
 		}
-
 		PostureValue = _Type;
 		CurItemIndex = ItemSlotIndex;
-		/*
-		for (size_t i = 0; i < static_cast<size_t>(EPlayerPosture::Barehand); i++)
-		{
-			if (i == static_cast<size_t>(_Type))
-			{
-				ItemMeshes[i]->SetVisibility(true);
-			}
-			else
-			{
-				ItemMeshes[i]->SetVisibility(false);
-			}
-		}
-		*/
+
+		// 아이템 static mesh 세팅
+		ItemSocket->SetStaticMesh(ItemSlot[CurItemIndex].MeshRes);
+		FPVItemSocket->SetStaticMesh(ItemSlot[CurItemIndex].MeshRes);
+
+		/* 아이템 메시 transform 세팅 */
+
+		// 아이템 메시 visibility 켜기
+		ItemSocket->SetVisibility(true);
+		FPVItemSocket->SetVisibility(true);
 	}
 }
 
@@ -353,10 +368,11 @@ void ATestCharacter::PickUpItem_Implementation()
 {
 	//AGameModeBase* Test = GetWorld()->GetAuthGameMode();
 	//ATestPlayerController* PlayerControl = Cast<ATestPlayerController>(GetController());
-	// 
+	
 	// RayCast를 통해 Tag 이름을 가져온다.
 	FString GetItemName = "";
 	GetItemName = RayCastToItemName;
+
 	if (GetItemName == "")
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, TEXT("Not Item"));
@@ -370,24 +386,71 @@ void ATestCharacter::PickUpItem_Implementation()
 	const FItemDataRow* ItemData = Inst->GetItemData(ItemStringToName);
 
 	EPlayerPosture ItemType = ItemData->GetType();	// 무기 Type
-	UStaticMesh* ItemMesh = ItemData->GetResMesh(); // Static Mesh
+	UStaticMesh* ItemMeshRes = ItemData->GetResMesh(); // Static Mesh
 	int ItemReloadNum = ItemData->GetReloadNum();	// 장전 단위.(30, 40)
 
-	uint8 ItemIndex = static_cast<uint8>(ItemType); // 사용할 소켓 번호.
+	uint8 ItemIndex = static_cast<uint8>(ItemType); // 사용할 인벤토리 인덱스
 
-	// Attaching Item => 액터로 가져가는 방식 (이걸 가져가주세요!)
-	WeaponSocket = GetMesh()->GetSocketByName("ItemSocket");
-	WeaponSocket->AttachActor(GetMapItem, GetMesh());
-
-	// Setting Weapon Mesh => 스태틱메시로 가져가는 방식 (삭제해주세요)
-	//ItemMeshes[ItemIndex]->SetStaticMesh(ItemMesh); // Static Mesh 적용.
-	//GetMapItem->Destroy(); // Map에 있는 아이템 삭제.
-
-	// Setting Inventory
+	// Setting Inventory => 인벤토리에 아이템 집어넣기. (스태틱메시로 아이템을 가져가는 방식 채택!!!)
 	ItemSlot[ItemIndex].Name = ItemStringToName;
+	ItemSlot[ItemIndex].MeshRes = ItemMeshRes;
 	ItemSlot[ItemIndex].ReloadMaxNum = ItemReloadNum;
 	ItemSlot[ItemIndex].ReloadLeftNum = ItemReloadNum;
 	IsItemIn[ItemIndex] = true;
 
-	ChangePosture(ItemType); // 무기 Type에 따른 애니메이션 변화 함수 호출.
+	// Map에 있는 아이템 삭제.
+	GetMapItem->Destroy(); 
+
+	// 무기 Type에 따른 애니메이션 변화 함수 호출.
+	ChangePosture(ItemType);
+}
+
+void ATestCharacter::ChangePOV()
+{
+	if (IsFPV)
+	{
+		// SpringArm Component
+		SpringArmComponent->TargetArmLength = 200.0f;
+		SpringArmComponent->SetRelativeLocation(FVector(0.0f, 0.0f, 80.0f));
+
+		// Character Mesh
+		GetMesh()->SetOnlyOwnerSee(true);
+		GetMesh()->SetOwnerNoSee(false);
+		FPVMesh->SetOwnerNoSee(true);
+		FPVMesh->SetOnlyOwnerSee(false);
+
+		// Item Meshes
+		for (int i = 0; i < int(EPlayerPosture::Barehand); i++)
+		{
+			ItemSocket->SetOnlyOwnerSee(true);
+			ItemSocket->SetOwnerNoSee(false);
+			FPVItemSocket->SetOwnerNoSee(true);
+			FPVItemSocket->SetOnlyOwnerSee(false);
+		}
+
+		IsFPV = false;
+	}
+	else
+	{
+		// SpringArm Component
+		SpringArmComponent->TargetArmLength = 0.0f;
+		SpringArmComponent->SetRelativeLocation(FVector(20.0f, 0.0f, 67.0f));
+
+		// Character Mesh
+		GetMesh()->SetOwnerNoSee(true);
+		GetMesh()->SetOnlyOwnerSee(false);
+		FPVMesh->SetOnlyOwnerSee(true);
+		FPVMesh->SetOwnerNoSee(false);
+
+		// Item Meshes
+		for (int i = 0; i < int(EPlayerPosture::Barehand); i++)
+		{
+			ItemSocket->SetOwnerNoSee(true);
+			ItemSocket->SetOnlyOwnerSee(false);
+			FPVItemSocket->SetOnlyOwnerSee(true);
+			FPVItemSocket->SetOwnerNoSee(false);
+		}
+
+		IsFPV = true;
+	}
 }

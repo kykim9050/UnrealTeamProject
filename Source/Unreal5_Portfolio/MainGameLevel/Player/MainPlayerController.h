@@ -38,11 +38,11 @@ public :
 	UFUNCTION(BlueprintCallable)
 	void JumpEnd(const FInputActionValue& Value);
 	UFUNCTION(BlueprintCallable)
-	void FireStart();
+	void FireStart(const FInputActionValue& Value);
 	UFUNCTION(BlueprintCallable)
 	void FireTick(float _DeltaTime);
 	UFUNCTION(BlueprintCallable)
-	void FireEnd();
+	void FireEnd(const FInputActionValue& Value);
 	UFUNCTION(BlueprintCallable)
 	void PickUpItem();
 	UFUNCTION(BlueprintCallable)
@@ -64,4 +64,6 @@ private :
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "TeamId", meta = (AllowPrivateAccess = true))
 	FGenericTeamId TeamId;
+
+	FTimerHandle MyTimeHandle;
 };
