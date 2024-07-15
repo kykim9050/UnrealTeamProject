@@ -283,10 +283,10 @@ void ATestCharacter::FireRayCast_Implementation(float _DeltaTime)
 	}
 
 	ATestPlayerController* Con = Cast<ATestPlayerController>(GetController());
+	FVector Start = GetMesh()->GetSocketLocation(FName("weapon_r_muzzle"));
+	Start.Z -= 20.0f;
+	FVector End = (Con->GetControlRotation().Vector() * 2000.0f) + Start;
 	FHitResult Hit;
-
-	FVector Start = GetMesh()->GetSocketLocation("weapon_r_muzzle");
-	FVector End = Start + (GetActorForwardVector() * 1000.0);
 
 	if (GetWorld())
 	{
@@ -304,6 +304,7 @@ void ATestCharacter::FireRayCast_Implementation(float _DeltaTime)
 			if (nullptr != Monster)
 			{
 				Monster->Damaged(50.0f);
+				GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, FString::Printf(TEXT("%s got damage : -50"), *Monster->GetName()));
 			}
 		}
 	}
