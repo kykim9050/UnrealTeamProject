@@ -282,9 +282,11 @@ void ATestCharacter::FireRayCast_Implementation(float _DeltaTime)
 		ItemSlot[CurItemIndex].ReloadLeftNum = ItemSlot[CurItemIndex].ReloadMaxNum;
 	}
 
+	ATestPlayerController* Con = Cast<ATestPlayerController>(GetController());
+	FHitResult Hit;
+
 	FVector Start = GetMesh()->GetSocketLocation("weapon_r_muzzle");
 	FVector End = Start + (GetActorForwardVector() * 1000.0);
-	FHitResult Hit;
 
 	if (GetWorld())
 	{

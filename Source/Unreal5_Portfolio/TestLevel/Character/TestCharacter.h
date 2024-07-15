@@ -86,7 +86,12 @@ public:
 	{
 		ChangeAniValue(static_cast<uint8>(_Type));
 	}
-	//
+	
+	// POV
+	bool IsFPV = true;
+
+	UFUNCTION()
+	void ChangePOV();
 
 	// Inventory
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
