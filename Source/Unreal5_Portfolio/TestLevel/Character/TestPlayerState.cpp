@@ -16,3 +16,13 @@ void ATestPlayerState::InitPlayerData()
 	UMainGameInstance* MainGameInst = UMainGameBlueprintFunctionLibrary::GetMainGameInstance(GetWorld());
 	PlayerHp = MainGameInst->GetPlayerData(FName("TestPlayer"))->GetHp();
 }
+
+void ATestPlayerState::SetPlayerHp(float _Hp)
+{
+	PlayerHp = _Hp;
+}
+
+void ATestPlayerState::AddDamage(float _Damage)
+{
+	PlayerHp -= _Damage;
+}

@@ -28,6 +28,11 @@ public:
 		return PlayerNumber;
 	}
 
+	UFUNCTION()
+	void SetPlayerHp(float _Hp);
+
+	UFUNCTION()
+	void AddDamage(float _Damage);
 public:
 	UFUNCTION()
 	void InitPlayerData();
