@@ -51,6 +51,7 @@ enum class EMonsterState : uint8
 	Fall,
 	Jump,
 	Climb,
+	ClimbEnd,
 	Attack,
 	Dead
 };
@@ -58,12 +59,13 @@ enum class EMonsterState : uint8
 UENUM(BlueprintType)
 enum class EMonsterAnim : uint8
 {
-	Idle	UMETA(DisplayName = "Idle"),
-	Walk	UMETA(DisplayName = "Walk"),
-	Run		UMETA(DisplayName = "Run"),
-	Attack	UMETA(DisplayName = "Attack"),
-	Dead	UMETA(DisplayName = "Dead"),
-	Climb	UMETA(DisplayName = "Climb")
+	Idle		UMETA(DisplayName = "Idle"),
+	Walk		UMETA(DisplayName = "Walk"),
+	Run			UMETA(DisplayName = "Run"),
+	Attack		UMETA(DisplayName = "Attack"),
+	Dead		UMETA(DisplayName = "Dead"),
+	Climb		UMETA(DisplayName = "Climb"),
+	ClimbEnd	UMETA(DisplayName = "ClimbEnd")
 };
 
 UENUM()

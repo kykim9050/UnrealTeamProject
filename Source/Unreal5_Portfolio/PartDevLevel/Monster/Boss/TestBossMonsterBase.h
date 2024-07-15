@@ -32,7 +32,7 @@ protected:
 	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
 public:
-	class ATestBossMonsterAIControllerBase GetBossAIController();
+	class ATestBossMonsterAIControllerBase* GetBossAIController();
 	class UMainAnimInstance* GetAnimInstance();
 
 

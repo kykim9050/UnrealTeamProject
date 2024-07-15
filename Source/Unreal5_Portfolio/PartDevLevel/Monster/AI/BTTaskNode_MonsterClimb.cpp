@@ -10,6 +10,7 @@
 #include "Kismet/KismetMathLibrary.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "PartDevLevel/Monster/TestMonsterBaseAIController.h"
+#include "Components/CapsuleComponent.h"
 
 EBTNodeResult::Type UBTTaskNode_MonsterClimb::ExecuteTask(UBehaviorTreeComponent& _OwnerComp, uint8* _NodeMemory)
 {
@@ -22,7 +23,10 @@ EBTNodeResult::Type UBTTaskNode_MonsterClimb::ExecuteTask(UBehaviorTreeComponent
 		return EBTNodeResult::Type::Aborted;
 	}
 
-	Monster->GetMovementComponent()->SetActive(false);
+	//Monster->GetCharacterMovement()->GravityScale = 0.0f;
+	Monster->GetCharacterMovement()->Velocity = FVector::ZeroVector;
+	Monster->GetCharacterMovement()->MovementMode = EMovementMode::MOVE_Flying;
+	Monster->GetCharacterMovement()->MaxFlySpeed = 200.0f;
 	Monster->ChangeAniValue(EMonsterAnim::Climb);
 	return EBTNodeResult::InProgress;
 }
@@ -35,16 +39,12 @@ void UBTTaskNode_MonsterClimb::TickTask(UBehaviorTreeComponent& _OwnerComp, uint
 	ATestMonsterBaseAIController* Controller = Cast<ATestMonsterBaseAIController>(Monster->GetController());
 	FVector Dest = Controller->GetBlackboardComponent()->GetValueAsVector("DestinationLocation");
 	FVector CurPos = Monster->GetActorLocation();
-	FVector UpVector = Monster->GetActorUpVector();
-	if (CurPos.Z < Dest.Z)
+	FVector ForwardVector = Monster->GetActorForwardVector();
+	
+	if (CurPos.Z >= Dest.Z - Monster->GetCapsuleComponent()->GetUnscaledCapsuleHalfHeight())
 	{
-		FTransform AddTransform;
-		AddTransform.SetLocation(UpVector * 500.0f * _DeltaSeconds);
-		Monster->AddActorWorldTransform(AddTransform);
-	}
-	else
-	{
-		StateChange(_OwnerComp, EMonsterState::Chase);
+		Monster->GetCharacterMovement()->MovementMode = EMovementMode::MOVE_None;
+		StateChange(_OwnerComp, EMonsterState::ClimbEnd);
 		return;
 	}
 }
