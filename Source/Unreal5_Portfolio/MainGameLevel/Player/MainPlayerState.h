@@ -14,4 +14,25 @@ class UNREAL5_PORTFOLIO_API AMainPlayerState : public APlayerState
 {
 	GENERATED_BODY()
 	
+
+public :
+	AMainPlayerState();
+
+	UFUNCTION()
+	FORCEINLINE float GetPlayerHp() const
+	{
+		return PlayerHp;
+	}
+
+
+
+public :
+	UFUNCTION()
+	void InitPlayerData();
+
+
+
+public :
+	UPROPERTY()
+	float PlayerHp = 0;
 };
