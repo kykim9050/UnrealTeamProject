@@ -103,6 +103,7 @@ enum class EInGameUIType : uint8
 	MiniMap,
 	Leaderboard,
 	Crosshair,
+	TeamHpBar,
 };
 
 
