@@ -23,8 +23,19 @@ public:
 	}
 
 	UFUNCTION()
+	FORCEINLINE float GetPlayerNumber() const
+	{
+		return PlayerNumber;
+	}
+
+public:
+	UFUNCTION()
 	void InitPlayerData();
 
+public:
 	UPROPERTY()
 	float PlayerHp = 0;
+
+	UPROPERTY()
+	int PlayerNumber = -1; // 내가 몇 번째 플레이어인지
 };
