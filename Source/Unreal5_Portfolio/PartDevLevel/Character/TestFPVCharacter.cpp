@@ -5,6 +5,7 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
 #include "Engine/SkeletalMeshSocket.h"
+#include "Engine/StaticMeshSocket.h"
 #include "TimerManager.h"
 #include "Global/MainGameBlueprintFunctionLibrary.h"
 #include "Global/DataTable/ItemDataRow.h"
@@ -123,10 +124,18 @@ void ATestFPVCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Ou
 
 void ATestFPVCharacter::CreateRayCast()
 {
+	UMainGameInstance* Inst = GetGameInstance<UMainGameInstance>();
+	const FItemDataRow* ItemData = Inst->GetItemData(ItemSlot[CurItemIndex].Name);
+	UStaticMesh* ItemMeshRes = ItemData->GetResMesh();
+
+	FTransform MuzzleTrans;
+	ItemMeshRes->FindSocket("Muzzle")->GetSocketTransform(MuzzleTrans, ItemMeshes[0]);
+
 	FVector Start = GetActorLocation();
 	FVector ForwardVector = CameraComponent->GetForwardVector();
 
-	Start = FVector(Start.X + (ForwardVector.X * 100), Start.Y + (ForwardVector.Y * 100), Start.Z + (ForwardVector.Z * 100));
+	Start = GetMesh()->GetSocketLocation("weapon_r_muzzle");
+	//Start = MuzzleTrans.GetLocation();
 
 	FVector End = Start + (ForwardVector * 1000);
 

@@ -64,6 +64,7 @@ void ATestPlayerController::SetupInputComponent()
 			EnhancedInputComponent->BindAction(InputData->Actions[12], ETriggerEvent::Triggered, this, &ATestPlayerController::ChangePosture, static_cast<EPlayerPosture>(5));
 			EnhancedInputComponent->BindAction(InputData->Actions[13], ETriggerEvent::Triggered, this, &ATestPlayerController::PickUpItem);
 			EnhancedInputComponent->BindAction(InputData->Actions[13], ETriggerEvent::Completed, this, &ATestPlayerController::PickUpItemEnd);
+			EnhancedInputComponent->BindAction(InputData->Actions[14], ETriggerEvent::Triggered, this, &ATestPlayerController::ChangePOVController);
 			EnhancedInputComponent->BindAction(InputData->Actions[15], ETriggerEvent::Started, this, &ATestPlayerController::Crouch);
 		}
 	}
@@ -278,6 +279,12 @@ void ATestPlayerController::ChangePosture(EPlayerPosture _Posture)
 {
 	ATestCharacter* Ch = GetPawn<ATestCharacter>();
 	Ch->ChangePosture(_Posture);
+}
+
+void ATestPlayerController::ChangePOVController()
+{
+	ATestCharacter* Ch = GetPawn<ATestCharacter>();
+	Ch->ChangePOV();
 }
 
 void ATestPlayerController::ChangeLowerState(EPlayerLowerState _State)
