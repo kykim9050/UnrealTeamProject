@@ -11,8 +11,8 @@ AMinimapCaptureCamera::AMinimapCaptureCamera()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	
-
+	SetActorEnableCollision(false);
+	SetActorHiddenInGame(true);
 }
 
 // Called when the game starts or when spawned
@@ -36,7 +36,7 @@ void AMinimapCaptureCamera::Tick(float DeltaTime)
 
 	MyCharacter = Cast<ATestCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 	FVector CharacterPos = MyCharacter->GetActorLocation();
-	CharacterPos.Z = 2000.f;
+	CharacterPos.Z = 4000.f;
 	SetActorLocation(CharacterPos);
 }
 
