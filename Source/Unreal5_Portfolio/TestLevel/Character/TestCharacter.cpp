@@ -308,16 +308,16 @@ void ATestCharacter::FireRayCast_Implementation(float _DeltaTime)	// => 메인캐릭
 	}
 }
 
-//void ATestCharacter::ChangeMontage_Implementation()
-//{
-//	PlayerAnimInst->ChangeAnimation(PostureValue);
-//	ClientChangeMontage();
-//}
-//
-//void ATestCharacter::ClientChangeMontage_Implementation()
-//{
-//	PlayerAnimInst->ChangeAnimation(PostureValue);
-//}
+void ATestCharacter::ChangeMontage_Implementation()
+{
+	PlayerAnimInst->ChangeAnimation(PostureValue);
+	ClientChangeMontage();
+}
+
+void ATestCharacter::ClientChangeMontage_Implementation()
+{
+	PlayerAnimInst->ChangeAnimation(PostureValue);
+}
 
 void ATestCharacter::ChangeState_Implementation(EPlayerState _Type)
 {
