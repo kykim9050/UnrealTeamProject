@@ -90,10 +90,7 @@ public:
 
 	// AttackTest (ÅÂÈ¯)
 	UFUNCTION(BlueprintCallable)
-	void AttackStart();
-
-	UFUNCTION(BlueprintCallable)
-	void AttackEnd();
+	void AttackMontagePlay();
 
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "TeamId", meta = (AllowPrivateAccess = true))
