@@ -101,8 +101,8 @@ void AMainPlayerController::FireStart(const FInputActionValue& Value)
 {
 	ChangeState(EPlayerState::Fire);
 
+	// πﬂΩŒ Ω≈»£∏¶ HUD∑Œ ≥—±Ë.
 	BullitCountToHUD();
-
 
 	GetWorld()->GetTimerManager().SetTimer(MyTimeHandle, FTimerDelegate::CreateLambda([&]()
 		{
@@ -112,7 +112,8 @@ void AMainPlayerController::FireStart(const FInputActionValue& Value)
 
 void AMainPlayerController::FireTick(float _DeltaTime)
 {
-
+	// πﬂΩŒ Ω≈»£∏¶ HUD∑Œ ≥—±Ë.
+	BullitCountToHUD();
 }
 
 void AMainPlayerController::FireEnd(const FInputActionValue& Value)

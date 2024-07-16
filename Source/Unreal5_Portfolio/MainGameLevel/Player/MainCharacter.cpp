@@ -7,6 +7,8 @@
 #include "Global/DataTable/ItemDataRow.h"
 #include "Components/BoxComponent.h"
 #include "Camera/CameraComponent.h"
+#include "MainPlayerController.h"
+#include "PlayerItemInformation.h"
 
 
 // Sets default values
@@ -147,6 +149,47 @@ void AMainCharacter::CharacterPlayerToDropItem_Implementation(FName _ItemName, F
 	UMainGameInstance* MainGameInst = GetWorld()->GetGameInstanceChecked<UMainGameInstance>();
 	const FItemDataRow* ItemBase = MainGameInst->GetItemData(CreateItemName);
 	GetWorld()->SpawnActor<AActor>(ItemBase->GetItemUClass(), _Transform);
+}
+
+void AMainCharacter::FireRayCast_Implementation(float _DeltaTime)
+{
+	if (CurItemIndex == -1 || ItemSlot[CurItemIndex].ReloadMaxNum == -1)
+	{
+		return;
+	}
+
+	if (ItemSlot[CurItemIndex].ReloadLeftNum <= 0)
+	{
+		ItemSlot[CurItemIndex].ReloadLeftNum = ItemSlot[CurItemIndex].ReloadMaxNum;
+	}
+
+	FVector Start = GetMesh()->GetSocketLocation(FName("weapon_r_muzzle"));
+	Start.Z -= 20.0f;
+
+	AMainPlayerController* Con = Cast<AMainPlayerController>(GetController());
+	FVector End = (Con->GetControlRotation().Vector() * 2000.0f) + Start;
+	
+	FHitResult Hit;
+	if (GetWorld())
+	{
+		ItemSlot[CurItemIndex].ReloadLeftNum -= 1;
+
+		// Ray Cast
+		bool ActorHit = GetWorld()->LineTraceSingleByChannel(Hit, Start, End, ECC_GameTraceChannel9, FCollisionQueryParams(), FCollisionResponseParams());
+		DrawDebugLine(GetWorld(), Start, End, FColor::Red, false, _DeltaTime, 0.0f, 0.0f);
+		
+		if (true == ActorHit && nullptr != Hit.GetActor())
+		{
+			FString BoneName = Hit.BoneName.ToString();
+			UE_LOG(LogTemp, Warning, TEXT("Bone Name : %s"), *BoneName);
+			//ATestMonsterBase* Monster = Cast<ATestMonsterBase>(Hit.GetActor()); // Main Monster ´ë±â Áß.
+			//if (nullptr != Monster)
+			//{
+			//	Monster->Damaged(50.0f);
+			//	GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, FString::Printf(TEXT("%s got damage : -50"), *Monster->GetName()));
+			//}
+		}
+	}
 }
 
 void AMainCharacter::MapItemOverlapStart(AActor* _OtherActor, UPrimitiveComponent* _Collision)

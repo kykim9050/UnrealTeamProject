@@ -5,9 +5,13 @@
 #include "PartDevLevel/Monster/Boss/TestBossMonsterAIControllerBase.h"
 #include "PartDevLevel/Monster/Boss/TestBossMonsterBase.h"
 
+#include "TestLevel/Character/TestCharacter.h"
+#include "TestLevel/Character/TestPlayerState.h"
+
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Navigation/PathFollowingComponent.h"
 #include "Kismet/KismetMathLibrary.h"
+#include <Kismet/GameplayStatics.h>
 
 #include "Global/ContentsLog.h"
 
@@ -48,12 +52,12 @@ void UBTTaskNode_BossMonsterChase::TickTask(UBehaviorTreeComponent& _OwnerComp, 
 
 	EPathFollowingRequestResult::Type IsMove = BossMonster->GetBossAIController()->MoveToLocation(TargetLocation);
 
-	//// 범위 안에 있으면 공격상태로 변경
-	//FVector LocationDiff = TargetLocation - MonsterLocation;
-	//double DiffLength = LocationDiff.Size();
-	//if (DiffLength <= BossData->AttackBoundary)
-	//{
-	//	StateChange(_OwnerComp, EMonsterState::Attack);
-	//	return;
-	//}
+	// 범위 안에 있으면 공격상태로 변경
+	FVector LocationDiff = TargetLocation - MonsterLocation;
+	double DiffLength = LocationDiff.Size();
+	if (DiffLength <= BossData->Data->GetMeleeAttackBoundary())
+	{
+		StateChange(_OwnerComp, EBossMonsterState::MeleeAttack);
+		return;
+	}
 }
