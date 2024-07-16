@@ -26,7 +26,8 @@ public:
 	void PushRandomAnimation_Implementation(uint8 _Key, struct FAnimMontageGroup _MontageGroup);
 
 private:
-	
-
+	UFUNCTION(Reliable, NetMulticast)
+	void PushMontage(uint8 _Key, UAnimMontage* _Montage);
+	void PushMontage_Implementation(uint8 _Key, UAnimMontage* _Montage);
 
 };
