@@ -82,14 +82,6 @@ public:
 	UFUNCTION(Reliable, Server)
 	void ChangePlayerDir(EPlayerMoveDir _Dir);
 	void ChangePlayerDir_Implementation(EPlayerMoveDir _Dir);
-
-	// 몽타주 변경 함수 (태환)
-	void ChangeAniValue(uint8 _Type);
-	template<typename EnumType>
-	void ChangeAniValue(EnumType _Type)
-	{
-		ChangeAniValue(static_cast<uint8>(_Type));
-	}
 	
 	// POV
 	bool IsFPV = true;
@@ -136,6 +128,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void Collision(AActor* _OtherActor, UPrimitiveComponent* _Collision);
 
+	// NotifyState에서 사용 중 (태환)
 	UFUNCTION(BlueprintCallable)
 	void HandAttackCollision(AActor* _OtherActor, UPrimitiveComponent* _Collision);
 
@@ -168,10 +161,11 @@ protected:
 	float PlayerHp = 100.0f;
 
 private:
+	// 근접 공격에 사용 중 (태환)
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	class USphereComponent* HandAttackComponent = nullptr;
 
-
+	// 몽타주 변경에 사용 중 (태환)
 	UPROPERTY()
 	class UPlayerAnimInstance* PlayerAnimInst;
 	//
@@ -187,10 +181,12 @@ public:
 	void FireRayCast(float _DeltaTime);
 	void FireRayCast_Implementation(float _DeltaTime);
 
+	// 공격 시 서버 캐릭터 몽타주 변경 함수 (태환)
 	UFUNCTION(Reliable, Server)
 	void ChangeMontage();
 	void ChangeMontage_Implementation();
 
+	// 공격 시 클라이언트 캐릭터 몽타주 변경 함수 (태환)
 	UFUNCTION(Reliable, NetMulticast)
 	void ClientChangeMontage();
 	void ClientChangeMontage_Implementation();

@@ -72,7 +72,7 @@ private :
 	FTimerHandle MyTimeHandle;
 
 protected :
-	// Bullet Count To HUD
+	// Bullet Count To HUD [BP]
 	UFUNCTION(BlueprintImplementableEvent, meta = (CallInEditor = true))
 	void BullitCountToHUD();
 };

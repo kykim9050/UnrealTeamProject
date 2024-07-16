@@ -45,6 +45,8 @@ public:
 	//UFUNCTION(BlueprintCallable)
 	//void JumpEnd(const FInputActionValue& Value);
 
+
+	// 사용 중 (태환)
 	UFUNCTION(BlueprintCallable)
 	void Crouch(const FInputActionValue& Value);
 	
