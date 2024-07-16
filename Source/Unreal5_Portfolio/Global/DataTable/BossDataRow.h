@@ -16,9 +16,35 @@ struct FBossDataRow : public FTableRowBase
 	GENERATED_BODY()
 	
 public:
+
 	FORCEINLINE FString GetName() const
 	{
 		return Name;
+	}
+
+	FORCEINLINE float GetHP() const
+	{
+		return HP;
+	}
+
+	FORCEINLINE float GetAttackDamage() const
+	{
+		return AttackDamage;
+	}
+
+	FORCEINLINE float GetAttackTime() const
+	{
+		return AttackTime;
+	}
+
+	FORCEINLINE float GetMeleeAttackBoundary() const
+	{
+		return MeleeAttackBoundary;
+	}
+
+	FORCEINLINE float GetRangedAttackBoundary() const
+	{
+		return RangedAttackBoundary;
 	}
 
 	FORCEINLINE float GetWalkSpeed() const
@@ -46,7 +72,37 @@ private:
 	FString Name = "None";
 
 	/// <summary>
-	/// 보스 걷기 Speed
+	/// 체력
+	/// </summary>
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowprivateAccess = "true"))
+	float HP = 0.0f;
+
+	/// <summary>
+	/// 공격력
+	/// </summary>
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowprivateAccess = "true"))
+	float AttackDamage = 0.0f;
+
+	/// <summary>
+	/// 공격 쿨타임
+	/// </summary>
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowprivateAccess = "true"))
+	float AttackTime = 0.0f;
+
+	/// <summary>
+	/// 근접 공격 범위
+	/// </summary>
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowprivateAccess = "true"))
+	float MeleeAttackBoundary = 0.0f;
+
+	/// <summary>
+	/// 원거리 공격 범위
+	/// </summary>
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowprivateAccess = "true"))
+	float RangedAttackBoundary = 0.0f;
+
+	/// <summary>
+	/// 보스 걷기 속도
 	/// </summary>
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowprivateAccess = "true"))
 	float WalkSpeed = 0.0f;
