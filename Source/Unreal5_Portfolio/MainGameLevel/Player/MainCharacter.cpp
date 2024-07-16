@@ -85,6 +85,8 @@ void AMainCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLi
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
+	// 하체 정보
+	DOREPLIFETIME(AMainCharacter, LowerStateValue);
 }
 
 // Called every frame
@@ -99,6 +101,21 @@ void AMainCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+}
+
+void AMainCharacter::ChangeLowerState_Implementation()
+{
+	switch (LowerStateValue)
+	{
+	case EPlayerLowerState::Idle:
+		LowerStateValue = EPlayerLowerState::Crouch;
+		break;
+	case EPlayerLowerState::Crouch:
+		LowerStateValue = EPlayerLowerState::Idle;
+		break;
+	default:
+		break;
+	}
 }
 
 void AMainCharacter::PickUpItem_Implementation()

@@ -51,6 +51,7 @@ void AMainPlayerController::SetupInputComponent()
 		EnhancedInputComponent->BindAction(InputData->Actions[12], ETriggerEvent::Triggered, this, &AMainPlayerController::ChangePosture, static_cast<EPlayerPosture>(5));
 		EnhancedInputComponent->BindAction(InputData->Actions[13], ETriggerEvent::Started, this, &AMainPlayerController::PickUpItem);
 		EnhancedInputComponent->BindAction(InputData->Actions[14], ETriggerEvent::Started, this, &AMainPlayerController::ChangePOVController);
+		EnhancedInputComponent->BindAction(InputData->Actions[15], ETriggerEvent::Started, this, &AMainPlayerController::Crouch);
 	}
 }
 
@@ -63,28 +64,24 @@ void AMainPlayerController::MouseRotation(const FInputActionValue& Value)
 
 void AMainPlayerController::MoveFront(const FInputActionValue& Value)
 {
-	ChangeState(EPlayerState::Walk);
 	FVector Forward = GetPawn()->GetActorForwardVector();
 	GetPawn()->AddMovementInput(Forward);
 }
 
 void AMainPlayerController::MoveBack(const FInputActionValue& Value)
 {
-	ChangeState(EPlayerState::Walk);
 	FVector Forward = GetPawn()->GetActorForwardVector();
 	GetPawn()->AddMovementInput(-Forward);
 }
 
 void AMainPlayerController::MoveRight(const FInputActionValue& Value)
 {
-	ChangeState(EPlayerState::Walk);
 	FVector Rightward = GetPawn()->GetActorRightVector();
 	GetPawn()->AddMovementInput(Rightward);
 }
 
 void AMainPlayerController::MoveLeft(const FInputActionValue& Value)
 {
-	ChangeState(EPlayerState::Walk);
 	FVector Rightward = GetPawn()->GetActorRightVector();
 	GetPawn()->AddMovementInput(-Rightward);
 }
@@ -99,8 +96,6 @@ void AMainPlayerController::JumpEnd(const FInputActionValue& Value)
 
 void AMainPlayerController::FireStart(const FInputActionValue& Value)
 {
-	ChangeState(EPlayerState::Fire);
-
 	// ¹ß½Î ½ÅÈ£¸¦ HUD·Î ³Ñ±è.
 	BullitCountToHUD();
 
@@ -118,8 +113,6 @@ void AMainPlayerController::FireTick(float _DeltaTime)
 
 void AMainPlayerController::FireEnd(const FInputActionValue& Value)
 {
-	ChangeState(EPlayerState::Idle);
-
 	GetWorld()->GetTimerManager().ClearTimer(MyTimeHandle);
 }
 
@@ -144,15 +137,10 @@ void AMainPlayerController::ChangePOVController()
 	Ch->ChangePOV();
 }
 
-
-void AMainPlayerController::ChangeState(EPlayerState _State)
+void AMainPlayerController::Crouch(const FInputActionValue& Value)
 {
 	AMainCharacter* Ch = GetPawn<AMainCharacter>();
-	if (nullptr == Ch)
-	{
-		return;
-	}
-
+	Ch->ChangeLowerState();
 }
 
 void AMainPlayerController::ChangePosture(EPlayerPosture _Posture)

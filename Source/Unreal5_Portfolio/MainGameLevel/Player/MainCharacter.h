@@ -81,19 +81,27 @@ private : // 문제 발생 여지 있음 발생하면 그냥 지워야 함.
 	UPROPERTY(VisibleAnywhere)
 	TArray<struct FPlayerItemInformation> ItemSlot;
 
+	// 하체 정보
+	UPROPERTY(Category = "Contents", Replicated, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	EPlayerLowerState LowerStateValue = EPlayerLowerState::Idle;
+
+	// 상체 정보
+
+
 	// == Server ==
 public :
 	// 상채 변경
 
 
 	// 하제 변경
-
+	UFUNCTION(Reliable, Server)
+	void ChangeLowerState();
+	void ChangeLowerState_Implementation();
 
 	// 아이템 변경
 	UFUNCTION(Reliable, Server, BlueprintCallable)
 	void PickUpItem();
 	void PickUpItem_Implementation();
-
 
 	// 아이템 드랍
 	UFUNCTION(Reliable, Server, BlueprintCallable)
