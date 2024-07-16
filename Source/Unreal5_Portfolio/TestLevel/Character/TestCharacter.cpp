@@ -50,7 +50,7 @@ ATestCharacter::ATestCharacter()
 	FPVMesh->bCastDynamicShadow = false;
 	FPVMesh->CastShadow = false;
 
-	// Item Mesh
+	// Item Mesh => 메인캐릭터로 이전해야 함 (새로 추가됨)
 	ItemSocket = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ItemSocket"));
 	ItemSocket->SetupAttachment(GetMesh(), "ItemSocket");
 	ItemSocket->SetCollisionProfileName(TEXT("NoCollision"));
@@ -59,7 +59,7 @@ ATestCharacter::ATestCharacter()
 	ItemSocket->SetVisibility(false);
 	ItemSocket->SetIsReplicated(true);
 
-	// FPV Item Mesh
+	// FPV Item Mesh => 메인캐릭터로 이전해야 함 (새로 추가됨)
 	FPVItemSocket = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("FPVItemSocket"));
 	FPVItemSocket->SetupAttachment(FPVMesh, "FPVItemSocket");
 	FPVItemSocket->SetCollisionProfileName(TEXT("NoCollision"));
@@ -270,7 +270,7 @@ void ATestCharacter::DefaultRayCast(float _DeltaTime)
 	}
 }
 
-void ATestCharacter::FireRayCast_Implementation(float _DeltaTime)
+void ATestCharacter::FireRayCast_Implementation(float _DeltaTime)	// => 메인캐릭터로 이전해야 함 (내용 수정됨)
 {
 	if (CurItemIndex == -1 || ItemSlot[CurItemIndex].ReloadMaxNum == -1)
 	{
@@ -364,7 +364,7 @@ void ATestCharacter::ChangePlayerDir_Implementation(EPlayerMoveDir _Dir)
 	DirValue = _Dir;
 }
 
-void ATestCharacter::PickUpItem_Implementation()
+void ATestCharacter::PickUpItem_Implementation()	// => 메인캐릭터로 이전해야 함 (내용 수정됨)
 {
 	//AGameModeBase* Test = GetWorld()->GetAuthGameMode();
 	//ATestPlayerController* PlayerControl = Cast<ATestPlayerController>(GetController());
@@ -391,7 +391,7 @@ void ATestCharacter::PickUpItem_Implementation()
 
 	uint8 ItemIndex = static_cast<uint8>(ItemType); // 사용할 인벤토리 인덱스
 
-	// Setting Inventory => 인벤토리에 아이템 집어넣기. (스태틱메시로 아이템을 가져가는 방식 채택!!!)
+	// 인벤토리에 아이템 집어넣기. (스태틱메시로 아이템을 가져가는 방식 채택!!!)
 	ItemSlot[ItemIndex].Name = ItemStringToName;
 	ItemSlot[ItemIndex].MeshRes = ItemMeshRes;
 	ItemSlot[ItemIndex].ReloadMaxNum = ItemReloadNum;
@@ -405,7 +405,7 @@ void ATestCharacter::PickUpItem_Implementation()
 	ChangePosture(ItemType);
 }
 
-void ATestCharacter::ChangePOV()
+void ATestCharacter::ChangePOV()	// => 메인캐릭터로 이전해야 함 (내용 수정됨)
 {
 	if (IsFPV)
 	{

@@ -8,7 +8,7 @@
 #include "Global/ContentsEnum.h"
 #include "TestCharacter.generated.h"
 
-// Inventory (for UI Test)
+// Inventory (for UI Test) => 메인캐릭터로 이전해야 함 (PickUpItem 함수에 필요)
 USTRUCT(BlueprintType)
 struct FItemInformation
 {
@@ -40,11 +40,11 @@ public:
 	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	class UCameraComponent* CameraComponent = nullptr;
 	UPROPERTY(Category = "Contents", VisibleDefaultsOnly)
-	USkeletalMeshComponent* FPVMesh = nullptr;
+	USkeletalMeshComponent* FPVMesh = nullptr;	// => 메인캐릭터로 이전해야 함 (새로 추가됨)
 	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-	class UStaticMeshComponent* ItemSocket = nullptr;
+	class UStaticMeshComponent* ItemSocket = nullptr;	// => 메인캐릭터로 이전해야 함 (새로 추가됨)
 	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-	class UStaticMeshComponent* FPVItemSocket = nullptr;
+	class UStaticMeshComponent* FPVItemSocket = nullptr;	// => 메인캐릭터로 이전해야 함 (새로 추가됨)
 	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	class UTestMinimapIconComponent* MinimapIconComponent = nullptr;
 
@@ -93,7 +93,7 @@ public:
 	UFUNCTION()
 	void ChangePOV();
 
-	// Inventory
+	// Inventory => 메인캐릭터로 이전해야 함 (PickUpItem 함수에 필요)
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	TArray<FItemInformation> ItemSlot;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
@@ -180,7 +180,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void DefaultRayCast(float _DeltaTime);
 
-	UFUNCTION(Reliable, Server, BlueprintCallable)
+	UFUNCTION(Reliable, Server, BlueprintCallable)	// => 메인캐릭터로 이전해야 함
 	void FireRayCast(float _DeltaTime);
 	void FireRayCast_Implementation(float _DeltaTime);
 
