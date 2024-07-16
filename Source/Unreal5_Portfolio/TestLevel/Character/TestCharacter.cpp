@@ -40,8 +40,8 @@ ATestCharacter::ATestCharacter()
 	MinimapIconComponent->bVisibleInSceneCaptureOnly = true;
 
 	// Character Mesh
-	GetMesh()->bHiddenInSceneCapture = true;
 	GetMesh()->SetOwnerNoSee(true);
+	GetMesh()->bHiddenInSceneCapture = true;
 
 	// FPV Character Mesh
 	FPVMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("FirstPersonMesh"));
@@ -49,6 +49,14 @@ ATestCharacter::ATestCharacter()
 	FPVMesh->SetOnlyOwnerSee(true);
 	FPVMesh->bCastDynamicShadow = false;
 	FPVMesh->CastShadow = false;
+
+	// Riding Character Mesh => 메인캐릭터로 이전해야 함 (새로 추가됨)
+	RidingMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("RidingMesh"));
+	RidingMesh->SetupAttachment(GetMesh());
+	RidingMesh->SetCollisionProfileName(TEXT("NoCollision"));
+	RidingMesh->SetVisibility(false);
+	RidingMesh->SetIsReplicated(true);
+	RidingMesh->bHiddenInSceneCapture = true;
 
 	// Item Mesh => 메인캐릭터로 이전해야 함 (새로 추가됨)
 	ItemSocketMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ItemSocketMesh"));
@@ -58,6 +66,7 @@ ATestCharacter::ATestCharacter()
 	ItemSocketMesh->SetOwnerNoSee(true);
 	ItemSocketMesh->SetVisibility(false);
 	ItemSocketMesh->SetIsReplicated(true);
+	ItemSocketMesh->bHiddenInSceneCapture = true;
 
 	// FPV Item Mesh => 메인캐릭터로 이전해야 함 (새로 추가됨)
 	FPVItemSocketMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("FPVItemSocketMesh"));
@@ -65,10 +74,10 @@ ATestCharacter::ATestCharacter()
 	FPVItemSocketMesh->SetCollisionProfileName(TEXT("NoCollision"));
 	FPVItemSocketMesh->SetGenerateOverlapEvents(true);
 	FPVItemSocketMesh->SetOnlyOwnerSee(true);
-	FPVItemSocketMesh->bCastDynamicShadow = false;
-	FPVItemSocketMesh->CastShadow = false;
 	FPVItemSocketMesh->SetVisibility(false);
 	FPVItemSocketMesh->SetIsReplicated(true);
+	FPVItemSocketMesh->bCastDynamicShadow = false;
+	FPVItemSocketMesh->CastShadow = false;
 
 
 	UEnum* Enum = StaticEnum<EPlayerPosture>();
