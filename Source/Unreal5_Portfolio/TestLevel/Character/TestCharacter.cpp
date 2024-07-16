@@ -324,7 +324,7 @@ void ATestCharacter::ChangeState_Implementation(EPlayerState _Type)
 	StateValue = _Type;
 }
 
-void ATestCharacter::ChangePosture_Implementation(EPlayerPosture _Type)
+void ATestCharacter::ChangePosture_Implementation(EPlayerPosture _Type)	// => 메인캐릭터로 이전해야 함 (내용 수정됨)
 {
 	if (_Type == EPlayerPosture::Barehand)
 	{
@@ -457,4 +457,13 @@ void ATestCharacter::ChangePOV()	// => 메인캐릭터로 이전해야 함 (내용 수정됨)
 
 		IsFPV = true;
 	}
+}
+
+void ATestCharacter::ChangeSocketRelTrans()
+{
+	ItemSocket->SetRelativeLocation(FVector(-11.492245f, -0.540951f, 12.555331f));
+	FPVItemSocket->SetRelativeLocation(FVector(-11.492245f, -0.540951f, 12.555331f));
+
+	ItemSocket->SetRelativeRotation(FQuat((-0.685624f, -7.766383f, 7.876074f)));
+	FPVItemSocket->SetRelativeRotation(FQuat((-0.685624f, -7.766383f, 7.876074f)));
 }
