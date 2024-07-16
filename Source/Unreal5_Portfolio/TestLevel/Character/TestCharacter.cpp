@@ -174,8 +174,8 @@ void ATestCharacter::Tick(float DeltaTime)
 
 	DefaultRayCast(DeltaTime);
 
-	TArray<FItemInformation> I = ItemSlot;
-	AGameModeBase* Ptr = GetWorld()->GetAuthGameMode();
+	//TArray<FItemInformation> I = ItemSlot;
+	//AGameModeBase* Ptr = GetWorld()->GetAuthGameMode();
 }
 
 void ATestCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
