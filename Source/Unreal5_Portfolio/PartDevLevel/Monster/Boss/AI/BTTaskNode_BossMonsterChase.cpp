@@ -5,9 +5,13 @@
 #include "PartDevLevel/Monster/Boss/TestBossMonsterAIControllerBase.h"
 #include "PartDevLevel/Monster/Boss/TestBossMonsterBase.h"
 
+#include "TestLevel/Character/TestCharacter.h"
+#include "TestLevel/Character/TestPlayerState.h"
+
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Navigation/PathFollowingComponent.h"
 #include "Kismet/KismetMathLibrary.h"
+#include <Kismet/GameplayStatics.h>
 
 #include "Global/ContentsLog.h"
 
@@ -43,17 +47,37 @@ void UBTTaskNode_BossMonsterChase::TickTask(UBehaviorTreeComponent& _OwnerComp, 
 	ATestBossMonsterBase* BossMonster = GetActor<ATestBossMonsterBase>(_OwnerComp);
 	FVector MonsterLocation = BossMonster->GetActorLocation();
 
-	AActor* TargetActor = GetValueAsObject<AActor>(_OwnerComp, TEXT("TargetActor"));
-	FVector TargetLocation = TargetActor->GetActorLocation();
+    // 모든 플레이어 위치 가져오기
+    TArray<AActor*> Players;
+    UGameplayStatics::GetAllActorsOfClass(GetWorld(), ATestCharacter::StaticClass(), Players);
 
-	EPathFollowingRequestResult::Type IsMove = BossMonster->GetBossAIController()->MoveToLocation(TargetLocation);
+    AActor* ClosestPlayer = nullptr;
+    float ClosestDistanceSq = MAX_FLT;
 
-	//// 범위 안에 있으면 공격상태로 변경
-	//FVector LocationDiff = TargetLocation - MonsterLocation;
-	//double DiffLength = LocationDiff.Size();
-	//if (DiffLength <= BossData->AttackBoundary)
-	//{
-	//	StateChange(_OwnerComp, EMonsterState::Attack);
-	//	return;
-	//}
+    // 가장 가까운 플레이어 찾기
+    for (AActor* Player : Players)
+    {
+        FVector PlayerLocation = Player->GetActorLocation();
+        float DistanceSq = FVector::DistSquared(PlayerLocation, MonsterLocation);
+
+        if (DistanceSq < ClosestDistanceSq)
+        {
+            ClosestDistanceSq = DistanceSq;
+            ClosestPlayer = Player;
+        }
+    }
+
+    if (ClosestPlayer)
+    {
+        // 가장 가까운 플레이어의 위치로 이동 요청
+        FVector TargetLocation = ClosestPlayer->GetActorLocation();
+        EPathFollowingRequestResult::Type IsMove = BossMonster->GetBossAIController()->MoveToLocation(TargetLocation);
+
+        // 공격 범위 내에 있다면 공격 상태로 변경
+        //if (FVector::Dist(TargetLocation, MonsterLocation) <= BossData->Data->GetMeleeAttackBoundary())
+        //{
+        //    StateChange(_OwnerComp, EBossMonsterState::MeleeAttack);
+        //    return;
+        //}
+    }
 }
