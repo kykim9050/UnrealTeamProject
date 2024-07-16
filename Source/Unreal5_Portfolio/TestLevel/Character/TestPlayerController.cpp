@@ -252,15 +252,10 @@ void ATestPlayerController::ChangePlayerDir(EPlayerMoveDir _Dir)
 	Ch->ChangePlayerDir(_Dir);
 }
 
-void ATestPlayerController::AttackStart()
+void ATestPlayerController::AttackMontagePlay()
 {
 	ATestCharacter* Ch = GetPawn<ATestCharacter>();
 	Ch->ChangeMontage();
-}
-
-void ATestPlayerController::AttackEnd()
-{
-	ATestCharacter* Ch = GetPawn<ATestCharacter>();
 }
 
 FGenericTeamId ATestPlayerController::GetGenericTeamId() const
