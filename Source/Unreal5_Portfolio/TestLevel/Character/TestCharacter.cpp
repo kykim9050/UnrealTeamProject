@@ -153,9 +153,7 @@ void ATestCharacter::BeginPlay()
 	UMainGameBlueprintFunctionLibrary::PushActor(EObjectType::Player, this);
 
 	// 몽타주 변경에 필요한 세팅 추가 필요 (태환)
-	UAnimInstance* Inst = GetMesh()->GetAnimInstance();
 	PlayerAnimInst = Cast<UPlayerAnimInstance>(GetMesh()->GetAnimInstance());
-	UMainGameInstance* MainGameInst = UMainGameBlueprintFunctionLibrary::GetMainGameInstance(GetWorld());
 
 	HandAttackComponent->SetCollisionProfileName(TEXT("NoCollision"));
 }
@@ -310,10 +308,16 @@ void ATestCharacter::FireRayCast_Implementation(float _DeltaTime)	// => 메인캐릭
 	}
 }
 
-void ATestCharacter::ChangeMontage_Implementation(EPlayerPosture _Posture)
-{
-	PlayerAnimInst->ChangeAnimation(_Posture);
-}
+//void ATestCharacter::ChangeMontage_Implementation()
+//{
+//	PlayerAnimInst->ChangeAnimation(PostureValue);
+//	ClientChangeMontage();
+//}
+//
+//void ATestCharacter::ClientChangeMontage_Implementation()
+//{
+//	PlayerAnimInst->ChangeAnimation(PostureValue);
+//}
 
 void ATestCharacter::ChangeState_Implementation(EPlayerState _Type)
 {

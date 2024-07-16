@@ -6,34 +6,34 @@
 
 void UMainRandomAnimInstance::ChangeAnimation(uint8 _Key)
 {
-	if (false == AnimMontages.Contains(_Key))
+	if (false == AllAnimMontages.Contains(_Key))
 	{
 		LOG(GlobalLog, Fatal, TEXT("AnimMontages false"));
 		return;
 	}
 
-	UAnimMontage* Montage = AnimMontages[_Key];
+	FAnimMontageGroup Montage = AllAnimMontages[_Key];
 
-	if (nullptr == Montage)
+	if (0 == Montage.AnimMontages.Num())
 	{
 		LOG(GlobalLog, Fatal, TEXT("Montage is nullptr"));
 		return;
 	}
 
-	UAnimMontage* PrevMontage = GetCurrentActiveMontage();
+	//UAnimMontage* PrevMontage = GetCurrentActiveMontage();
 
-	if (PrevMontage != Montage)
-	{
-		Montage_Play(Montage);
-	}
+	//if (PrevMontage != Montage)
+	//{
+	//	Montage_Play(Montage);
+	//}
 }
 
 void UMainRandomAnimInstance::PushAnimation(uint8 _Key, UAnimMontage* _Montage)
 {
-	if (true == AnimMontages.Contains(_Key))
+	if (true == AllAnimMontages.Contains(_Key))
 	{
 		return;
 	}
 
-	AnimMontages.Add(_Key, _Montage);
+	AllAnimMontages[_Key].AnimMontages.Add(_Montage);
 }

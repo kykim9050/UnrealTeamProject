@@ -257,10 +257,14 @@ void ATestPlayerController::ChangePlayerDir(EPlayerMoveDir _Dir)
 	Ch->ChangePlayerDir(_Dir);
 }
 
-void ATestPlayerController::AttackTest(EPlayerMoveDir _Dir)
+void ATestPlayerController::AttackStart()
 {
 	ATestCharacter* Ch = GetPawn<ATestCharacter>();
-	// 몽타주 플레이
+}
+
+void ATestPlayerController::AttackEnd()
+{
+	ATestCharacter* Ch = GetPawn<ATestCharacter>();
 }
 
 FGenericTeamId ATestPlayerController::GetGenericTeamId() const

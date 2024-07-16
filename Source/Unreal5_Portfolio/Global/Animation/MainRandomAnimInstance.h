@@ -6,6 +6,17 @@
 #include "Animation/AnimInstance.h"
 #include "MainRandomAnimInstance.generated.h"
 
+USTRUCT()
+struct UNREAL5_PORTFOLIO_API FAnimMontageGroup
+{
+	GENERATED_BODY()
+	
+public:
+	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true"))
+	TArray<UAnimMontage*> AnimMontages;
+
+};
+
 /**
  * 
  */
@@ -31,17 +42,17 @@ public:
 
 	void PushAnimation(uint8 _Key, class UAnimMontage* _Montage);
 
-	TMap<uint8, class UAnimMontage*> GetAnimMontages()
+	TMap<uint8, FAnimMontageGroup> GetAnimMontages()
 	{
-		return AnimMontages;
+		return AllAnimMontages;
 	}
 
-	UAnimMontage* GetKeyAnimMontage(uint8 Key)
+	FAnimMontageGroup GetKeyAnimMontage(uint8 Key)
 	{
-		return AnimMontages[Key];
+		return AllAnimMontages[Key];
 	}
 
 private:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-	TMap<uint8, class UAnimMontage*> AnimMontages;
+	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true"))
+	TMap<uint8, FAnimMontageGroup> AllAnimMontages;
 };

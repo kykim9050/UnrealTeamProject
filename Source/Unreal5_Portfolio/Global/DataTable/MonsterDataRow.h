@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Engine/DataTable.h"
 #include "Global/ContentsEnum.h"
+#include "Global/Animation/MainRandomAnimInstance.h"
 #include "MonsterDataRow.generated.h"
 
 /**
@@ -60,6 +61,9 @@ private:
 	/// </summary>
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowprivateAccess = "true"))
 	TMap<EMonsterAnim, class UAnimMontage*> AnimMontages;
+
+	UPROPERTY(EditAnywhere, meta = (AllowprivateAccess = "true"))
+	TMap<EMonsterAnim, FAnimMontageGroup> AllAnimMontages;
 };
 
 UCLASS()
@@ -84,5 +88,7 @@ public:
 	float AttackTime = 0.0f;
 	float AttackDamage = 0.0f;
 	float AttackBoundary = 200.0f;
+
+	float ClimbTime = 0.0f;
 	
 };
