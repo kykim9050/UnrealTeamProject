@@ -54,10 +54,10 @@ void ATestMonsterBase::BeginPlay()
 		return;
 	}
 
-	TMap<EMonsterAnim, UAnimMontage*> AnimMontages = BaseData->GetAnimMontage();
-	for (TPair<EMonsterAnim, class UAnimMontage*> Montage : AnimMontages)
+	TMap<EMonsterAnim, FAnimMontageGroup> TestAnimMontages = BaseData->GetTestAnimMontage();
+	for (TPair<EMonsterAnim, FAnimMontageGroup> AnimMontageGroup : TestAnimMontages)
 	{
-		AnimInst->PushAnimation(Montage.Key, Montage.Value);
+		AnimInst->PushRandomAnimation(AnimMontageGroup.Key, AnimMontageGroup.Value);
 	}
 
 	//  몬스터 데이터 세팅

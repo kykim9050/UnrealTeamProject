@@ -92,7 +92,7 @@ private:
 	UPROPERTY(Replicated)
 	uint8 AniValue;
 
-	UPROPERTY(Replicated)
+	UPROPERTY()
 	class UMonsterAnimInstance* AnimInst;
 
 	TArray<class UMaterialInstanceDynamic*> DynamicMaterials;
