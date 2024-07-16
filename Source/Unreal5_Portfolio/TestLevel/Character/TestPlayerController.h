@@ -100,9 +100,6 @@ private:
 	FGenericTeamId TeamId;
 	virtual FGenericTeamId GetGenericTeamId() const override;
 
-	bool IsFire = false;
-
-
 	FTimerHandle MyTimeHandle;
 	int Count = 0;
 };

@@ -51,24 +51,24 @@ ATestCharacter::ATestCharacter()
 	FPVMesh->CastShadow = false;
 
 	// Item Mesh => 메인캐릭터로 이전해야 함 (새로 추가됨)
-	ItemSocket = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ItemSocket"));
-	ItemSocket->SetupAttachment(GetMesh(), "ItemSocket");
-	ItemSocket->SetCollisionProfileName(TEXT("NoCollision"));
-	ItemSocket->SetGenerateOverlapEvents(true);
-	ItemSocket->SetOwnerNoSee(true);
-	ItemSocket->SetVisibility(false);
-	ItemSocket->SetIsReplicated(true);
+	ItemSocketMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ItemSocketMesh"));
+	ItemSocketMesh->SetupAttachment(GetMesh(), FName("ItemSocket"));
+	ItemSocketMesh->SetCollisionProfileName(TEXT("NoCollision"));
+	ItemSocketMesh->SetGenerateOverlapEvents(true);
+	ItemSocketMesh->SetOwnerNoSee(true);
+	ItemSocketMesh->SetVisibility(false);
+	ItemSocketMesh->SetIsReplicated(true);
 
 	// FPV Item Mesh => 메인캐릭터로 이전해야 함 (새로 추가됨)
-	FPVItemSocket = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("FPVItemSocket"));
-	FPVItemSocket->SetupAttachment(FPVMesh, "FPVItemSocket");
-	FPVItemSocket->SetCollisionProfileName(TEXT("NoCollision"));
-	FPVItemSocket->SetGenerateOverlapEvents(true);
-	FPVItemSocket->SetOnlyOwnerSee(true);
-	FPVItemSocket->bCastDynamicShadow = false;
-	FPVItemSocket->CastShadow = false;
-	FPVItemSocket->SetVisibility(false);
-	FPVItemSocket->SetIsReplicated(true);
+	FPVItemSocketMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("FPVItemSocketMesh"));
+	FPVItemSocketMesh->SetupAttachment(FPVMesh, FName("FPVItemSocket"));
+	FPVItemSocketMesh->SetCollisionProfileName(TEXT("NoCollision"));
+	FPVItemSocketMesh->SetGenerateOverlapEvents(true);
+	FPVItemSocketMesh->SetOnlyOwnerSee(true);
+	FPVItemSocketMesh->bCastDynamicShadow = false;
+	FPVItemSocketMesh->CastShadow = false;
+	FPVItemSocketMesh->SetVisibility(false);
+	FPVItemSocketMesh->SetIsReplicated(true);
 
 
 	UEnum* Enum = StaticEnum<EPlayerPosture>();
@@ -308,16 +308,16 @@ void ATestCharacter::FireRayCast_Implementation(float _DeltaTime)	// => 메인캐릭
 	}
 }
 
-//void ATestCharacter::ChangeMontage_Implementation()
-//{
-//	PlayerAnimInst->ChangeAnimation(PostureValue);
-//	ClientChangeMontage();
-//}
-//
-//void ATestCharacter::ClientChangeMontage_Implementation()
-//{
-//	PlayerAnimInst->ChangeAnimation(PostureValue);
-//}
+void ATestCharacter::ChangeMontage_Implementation()
+{
+	PlayerAnimInst->ChangeAnimation(PostureValue);
+	ClientChangeMontage();
+}
+
+void ATestCharacter::ClientChangeMontage_Implementation()
+{
+	PlayerAnimInst->ChangeAnimation(PostureValue);
+}
 
 void ATestCharacter::ChangeState_Implementation(EPlayerState _Type)
 {
@@ -332,8 +332,8 @@ void ATestCharacter::ChangePosture_Implementation(EPlayerPosture _Type)	// => 메
 		CurItemIndex = -1;
 
 		// 아이템 메시 visibility 끄기
-		ItemSocket->SetVisibility(false);
-		FPVItemSocket->SetVisibility(false);
+		ItemSocketMesh->SetVisibility(false);
+		FPVItemSocketMesh->SetVisibility(false);
 	}
 	else
 	{
@@ -347,14 +347,14 @@ void ATestCharacter::ChangePosture_Implementation(EPlayerPosture _Type)	// => 메
 		CurItemIndex = ItemSlotIndex;
 
 		// 아이템 static mesh 세팅
-		ItemSocket->SetStaticMesh(ItemSlot[CurItemIndex].MeshRes);
-		FPVItemSocket->SetStaticMesh(ItemSlot[CurItemIndex].MeshRes);
+		ItemSocketMesh->SetStaticMesh(ItemSlot[CurItemIndex].MeshRes);
+		FPVItemSocketMesh->SetStaticMesh(ItemSlot[CurItemIndex].MeshRes);
 
 		/* 아이템 메시 transform 세팅 */
 
 		// 아이템 메시 visibility 켜기
-		ItemSocket->SetVisibility(true);
-		FPVItemSocket->SetVisibility(true);
+		ItemSocketMesh->SetVisibility(true);
+		FPVItemSocketMesh->SetVisibility(true);
 	}
 }
 
@@ -389,11 +389,11 @@ void ATestCharacter::PickUpItem_Implementation()	// => 메인캐릭터로 이전해야 함 
 	UMainGameInstance* Inst = GetGameInstance<UMainGameInstance>();
 	const FItemDataRow* ItemData = Inst->GetItemData(ItemStringToName);
 
-	EPlayerPosture ItemType = ItemData->GetType();	// 무기 Type
-	UStaticMesh* ItemMeshRes = ItemData->GetResMesh(); // Static Mesh
-	int ItemReloadNum = ItemData->GetReloadNum();	// 장전 단위.(30, 40)
+	EPlayerPosture ItemType = ItemData->GetType();		// 무기 Type
+	UStaticMesh* ItemMeshRes = ItemData->GetResMesh();	// Static Mesh
+	int ItemReloadNum = ItemData->GetReloadNum();		// 장전 단위.(30, 40)
 
-	uint8 ItemIndex = static_cast<uint8>(ItemType); // 사용할 인벤토리 인덱스
+	uint8 ItemIndex = static_cast<uint8>(ItemType);		// 사용할 인벤토리 인덱스
 
 	// 인벤토리에 아이템 집어넣기. (스태틱메시로 아이템을 가져가는 방식 채택!!!)
 	ItemSlot[ItemIndex].Name = ItemStringToName;
@@ -411,30 +411,26 @@ void ATestCharacter::PickUpItem_Implementation()	// => 메인캐릭터로 이전해야 함 
 
 void ATestCharacter::ChangePOV()	// => 메인캐릭터로 이전해야 함 (내용 수정됨)
 {
-	if (IsFPV)
+	if (IsFPV)	// 일인칭 -> 삼인칭
 	{
 		// SpringArm Component
 		SpringArmComponent->TargetArmLength = 200.0f;
 		SpringArmComponent->SetRelativeLocation(FVector(0.0f, 0.0f, 80.0f));
 
 		// Character Mesh
-		GetMesh()->SetOnlyOwnerSee(true);
 		GetMesh()->SetOwnerNoSee(false);
 		FPVMesh->SetOwnerNoSee(true);
-		FPVMesh->SetOnlyOwnerSee(false);
 
-		// Item Meshes
+		// Item Mesh
 		for (int i = 0; i < int(EPlayerPosture::Barehand); i++)
 		{
-			ItemSocket->SetOnlyOwnerSee(true);
-			ItemSocket->SetOwnerNoSee(false);
-			FPVItemSocket->SetOwnerNoSee(true);
-			FPVItemSocket->SetOnlyOwnerSee(false);
+			ItemSocketMesh->SetOwnerNoSee(false);
+			FPVItemSocketMesh->SetOwnerNoSee(true);
 		}
 
 		IsFPV = false;
 	}
-	else
+	else	// 삼인칭 -> 일인칭
 	{
 		// SpringArm Component
 		SpringArmComponent->TargetArmLength = 0.0f;
@@ -442,17 +438,13 @@ void ATestCharacter::ChangePOV()	// => 메인캐릭터로 이전해야 함 (내용 수정됨)
 
 		// Character Mesh
 		GetMesh()->SetOwnerNoSee(true);
-		GetMesh()->SetOnlyOwnerSee(false);
-		FPVMesh->SetOnlyOwnerSee(true);
 		FPVMesh->SetOwnerNoSee(false);
 
-		// Item Meshes
+		// Item Mesh
 		for (int i = 0; i < int(EPlayerPosture::Barehand); i++)
 		{
-			ItemSocket->SetOwnerNoSee(true);
-			ItemSocket->SetOnlyOwnerSee(false);
-			FPVItemSocket->SetOnlyOwnerSee(true);
-			FPVItemSocket->SetOwnerNoSee(false);
+			ItemSocketMesh->SetOwnerNoSee(true);
+			FPVItemSocketMesh->SetOwnerNoSee(false);
 		}
 
 		IsFPV = true;
@@ -461,9 +453,9 @@ void ATestCharacter::ChangePOV()	// => 메인캐릭터로 이전해야 함 (내용 수정됨)
 
 void ATestCharacter::ChangeSocketRelTrans()
 {
-	ItemSocket->SetRelativeLocation(FVector(-11.492245f, -0.540951f, 12.555331f));
-	FPVItemSocket->SetRelativeLocation(FVector(-11.492245f, -0.540951f, 12.555331f));
+	ItemSocketMesh->SetRelativeLocation(FVector(-11.492245f, -0.540951f, 12.555331f));
+	FPVItemSocketMesh->SetRelativeLocation(FVector(-11.492245f, -0.540951f, 12.555331f));
 
-	ItemSocket->SetRelativeRotation(FQuat((-0.685624f, -7.766383f, 7.876074f)));
-	FPVItemSocket->SetRelativeRotation(FQuat((-0.685624f, -7.766383f, 7.876074f)));
+	ItemSocketMesh->SetRelativeRotation(FQuat((-0.685624f, -7.766383f, 7.876074f)));
+	FPVItemSocketMesh->SetRelativeRotation(FQuat((-0.685624f, -7.766383f, 7.876074f)));
 }
