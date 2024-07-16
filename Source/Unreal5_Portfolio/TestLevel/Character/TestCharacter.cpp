@@ -163,6 +163,7 @@ void ATestCharacter::BeginPlay()
 
 	// 몽타주 변경에 필요한 세팅 추가 필요 (태환)
 	PlayerAnimInst = Cast<UPlayerAnimInstance>(GetMesh()->GetAnimInstance());
+	FPVPlayerAnimInst = Cast<UPlayerAnimInstance>(FPVMesh->GetAnimInstance());
 
 	HandAttackComponent->SetCollisionProfileName(TEXT("NoCollision"));
 }
@@ -320,12 +321,14 @@ void ATestCharacter::FireRayCast_Implementation(float _DeltaTime)	// => 메인캐릭
 void ATestCharacter::ChangeMontage_Implementation()
 {
 	PlayerAnimInst->ChangeAnimation(PostureValue);
+	FPVPlayerAnimInst->ChangeAnimation(PostureValue);
 	ClientChangeMontage();
 }
 
 void ATestCharacter::ClientChangeMontage_Implementation()
 {
 	PlayerAnimInst->ChangeAnimation(PostureValue);
+	FPVPlayerAnimInst->ChangeAnimation(PostureValue);
 }
 
 void ATestCharacter::ChangeState_Implementation(EPlayerState _Type)

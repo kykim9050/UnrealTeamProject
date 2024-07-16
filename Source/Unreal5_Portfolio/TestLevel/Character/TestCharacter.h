@@ -174,7 +174,8 @@ private:
 
 	UPROPERTY()
 	class UPlayerAnimInstance* PlayerAnimInst;
-	//
+	UPROPERTY()
+	class UPlayerAnimInstance* FPVPlayerAnimInst;
 
 public:
 	UFUNCTION(BlueprintCallable)
