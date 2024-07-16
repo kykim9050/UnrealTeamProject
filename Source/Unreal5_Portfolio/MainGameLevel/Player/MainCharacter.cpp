@@ -157,13 +157,13 @@ void AMainCharacter::PickUpItem_Implementation()
 
 
 	// Map에 아이템 생성.
-	// FTransform CreatePos = GetMapItemCollisonComponent->GetComponentToWorld(); // 체크 필요.
+	// FTransform CreatePos = CreateItemComponent->GetComponentToWorld(); // 체크 필요.
 	// CharacterPlayerToDropItem(ItemName, CreatePos);
 
 	
 	// 손에 아이템을 생성한다.
-	UMainGameInstance* Inst = GetGameInstance<UMainGameInstance>();
-	const FItemDataRow* ItemData = Inst->GetItemData(ItemName);
+	//UMainGameInstance* Inst = GetGameInstance<UMainGameInstance>();
+	//const FItemDataRow* ItemData = Inst->GetItemData(ItemName);
 
 
 	// 주은 무기 삭제.
@@ -172,14 +172,8 @@ void AMainCharacter::PickUpItem_Implementation()
 
 void AMainCharacter::CharacterPlayerToDropItem_Implementation(FName _ItemName, FTransform _Transform)
 {
-	// 무기를 장착 했을 때,
-
-	FName CreateItemName = "";
-
-
-
 	UMainGameInstance* MainGameInst = GetWorld()->GetGameInstanceChecked<UMainGameInstance>();
-	const FItemDataRow* ItemBase = MainGameInst->GetItemData(CreateItemName);
+	const FItemDataRow* ItemBase = MainGameInst->GetItemData(_ItemName);
 	GetWorld()->SpawnActor<AActor>(ItemBase->GetItemUClass(), _Transform);
 }
 
