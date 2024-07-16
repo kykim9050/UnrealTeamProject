@@ -76,6 +76,10 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void ChangePOVController();
 
+	// Item
+	UFUNCTION()
+	void ChangeSocketRelTransController();
+
 	// LowerStateChange 함수 (태환)
 	UFUNCTION(BlueprintCallable)
 	void ChangeLowerState(EPlayerLowerState _State);

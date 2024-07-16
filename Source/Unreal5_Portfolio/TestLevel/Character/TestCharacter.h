@@ -110,6 +110,8 @@ public:
 	UFUNCTION(Reliable, Server)
 	void PickUpItem();
 	void PickUpItem_Implementation();
+	UFUNCTION()
+	void ChangeSocketRelTrans();
 
 	UFUNCTION(BlueprintCallable)
 	FORCEINLINE bool GetPickUp()
