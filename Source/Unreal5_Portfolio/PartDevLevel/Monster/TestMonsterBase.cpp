@@ -2,6 +2,7 @@
 
 
 #include "PartDevLevel/Monster/TestMonsterBase.h"
+#include "PartDevLevel/Monster/Animation/MonsterAnimInstance.h"
 #include "TestMonsterBaseAIController.h"
 #include "TestLevel/Character/TestPlayerState.h"
 #include "TestLevel/Character/TestCharacter.h"
@@ -15,7 +16,6 @@
 #include "Net/UnrealNetwork.h"
 
 #include "Global/MainGameBlueprintFunctionLibrary.h"
-#include "Global/Animation/MainAnimInstance.h"
 #include "Global/ContentsEnum.h"
 #include "Global/ContentsLog.h"
 
@@ -45,8 +45,7 @@ void ATestMonsterBase::BeginPlay()
 
 	UMainGameInstance* MainGameInst = UMainGameBlueprintFunctionLibrary::GetMainGameInstance(GetWorld());
 
-	UAnimInstance* Inst = GetMesh()->GetAnimInstance();
-	AnimInst = Cast<UMainAnimInstance>(GetMesh()->GetAnimInstance());
+	AnimInst = Cast<UMonsterAnimInstance>(GetMesh()->GetAnimInstance());
 	BaseData = MainGameInst->GetMonsterData(BaseDataName);
 
 	if (nullptr == BaseData)
@@ -118,7 +117,7 @@ ATestMonsterBaseAIController* ATestMonsterBase::GetAIController()
 	return Cast<ATestMonsterBaseAIController>(GetController());
 }
 
-UMainAnimInstance* ATestMonsterBase::GetAnimInstance()
+UMonsterAnimInstance* ATestMonsterBase::GetAnimInstance()
 {
 	return AnimInst;
 }

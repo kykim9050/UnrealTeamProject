@@ -324,7 +324,7 @@ void ATestCharacter::ChangeState_Implementation(EPlayerState _Type)
 	StateValue = _Type;
 }
 
-void ATestCharacter::ChangePosture_Implementation(EPlayerPosture _Type)
+void ATestCharacter::ChangePosture_Implementation(EPlayerPosture _Type)	// => 메인캐릭터로 이전해야 함 (내용 수정됨)
 {
 	if (_Type == EPlayerPosture::Barehand)
 	{
@@ -411,30 +411,26 @@ void ATestCharacter::PickUpItem_Implementation()	// => 메인캐릭터로 이전해야 함 
 
 void ATestCharacter::ChangePOV()	// => 메인캐릭터로 이전해야 함 (내용 수정됨)
 {
-	if (IsFPV)
+	if (IsFPV)	// 일인칭 -> 삼인칭
 	{
 		// SpringArm Component
 		SpringArmComponent->TargetArmLength = 200.0f;
 		SpringArmComponent->SetRelativeLocation(FVector(0.0f, 0.0f, 80.0f));
 
 		// Character Mesh
-		GetMesh()->SetOnlyOwnerSee(true);
 		GetMesh()->SetOwnerNoSee(false);
 		FPVMesh->SetOwnerNoSee(true);
-		FPVMesh->SetOnlyOwnerSee(false);
 
-		// Item Meshes
+		// Item Mesh
 		for (int i = 0; i < int(EPlayerPosture::Barehand); i++)
 		{
-			ItemSocket->SetOnlyOwnerSee(true);
 			ItemSocket->SetOwnerNoSee(false);
 			FPVItemSocket->SetOwnerNoSee(true);
-			FPVItemSocket->SetOnlyOwnerSee(false);
 		}
 
 		IsFPV = false;
 	}
-	else
+	else	// 삼인칭 -> 일인칭
 	{
 		// SpringArm Component
 		SpringArmComponent->TargetArmLength = 0.0f;
@@ -442,19 +438,24 @@ void ATestCharacter::ChangePOV()	// => 메인캐릭터로 이전해야 함 (내용 수정됨)
 
 		// Character Mesh
 		GetMesh()->SetOwnerNoSee(true);
-		GetMesh()->SetOnlyOwnerSee(false);
-		FPVMesh->SetOnlyOwnerSee(true);
 		FPVMesh->SetOwnerNoSee(false);
 
-		// Item Meshes
+		// Item Mesh
 		for (int i = 0; i < int(EPlayerPosture::Barehand); i++)
 		{
 			ItemSocket->SetOwnerNoSee(true);
-			ItemSocket->SetOnlyOwnerSee(false);
-			FPVItemSocket->SetOnlyOwnerSee(true);
 			FPVItemSocket->SetOwnerNoSee(false);
 		}
 
 		IsFPV = true;
 	}
+}
+
+void ATestCharacter::ChangeSocketRelTrans()
+{
+	ItemSocket->SetRelativeLocation(FVector(-11.492245f, -0.540951f, 12.555331f));
+	FPVItemSocket->SetRelativeLocation(FVector(-11.492245f, -0.540951f, 12.555331f));
+
+	ItemSocket->SetRelativeRotation(FQuat((-0.685624f, -7.766383f, 7.876074f)));
+	FPVItemSocket->SetRelativeRotation(FQuat((-0.685624f, -7.766383f, 7.876074f)));
 }
