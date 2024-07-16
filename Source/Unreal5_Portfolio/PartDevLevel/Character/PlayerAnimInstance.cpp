@@ -9,7 +9,6 @@ void UPlayerAnimInstance::NativeBeginPlay()
 {
 	Super::NativeBeginPlay();
 	OwnerPlayer = Cast<ATestCharacter>(GetOwningActor());
-	PlayerMesh = OwnerPlayer->GetMesh();
 
 	// MainGameInst의 PlayerData에 저장된 Montages를 PlayerUpperMontages로 Add
 	MainGameInst = UMainGameBlueprintFunctionLibrary::GetMainGameInstance(GetWorld());

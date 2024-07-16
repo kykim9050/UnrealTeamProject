@@ -24,6 +24,12 @@ private:
 
 public:
 	UFUNCTION(BlueprintCallable)
+	TMap<EInGameUIType, UUserWidget*> GetAllTestPlayWidgets();
+
+	UFUNCTION(BlueprintCallable)
+	UUserWidget* GetWidget(EInGameUIType _Type);
+
+	UFUNCTION(BlueprintCallable)
 	void UIOn(EInGameUIType _Type);
 
 	UFUNCTION(BlueprintCallable)

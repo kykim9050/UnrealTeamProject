@@ -25,6 +25,16 @@ void ATestPlayHUD::BeginPlay()
 	}
 }
 
+TMap<EInGameUIType, UUserWidget*> ATestPlayHUD::GetAllTestPlayWidgets()
+{
+	return AllTestPlayWidgets;
+}
+
+UUserWidget* ATestPlayHUD::GetWidget(EInGameUIType _Type)
+{
+	return AllTestPlayWidgets[_Type];
+}
+
 void ATestPlayHUD::UIOn(EInGameUIType _Type)
 {
 	AllTestPlayWidgets[_Type]->SetVisibility(ESlateVisibility::Visible);

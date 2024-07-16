@@ -47,11 +47,10 @@ public :
 	void PickUpItem();
 	UFUNCTION(BlueprintCallable)
 	void ChangePOVController();
-
-	// State, Posture
 	UFUNCTION(BlueprintCallable)
-	void ChangeState(EPlayerState _State);
+	void Crouch(const FInputActionValue& Value);
 
+	// Posture
 	UFUNCTION(BlueprintCallable)
 	void ChangePosture(EPlayerPosture _Posture);
 

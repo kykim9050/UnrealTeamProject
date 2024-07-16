@@ -29,18 +29,30 @@ public:
 	}
 
 	UFUNCTION()
+	FORCEINLINE TArray<ATestPlayerState*> GetAllPlayerStates() const
+	{
+		return AllPlayerStates;
+	}
+
+	UFUNCTION()
 	void SetPlayerHp(float _Hp);
+	UFUNCTION()
+	void SetPlayerNumber(int _Num);
+	UFUNCTION()
+	void SetAllPlayerStates(TArray<ATestPlayerState*> _Arr);
 
 	UFUNCTION()
 	void AddDamage(float _Damage);
 public:
 	UFUNCTION()
-	void InitPlayerData();
+	void InitPlayerData(int _PlayerNumber);
 
-public:
+private:
 	UPROPERTY()
 	float PlayerHp = 0;
 
 	UPROPERTY()
-	int PlayerNumber = -1; // 내가 몇 번째 플레이어인지
+	int PlayerNumber = -1;	// 내가 몇 번째 플레이어인지
+
+	TArray<ATestPlayerState*> AllPlayerStates; // 모든 플레이어의 State
 };

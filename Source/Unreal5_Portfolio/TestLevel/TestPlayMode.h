@@ -10,6 +10,7 @@
 /**
  * 
  */
+class ATestPlayerState;
 UCLASS()
 class UNREAL5_PORTFOLIO_API ATestPlayMode : public AGameMode
 {
@@ -19,11 +20,21 @@ public:
 	void BeginPlay() override;
 	void PostLogin(APlayerController* NewPlayer) override; // 플레이어 성공적인 입장(Login) 후 호출되는 함수 
 
+	//FORCEINLINE TArray<ATestPlayerState*> GetAllPlayerStates() const
+	//{
+	//	return AllPlayerStates;
+	//}
+
 	UFUNCTION(Reliable, Server, BlueprintCallable)
 	void GPlayerToDropItem(FName _ItemName, FTransform _Transform);
 	void GPlayerToDropItem_Implementation(FName _ItemName, FTransform _Transform);
 
 protected :
 	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+
+private:
+	int PlayerCount = -1;
+
+	TArray<ATestPlayerState*> AllPlayerStates;
 };
 	
