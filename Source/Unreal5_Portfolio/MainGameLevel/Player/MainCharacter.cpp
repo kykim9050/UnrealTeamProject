@@ -2,6 +2,7 @@
 
 
 #include "MainGameLevel/Player/MainCharacter.h"
+#include "Global/MainGameBlueprintFunctionLibrary.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Global/MainGameInstance.h"
 #include "Global/DataTable/ItemDataRow.h"
@@ -78,7 +79,9 @@ AMainCharacter::AMainCharacter()
 void AMainCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	UMainGameBlueprintFunctionLibrary::PushActor(EObjectType::Player, this);
+
+
 }
 
 void AMainCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
