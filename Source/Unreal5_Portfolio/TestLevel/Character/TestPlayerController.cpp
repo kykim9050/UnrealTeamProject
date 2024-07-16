@@ -66,6 +66,7 @@ void ATestPlayerController::SetupInputComponent()
 			EnhancedInputComponent->BindAction(InputData->Actions[13], ETriggerEvent::Completed, this, &ATestPlayerController::PickUpItemEnd);
 			EnhancedInputComponent->BindAction(InputData->Actions[14], ETriggerEvent::Triggered, this, &ATestPlayerController::ChangePOVController);
 			EnhancedInputComponent->BindAction(InputData->Actions[15], ETriggerEvent::Started, this, &ATestPlayerController::Crouch);
+			EnhancedInputComponent->BindAction(InputData->Actions[17], ETriggerEvent::Triggered, this, &ATestPlayerController::ChangeSocketRelTransController);
 		}
 	}
 }
@@ -231,6 +232,12 @@ void ATestPlayerController::ChangePOVController()
 {
 	ATestCharacter* Ch = GetPawn<ATestCharacter>();
 	Ch->ChangePOV();
+}
+
+void ATestPlayerController::ChangeSocketRelTransController()
+{
+	ATestCharacter* Ch = GetPawn<ATestCharacter>();
+	Ch->ChangeSocketRelTrans();
 }
 
 void ATestPlayerController::ChangeLowerState(EPlayerLowerState _State)

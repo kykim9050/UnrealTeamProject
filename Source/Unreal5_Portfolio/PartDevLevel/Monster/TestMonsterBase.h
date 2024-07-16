@@ -33,7 +33,7 @@ protected:
 
 public:
 	class ATestMonsterBaseAIController* GetAIController();
-	class UMainAnimInstance* GetAnimInstance();
+	class UMonsterAnimInstance* GetAnimInstance();
 	
 	void ChangeAniValue(uint8 _Type);
 
@@ -93,7 +93,7 @@ private:
 	uint8 AniValue;
 
 	UPROPERTY(Replicated)
-	class UMainAnimInstance* AnimInst;
+	class UMonsterAnimInstance* AnimInst;
 
 	TArray<class UMaterialInstanceDynamic*> DynamicMaterials;
 	
