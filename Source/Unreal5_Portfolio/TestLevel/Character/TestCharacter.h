@@ -181,11 +181,11 @@ public:
 	void FireRayCast(float _DeltaTime);
 	void FireRayCast_Implementation(float _DeltaTime);
 
-	//UFUNCTION(Reliable, Server)
-	//void ChangeMontage();
-	//void ChangeMontage_Implementation();
+	UFUNCTION(Reliable, Server)
+	void ChangeMontage();
+	void ChangeMontage_Implementation();
 
-	//UFUNCTION(Reliable, NetMulticast)
-	//void ClientChangeMontage();
-	//void ClientChangeMontage_Implementation();
+	UFUNCTION(Reliable, NetMulticast)
+	void ClientChangeMontage();
+	void ClientChangeMontage_Implementation();
 };

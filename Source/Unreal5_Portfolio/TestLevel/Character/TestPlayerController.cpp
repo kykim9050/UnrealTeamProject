@@ -120,11 +120,6 @@ void ATestPlayerController::MoveLeft(const FInputActionValue& Value)
 void ATestPlayerController::MoveEnd(const FInputActionValue& Value)
 {
 	ATestCharacter* Ch = GetPawn<ATestCharacter>();
-
-	if (IsFire == true)
-	{
-		return;
-	}
 }
 
 //void ATestPlayerController::Jump(const FInputActionValue& Value)
@@ -172,7 +167,6 @@ void ATestPlayerController::Crouch(const FInputActionValue& Value)
 
 void ATestPlayerController::FireStart(float _DeltaTime)
 {
-	IsFire = true;
 	ChangeState(EPlayerState::Fire);
 	ATestCharacter* Ch = GetPawn<ATestCharacter>();
 	Ch->FireRayCast(_DeltaTime);
@@ -188,18 +182,12 @@ void ATestPlayerController::FireTick(float _DeltaTime)
 {
 	ATestCharacter* Ch = GetPawn<ATestCharacter>();
 	Ch->FireRayCast(_DeltaTime);
-	
-	if (false == IsFire)
-	{
-		return;
-	}
 	++Count;
 	GEngine->AddOnScreenDebugMessage(-1, 0.2f, FColor::Red, FString::Printf(TEXT("Tick Count : %d"), Count));
 }
 
 void ATestPlayerController::FireEnd()
 {
-	IsFire = false;
 	ChangeState(EPlayerState::Idle);
 	ATestCharacter* Ch = GetPawn<ATestCharacter>();
 
@@ -260,6 +248,7 @@ void ATestPlayerController::ChangePlayerDir(EPlayerMoveDir _Dir)
 void ATestPlayerController::AttackStart()
 {
 	ATestCharacter* Ch = GetPawn<ATestCharacter>();
+	Ch->ChangeMontage();
 }
 
 void ATestPlayerController::AttackEnd()
