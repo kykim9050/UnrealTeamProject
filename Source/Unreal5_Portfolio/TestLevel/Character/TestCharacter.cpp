@@ -4,7 +4,6 @@
 #include "TestCharacter.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
-//#include "Engine/StaticMesh.h"
 #include "Engine/SkeletalMeshSocket.h"
 #include "Engine/StaticMeshSocket.h"
 #include "Global/MainGameBlueprintFunctionLibrary.h"
@@ -362,7 +361,12 @@ void ATestCharacter::ChangePosture_Implementation(EPlayerPosture _Type)	// => 메
 		ItemSocketMesh->SetStaticMesh(ItemSlot[CurItemIndex].MeshRes);
 		FPVItemSocketMesh->SetStaticMesh(ItemSlot[CurItemIndex].MeshRes);
 
-		/* 아이템 메시 transform 세팅 */
+		// 아이템 메시 transform 세팅
+		ItemSocketMesh->SetRelativeLocation(FVector(/*ItemSlot[CurItemIndex].RelLoc*/));		// ItemDataRow에 항목 추가 필요
+		FPVItemSocketMesh->SetRelativeLocation(FVector(/*ItemSlot[CurItemIndex].RelLoc*/));		// ItemDataRow에 항목 추가 필요
+
+		ItemSocketMesh->SetRelativeRotation(FQuat(/*ItemSlot[CurItemIndex].RelRot*/));			// ItemDataRow에 항목 추가 필요
+		FPVItemSocketMesh->SetRelativeRotation(FRotator(/*ItemSlot[CurItemIndex].RelRot*/));	// ItemDataRow에 항목 추가 필요
 
 		// 아이템 메시 visibility 켜기
 		ItemSocketMesh->SetVisibility(true);
@@ -402,16 +406,18 @@ void ATestCharacter::PickUpItem_Implementation()	// => 메인캐릭터로 이전해야 함 
 	const FItemDataRow* ItemData = Inst->GetItemData(ItemStringToName);
 
 	EPlayerPosture ItemType = ItemData->GetType();		// 무기 Type
-	UStaticMesh* ItemMeshRes = ItemData->GetResMesh();	// Static Mesh
-	int ItemReloadNum = ItemData->GetReloadNum();		// 장전 단위.(30, 40)
+	int ItemReloadNum = ItemData->GetReloadNum();		// 무기 장전 단위 (30, 40) (-1일 경우 총기류 무기가 아님)
+	int ItemDamage = ItemData->GetDamage();				// 무기 공격력 (0일 경우 무기가 아님)
+	UStaticMesh* ItemMeshRes = ItemData->GetResMesh();	// 아이템 static mesh
 
-	uint8 ItemIndex = static_cast<uint8>(ItemType);		// 사용할 인벤토리 인덱스
+	uint8 ItemIndex = static_cast<uint8>(ItemType);		// 아이템을 넣을 인벤토리 인덱스
 
 	// 인벤토리에 아이템 집어넣기. (스태틱메시로 아이템을 가져가는 방식 채택!!!)
 	ItemSlot[ItemIndex].Name = ItemStringToName;
-	ItemSlot[ItemIndex].MeshRes = ItemMeshRes;
 	ItemSlot[ItemIndex].ReloadMaxNum = ItemReloadNum;
 	ItemSlot[ItemIndex].ReloadLeftNum = ItemReloadNum;
+	ItemSlot[ItemIndex].Damage = ItemDamage;
+	ItemSlot[ItemIndex].MeshRes = ItemMeshRes;
 	IsItemIn[ItemIndex] = true;
 
 	// Map에 있는 아이템 삭제.
@@ -468,6 +474,6 @@ void ATestCharacter::ChangeSocketRelTrans()
 	ItemSocketMesh->SetRelativeLocation(FVector(-11.492245f, -0.540951f, 12.555331f));
 	FPVItemSocketMesh->SetRelativeLocation(FVector(-11.492245f, -0.540951f, 12.555331f));
 
-	ItemSocketMesh->SetRelativeRotation(FQuat((-0.685624f, -7.766383f, 7.876074f)));
-	FPVItemSocketMesh->SetRelativeRotation(FQuat((-0.685624f, -7.766383f, 7.876074f)));
+	ItemSocketMesh->SetRelativeRotation(FRotator(-0.685624f, -7.766383f, 7.876074f));
+	FPVItemSocketMesh->SetRelativeRotation(FRotator(-0.685624f, -7.766383f, 7.876074f));
 }
