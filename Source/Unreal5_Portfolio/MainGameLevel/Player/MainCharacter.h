@@ -30,7 +30,7 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-
+private : // 문제 발생 여지 있음 발생하면 그냥 지워야 함.
 	// == Components ==
 	
 	// 스프링암
@@ -73,11 +73,16 @@ public:
 	UPROPERTY(Category = "Contents", VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	AActor* GetMapItemData = nullptr;
 
-	
+	// 현재 아이템 Index
+	UPROPERTY(VisibleAnywhere)
+	int CurItemIndex = -1;
 
-	
+	// 현재 아이템 정보.
+	UPROPERTY(VisibleAnywhere)
+	TArray<struct FPlayerItemInformation> ItemSlot;
+
 	// == Server ==
-
+public :
 	// 상채 변경
 
 
@@ -95,12 +100,20 @@ public:
 	void CharacterPlayerToDropItem(FName _ItemName, FTransform _Transform);
 	void CharacterPlayerToDropItem_Implementation(FName _ItemName, FTransform _Transform);
 
+	// Fire Ray Cast
+	UFUNCTION(Reliable, Server, BlueprintCallable)
+	void FireRayCast(float _DeltaTime);
+	void FireRayCast_Implementation(float _DeltaTime);
+
 	// == Client ==
+private :	
 	UFUNCTION(BlueprintCallable)
 	void MapItemOverlapStart(AActor* _OtherActor, UPrimitiveComponent* _Collision);
+	
 	UFUNCTION(BlueprintCallable)
 	void MapItemOverlapEnd();
 	
+public :
 	// == 인칭 변경 함수 ==
 	UFUNCTION()
 	void ChangePOV();
