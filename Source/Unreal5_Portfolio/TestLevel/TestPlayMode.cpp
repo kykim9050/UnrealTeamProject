@@ -27,8 +27,17 @@ void ATestPlayMode::PostLogin(APlayerController* NewPlayer)
 {
 	Super::PostLogin(NewPlayer);
 
-	// 새로 로그인한 플레이어의 데이터 초기화 
-	NewPlayer->GetPlayerState<ATestPlayerState>()->InitPlayerData();
+	// 새로 로그인한 플레이어 처리
+	ATestPlayerState* NewPlayerState = NewPlayer->GetPlayerState<ATestPlayerState>();
+	NewPlayerState->InitPlayerData(++PlayerCount);
+
+	// 전체 PlayerState 배열에 추가하고 다른 PlayerState들에게도 덮어 써줌 
+	AllPlayerStates.Add(NewPlayerState);
+	//NewPlayerState->SetAllPlayerStates(AllPlayerStates); 
+	for (auto other : AllPlayerStates)
+	{
+		other->SetAllPlayerStates(AllPlayerStates);
+	}
 }
 
 void ATestPlayMode::GPlayerToDropItem_Implementation(FName _ItemName, FTransform _Transform)
