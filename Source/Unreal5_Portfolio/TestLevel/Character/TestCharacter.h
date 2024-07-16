@@ -8,7 +8,7 @@
 #include "Global/ContentsEnum.h"
 #include "TestCharacter.generated.h"
 
-// Inventory (for UI Test)
+// Inventory (for UI Test) => 메인캐릭터로 이전해야 함 (PickUpItem 함수에 필요)
 USTRUCT(BlueprintType)
 struct FItemInformation
 {
@@ -40,11 +40,11 @@ public:
 	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	class UCameraComponent* CameraComponent = nullptr;
 	UPROPERTY(Category = "Contents", VisibleDefaultsOnly)
-	USkeletalMeshComponent* FPVMesh = nullptr;
+	USkeletalMeshComponent* FPVMesh = nullptr;	// => 메인캐릭터로 이전해야 함 (새로 추가됨)
 	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-	class UStaticMeshComponent* ItemSocket = nullptr;
+	class UStaticMeshComponent* ItemSocketMesh = nullptr;	// => 메인캐릭터로 이전해야 함 (새로 추가됨)
 	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-	class UStaticMeshComponent* FPVItemSocket = nullptr;
+	class UStaticMeshComponent* FPVItemSocketMesh = nullptr;	// => 메인캐릭터로 이전해야 함 (새로 추가됨)
 	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	class UTestMinimapIconComponent* MinimapIconComponent = nullptr;
 
@@ -93,14 +93,14 @@ public:
 	UFUNCTION()
 	void ChangePOV();
 
-	// Inventory
+	// Inventory => 메인캐릭터로 이전해야 함 (PickUpItem 함수에 필요)
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	TArray<FItemInformation> ItemSlot;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	TArray<bool> IsItemIn;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	int CurItemIndex = -1;
-	
+
 	// Item
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	AActor* GetMapItem = nullptr;
@@ -110,6 +110,8 @@ public:
 	UFUNCTION(Reliable, Server)
 	void PickUpItem();
 	void PickUpItem_Implementation();
+	UFUNCTION()
+	void ChangeSocketRelTrans();
 
 	UFUNCTION(BlueprintCallable)
 	FORCEINLINE bool GetPickUp()
@@ -165,12 +167,9 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	class USphereComponent* HandAttackComponent = nullptr;
 
-	// 몽타주 변경에 필요한 변수 (태환)
-	UPROPERTY(Replicated)
-	uint8 PlayerMontageAniValue;
 
-	UPROPERTY(Replicated)
-	class UMainAnimInstance* PlayerAnimInst;
+	UPROPERTY()
+	class UPlayerAnimInstance* PlayerAnimInst;
 	//
 
 public:
@@ -180,11 +179,15 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void DefaultRayCast(float _DeltaTime);
 
-	UFUNCTION(Reliable, Server, BlueprintCallable)
+	UFUNCTION(Reliable, Server, BlueprintCallable)	// => 메인캐릭터로 이전해야 함
 	void FireRayCast(float _DeltaTime);
 	void FireRayCast_Implementation(float _DeltaTime);
 
-	UFUNCTION(Reliable, Server, BlueprintCallable)
-	void ChangeMontage(EPlayerPosture _Posture);
-	void ChangeMontage_Implementation(EPlayerPosture _Posture);
+	UFUNCTION(Reliable, Server)
+	void ChangeMontage();
+	void ChangeMontage_Implementation();
+
+	UFUNCTION(Reliable, NetMulticast)
+	void ClientChangeMontage();
+	void ClientChangeMontage_Implementation();
 };

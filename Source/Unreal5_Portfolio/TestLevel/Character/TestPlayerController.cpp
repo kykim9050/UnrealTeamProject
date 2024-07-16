@@ -66,6 +66,7 @@ void ATestPlayerController::SetupInputComponent()
 			EnhancedInputComponent->BindAction(InputData->Actions[13], ETriggerEvent::Completed, this, &ATestPlayerController::PickUpItemEnd);
 			EnhancedInputComponent->BindAction(InputData->Actions[14], ETriggerEvent::Triggered, this, &ATestPlayerController::ChangePOVController);
 			EnhancedInputComponent->BindAction(InputData->Actions[15], ETriggerEvent::Started, this, &ATestPlayerController::Crouch);
+			EnhancedInputComponent->BindAction(InputData->Actions[17], ETriggerEvent::Triggered, this, &ATestPlayerController::ChangeSocketRelTransController);
 		}
 	}
 }
@@ -120,11 +121,6 @@ void ATestPlayerController::MoveLeft(const FInputActionValue& Value)
 void ATestPlayerController::MoveEnd(const FInputActionValue& Value)
 {
 	ATestCharacter* Ch = GetPawn<ATestCharacter>();
-
-	if (IsFire == true)
-	{
-		return;
-	}
 }
 
 //void ATestPlayerController::Jump(const FInputActionValue& Value)
@@ -172,7 +168,6 @@ void ATestPlayerController::Crouch(const FInputActionValue& Value)
 
 void ATestPlayerController::FireStart(float _DeltaTime)
 {
-	IsFire = true;
 	ChangeState(EPlayerState::Fire);
 	ATestCharacter* Ch = GetPawn<ATestCharacter>();
 	Ch->FireRayCast(_DeltaTime);
@@ -188,18 +183,12 @@ void ATestPlayerController::FireTick(float _DeltaTime)
 {
 	ATestCharacter* Ch = GetPawn<ATestCharacter>();
 	Ch->FireRayCast(_DeltaTime);
-	
-	if (false == IsFire)
-	{
-		return;
-	}
 	++Count;
 	GEngine->AddOnScreenDebugMessage(-1, 0.2f, FColor::Red, FString::Printf(TEXT("Tick Count : %d"), Count));
 }
 
 void ATestPlayerController::FireEnd()
 {
-	IsFire = false;
 	ChangeState(EPlayerState::Idle);
 	ATestCharacter* Ch = GetPawn<ATestCharacter>();
 
@@ -245,6 +234,12 @@ void ATestPlayerController::ChangePOVController()
 	Ch->ChangePOV();
 }
 
+void ATestPlayerController::ChangeSocketRelTransController()
+{
+	ATestCharacter* Ch = GetPawn<ATestCharacter>();
+	Ch->ChangeSocketRelTrans();
+}
+
 void ATestPlayerController::ChangeLowerState(EPlayerLowerState _State)
 {
 	ATestCharacter* Ch = GetPawn<ATestCharacter>();
@@ -257,10 +252,10 @@ void ATestPlayerController::ChangePlayerDir(EPlayerMoveDir _Dir)
 	Ch->ChangePlayerDir(_Dir);
 }
 
-void ATestPlayerController::AttackTest(EPlayerMoveDir _Dir)
+void ATestPlayerController::AttackMontagePlay()
 {
 	ATestCharacter* Ch = GetPawn<ATestCharacter>();
-	// 몽타주 플레이
+	Ch->ChangeMontage();
 }
 
 FGenericTeamId ATestPlayerController::GetGenericTeamId() const

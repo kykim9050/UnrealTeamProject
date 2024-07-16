@@ -101,6 +101,9 @@ void AMainPlayerController::FireStart(const FInputActionValue& Value)
 {
 	ChangeState(EPlayerState::Fire);
 
+	BullitCountToHUD();
+
+
 	GetWorld()->GetTimerManager().SetTimer(MyTimeHandle, FTimerDelegate::CreateLambda([&]()
 		{
 			FireTick(GetWorld()->GetTimeSeconds());

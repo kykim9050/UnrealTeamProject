@@ -51,6 +51,7 @@ public :
 	// State, Posture
 	UFUNCTION(BlueprintCallable)
 	void ChangeState(EPlayerState _State);
+
 	UFUNCTION(BlueprintCallable)
 	void ChangePosture(EPlayerPosture _Posture);
 
@@ -62,8 +63,16 @@ private :
 	UPROPERTY()
 	class UInputDatas* InputData = nullptr;
 
+	// Monster 요청
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "TeamId", meta = (AllowPrivateAccess = true))
 	FGenericTeamId TeamId;
 
+	// Fire Tick 함수를 위한 Timer 변수.
+	UPROPERTY()
 	FTimerHandle MyTimeHandle;
+
+protected :
+	// Bullet Count To HUD
+	UFUNCTION(BlueprintImplementableEvent, meta = (CallInEditor = true))
+	void BullitCountToHUD();
 };

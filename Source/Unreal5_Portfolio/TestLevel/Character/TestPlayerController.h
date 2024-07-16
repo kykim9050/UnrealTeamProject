@@ -76,6 +76,10 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void ChangePOVController();
 
+	// Item
+	UFUNCTION()
+	void ChangeSocketRelTransController();
+
 	// LowerStateChange 함수 (태환)
 	UFUNCTION(BlueprintCallable)
 	void ChangeLowerState(EPlayerLowerState _State);
@@ -86,15 +90,12 @@ public:
 
 	// AttackTest (태환)
 	UFUNCTION(BlueprintCallable)
-	void AttackTest(EPlayerMoveDir _Dir);
+	void AttackMontagePlay();
 
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "TeamId", meta = (AllowPrivateAccess = true))
 	FGenericTeamId TeamId;
 	virtual FGenericTeamId GetGenericTeamId() const override;
-
-	bool IsFire = false;
-
 
 	FTimerHandle MyTimeHandle;
 	int Count = 0;

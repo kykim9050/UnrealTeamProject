@@ -30,7 +30,10 @@ float UTestHpBarUserWidget::HPUpdate()
 {
 	//CurHp = static_cast<float>(MyCharacter->GetPlayerHp());
 	ATestPlayerState* MyPlayerState = Cast<ATestPlayerState>(UGameplayStatics::GetPlayerState(GetWorld(), 0));
-	CurHp = MyPlayerState->GetPlayerHp();
+	if(MyPlayerState != nullptr)
+	{
+		CurHp = MyPlayerState->GetPlayerHp();
+	}
 
 	// 현재 체력 / MAX 체력 
 	return CurHp / MaxHp;

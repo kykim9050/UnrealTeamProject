@@ -2,19 +2,20 @@
 
 
 #include "PartDevLevel/Monster/TestMonsterBase.h"
+#include "PartDevLevel/Monster/Animation/MonsterAnimInstance.h"
 #include "TestMonsterBaseAIController.h"
+#include "TestLevel/Character/TestPlayerState.h"
 #include "TestLevel/Character/TestCharacter.h"
 
 #include "GameFrameWork/CharacterMovementComponent.h"
 #include "Blueprint/AIBlueprintHelperLibrary.h"
 #include "BehaviorTree/BlackboardComponent.h"
-#include "Kismet/GameplayStatics.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "Kismet/GameplayStatics.h"
 #include "Net/UnrealNetwork.h"
 
 #include "Global/MainGameBlueprintFunctionLibrary.h"
-#include "Global/Animation/MainAnimInstance.h"
 #include "Global/ContentsEnum.h"
 #include "Global/ContentsLog.h"
 
@@ -44,8 +45,7 @@ void ATestMonsterBase::BeginPlay()
 
 	UMainGameInstance* MainGameInst = UMainGameBlueprintFunctionLibrary::GetMainGameInstance(GetWorld());
 
-	UAnimInstance* Inst = GetMesh()->GetAnimInstance();
-	AnimInst = Cast<UMainAnimInstance>(GetMesh()->GetAnimInstance());
+	AnimInst = Cast<UMonsterAnimInstance>(GetMesh()->GetAnimInstance());
 	BaseData = MainGameInst->GetMonsterData(BaseDataName);
 
 	if (nullptr == BaseData)
@@ -54,10 +54,10 @@ void ATestMonsterBase::BeginPlay()
 		return;
 	}
 
-	TMap<EMonsterAnim, UAnimMontage*> AnimMontages = BaseData->GetAnimMontage();
-	for (TPair<EMonsterAnim, class UAnimMontage*> Montage : AnimMontages)
+	TMap<EMonsterAnim, FAnimMontageGroup> TestAnimMontages = BaseData->GetTestAnimMontage();
+	for (TPair<EMonsterAnim, FAnimMontageGroup> AnimMontageGroup : TestAnimMontages)
 	{
-		AnimInst->PushAnimation(Montage.Key, Montage.Value);
+		AnimInst->PushRandomAnimation(AnimMontageGroup.Key, AnimMontageGroup.Value);
 	}
 
 	//  몬스터 데이터 세팅
@@ -117,7 +117,7 @@ ATestMonsterBaseAIController* ATestMonsterBase::GetAIController()
 	return Cast<ATestMonsterBaseAIController>(GetController());
 }
 
-UMainAnimInstance* ATestMonsterBase::GetAnimInstance()
+UMonsterAnimInstance* ATestMonsterBase::GetAnimInstance()
 {
 	return AnimInst;
 }
@@ -139,7 +139,14 @@ void ATestMonsterBase::Attack(AActor* _OtherActor, UPrimitiveComponent* _Collisi
 	ATestCharacter* HitCharacter = Cast<ATestCharacter>(_OtherActor);
 	if (nullptr != HitCharacter && EMonsterState::Attack == MonsterState)
 	{
-		HitCharacter->GetDamage(SettingData->AttackDamage);
+		ATestPlayerState* HitPlayerState = Cast<ATestPlayerState>(HitCharacter->GetPlayerState());
+
+		if (nullptr == HitPlayerState)
+		{
+			LOG(MonsterLog, Fatal, TEXT("HitPlayerState Is Not Valid"));
+		}
+
+		HitPlayerState->AddDamage(SettingData->AttackDamage);
 	}
 }
 
