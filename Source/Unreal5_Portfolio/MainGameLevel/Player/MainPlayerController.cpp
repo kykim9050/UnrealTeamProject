@@ -150,7 +150,7 @@ void AMainPlayerController::ChangePosture(EPlayerPosture _Posture)
 	{
 		return;
 	}
-
+	Ch->ChangePosture(_Posture);
 }
 
 FGenericTeamId AMainPlayerController::GetGenericTeamId() const

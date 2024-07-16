@@ -91,7 +91,9 @@ private : // 문제 발생 여지 있음 발생하면 그냥 지워야 함.
 	// == Server ==
 public :
 	// 상채 변경
-
+	UFUNCTION(Reliable, Server)
+	void ChangePosture(EPlayerPosture _Type);
+	void ChangePosture_Implementation(EPlayerPosture _Type);
 
 	// 하제 변경
 	UFUNCTION(Reliable, Server)
@@ -103,7 +105,7 @@ public :
 	void PickUpItem();
 	void PickUpItem_Implementation();
 
-	// 아이템 드랍
+	// 아이템 생성 -> 드랍
 	UFUNCTION(Reliable, Server, BlueprintCallable)
 	void CharacterPlayerToDropItem(FName _ItemName, FTransform _Transform);
 	void CharacterPlayerToDropItem_Implementation(FName _ItemName, FTransform _Transform);

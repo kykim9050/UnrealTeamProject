@@ -103,6 +103,18 @@ void AMainCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 
 }
 
+void AMainCharacter::ChangePosture_Implementation(EPlayerPosture _Type)
+{
+	if (_Type == EPlayerPosture::Barehand)
+	{
+		PostureValue = _Type;
+	}
+	else
+	{
+		PostureValue = _Type;
+	}
+}
+
 void AMainCharacter::ChangeLowerState_Implementation()
 {
 	switch (LowerStateValue)
