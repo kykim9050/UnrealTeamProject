@@ -47,6 +47,11 @@ public:
 		return AnimMontages;
 	}
 
+	TMap<EMonsterAnim, FAnimMontageGroup> GetTestAnimMontage() const
+	{
+		return TestAnimMontages;
+	}
+
 private:
 	/// <summary>
 	/// 기본 Monster 종류
@@ -72,8 +77,8 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowprivateAccess = "true"))
 	TMap<EMonsterAnim, class UAnimMontage*> AnimMontages;
 
-	//UPROPERTY(EditAnywhere, meta = (AllowprivateAccess = "true"))
-	//TMap<EMonsterAnim, FAnimMontageGroup> AllAnimMontages;
+	UPROPERTY(EditAnywhere, meta = (AllowprivateAccess = "true"))
+	TMap<EMonsterAnim, FAnimMontageGroup> TestAnimMontages;
 };
 
 UCLASS()
