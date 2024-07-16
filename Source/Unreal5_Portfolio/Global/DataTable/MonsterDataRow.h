@@ -5,8 +5,18 @@
 #include "CoreMinimal.h"
 #include "Engine/DataTable.h"
 #include "Global/ContentsEnum.h"
-#include "Global/Animation/MainRandomAnimInstance.h"
 #include "MonsterDataRow.generated.h"
+
+USTRUCT()
+struct UNREAL5_PORTFOLIO_API FAnimMontageGroup
+{
+	GENERATED_BODY()
+
+public:
+	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true"))
+	TArray<UAnimMontage*> AnimMontages;
+
+};
 
 /**
  * 
@@ -62,8 +72,8 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowprivateAccess = "true"))
 	TMap<EMonsterAnim, class UAnimMontage*> AnimMontages;
 
-	UPROPERTY(EditAnywhere, meta = (AllowprivateAccess = "true"))
-	TMap<EMonsterAnim, FAnimMontageGroup> AllAnimMontages;
+	//UPROPERTY(EditAnywhere, meta = (AllowprivateAccess = "true"))
+	//TMap<EMonsterAnim, FAnimMontageGroup> AllAnimMontages;
 };
 
 UCLASS()
