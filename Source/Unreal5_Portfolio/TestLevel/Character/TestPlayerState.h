@@ -30,7 +30,7 @@ public:
 	void AddDamage(float _Damage);
 public:
 	UFUNCTION()
-	void InitPlayerData(int _PlayerNumber);
+	void InitPlayerData();
 
 	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const;
 private:
