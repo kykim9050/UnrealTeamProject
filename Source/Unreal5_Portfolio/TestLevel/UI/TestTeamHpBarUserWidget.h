@@ -42,8 +42,6 @@ public:
 	void HPUpdate();
 
 private:
-	int MyPlayerNumber = -1;	// 몇 번째 플레이어인지
-	int PlayerCount = -1;		// 전체 플레이어 수 
 
 	float CurHp = 0.f;
 	float MaxHp = 100.f;

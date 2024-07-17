@@ -68,6 +68,24 @@ public:
 		return ItemUClass;
 	}
 
+	/// <summary>
+	/// 아이템 static mesh component의 relative location 값 반환
+	/// </summary>
+	/// <returns></returns>
+	FORCEINLINE FVector GetRelLoc() const
+	{
+		return RelLoc;
+	}
+
+	/// <summary>
+	/// 아이템 static mesh component의 relative rotation 값 반환
+	/// </summary>
+	/// <returns></returns>
+	FORCEINLINE FRotator GetRelRot() const
+	{
+		return RelRot;
+	}
+
 protected:
 
 private:
@@ -106,4 +124,16 @@ private:
 	/// </summary>
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowprivateAccess = "true"))
 	TSubclassOf<AActor> ItemUClass = TSubclassOf<AActor>();
+
+	/// <summary>
+	/// 아이템 static mesh component의 relative location
+	/// </summary>
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowprivateAccess = "true"))
+	FVector RelLoc = FVector(0.0f, 0.0f, 0.0f);
+
+	/// <summary>
+	/// 아이템 static mesh component의 relative rotation
+	/// </summary>
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowprivateAccess = "true"))
+	FRotator RelRot = FRotator(0.0f, 0.0f, 0.0f);
 };

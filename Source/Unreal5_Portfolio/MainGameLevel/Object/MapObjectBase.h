@@ -4,55 +4,35 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "TestSwtich.generated.h"
+#include "MapObjectBase.generated.h"
 
 UCLASS()
-class UNREAL5_PORTFOLIO_API ATestSwtich : public AActor
+class UNREAL5_PORTFOLIO_API AMapObjectBase : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	ATestSwtich();
+	AMapObjectBase();
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	UFUNCTION(BlueprintCallable)
-	void DoorSwitch(AActor* _OtherActor);
-
-
-	void GetDoorTime()
+	FORCEINLINE UStaticMeshComponent* GetMeshComponent() const
 	{
-		DoorTime;
+		return MeshComponent;
 	}
-
-	void SetDoorTime()
-	{
-		DoorTime = 0.0f;
-	}
-
 
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	
+
 private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-	class UStaticMeshComponent* Mesh = nullptr;
+	class UStaticMeshComponent* MeshComponent = nullptr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	class UCapsuleComponent* Collision = nullptr;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-	class ATestDoor* ConnectedDoor = nullptr;
-
-	UFUNCTION(BlueprintCallable)
-	void CharactorCollision(AActor* _OtherActor, UPrimitiveComponent* _Collision);
-
-	bool CharctorOn = false;
-
-	float DoorTime = 0.0f;
 };

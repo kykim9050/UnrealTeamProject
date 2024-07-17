@@ -10,6 +10,7 @@
 #include "Global/DataTable/ItemDataRow.h"
 #include "Global/DataTable/BossDataRow.h"
 #include "Global/DataTable/GlobalObjectRow.h"
+#include "Global/DataTable/MapObjDataRow.h"
 
 UMainGameInstance::UMainGameInstance()
 {
@@ -179,4 +180,22 @@ const TSubclassOf<UObject> UMainGameInstance::GetGlobalObjectClass(FName _Name)
 	}
 
 	return Data->GetObject();
+}
+
+FMapObjDataRow* UMainGameInstance::GetMapObjDataTable(FName _Name)
+{
+	if (nullptr == MapObjDataTable)
+	{
+		UE_LOG(ObjectLog, Fatal, TEXT("%S(%u)> if (nullptr == MapObjDataTable)"), __FUNCTION__, __LINE__);
+	}
+
+	FMapObjDataRow* Data = MapObjDataTable->FindRow<FMapObjDataRow>(_Name, nullptr);
+
+	if (nullptr == Data)
+	{
+		UE_LOG(MonsterLog, Error, TEXT("%S(%u)> %s Name Data Is Nullptr"), __FUNCTION__, __LINE__, *_Name.ToString());
+		return nullptr;
+	}
+
+	return Data;
 }

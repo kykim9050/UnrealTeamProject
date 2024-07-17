@@ -28,7 +28,9 @@ void UTestHpBarUserWidget::NativeTick(const FGeometry& _MyGeometry, float _InDel
 
 float UTestHpBarUserWidget::HPUpdate()
 {
-	//CurHp = static_cast<float>(MyCharacter->GetPlayerHp());
+	AGameModeBase* Mode = GetWorld()->GetAuthGameMode();
+	int b = 0;
+
 	ATestPlayerState* MyPlayerState = Cast<ATestPlayerState>(UGameplayStatics::GetPlayerState(GetWorld(), 0));
 	if(MyPlayerState != nullptr)
 	{

@@ -29,15 +29,7 @@ void ATestPlayMode::PostLogin(APlayerController* NewPlayer)
 
 	// 새로 로그인한 플레이어 처리
 	ATestPlayerState* NewPlayerState = NewPlayer->GetPlayerState<ATestPlayerState>();
-	NewPlayerState->InitPlayerData(++PlayerCount);
-
-	// 전체 PlayerState 배열에 추가하고 다른 PlayerState들에게도 덮어 써줌 
-	AllPlayerStates.Add(NewPlayerState);
-	//NewPlayerState->SetAllPlayerStates(AllPlayerStates); 
-	for (auto other : AllPlayerStates)
-	{
-		other->SetAllPlayerStates(AllPlayerStates);
-	}
+	NewPlayerState->InitPlayerData();
 }
 
 void ATestPlayMode::GPlayerToDropItem_Implementation(FName _ItemName, FTransform _Transform)
