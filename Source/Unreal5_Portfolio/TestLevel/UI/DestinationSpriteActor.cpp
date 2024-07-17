@@ -29,6 +29,12 @@ ADestinationSpriteActor::ADestinationSpriteActor()
 	SetActorEnableCollision(false);
 }
 
+void ADestinationSpriteActor::SetDestinationValue(float _x, float _y)
+{
+	SetActorLocation(FVector(_x, _y, 0.f));
+	SetActorScale3D(FVector(4.f, 1.f, 4.f));
+}
+
 // Called when the game starts or when spawned
 void ADestinationSpriteActor::BeginPlay()
 {
