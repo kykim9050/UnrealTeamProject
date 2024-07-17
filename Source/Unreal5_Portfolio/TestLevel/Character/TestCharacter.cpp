@@ -362,11 +362,11 @@ void ATestCharacter::ChangePosture_Implementation(EPlayerPosture _Type)	// => 메
 		FPVItemSocketMesh->SetStaticMesh(ItemSlot[CurItemIndex].MeshRes);
 
 		// 아이템 메시 transform 세팅
-		ItemSocketMesh->SetRelativeLocation(FVector(/*ItemSlot[CurItemIndex].RelLoc*/));		// ItemDataRow에 항목 추가 필요
-		FPVItemSocketMesh->SetRelativeLocation(FVector(/*ItemSlot[CurItemIndex].RelLoc*/));		// ItemDataRow에 항목 추가 필요
+		ItemSocketMesh->SetRelativeLocation(FVector(ItemSlot[CurItemIndex].RelLoc));		// ItemDataRow에 항목 추가 필요
+		FPVItemSocketMesh->SetRelativeLocation(FVector(ItemSlot[CurItemIndex].RelLoc));		// ItemDataRow에 항목 추가 필요
 
-		ItemSocketMesh->SetRelativeRotation(FQuat(/*ItemSlot[CurItemIndex].RelRot*/));			// ItemDataRow에 항목 추가 필요
-		FPVItemSocketMesh->SetRelativeRotation(FRotator(/*ItemSlot[CurItemIndex].RelRot*/));	// ItemDataRow에 항목 추가 필요
+		ItemSocketMesh->SetRelativeRotation(FQuat(ItemSlot[CurItemIndex].RelRot));			// ItemDataRow에 항목 추가 필요
+		FPVItemSocketMesh->SetRelativeRotation(FRotator(ItemSlot[CurItemIndex].RelRot));	// ItemDataRow에 항목 추가 필요
 
 		// 아이템 메시 visibility 켜기
 		ItemSocketMesh->SetVisibility(true);
@@ -406,8 +406,8 @@ void ATestCharacter::PickUpItem_Implementation()	// => 메인캐릭터로 이전해야 함 
 	int ItemReloadNum = ItemData->GetReloadNum();		// 무기 장전 단위 (30, 40)	// -1일 경우 총기류 무기가 아님
 	int ItemDamage = ItemData->GetDamage();				// 무기 공격력				// 0일 경우 무기가 아님
 	UStaticMesh* ItemMeshRes = ItemData->GetResMesh();	// 스태틱 메시
-	//FVector ItemRelLoc = ItemData->GetRelLoc();		// 스태틱 메시 컴포넌트 상대적 위치
-	//FRotator ItemRelRot = ItemData->GetRelRot();		// 스태틱 메시 컴포넌트 상대적 회전
+	FVector ItemRelLoc = ItemData->GetRelLoc();			// 스태틱 메시 컴포넌트 상대적 위치
+	FRotator ItemRelRot = ItemData->GetRelRot();		// 스태틱 메시 컴포넌트 상대적 회전
 
 	// 인벤토리에 아이템 집어넣기. (스태틱메시로 아이템을 가져가는 방식 채택!!!)
 	uint8 ItemIndex = static_cast<uint8>(ItemType);		// 아이템을 넣을 인벤토리 인덱스
@@ -418,8 +418,8 @@ void ATestCharacter::PickUpItem_Implementation()	// => 메인캐릭터로 이전해야 함 
 	ItemSlot[ItemIndex].ReloadLeftNum = ItemReloadNum;
 	ItemSlot[ItemIndex].Damage = ItemDamage;
 	ItemSlot[ItemIndex].MeshRes = ItemMeshRes;
-	//ItemSlot[ItemIndex].RelLoc = ItemRelLoc;
-	//ItemSlot[ItemIndex].RelLoc = ItemRelRot;
+	ItemSlot[ItemIndex].RelLoc = ItemRelLoc;
+	ItemSlot[ItemIndex].RelRot= ItemRelRot;
 
 	// Map에 있는 아이템 삭제.
 	GetMapItem->Destroy();
