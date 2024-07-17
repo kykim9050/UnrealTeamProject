@@ -386,9 +386,6 @@ void ATestCharacter::ChangePlayerDir_Implementation(EPlayerMoveDir _Dir)
 
 void ATestCharacter::PickUpItem_Implementation()	// => 메인캐릭터로 이전해야 함 (내용 수정됨)
 {
-	//AGameModeBase* Test = GetWorld()->GetAuthGameMode();
-	//ATestPlayerController* PlayerControl = Cast<ATestPlayerController>(GetController());
-	
 	// RayCast를 통해 Tag 이름을 가져온다.
 	FString GetItemName = "";
 	GetItemName = RayCastToItemName;
@@ -399,29 +396,33 @@ void ATestCharacter::PickUpItem_Implementation()	// => 메인캐릭터로 이전해야 함 
 		return;
 	}
 
-	FName ItemStringToName = FName(*GetItemName);
+	FName ItemStringToName = FName(*GetItemName);		// 아이템 이름
 
-	// Data Table에 있는 Static Mesh 가져오기.
+	// Data Table에 있는 아이템 정보 가져오기.
 	UMainGameInstance* Inst = GetGameInstance<UMainGameInstance>();
 	const FItemDataRow* ItemData = Inst->GetItemData(ItemStringToName);
 
-	EPlayerPosture ItemType = ItemData->GetType();		// 무기 Type
-	int ItemReloadNum = ItemData->GetReloadNum();		// 무기 장전 단위 (30, 40) (-1일 경우 총기류 무기가 아님)
-	int ItemDamage = ItemData->GetDamage();				// 무기 공격력 (0일 경우 무기가 아님)
-	UStaticMesh* ItemMeshRes = ItemData->GetResMesh();	// 아이템 static mesh
-
-	uint8 ItemIndex = static_cast<uint8>(ItemType);		// 아이템을 넣을 인벤토리 인덱스
+	EPlayerPosture ItemType = ItemData->GetType();		// 아이템 타입
+	int ItemReloadNum = ItemData->GetReloadNum();		// 무기 장전 단위 (30, 40)	// -1일 경우 총기류 무기가 아님
+	int ItemDamage = ItemData->GetDamage();				// 무기 공격력				// 0일 경우 무기가 아님
+	UStaticMesh* ItemMeshRes = ItemData->GetResMesh();	// 스태틱 메시
+	//FVector ItemRelLoc = ItemData->GetRelLoc();		// 스태틱 메시 컴포넌트 상대적 위치
+	//FRotator ItemRelRot = ItemData->GetRelRot();		// 스태틱 메시 컴포넌트 상대적 회전
 
 	// 인벤토리에 아이템 집어넣기. (스태틱메시로 아이템을 가져가는 방식 채택!!!)
+	uint8 ItemIndex = static_cast<uint8>(ItemType);		// 아이템을 넣을 인벤토리 인덱스
+	IsItemIn[ItemIndex] = true;
+
 	ItemSlot[ItemIndex].Name = ItemStringToName;
 	ItemSlot[ItemIndex].ReloadMaxNum = ItemReloadNum;
 	ItemSlot[ItemIndex].ReloadLeftNum = ItemReloadNum;
 	ItemSlot[ItemIndex].Damage = ItemDamage;
 	ItemSlot[ItemIndex].MeshRes = ItemMeshRes;
-	IsItemIn[ItemIndex] = true;
+	//ItemSlot[ItemIndex].RelLoc = ItemRelLoc;
+	//ItemSlot[ItemIndex].RelLoc = ItemRelRot;
 
 	// Map에 있는 아이템 삭제.
-	GetMapItem->Destroy(); 
+	GetMapItem->Destroy();
 
 	// 무기 Type에 따른 애니메이션 변화 함수 호출.
 	ChangePosture(ItemType);
