@@ -29,14 +29,14 @@ void AMonsterSpawner::Tick(float DeltaTime)
 	DestroyCheck();
 }
 
-void AMonsterSpawner::InitSpawner(EMonsterSpawnerType _Type, const FVector& _Location, float _Radius, int _MinSize, int _MaxSize)
+void AMonsterSpawner::InitSpawner(EMonsterSpawnerType Type, const FVector& Location, float Radius, int MinSize, int MaxSize)
 {
 	SettingData = NewObject<UMonsterSpawnerData>(this);
-	SettingData->Location = _Location;
-	SettingData->MinSize = _MinSize;
-	SettingData->MaxSize = _MaxSize;
-	SettingData->Radius = _Radius;
-	SettingData->Type = _Type;
+	SettingData->Location = Location;
+	SettingData->MinSize = MinSize;
+	SettingData->MaxSize = MaxSize;
+	SettingData->Radius = Radius;
+	SettingData->Type = Type;
 }
 
 void AMonsterSpawner::DestroyCheck()

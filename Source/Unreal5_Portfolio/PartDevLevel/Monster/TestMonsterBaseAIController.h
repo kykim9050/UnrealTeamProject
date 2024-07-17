@@ -33,7 +33,7 @@ protected:
 	void SetPerception();
 
 private:
-	UPROPERTY(EditANywhere, BlueprintReadWrite, Category = "Sight", meta = (AllowPrivateAccess = true))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sight", meta = (AllowPrivateAccess = true))
 	UAISenseConfig_Sight* SightConfig;
 
 	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = true))

@@ -25,14 +25,14 @@ public:
 	}
 
 	template<typename EnumType>
-	void ChangeAniType(EnumType _Type)
+	void ChangeAniType(EnumType Type)
 	{
-		ChangeAniType(static_cast<uint8>(_Type));
+		ChangeAniType(static_cast<uint8>(Type));
 	}
 
-	void ChangeAniType(uint8 _Type)
+	void ChangeAniType(uint8 Type)
 	{
-		AnimType = _Type;
+		AnimType = Type;
 	}
 
 
