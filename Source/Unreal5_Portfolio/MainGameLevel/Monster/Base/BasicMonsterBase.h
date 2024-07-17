@@ -7,6 +7,9 @@
 #include "Global/DataTable/MonsterDataRow.h"
 #include "BasicMonsterBase.generated.h"
 
+class USphereComponent;
+class UBasicMonsterAnimInstance;
+
 UCLASS()
 class UNREAL5_PORTFOLIO_API ABasicMonsterBase : public ACharacter
 {
@@ -16,13 +19,27 @@ public:
 	ABasicMonsterBase();
 
 public:
+	UBasicMonsterAnimInstance* GetAnimInstance() const
+	{
+		return AnimInst;
+	}
+
+	template<typename EnumType>
+	void ChangeAniType(EnumType _Type)
+	{
+		ChangeAniType(static_cast<uint8>(_Type));
+	}
+
+	void ChangeAniType(uint8 _Type)
+	{
+		AniType = _Type;
+	}
 
 
 protected:
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
 	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
-
 
 private:
 	// 기본 설정 데이터 (데이터 테이블 기반)
@@ -37,13 +54,15 @@ private:
 private:
 	// 애니메이션
 	UPROPERTY(Replicated)
-	uint8 AniValue;
-	class UBasicMonsterAnimInstance* AnimInst = nullptr;
+	uint8 AniType;
+
+	UBasicMonsterAnimInstance* AnimInst = nullptr;
 
 private:
 	// 컴포넌트
 	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = true))
-	class USphereComponent* AttackComponent;
+	USphereComponent* AttackComponent;
 
-
+	UPROPERTY(EditAnywhere, Category = "Particle", meta = (AllowPrivateAccess = true))
+	UParticleSystem* BloodParticle;
 };

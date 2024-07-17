@@ -24,7 +24,7 @@ void ABasicMonsterBase::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Ou
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
-	DOREPLIFETIME(ABasicMonsterBase, AniValue);
+	DOREPLIFETIME(ABasicMonsterBase, AniType);
 }
 
 void ABasicMonsterBase::BeginPlay()
@@ -42,7 +42,6 @@ void ABasicMonsterBase::BeginPlay()
 	}
 
 	SettingData = NewObject<UMonsterData>(this);
-	SettingData->Data = BaseData;
 	SettingData->AttackDamage = 34.0f;
 	SettingData->OriginPos = GetActorLocation();
 

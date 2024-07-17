@@ -53,6 +53,11 @@ public:
 		return SettingData->Hp;
 	}
 
+	FORCEINLINE const FMonsterDataRow* GetBaseData() const
+	{
+		return BaseData;
+	}
+
 	void Damaged(float Damage);
 	void SetAttackCollision(bool Active);
 

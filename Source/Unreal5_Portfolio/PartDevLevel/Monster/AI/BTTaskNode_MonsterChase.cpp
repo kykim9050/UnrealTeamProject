@@ -23,7 +23,7 @@ EBTNodeResult::Type UBTTaskNode_MonsterChase::ExecuteTask(UBehaviorTreeComponent
 	}
 
 	UMonsterData* MonsterData = GetValueAsObject<UMonsterData>(_OwnerComp, TEXT("MonsterData"));
-	Monster->GetCharacterMovement()->MaxWalkSpeed = MonsterData->Data->GetRunSpeed();
+	Monster->GetCharacterMovement()->MaxWalkSpeed = Monster->GetBaseData()->GetRunSpeed();
 	Monster->ChangeAniValue(EMonsterAnim::Run);
 
 	return EBTNodeResult::Type::InProgress;

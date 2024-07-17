@@ -91,9 +91,8 @@ protected:
 	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
 public:
-	const FMonsterDataRow* Data;
-	
 	FVector OriginPos = FVector::ZeroVector;
+
 	UPROPERTY(Replicated)
 	float Hp = 100.0f;
 
