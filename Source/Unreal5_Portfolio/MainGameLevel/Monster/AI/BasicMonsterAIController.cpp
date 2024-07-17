@@ -15,5 +15,4 @@ void ABasicMonsterAIController::BeginPlay()
 {
 	Super::BeginPlay();
 
-	RunBehaviorTree()
 }

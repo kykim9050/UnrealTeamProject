@@ -6,8 +6,6 @@
 #include "AIController.h"
 #include "BasicMonsterAIController.generated.h"
 
-
-
 /**
  * 
  */
