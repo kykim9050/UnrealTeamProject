@@ -1,18 +1,17 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "MainGameLevel/Object/SwitchObject.h"
+#include "MainGameLevel/Object/DoorObject.h"
 #include "Global/MainGameBlueprintFunctionLibrary.h"
 #include "Global/ContentsLog.h"
 #include "Global/DataTable/MapObjDataRow.h"
 
-
-ASwitchObject::ASwitchObject()
+ADoorObject::ADoorObject()
 {
 
 }
 
-void ASwitchObject::BeginPlay()
+void ADoorObject::BeginPlay()
 {
 	Super::BeginPlay();
 
@@ -24,13 +23,11 @@ void ASwitchObject::BeginPlay()
 		return;
 	}
 
-	const FMapObjDataRow* TableData = Inst->GetMapObjDataTable(FName(TEXT("Armory_Switch")));
+	const FMapObjDataRow* TableData = Inst->GetMapObjDataTable(FName(TEXT("Armory_Door")));
 	GetMeshComponent()->SetStaticMesh(TableData->GetMesh());
-
-	SwitchValue = TableData->GetWorkValue();
 }
 
-void ASwitchObject::Tick(float DeltaTime)
+void ADoorObject::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 }
