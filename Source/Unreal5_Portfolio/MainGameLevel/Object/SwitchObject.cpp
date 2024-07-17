@@ -5,11 +5,12 @@
 #include "Global/MainGameBlueprintFunctionLibrary.h"
 #include "Global/ContentsLog.h"
 #include "Global/DataTable/MapObjDataRow.h"
+#include "Components/CapsuleComponent.h"
 
 
 ASwitchObject::ASwitchObject()
 {
-
+	GetCollisionComponent()->OnComponentBeginOverlap.AddDynamic(this, &ASwitchObject::OnOverlapBegin);
 }
 
 void ASwitchObject::BeginPlay()
@@ -29,9 +30,26 @@ void ASwitchObject::BeginPlay()
 
 	SwitchValue = TableData->GetWorkValue();
 	InteractObjClass = TableData->GetInteractObjClass();
+
+	//FVector CurPos = GetCollisionComponent()->GetComponentLocation();
+	//FVector CurActorPos = GetActorLocation();
+	//FVector CurMeshPos = GetMeshComponent()->GetComponentLocation();
+
+	GetCollisionComponent()->AddRelativeLocation(CollisionOffset);
+	//FVector NextPos = GetCollisionComponent()->GetComponentLocation();
+	//FVector NextActorPos = GetActorLocation();
+	//FVector NextMeshPos = GetMeshComponent()->GetComponentLocation();
 }
 
 void ASwitchObject::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+}
+
+void ASwitchObject::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	if (OtherActor && (OtherActor != this) && OtherComp)
+	{
+		int a = 0;
+	}
 }

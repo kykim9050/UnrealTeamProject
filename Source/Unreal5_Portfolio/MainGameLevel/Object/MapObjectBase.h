@@ -24,6 +24,11 @@ protected:
 		return MeshComponent;
 	}
 
+	FORCEINLINE class UCapsuleComponent* GetCollisionComponent() const
+	{
+		return CollisionComponent;
+	}
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -34,5 +39,5 @@ private:
 	class UStaticMeshComponent* MeshComponent = nullptr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-	class UCapsuleComponent* Collision = nullptr;
+	class UCapsuleComponent* CollisionComponent = nullptr;
 };
