@@ -33,7 +33,7 @@ protected:
 	void Tick(float DeltaTime) override;
 
 private:
-	UPROPERTY()
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<UObject> InteractObjClass = TSubclassOf<UObject>();
 
 	UPROPERTY()

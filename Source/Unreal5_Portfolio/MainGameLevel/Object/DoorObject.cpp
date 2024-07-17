@@ -34,3 +34,8 @@ void ADoorObject::SetMesh(FName _ObjName)
 	const FMapObjDataRow* TableData = Inst->GetMapObjDataTable(_ObjName);
 	GetMeshComponent()->SetStaticMesh(TableData->GetMesh());
 }
+
+void ADoorObject::SlideDoorOpen()
+{
+	AddActorLocalOffset(FVector(0.0f, 100.0f, 0.0f));
+}

@@ -6,6 +6,7 @@
 #include "Global/ContentsLog.h"
 #include "Global/DataTable/MapObjDataRow.h"
 #include "Components/CapsuleComponent.h"
+#include "MainGameLevel/Object/DoorObject.h"
 
 
 ASwitchObject::ASwitchObject()
@@ -50,6 +51,11 @@ void ASwitchObject::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, cl
 {
 	if (OtherActor && (OtherActor != this) && OtherComp)
 	{
-		int a = 0;
+
+		// 클래스 형 받아오고
+
+		// 해당 클래스 형으로 다운캐스팅하기??
+
+		// 그리고 SlideDoorOpen함수 실행
 	}
 }
