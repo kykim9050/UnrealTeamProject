@@ -7,6 +7,7 @@
 #include "Global/DataTable/MapObjDataRow.h"
 #include "Components/CapsuleComponent.h"
 #include "MainGameLevel/Object/DoorObject.h"
+#include "Kismet/GameplayStatics.h"
 
 
 ASwitchObject::ASwitchObject()
@@ -51,11 +52,25 @@ void ASwitchObject::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, cl
 {
 	if (OtherActor && (OtherActor != this) && OtherComp)
 	{
-
 		// 클래스 형 받아오고
+		AActor* OtherObj = UGameplayStatics::GetActorOfClass(GetWorld(), InteractObjClass);
+		
+		if (nullptr == OtherObj)
+		{
+			UE_LOG(ObjectLog, Fatal, TEXT("%S(%u)> if (nullptr == OtherObj)"), __FUNCTION__, __LINE__);
+			return;
+		}
 
-		// 해당 클래스 형으로 다운캐스팅하기??
+		// 해당 클래스 형으로 다운캐스팅하기
+		ADoorObject* InteractObj = Cast<ADoorObject>(OtherObj);
 
-		// 그리고 SlideDoorOpen함수 실행
+		if (nullptr == InteractObj)
+		{
+			UE_LOG(ObjectLog, Fatal, TEXT("%S(%u)> if (nullptr == InteractObj)"), __FUNCTION__, __LINE__);
+			return;
+		}
+
+		// 그리고 Sliding함수 실행
+		InteractObj->Sliding();
 	}
 }

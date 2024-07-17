@@ -19,7 +19,7 @@ public:
 	void SetMesh(FName _ObjName);
 
 	UFUNCTION(BlueprintCallable)
-	void SlideDoorOpen(/*float _DeltaTime*/);
+	void Sliding(/*float _DeltaTime*/);
 
 protected:
 	ADoorObject();

@@ -34,7 +34,7 @@ protected:
 
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	TSubclassOf<UObject> InteractObjClass = TSubclassOf<UObject>();
+	TSubclassOf<AActor> InteractObjClass = TSubclassOf<AActor>();
 
 	UPROPERTY()
 	bool SwitchValue = false;
