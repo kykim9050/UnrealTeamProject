@@ -10,6 +10,7 @@
 #include "Camera/CameraComponent.h"
 #include "MainPlayerController.h"
 #include "PlayerItemInformation.h"
+#include "PartDevLevel/Character/PlayerAnimInstance.h"
 
 
 // Sets default values
@@ -81,7 +82,7 @@ void AMainCharacter::BeginPlay()
 	Super::BeginPlay();
 	UMainGameBlueprintFunctionLibrary::PushActor(EObjectType::Player, this);
 
-
+	PlayerAnimInst = Cast<UPlayerAnimInstance>(GetMesh()->GetAnimInstance());
 }
 
 void AMainCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -90,6 +91,8 @@ void AMainCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLi
 
 	// 하체 정보
 	DOREPLIFETIME(AMainCharacter, LowerStateValue);
+	// 플레이어 자세 유형.
+	DOREPLIFETIME(AMainCharacter, PostureValue);
 }
 
 // Called every frame
@@ -216,6 +219,18 @@ void AMainCharacter::FireRayCast_Implementation(float _DeltaTime)
 			//}
 		}
 	}
+}
+
+void AMainCharacter::ChangeMontage_Implementation()
+{
+	PlayerAnimInst->ChangeAnimation(PostureValue);
+
+	ClientChangeMontage();
+}
+
+void AMainCharacter::ClientChangeMontage_Implementation()
+{
+	PlayerAnimInst->ChangeAnimation(PostureValue);
 }
 
 void AMainCharacter::MapItemOverlapStart(AActor* _OtherActor, UPrimitiveComponent* _Collision)

@@ -52,6 +52,10 @@ private : // 문제 발생 여지 있음 발생하면 그냥 지워야 함.
 	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	class USceneComponent* CreateItemComponent = nullptr;
 
+	// 몽타주 변경을 위한 AnimInstance
+	UPROPERTY()
+	class UPlayerAnimInstance* PlayerAnimInst;
+
 
 	// == State, Posture ==
 	
@@ -114,6 +118,15 @@ public :
 	UFUNCTION(Reliable, Server, BlueprintCallable)
 	void FireRayCast(float _DeltaTime);
 	void FireRayCast_Implementation(float _DeltaTime);
+
+	// 공격 몽타주 서버
+	UFUNCTION(Reliable, Server)
+	void ChangeMontage();
+	void ChangeMontage_Implementation();
+
+	UFUNCTION(Reliable, NetMulticast)
+	void ClientChangeMontage();
+	void ClientChangeMontage_Implementation();
 
 	// == Client ==
 private :	
