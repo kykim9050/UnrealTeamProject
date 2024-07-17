@@ -35,5 +35,5 @@ public:
 	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const;
 private:
 	UPROPERTY()
-	float PlayerHp = 0;
+	float PlayerHp = 0.f;
 };
