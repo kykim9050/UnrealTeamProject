@@ -13,7 +13,7 @@
 
 UMainGameInstance::UMainGameInstance()
 {
-
+	Random.GenerateNewSeed();
 }
 
 void UMainGameInstance::Init()

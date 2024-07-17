@@ -42,6 +42,6 @@ public:
 	}
 
 private:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY()
 	TMap<uint8, class UAnimMontage*> AnimMontages;
 };

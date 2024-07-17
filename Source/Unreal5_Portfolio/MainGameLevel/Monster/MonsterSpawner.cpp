@@ -71,7 +71,6 @@ void AMonsterSpawner::SpawnMonster_Implementation()
 
 		FTransform Transform;
 		Transform.SetLocation(Location);
-		TSubclassOf<AActor> UClass = MonsterData->GetMonsterUClass();
-		GetWorld()->SpawnActor<AActor>(MonsterData->GetMonsterUClass(), Transform);
+		GetWorld()->SpawnActor<AActor>(MonsterData->GetMonsterUClass(), Transform);		
 	}
 }

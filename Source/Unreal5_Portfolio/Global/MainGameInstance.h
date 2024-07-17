@@ -86,6 +86,8 @@ public:
 	}
 
 	FNetDataRow CurNetInfo;
+	FRandomStream Random;
+
 protected:
 
 private:
