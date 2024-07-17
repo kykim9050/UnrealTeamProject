@@ -57,6 +57,20 @@ enum class EMonsterState : uint8
 };
 
 UENUM(BlueprintType)
+enum class EBasicMonsterState : uint8
+{
+	Idle,
+	Patrol,
+	Chase,
+	Fall,
+	Jump,
+	Climb,
+	ClimbEnd,
+	Attack,
+	Dead
+};
+
+UENUM(BlueprintType)
 enum class EMonsterAnim : uint8
 {
 	Idle		UMETA(DisplayName = "Idle"),
