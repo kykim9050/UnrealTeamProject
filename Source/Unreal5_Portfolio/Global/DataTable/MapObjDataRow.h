@@ -30,7 +30,7 @@ public:
 		WorkValue = _Value;
 	}
 
-	FORCEINLINE TSubclassOf<AActor> GetInteractObjClass() const
+	FORCEINLINE TSubclassOf<UObject> GetInteractObjClass() const
 	{
 		return InteractObjClass;
 	}
@@ -54,5 +54,5 @@ private:
 	/// 상호작용할 오브젝트
 	/// </summary>
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowprivateAccess = "true"))
-	TSubclassOf<AActor> InteractObjClass = TSubclassOf<AActor>();
+	TSubclassOf<UObject> InteractObjClass = TSubclassOf<UObject>();
 };

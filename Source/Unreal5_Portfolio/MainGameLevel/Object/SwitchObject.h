@@ -31,9 +31,10 @@ protected:
 
 private:
 	UPROPERTY()
-	TSubclassOf<AMapObjectBase> InteractObjClass = TSubclassOf<AMapObjectBase>();
+	TSubclassOf<UObject> InteractObjClass = TSubclassOf<UObject>();
 
 	UPROPERTY()
 	bool SwitchValue = false;
+
 
 };

@@ -14,7 +14,15 @@ ADoorObject::ADoorObject()
 void ADoorObject::BeginPlay()
 {
 	Super::BeginPlay();
+}
 
+void ADoorObject::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+}
+
+void ADoorObject::SetMesh(FName _ObjName)
+{
 	UMainGameInstance* Inst = UMainGameBlueprintFunctionLibrary::GetMainGameInstance(GetWorld());
 
 	if (nullptr == Inst)
@@ -23,11 +31,6 @@ void ADoorObject::BeginPlay()
 		return;
 	}
 
-	const FMapObjDataRow* TableData = Inst->GetMapObjDataTable(FName(TEXT("Armory_Door")));
+	const FMapObjDataRow* TableData = Inst->GetMapObjDataTable(_ObjName);
 	GetMeshComponent()->SetStaticMesh(TableData->GetMesh());
-}
-
-void ADoorObject::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
 }

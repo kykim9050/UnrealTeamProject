@@ -15,6 +15,8 @@ class UNREAL5_PORTFOLIO_API ADoorObject : public AMapObjectBase
 	GENERATED_BODY()
 	
 public:
+	UFUNCTION(BlueprintCallable)
+	void SetMesh(FName _ObjName);
 
 protected:
 	ADoorObject();

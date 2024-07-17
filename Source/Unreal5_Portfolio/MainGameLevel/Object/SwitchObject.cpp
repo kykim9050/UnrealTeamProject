@@ -28,6 +28,7 @@ void ASwitchObject::BeginPlay()
 	GetMeshComponent()->SetStaticMesh(TableData->GetMesh());
 
 	SwitchValue = TableData->GetWorkValue();
+	InteractObjClass = TableData->GetInteractObjClass();
 }
 
 void ASwitchObject::Tick(float DeltaTime)
