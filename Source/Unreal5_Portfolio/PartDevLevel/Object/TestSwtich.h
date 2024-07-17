@@ -55,5 +55,4 @@ private:
 	bool CharctorOn = false;
 
 	float DoorTime = 0.0f;
-
 };
