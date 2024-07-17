@@ -16,7 +16,6 @@ struct FBossDataRow : public FTableRowBase
 	GENERATED_BODY()
 	
 public:
-
 	FORCEINLINE FString GetName() const
 	{
 		return Name;
@@ -27,9 +26,14 @@ public:
 		return HP;
 	}
 
-	FORCEINLINE float GetAttackDamage() const
+	FORCEINLINE float GetMeleeAttackDamage() const
 	{
-		return AttackDamage;
+		return MeleeAttackDamage;
+	}
+
+	FORCEINLINE float GetRangedAttackDamage() const
+	{
+		return RangedAttackDamage;
 	}
 
 	FORCEINLINE float GetAttackTime() const
@@ -78,10 +82,16 @@ private:
 	float HP = 0.0f;
 
 	/// <summary>
-	/// 공격력
+	/// 근접 공격력
 	/// </summary>
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowprivateAccess = "true"))
-	float AttackDamage = 0.0f;
+	float MeleeAttackDamage = 0.0f;
+
+	/// <summary>
+	/// 원거리 공격력
+	/// </summary>
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowprivateAccess = "true"))
+	float RangedAttackDamage = 0.0f;
 
 	/// <summary>
 	/// 공격 쿨타임
@@ -130,6 +140,8 @@ protected:
 
 public:
 	const FBossDataRow* Data = nullptr;
+
+	float HP = 0.0f;
 
 protected:
 

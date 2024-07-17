@@ -2,25 +2,36 @@
 
 
 #include "PartDevLevel/Monster/Boss/TestBossMonsterBase.h"
+#include "PartDevLevel/Monster/Animation/MonsterAnimInstance.h"
 #include "TestBossMonsterAIControllerBase.h"
+
+#include "TestLevel/Character/TestPlayerState.h"
+#include "TestLevel/Character/TestCharacter.h"
 
 #include "GameFrameWork/CharacterMovementComponent.h"
 #include "Blueprint/AIBlueprintHelperLibrary.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "Kismet/GameplayStatics.h"
 #include "Net/UnrealNetwork.h"
 
 #include "Global/MainGameBlueprintFunctionLibrary.h"
-#include "Global/Animation/MainAnimInstance.h"
 #include "Global/ContentsEnum.h"
 #include "Global/ContentsLog.h"
+
+#include "Components/SphereComponent.h"
 
 // Sets default values
 ATestBossMonsterBase::ATestBossMonsterBase()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+
+	MeleeAttackComponent = CreateDefaultSubobject<USphereComponent>(TEXT("MeleeAttack Component"));
+	MeleeAttackComponent->SetupAttachment(RootComponent);
+
+	GetMesh()->SetCollisionEnabled(ECollisionEnabled::Type::NoCollision);
 
 }
 
@@ -33,24 +44,24 @@ void ATestBossMonsterBase::BeginPlay()
 
 	UAnimInstance* AnimInst = GetMesh()->GetAnimInstance();
 	MainAnimInst = Cast<UMainAnimInstance>(GetMesh()->GetAnimInstance());
-	BossData = MainGameInst->GetBossDataTable(BossDataName);
 
-	if (nullptr == BossData)
+	//  몬스터 데이터 세팅
+	SettingBossData = NewObject<UBossData>(this);
+	SettingBossData->Data = MainGameInst->GetBossDataTable(BossDataName);
+	SettingBossData->HP = SettingBossData->Data->GetHP();
+
+	if (nullptr == SettingBossData->Data)
 	{
 		LOG(MonsterLog, Fatal, TEXT("BossData Is Null"));
 		return;
 	}
 
 	// 몽타주 푸쉬
-	TMap<EBossMonsterAnim, UAnimMontage*> AnimMontages = BossData->GetAnimMontage();
+	TMap<EBossMonsterAnim, UAnimMontage*> AnimMontages = SettingBossData->Data->GetAnimMontage();
 	for (TPair<EBossMonsterAnim, class UAnimMontage*> Montage : AnimMontages)
 	{
 		MainAnimInst->PushAnimation(Montage.Key, Montage.Value);
 	}
-
-	//  몬스터 데이터 세팅
-	SettingBossData = NewObject<UBossData>(this);
-	SettingBossData->Data = BossData;
 
 	// 클라이언트일 경우
 	ATestBossMonsterAIControllerBase* AIController = GetController<ATestBossMonsterAIControllerBase>();
@@ -60,6 +71,9 @@ void ATestBossMonsterBase::BeginPlay()
 	}
 
 	AIController->GetBlackboardComponent()->SetValueAsObject(TEXT("BossMonsterData"), SettingBossData);
+
+	MeleeAttackComponent->OnComponentEndOverlap.AddDynamic(this, &ATestBossMonsterBase::OnAttackOverlapEnd);
+	SetAttackCollision(false);
 
 }
 
@@ -91,4 +105,59 @@ void ATestBossMonsterBase::ChangeAniValue(uint8 _Type)
 ATestBossMonsterAIControllerBase* ATestBossMonsterBase::GetBossAIController()
 {
 	return Cast<ATestBossMonsterAIControllerBase>(GetController());
+}
+
+void ATestBossMonsterBase::OnAttackOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
+	MeleeAttack(OtherActor, OtherComp);
+}
+
+void ATestBossMonsterBase::MeleeAttack(AActor* _OtherActor, UPrimitiveComponent* _Collision)
+{
+	UBlackboardComponent* BlackBoard = UAIBlueprintHelperLibrary::GetBlackboard(this);
+	if (nullptr == BlackBoard)
+	{
+		return;
+	}
+
+	EBossMonsterState BossMonsterState = static_cast<EBossMonsterState>(BlackBoard->GetValueAsEnum(TEXT("State")));
+	ATestCharacter* HitCharacter = Cast<ATestCharacter>(_OtherActor);
+	if (nullptr != HitCharacter && EBossMonsterState::MeleeAttack == BossMonsterState)
+	{
+		ATestPlayerState* HitPlayerState = Cast<ATestPlayerState>(HitCharacter->GetPlayerState());
+
+		if (nullptr == HitPlayerState)
+		{
+			LOG(MonsterLog, Fatal, TEXT("HitPlayerState Is Not Valid"));
+		}
+
+		HitPlayerState->AddDamage(SettingBossData->Data->GetMeleeAttackDamage());
+	}
+}
+
+void ATestBossMonsterBase::Damaged(float Damage)
+{
+	if (false == HasAuthority() || 0.0f >= SettingBossData->HP)
+	{
+		return;
+	}
+
+	SettingBossData->HP -= Damage;
+
+	if (0.0f >= SettingBossData->HP)
+	{
+		//OnDead();
+	}
+}
+
+void ATestBossMonsterBase::SetAttackCollision(bool Active)
+{
+	if (true == Active)
+	{
+		MeleeAttackComponent->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+	}
+	else
+	{
+		MeleeAttackComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	}
 }

@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
-#include "Net/UnrealNetwork.h"
+#include "Components/TimeLineComponent.h"
 #include "Global/DataTable/BossDataRow.h"
 
 #include "TestBossMonsterBase.generated.h"
@@ -44,19 +44,56 @@ public:
 		ChangeAniValue(static_cast<uint8>(_Type));
 	}
 
-private:
-	const FBossDataRow* BossData;
+	FORCEINLINE float GetMeleeAttackDamage()
+	{
+		return SettingBossData->Data->GetMeleeAttackDamage();
+	}
 
+	FORCEINLINE float GetRangedAttackDamage()
+	{
+		return SettingBossData->Data->GetRangedAttackDamage();
+	}
+
+	FORCEINLINE float GetBossMonsterHp()
+	{
+		return SettingBossData->HP;
+	}
+
+	void Damaged(float Damage);
+	void SetAttackCollision(bool Active);
+
+private:
+	UFUNCTION()
+	void OnDeadFinish()
+	{
+		Destroy();
+	}
+
+protected:
+	UFUNCTION()
+	void OnAttackOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+
+	UFUNCTION(BlueprintCallable)
+	virtual void MeleeAttack(AActor* _OtherActor, UPrimitiveComponent* _Collision);
+
+private:
 	UPROPERTY()
 	UBossData* SettingBossData;
 
 	UPROPERTY(Category = "Data", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	FName BossDataName;
 
-	UPROPERTY(Category = "Animation", Replicated, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(Replicated)
 	uint8 AniValue;
 
-	UPROPERTY(Category = "Animation", Replicated, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY()
 	class UMainAnimInstance* MainAnimInst;
+
+private:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
+	class USphereComponent* MeleeAttackComponent;
+
+	UPROPERTY(EditAnywhere, Category = "Particle", meta = (AllowPrivateAccess = true))
+	UParticleSystem* BloodParticle;
 
 };
