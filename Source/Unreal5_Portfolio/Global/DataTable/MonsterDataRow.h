@@ -56,29 +56,30 @@ private:
 	/// <summary>
 	/// 기본 Monster 종류
 	/// </summary>
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowprivateAccess = "true"))
+	UPROPERTY(EditAnywhere, meta = (AllowprivateAccess = "true"))
 	TSubclassOf<AActor> MonsterUClass = TSubclassOf<AActor>();
 
 	/// <summary>
 	/// 걷기 속도
 	/// </summary>
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowprivateAccess = "true"))
+	UPROPERTY(EditAnywhere, meta = (AllowprivateAccess = "true"))
 	float WalkSpeed = 300.0f;
 
 	/// <summary>
 	/// 달리기 속도
 	/// </summary>
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowprivateAccess = "true"))
+	UPROPERTY(EditAnywhere, meta = (AllowprivateAccess = "true"))
 	float RunSpeed = 600.0f;
 
 	/// <summary>
 	/// 몽타주
 	/// </summary>
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowprivateAccess = "true"))
+	UPROPERTY(EditAnywhere, meta = (AllowprivateAccess = "true"))
 	TMap<EMonsterAnim, class UAnimMontage*> AnimMontages;
 
 	UPROPERTY(EditAnywhere, meta = (AllowprivateAccess = "true"))
 	TMap<EMonsterAnim, FAnimMontageGroup> TestAnimMontages;
+
 };
 
 UCLASS()
@@ -90,9 +91,8 @@ protected:
 	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
 public:
-	const FMonsterDataRow* Data;
-	
 	FVector OriginPos = FVector::ZeroVector;
+
 	UPROPERTY(Replicated)
 	float Hp = 100.0f;
 

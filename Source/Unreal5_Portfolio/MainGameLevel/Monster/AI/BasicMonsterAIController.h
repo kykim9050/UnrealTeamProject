@@ -14,4 +14,14 @@ class UNREAL5_PORTFOLIO_API ABasicMonsterAIController : public AAIController
 {
 	GENERATED_BODY()
 	
+public:
+	ABasicMonsterAIController();
+
+protected:
+	void BeginPlay() override;
+
+private:
+	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = true))
+	UBehaviorTree* BehaviorTree = nullptr;
+
 };

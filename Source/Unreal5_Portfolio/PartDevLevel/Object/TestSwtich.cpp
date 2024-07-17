@@ -5,6 +5,9 @@
 #include "Components/CapsuleComponent.h"
 #include "TestLevel/Character/TestCharacter.h"
 #include "PartDevLevel/Object/TestDoor.h"
+#include "Global/MainGameBlueprintFunctionLibrary.h"
+#include "Global/ContentsLog.h"
+#include "Global/DataTable/MapObjDataRow.h"
 
 
 // Sets default values
@@ -25,7 +28,17 @@ ATestSwtich::ATestSwtich()
 void ATestSwtich::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	UMainGameInstance* Inst = UMainGameBlueprintFunctionLibrary::GetMainGameInstance(GetWorld());
+
+	if (nullptr == Inst)
+	{
+		UE_LOG(ObjectLog, Fatal, TEXT("%S(%u)> if (nullptr == Inst)"), __FUNCTION__, __LINE__);
+		return;
+	}
+
+	const FMapObjDataRow* TableData = Inst->GetMapObjDataTable(FName(TEXT("Armory_Switch")));
+	Mesh->SetStaticMesh(TableData->GetMesh());
 }
 
 // Called every frame
