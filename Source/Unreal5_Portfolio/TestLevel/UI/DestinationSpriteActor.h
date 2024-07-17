@@ -14,7 +14,8 @@ class UNREAL5_PORTFOLIO_API ADestinationSpriteActor : public AActor
 public:	
 	// Sets default values for this actor's properties
 	ADestinationSpriteActor();
-	void SetDestinationValue(float _x,float _y);
+	UFUNCTION(BlueprintCallable)
+	void SetDestinationValue(FVector _value);
 
 protected:
 	// Called when the game starts or when spawned

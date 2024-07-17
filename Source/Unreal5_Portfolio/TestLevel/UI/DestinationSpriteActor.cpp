@@ -26,12 +26,12 @@ ADestinationSpriteActor::ADestinationSpriteActor()
 	}
 
 	sprite->bVisibleInSceneCaptureOnly = true;
-	SetActorEnableCollision(false);
+	SetActorEnableCollision(true);
 }
 
-void ADestinationSpriteActor::SetDestinationValue(float _x, float _y)
+void ADestinationSpriteActor::SetDestinationValue(FVector _value)
 {
-	SetActorLocation(FVector(_x, _y, 0.f));
+	SetActorLocation(_value);
 	SetActorScale3D(FVector(4.f, 1.f, 4.f));
 }
 
@@ -40,8 +40,8 @@ void ADestinationSpriteActor::BeginPlay()
 {
 	Super::BeginPlay();
 
-	SetActorLocation(FVector(-1530.f, 60836.f, 0.f));
-	SetActorScale3D(FVector(4.f, 1.f, 4.f));
+	//SetActorLocation(FVector(-1530.f, 60836.f, 0.f));
+	//SetActorScale3D(FVector(4.f, 1.f, 4.f));
 
 	FQuat Q;
 	UKismetMathLibrary::Quat_SetFromEuler(Q, FVector(90.f, 0.f, -90.f));
