@@ -17,14 +17,22 @@ struct FItemInformation
 public:
 	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	FName Name = "";
+
+	// Bullet Count, Damage
 	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-	int ReloadMaxNum = -1;
+	int ReloadMaxNum = -1;	// 총기류 무기 탄 최대 갯수
 	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-	int ReloadLeftNum = -1;
+	int ReloadLeftNum = -1;	// 총기류 무기 탄 현재 갯수
 	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-	int Damage = 0;
+	int Damage = 0;			// 무기 공격력
+
+	// Static Mesh
 	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-	class UStaticMesh* MeshRes = nullptr;
+	class UStaticMesh* MeshRes = nullptr;			// 스태틱 메시
+	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	FVector RelLoc = FVector(0.0f, 0.0f, 0.0f);		// 스태틱 메시 컴포넌트 상대적 위치
+	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	FRotator RelRot = FRotator(0.0f, 0.0f, 0.0f);	// 스태틱 메시 컴포넌트 상대적 회전
 };
 
 UCLASS()

@@ -7,16 +7,20 @@
 
 ATestPlayerState::ATestPlayerState()
 {
-
 }
 
-void ATestPlayerState::InitPlayerData(int _PlayerNumber)
+void ATestPlayerState::InitPlayerData()
 {
-	//UMainGameInstance* MainGameInst = GetWorld()->GetGameInstanceChecked<UMainGameInstance>();
 	UMainGameInstance* MainGameInst = UMainGameBlueprintFunctionLibrary::GetMainGameInstance(GetWorld());
 	PlayerHp = MainGameInst->GetPlayerData(FName("TestPlayer"))->GetHp();
+
+	int a = 0;
+}
+
+void ATestPlayerState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 	
-	SetPlayerNumber(_PlayerNumber);
 }
 
 void ATestPlayerState::SetPlayerHp(float _Hp)
@@ -24,15 +28,6 @@ void ATestPlayerState::SetPlayerHp(float _Hp)
 	PlayerHp = _Hp;
 }
 
-void ATestPlayerState::SetPlayerNumber(int _Num)
-{
-	PlayerNumber = _Num;
-}
-
-void ATestPlayerState::SetAllPlayerStates(TArray<ATestPlayerState*> _Arr)
-{
-	AllPlayerStates = _Arr;	// µ¤¾î¾º¿ò
-}
 
 void ATestPlayerState::AddDamage(float _Damage)
 {

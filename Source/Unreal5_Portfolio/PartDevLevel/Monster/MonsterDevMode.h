@@ -13,5 +13,8 @@ UCLASS()
 class UNREAL5_PORTFOLIO_API AMonsterDevMode : public AGameMode
 {
 	GENERATED_BODY()
+
+public:
+	void BeginPlay() override;
 	
 };
