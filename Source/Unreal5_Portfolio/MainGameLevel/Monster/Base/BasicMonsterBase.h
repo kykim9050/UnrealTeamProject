@@ -32,7 +32,7 @@ public:
 
 	void ChangeAniType(uint8 _Type)
 	{
-		AniType = _Type;
+		AnimType = _Type;
 	}
 
 
@@ -54,7 +54,7 @@ private:
 private:
 	// 애니메이션
 	UPROPERTY(Replicated)
-	uint8 AniType;
+	uint8 AnimType;
 
 	UBasicMonsterAnimInstance* AnimInst = nullptr;
 

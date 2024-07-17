@@ -3,11 +3,13 @@
 
 #include "MainGameLevel/Monster/Base/BasicMonsterBase.h"
 #include "MainGameLevel/Monster/Animation/BasicMonsterAnimInstance.h"
+#include "MainGameLevel/Monster/AI/BasicMonsterAIController.h"
 
 #include "Global/MainGameBlueprintFunctionLibrary.h"
 #include "Global/MainGameInstance.h"
 #include "Global/ContentsLog.h"
 
+#include "BehaviorTree/BlackboardComponent.h"
 #include "Components/SphereComponent.h"
 #include "Net/UnrealNetwork.h"
 
@@ -24,7 +26,7 @@ void ABasicMonsterBase::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Ou
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
-	DOREPLIFETIME(ABasicMonsterBase, AniType);
+	DOREPLIFETIME(ABasicMonsterBase, AnimType);
 }
 
 void ABasicMonsterBase::BeginPlay()
@@ -49,7 +51,15 @@ void ABasicMonsterBase::BeginPlay()
 	AnimInst = Cast<UBasicMonsterAnimInstance>(GetMesh()->GetAnimInstance());
 	
 	
+	// 서버 체크
+	if (false == HasAuthority())
+	{
+		return;
+	}
 
+	// AI 컨트롤러 세팅
+	ABasicMonsterAIController* AIController = GetController<ABasicMonsterAIController>();
+	AIController->GetBlackboardComponent()->SetValueAsObject(TEXT("BasicMonsterData"), SettingData);
 
 }
 
@@ -57,6 +67,7 @@ void ABasicMonsterBase::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	AnimInst->ChangeAnimation(AnimType);
 }
 
 

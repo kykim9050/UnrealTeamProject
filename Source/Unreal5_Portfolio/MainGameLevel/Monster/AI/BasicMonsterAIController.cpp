@@ -3,3 +3,17 @@
 
 #include "MainGameLevel/Monster/AI/BasicMonsterAIController.h"
 
+#include "Perception/AIPerceptionComponent.h"
+#include "Perception/AISenseConfig_Sight.h"
+
+
+ABasicMonsterAIController::ABasicMonsterAIController()
+{
+}
+
+void ABasicMonsterAIController::BeginPlay()
+{
+	Super::BeginPlay();
+
+	RunBehaviorTree()
+}
