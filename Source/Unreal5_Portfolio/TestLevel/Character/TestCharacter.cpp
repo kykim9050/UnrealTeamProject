@@ -362,11 +362,11 @@ void ATestCharacter::ChangePosture_Implementation(EPlayerPosture _Type)	// => 메
 		FPVItemSocketMesh->SetStaticMesh(ItemSlot[CurItemIndex].MeshRes);
 
 		// 아이템 메시 transform 세팅
-		ItemSocketMesh->SetRelativeLocation(FVector(ItemSlot[CurItemIndex].RelLoc));		// ItemDataRow에 항목 추가 필요
-		FPVItemSocketMesh->SetRelativeLocation(FVector(ItemSlot[CurItemIndex].RelLoc));		// ItemDataRow에 항목 추가 필요
+		ItemSocketMesh->SetRelativeLocation(ItemSlot[CurItemIndex].RelLoc);		
+		FPVItemSocketMesh->SetRelativeLocation(ItemSlot[CurItemIndex].RelLoc);	
 
-		ItemSocketMesh->SetRelativeRotation(FQuat(ItemSlot[CurItemIndex].RelRot));			// ItemDataRow에 항목 추가 필요
-		FPVItemSocketMesh->SetRelativeRotation(FRotator(ItemSlot[CurItemIndex].RelRot));	// ItemDataRow에 항목 추가 필요
+		ItemSocketMesh->SetRelativeRotation(ItemSlot[CurItemIndex].RelRot);		
+		FPVItemSocketMesh->SetRelativeRotation(ItemSlot[CurItemIndex].RelRot);	
 
 		// 아이템 메시 visibility 켜기
 		ItemSocketMesh->SetVisibility(true);
