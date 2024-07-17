@@ -182,7 +182,7 @@ const TSubclassOf<UObject> UMainGameInstance::GetGlobalObjectClass(FName _Name)
 	return Data->GetObject();
 }
 
-const FMapObjDataRow* UMainGameInstance::GetMapObjDataTable(FName _Name)
+FMapObjDataRow* UMainGameInstance::GetMapObjDataTable(FName _Name)
 {
 	if (nullptr == MapObjDataTable)
 	{

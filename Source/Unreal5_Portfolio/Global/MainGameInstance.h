@@ -91,8 +91,7 @@ public:
 	/// </summary>
 	/// <param name="_Name"></param>
 	/// <returns></returns>
-	const struct FMapObjDataRow* GetMapObjDataTable(FName _Name);
-
+	struct FMapObjDataRow* GetMapObjDataTable(FName _Name);
 
 	FNetDataRow CurNetInfo;
 protected:
