@@ -5,18 +5,9 @@
 #include "CoreMinimal.h"
 #include "Engine/DataTable.h"
 #include "Global/ContentsEnum.h"
+#include "Global/Animation/MainMultiAnimInstance.h"
 #include "MonsterDataRow.generated.h"
 
-USTRUCT()
-struct UNREAL5_PORTFOLIO_API FAnimMontageGroup
-{
-	GENERATED_BODY()
-
-public:
-	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true"))
-	TArray<UAnimMontage*> AnimMontages;
-
-};
 
 /**
  * 
