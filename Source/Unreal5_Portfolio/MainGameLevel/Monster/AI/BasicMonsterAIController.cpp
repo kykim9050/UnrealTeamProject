@@ -38,21 +38,18 @@ void ABasicMonsterAIController::PlayerDetect(AActor* Other, FAIStimulus const St
 	}
 
 	AMainCharacter* TargetPlayer = Cast<AMainCharacter>(Other);
-
 	if (nullptr == TargetPlayer)
 	{
 		return;
 	}
 
 	AMainPlayerState* TargetPlayerState = Cast<AMainPlayerState>(TargetPlayer->GetPlayerState());
-	
 	if (0.0f >= TargetPlayerState->GetPlayerHp())
 	{
 		return;
 	}
 
 	UObject* PrevTarget = GetBlackboardComponent()->GetValueAsObject(TEXT("TargetActor"));
-	
 	if (nullptr != PrevTarget)
 	{
 		return;
@@ -66,14 +63,12 @@ ETeamAttitude::Type ABasicMonsterAIController::GetTeamAttitudeTowards(const AAct
 	Super::GetTeamAttitudeTowards(Other);
 
 	const APawn* OtherPawn = Cast<APawn>(&Other);
-	
 	if (nullptr == OtherPawn)
 	{
 		return ETeamAttitude::Neutral;
 	}
 
 	const IGenericTeamAgentInterface* OtherTeamAgent = Cast<const IGenericTeamAgentInterface>(OtherPawn->GetController());
-
 	if (nullptr == OtherTeamAgent)
 	{
 		return ETeamAttitude::Neutral;
@@ -81,7 +76,6 @@ ETeamAttitude::Type ABasicMonsterAIController::GetTeamAttitudeTowards(const AAct
 
 	FGenericTeamId MyTeamId = GetGenericTeamId();
 	FGenericTeamId OtherTeamId = OtherTeamAgent->GetGenericTeamId();
-
 	if (MyTeamId == OtherTeamId)
 	{
 		return ETeamAttitude::Neutral;
