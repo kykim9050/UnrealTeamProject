@@ -12,7 +12,8 @@ AMapObjectBase::AMapObjectBase()
 	PrimaryActorTick.bCanEverTick = true;
 
 	CollisionComponent = CreateDefaultSubobject<UCapsuleComponent>(TEXT("MapObjCollision"));
-	CollisionComponent->SetupAttachment(RootComponent);
+	SetRootComponent(CollisionComponent);
+	//CollisionComponent->SetupAttachment(RootComponent);
 
 	MeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MapObjMesh"));
 	MeshComponent->SetupAttachment(RootComponent);
@@ -29,6 +30,4 @@ void AMapObjectBase::BeginPlay()
 void AMapObjectBase::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
-

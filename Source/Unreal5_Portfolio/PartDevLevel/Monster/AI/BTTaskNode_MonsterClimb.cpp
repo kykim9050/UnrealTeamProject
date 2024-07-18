@@ -28,7 +28,7 @@ EBTNodeResult::Type UBTTaskNode_MonsterClimb::ExecuteTask(UBehaviorTreeComponent
 	Monster->GetCharacterMovement()->MovementMode = EMovementMode::MOVE_Flying;
 	Monster->GetCharacterMovement()->MaxFlySpeed = 200.0f;
 	Monster->GetCapsuleComponent()->SetCapsuleRadius(50.0f);
-	Monster->ChangeAniValue(EMonsterAnim::Climb);
+	Monster->ChangeAniValue(ETestMonsterAnim::Climb);
 	return EBTNodeResult::InProgress;
 }
 
@@ -46,7 +46,7 @@ void UBTTaskNode_MonsterClimb::TickTask(UBehaviorTreeComponent& _OwnerComp, uint
 	{
 		Monster->GetCapsuleComponent()->SetCapsuleRadius(34.0f);
 		Monster->GetCharacterMovement()->MovementMode = EMovementMode::MOVE_None;
-		StateChange(_OwnerComp, EMonsterState::ClimbEnd);
+		StateChange(_OwnerComp, ETestMonsterState::ClimbEnd);
 		return;
 	}
 }

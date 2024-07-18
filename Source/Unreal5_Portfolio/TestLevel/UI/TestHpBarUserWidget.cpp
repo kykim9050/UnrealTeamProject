@@ -1,42 +1,95 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "TestLevel/UI/TestHpBarUserWidget.h"
-#include "Kismet/GameplayStatics.h"
-#include "TestLevel/Character/TestCharacter.h"
-#include "Global/MainGameBlueprintFunctionLibrary.h"
-#include "Global/DataTable/PlayerDataRow.h"
-#include "Components/ProgressBar.h"
-#include "TestLevel/Character/TestPlayerState.h"
+#include "TestHpBarUserWidget.h"
+#include "DefaultHpBarUserWidget.h"
 
 
 void UTestHpBarUserWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
 
-	MyCharacter = Cast<ATestCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
-	Inst = UMainGameBlueprintFunctionLibrary::GetMainGameInstance(GetWorld());
-	MaxHp = static_cast<float>(Inst->GetPlayerData(FName("TestPlayer"))->GetHp());
+	WidgetInit();
 }
 
-void UTestHpBarUserWidget::NativeTick(const FGeometry& _MyGeometry, float _InDeltaTime)
+void UTestHpBarUserWidget::WidgetInit()
 {
-	Super::NativeTick(_MyGeometry, _InDeltaTime);
+	// HpWidgets 세팅
+	HpWidgets.Add(MainPlayer);
+	HpWidgets.Add(Player2);
+	HpWidgets.Add(Player3);
+	HpWidgets.Add(Player4);
 
-	PB_HpBar->SetPercent(HPUpdate());
-}
-
-float UTestHpBarUserWidget::HPUpdate()
-{
-	AGameModeBase* Mode = GetWorld()->GetAuthGameMode();
-	int b = 0;
-
-	ATestPlayerState* MyPlayerState = Cast<ATestPlayerState>(UGameplayStatics::GetPlayerState(GetWorld(), 0));
-	if(MyPlayerState != nullptr)
+	// NickName 초기화
+	for (int i = 0; i < 4; ++i)
 	{
-		CurHp = MyPlayerState->GetPlayerHp();
+		FString NameInit = "Player" + FString::FromInt(i);
+		HpWidgets[i]->SetNickName(FText::FromString(NameInit));
 	}
 
-	// 현재 체력 / MAX 체력 
-	return CurHp / MaxHp;
+	// HP 초기화
+	for (int i = 0; i < 4; ++i)
+	{
+		HpWidgets[i]->SetHp(1.f);
+	}
 }
+
+//void UTestHpBarUserWidget::NativeTick(const FGeometry& _MyGeometry, float _InDeltaTime)
+//{
+//	Super::NativeTick(_MyGeometry, _InDeltaTime);
+//
+//}
+
+// 이 함수는 메인 플레이어만 실행해야 합니다. (플레이하는 컴퓨터당 1회 실행)
+void UTestHpBarUserWidget::HpbarInit_ForMainPlayer(int _MainPlayerToken)
+{
+	MainPlayerIndex = _MainPlayerToken;
+
+	for (int i = 0; i < 4; ++i)
+	{
+		if (i == MainPlayerIndex)
+		{
+			continue;
+		}
+		OtherPlayerNum.Add(i);
+	}
+}
+
+void UTestHpBarUserWidget::HpbarUpdate(int _Token, float _CurHp, float _MaxHp)
+{
+	if (MainPlayerIndex == _Token)
+	{
+		HpWidgets[0]->SetHp(_CurHp / _MaxHp);
+		return;
+	}
+
+	for (int i = 0; i < 3; ++i)
+	{
+		if (OtherPlayerNum[i] == _Token)
+		{
+			HpWidgets[i + 1]->SetHp(_CurHp / _MaxHp);
+			return;
+		}
+	}
+	
+}
+
+void UTestHpBarUserWidget::NickNameUpdate(int _Token, FText _nickname)
+{
+	if (MainPlayerIndex == _Token)
+	{
+		HpWidgets[0]->SetNickName(_nickname);
+		return;
+	}
+
+	for (int i = 0; i < 3; ++i)
+	{
+		if (OtherPlayerNum[i] == _Token)
+		{
+			HpWidgets[i + 1]->SetNickName(_nickname);
+			return;
+		}
+	}
+}
+
+

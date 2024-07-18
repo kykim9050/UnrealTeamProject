@@ -42,12 +42,12 @@ public:
 		return RunSpeed;
 	}
 
-	TMap<EMonsterAnim, class UAnimMontage*> GetAnimMontage() const
+	TMap<ETestMonsterAnim, class UAnimMontage*> GetAnimMontage() const
 	{
 		return AnimMontages;
 	}
 
-	TMap<EMonsterAnim, FAnimMontageGroup> GetTestAnimMontage() const
+	TMap<ETestMonsterAnim, FAnimMontageGroup> GetTestAnimMontage() const
 	{
 		return TestAnimMontages;
 	}
@@ -75,10 +75,10 @@ private:
 	/// 몽타주
 	/// </summary>
 	UPROPERTY(EditAnywhere, meta = (AllowprivateAccess = "true"))
-	TMap<EMonsterAnim, class UAnimMontage*> AnimMontages;
+	TMap<ETestMonsterAnim, class UAnimMontage*> AnimMontages;
 
 	UPROPERTY(EditAnywhere, meta = (AllowprivateAccess = "true"))
-	TMap<EMonsterAnim, FAnimMontageGroup> TestAnimMontages;
+	TMap<ETestMonsterAnim, FAnimMontageGroup> TestAnimMontages;
 
 };
 
@@ -91,6 +91,10 @@ protected:
 	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
 public:
+	// 기본 설정 Data
+	const FMonsterDataRow* BaseData;
+
+	// 개별 Data
 	FVector OriginPos = FVector::ZeroVector;
 
 	UPROPERTY(Replicated)

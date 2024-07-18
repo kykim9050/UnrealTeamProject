@@ -13,9 +13,9 @@
 
 ABasicMonsterAIController::ABasicMonsterAIController()
 {
-	SightConfig = CreateDefaultSubobject<UAISenseConfig_Sight>(TEXT("Sight_Config"));
+	SightConfig = CreateDefaultSubobject<UAISenseConfig_Sight>("Sight_Config");
 
-	UAIPerceptionComponent* AIPerception = CreateOptionalDefaultSubobject<UAIPerceptionComponent>(TEXT("AI Perception"));
+	UAIPerceptionComponent* AIPerception = CreateOptionalDefaultSubobject<UAIPerceptionComponent>("AI Perception");
 	AIPerception->OnTargetPerceptionUpdated.AddDynamic(this, &ABasicMonsterAIController::PlayerDetect);
 	AIPerception->SetDominantSense(*SightConfig->GetSenseImplementation());
 	AIPerception->ConfigureSense(*SightConfig);
@@ -38,27 +38,24 @@ void ABasicMonsterAIController::PlayerDetect(AActor* Other, FAIStimulus const St
 	}
 
 	AMainCharacter* TargetPlayer = Cast<AMainCharacter>(Other);
-
 	if (nullptr == TargetPlayer)
 	{
 		return;
 	}
 
 	AMainPlayerState* TargetPlayerState = Cast<AMainPlayerState>(TargetPlayer->GetPlayerState());
-	
 	if (0.0f >= TargetPlayerState->GetPlayerHp())
 	{
 		return;
 	}
 
-	UObject* PrevTarget = GetBlackboardComponent()->GetValueAsObject(TEXT("TargetActor"));
-	
+	UObject* PrevTarget = GetBlackboardComponent()->GetValueAsObject("TargetActor");
 	if (nullptr != PrevTarget)
 	{
 		return;
 	}
 
-	GetBlackboardComponent()->SetValueAsObject(TEXT("TargetActor"), TargetPlayer);
+	GetBlackboardComponent()->SetValueAsObject("TargetActor", TargetPlayer);
 }
 
 ETeamAttitude::Type ABasicMonsterAIController::GetTeamAttitudeTowards(const AActor& Other) const
@@ -66,14 +63,12 @@ ETeamAttitude::Type ABasicMonsterAIController::GetTeamAttitudeTowards(const AAct
 	Super::GetTeamAttitudeTowards(Other);
 
 	const APawn* OtherPawn = Cast<APawn>(&Other);
-	
 	if (nullptr == OtherPawn)
 	{
 		return ETeamAttitude::Neutral;
 	}
 
 	const IGenericTeamAgentInterface* OtherTeamAgent = Cast<const IGenericTeamAgentInterface>(OtherPawn->GetController());
-
 	if (nullptr == OtherTeamAgent)
 	{
 		return ETeamAttitude::Neutral;
@@ -81,7 +76,6 @@ ETeamAttitude::Type ABasicMonsterAIController::GetTeamAttitudeTowards(const AAct
 
 	FGenericTeamId MyTeamId = GetGenericTeamId();
 	FGenericTeamId OtherTeamId = OtherTeamAgent->GetGenericTeamId();
-
 	if (MyTeamId == OtherTeamId)
 	{
 		return ETeamAttitude::Neutral;

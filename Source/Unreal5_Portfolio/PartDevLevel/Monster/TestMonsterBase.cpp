@@ -31,10 +31,8 @@ ATestMonsterBase::ATestMonsterBase()
 	AttackComponent = CreateDefaultSubobject<USphereComponent>(TEXT("Attack Comp"));
 	AttackComponent->SetupAttachment(RootComponent);
 
-	GetMesh()->SetCollisionEnabled(ECollisionEnabled::Type::NoCollision);
-
-	DeadTimelineFinish.BindUFunction(this, FName("OnDeadFinish"));
-	DeadDissolveCallBack.BindUFunction(this, FName("OnDeadDissolveInterp"));
+	DeadTimelineFinish.BindUFunction(this, "OnDeadFinish");
+	DeadDissolveCallBack.BindUFunction(this, "OnDeadDissolveInterp");
 
 }
 
@@ -46,7 +44,7 @@ void ATestMonsterBase::BeginPlay()
 	UMainGameInstance* MainGameInst = UMainGameBlueprintFunctionLibrary::GetMainGameInstance(GetWorld());
 
 	AnimInst = Cast<UMonsterAnimInstance>(GetMesh()->GetAnimInstance());
-	BaseData = MainGameInst->GetMonsterData(BaseDataName);
+	const FMonsterDataRow* BaseData = MainGameInst->GetMonsterData(BaseDataName);
 
 	if (nullptr == BaseData)
 	{
@@ -54,14 +52,15 @@ void ATestMonsterBase::BeginPlay()
 		return;
 	}
 
-	TMap<EMonsterAnim, FAnimMontageGroup> TestAnimMontages = BaseData->GetTestAnimMontage();
-	for (TPair<EMonsterAnim, FAnimMontageGroup> AnimMontageGroup : TestAnimMontages)
+	TMap<ETestMonsterAnim, FAnimMontageGroup> TestAnimMontages = BaseData->GetTestAnimMontage();
+	for (TPair<ETestMonsterAnim, FAnimMontageGroup> AnimMontageGroup : TestAnimMontages)
 	{
 		AnimInst->PushRandomAnimation(AnimMontageGroup.Key, AnimMontageGroup.Value);
 	}
 
 	//  몬스터 데이터 세팅
 	SettingData = NewObject<UMonsterData>(this);
+	SettingData->BaseData = BaseData;
 	SettingData->AttackDamage = 34.0f;
 	SettingData->OriginPos = GetActorLocation();
 
@@ -134,9 +133,9 @@ void ATestMonsterBase::Attack(AActor* _OtherActor, UPrimitiveComponent* _Collisi
 		return;
 	}
 
-	EMonsterState MonsterState = static_cast<EMonsterState>(BlackBoard->GetValueAsEnum(TEXT("State")));
+	ETestMonsterState MonsterState = static_cast<ETestMonsterState>(BlackBoard->GetValueAsEnum(TEXT("State")));
 	ATestCharacter* HitCharacter = Cast<ATestCharacter>(_OtherActor);
-	if (nullptr != HitCharacter && EMonsterState::Attack == MonsterState)
+	if (nullptr != HitCharacter && ETestMonsterState::Attack == MonsterState)
 	{
 		ATestPlayerState* HitPlayerState = Cast<ATestPlayerState>(HitCharacter->GetPlayerState());
 
@@ -206,7 +205,7 @@ void ATestMonsterBase::SetOnDead_Implementation()
 void ATestMonsterBase::OnDead()
 {
 	SetOnDead();
-	ChangeAniValue(EMonsterAnim::Dead);
+	ChangeAniValue(ETestMonsterAnim::Dead);
 
 	ATestMonsterBaseAIController* AIController = GetController<ATestMonsterBaseAIController>();
 	AIController->UnPossess();
