@@ -52,8 +52,8 @@ void ATestMonsterBase::BeginPlay()
 		return;
 	}
 
-	TMap<ETestMonsterAnim, FAnimMontageGroup> TestAnimMontages = BaseData->GetTestAnimMontage();
-	for (TPair<ETestMonsterAnim, FAnimMontageGroup> AnimMontageGroup : TestAnimMontages)
+	TMap<ETestMonsterAnim, FAnimMontageGroup> AllAnimMontages = BaseData->GetAllAnimMontage();
+	for (TPair<ETestMonsterAnim, FAnimMontageGroup> AnimMontageGroup : AllAnimMontages)
 	{
 		AnimInst->PushRandomAnimation(AnimMontageGroup.Key, AnimMontageGroup.Value);
 	}
