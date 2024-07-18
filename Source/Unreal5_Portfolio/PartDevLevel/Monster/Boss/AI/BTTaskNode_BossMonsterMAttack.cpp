@@ -69,6 +69,7 @@ void UBTTaskNode_BossMonsterMAttack::TickTask(UBehaviorTreeComponent& _OwnerComp
 		}
 		else
 		{
+			// 원거리 상태로 변경
 			//StateChange(_OwnerComp, EBossMonsterState::RangedAttack);
 		}
 	}
