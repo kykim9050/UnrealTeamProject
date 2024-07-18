@@ -366,7 +366,10 @@ void ATestCharacter::ChangePosture_Implementation(EPlayerPosture _Type)	// => 메
 		FPVItemSocketMesh->SetRelativeLocation(ItemSlot[CurItemIndex].RelLoc);	
 
 		ItemSocketMesh->SetRelativeRotation(ItemSlot[CurItemIndex].RelRot);		
-		FPVItemSocketMesh->SetRelativeRotation(ItemSlot[CurItemIndex].RelRot);	
+		FPVItemSocketMesh->SetRelativeRotation(ItemSlot[CurItemIndex].RelRot);
+
+		ItemSocketMesh->SetRelativeScale3D(ItemSlot[CurItemIndex].RelScale);
+		FPVItemSocketMesh->SetRelativeScale3D(ItemSlot[CurItemIndex].RelScale);
 
 		// 아이템 메시 visibility 켜기
 		ItemSocketMesh->SetVisibility(true);
@@ -408,6 +411,7 @@ void ATestCharacter::PickUpItem_Implementation()	// => 메인캐릭터로 이전해야 함 
 	UStaticMesh* ItemMeshRes = ItemData->GetResMesh();	// 스태틱 메시
 	FVector ItemRelLoc = ItemData->GetRelLoc();			// 스태틱 메시 컴포넌트 상대적 위치
 	FRotator ItemRelRot = ItemData->GetRelRot();		// 스태틱 메시 컴포넌트 상대적 회전
+	FVector ItemRelScale = ItemData->GetRelScale();		// 스태틱 메시 컴포넌트 상대적 크기
 
 	// 인벤토리에 아이템 집어넣기. (스태틱메시로 아이템을 가져가는 방식 채택!!!)
 	uint8 ItemIndex = static_cast<uint8>(ItemType);		// 아이템을 넣을 인벤토리 인덱스
@@ -420,6 +424,7 @@ void ATestCharacter::PickUpItem_Implementation()	// => 메인캐릭터로 이전해야 함 
 	ItemSlot[ItemIndex].MeshRes = ItemMeshRes;
 	ItemSlot[ItemIndex].RelLoc = ItemRelLoc;
 	ItemSlot[ItemIndex].RelRot= ItemRelRot;
+	ItemSlot[ItemIndex].RelScale = ItemRelScale;
 
 	// Map에 있는 아이템 삭제.
 	GetMapItem->Destroy();
