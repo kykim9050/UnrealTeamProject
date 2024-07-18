@@ -14,6 +14,10 @@
 #include "PartDevLevel/Monster/TestMonsterBase.h"
 #include "PartDevLevel/Character/PlayerAnimInstance.h"
 
+#include "TestLevel/UI/TestPlayHUD.h"
+#include "TestLevel/UI/TestHpBarUserWidget.h"
+#include "TestLevel/Character/TestPlayerState.h"
+
 // Sets default values
 ATestCharacter::ATestCharacter()
 {
@@ -167,6 +171,7 @@ void ATestCharacter::BeginPlay()
 	FPVPlayerAnimInst = Cast<UPlayerAnimInstance>(FPVMesh->GetAnimInstance());
 
 	HandAttackComponent->SetCollisionProfileName(TEXT("NoCollision"));
+	UISetting();
 }
 
 // Called every frame
@@ -176,6 +181,7 @@ void ATestCharacter::Tick(float DeltaTime)
 
 	DefaultRayCast(DeltaTime);
 
+	UpdatePlayerHp(DeltaTime);
 	//TArray<FItemInformation> I = ItemSlot;
 	//AGameModeBase* Ptr = GetWorld()->GetAuthGameMode();
 }
@@ -497,7 +503,7 @@ void ATestCharacter::NetCheck()
 	{
 		IsCanControlled = (GetLocalRole() == ROLE_Authority) ? true : false;
 	}
-	else
+	else // client
 	{
 		IsCanControlled = (GetLocalRole() == ROLE_AutonomousProxy) ? true : false;
 	}
@@ -507,6 +513,70 @@ void ATestCharacter::NetCheck()
 		UMainGameInstance* Inst = GetGameInstance<UMainGameInstance>();
 		// 이토큰은 그 인덱스가 아니다.
 		Token = Inst->GetNetToken();
+		MyMaxHp = Inst->GetPlayerData(FName("TestPlayer"))->GetHp();
+		
 		// UGameplayStatics::GetPlayerPawn(Token)
+	}
+	else // client
+	{
+
+	}
+}
+
+void ATestCharacter::UISetting()
+{
+	ATestPlayerController* Con = Cast<ATestPlayerController>(GetController());
+	if (nullptr == Con)
+	{
+		return;
+	}
+	ATestPlayHUD* PlayHUD = Cast<ATestPlayHUD>(Con->GetHUD());
+	if (nullptr == PlayHUD)
+	{
+		return;
+	}
+	UTestHpBarUserWidget* MyHpWidget = Cast<UTestHpBarUserWidget>(PlayHUD->GetWidget(EInGameUIType::HpBar));
+	if (nullptr == MyHpWidget)
+	{
+		return;
+	}
+
+	if (true == IsCanControlled && -1 != Token)
+	{
+		MyHpWidget->HpbarInit_ForMainPlayer(Token);
+	}
+	else
+	{
+		int a = 0;
+		return;
+	}
+}
+
+void ATestCharacter::UpdatePlayerHp(float _DeltaTime)
+{
+	ATestPlayerState* MyTestPlayerState = Cast<ATestPlayerState>(GetPlayerState());
+	if (nullptr == MyTestPlayerState)
+	{
+		int a = 0;
+		return;
+	}
+
+	float GetHp = MyTestPlayerState->GetPlayerHp();
+	if(CulHp != GetHp || /*test*/MyMaxHp != PlayerHp)
+	{
+		CulHp = MyTestPlayerState->GetPlayerHp();
+
+		ATestPlayerController* MyController = Cast<ATestPlayerController>(GetController());
+		if (nullptr == MyController)
+		{
+			return;
+		}
+		ATestPlayHUD* PlayHUD = Cast<ATestPlayHUD>(MyController->GetHUD());
+		if (nullptr != PlayHUD && Token != -1)
+		{
+			UTestHpBarUserWidget* MyHpWidget = Cast<UTestHpBarUserWidget>(PlayHUD->GetWidget(EInGameUIType::HpBar));
+			MyHpWidget->NickNameUpdate(Token, FText::FromString(FString("CORORO")));
+			MyHpWidget->HpbarUpdate(Token, CulHp, 100.0f);
+		}
 	}
 }

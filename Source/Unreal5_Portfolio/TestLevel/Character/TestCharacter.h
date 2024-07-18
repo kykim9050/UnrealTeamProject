@@ -181,6 +181,18 @@ private:
 	UPROPERTY()
 	class UPlayerAnimInstance* FPVPlayerAnimInst;
 
+	UFUNCTION()
+	void UISetting();
+	
+	UFUNCTION()
+	void UpdatePlayerHp(float _DeltaTime);
+
+	UPROPERTY()
+	float CulHp = 0.0f;
+
+	UPROPERTY()
+	float MyMaxHp = 0.0f;
+
 public:
 	UFUNCTION(BlueprintCallable)
 	void TestRayCast(float _DeltaTime, FVector _StartPos, FVector _EndPos, FRotator _CameraRot);
