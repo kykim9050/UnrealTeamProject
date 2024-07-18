@@ -30,10 +30,20 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	// AnimInstance
 public :
 	// 하체 정보 (Controller 에서 호출함. -> 나중에 수정 필요.)
 	UPROPERTY(Category = "Contents", Replicated, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	EPlayerLowerState LowerStateValue = EPlayerLowerState::Idle;
+	
+	// 플레이어 자세 유형
+	UPROPERTY(Category = "Contents", Replicated, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	EPlayerPosture PostureValue = EPlayerPosture::Barehand;
+	
+	// 캐릭터 방향 정보
+	UPROPERTY(Category = "Contents", Replicated, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	EPlayerMoveDir DirValue = EPlayerMoveDir::Forward;
+
 private : // 문제 발생 여지 있음 발생하면 그냥 지워야 함.
 	// == Components ==
 	
@@ -63,14 +73,7 @@ private : // 문제 발생 여지 있음 발생하면 그냥 지워야 함.
 	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	class UStaticMeshComponent* FPVItemSocketMesh = nullptr;	// => 메인캐릭터로 이전해야 함 (새로 추가됨)
 
-
-	// == Posture ==
-	
-	// 플레이어 자세 유형
-	UPROPERTY(Category = "Contents", Replicated, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	EPlayerPosture PostureValue = EPlayerPosture::Barehand;
-
-
+		
 	// == 인칭 변경 변수 ==
 	UPROPERTY()
 	bool IsFPV = true;
@@ -97,9 +100,7 @@ private : // 문제 발생 여지 있음 발생하면 그냥 지워야 함.
 	UPROPERTY()
 	class UPlayerAnimInstance* FPVPlayerAnimInst;
 
-	// 캐릭터 방향 정보
-	UPROPERTY(Category = "Contents", Replicated, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	EPlayerMoveDir DirValue = EPlayerMoveDir::Forward;
+	
 
 	// 근접 공격에 사용
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
