@@ -1,15 +1,14 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "MainGameLevel/Monster/AI/TaskNode/BTTaskNode_BasicMonsterFall.h"
+#include "MainGameLevel/Monster/AI/TaskNode/BTTaskNode_BasicMonsterJump.h"
 #include "MainGameLevel/Monster/Base/BasicMonsterBase.h"
 
-#include "Kismet/KismetMathLibrary.h"
 #include "Kismet/GameplayStatics.h"
 
 #include "Global/ContentsLog.h"
 
-EBTNodeResult::Type UBTTaskNode_BasicMonsterFall::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
+EBTNodeResult::Type UBTTaskNode_BasicMonsterJump::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
 {
 	Super::ExecuteTask(OwnerComp, NodeMemory);
 
@@ -22,6 +21,7 @@ EBTNodeResult::Type UBTTaskNode_BasicMonsterFall::ExecuteTask(UBehaviorTreeCompo
 
 	FVector MonsterLocation = Monster->GetActorLocation();
 	FVector LandingLocation = GetValueAsVector(OwnerComp, "Destination");
+	LandingLocation.Z -= Monster->GetMesh()->GetRelativeLocation().Z;
 	FVector Velocity = FVector::ZeroVector;
 
 	UGameplayStatics::SuggestProjectileVelocity_CustomArc(GetWorld(), Velocity, MonsterLocation, LandingLocation, 0.0f, 0.5f);
@@ -30,7 +30,7 @@ EBTNodeResult::Type UBTTaskNode_BasicMonsterFall::ExecuteTask(UBehaviorTreeCompo
 	return EBTNodeResult::Type::InProgress;
 }
 
-void UBTTaskNode_BasicMonsterFall::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* pNodeMemory, float DeltaSeconds)
+void UBTTaskNode_BasicMonsterJump::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* pNodeMemory, float DeltaSeconds)
 {
 	Super::TickTask(OwnerComp, pNodeMemory, DeltaSeconds);
 

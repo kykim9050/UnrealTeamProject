@@ -88,10 +88,15 @@ void AMainPlayerController::MoveLeft(const FInputActionValue& Value)
 
 void AMainPlayerController::Jump(const FInputActionValue& Value)
 {
+	ChangeLowerState(EPlayerLowerState::Idle);
+	AMainCharacter* Ch = GetPawn<AMainCharacter>();
+	Ch->Jump();
 }
 
 void AMainPlayerController::JumpEnd(const FInputActionValue& Value)
 {
+	AMainCharacter* Ch = GetPawn<AMainCharacter>();
+	Ch->StopJumping();
 }
 
 void AMainPlayerController::FireStart(const FInputActionValue& Value)

@@ -11,6 +11,7 @@
 #include "MainPlayerController.h"
 #include "PlayerItemInformation.h"
 #include "PartDevLevel/Character/PlayerAnimInstance.h"
+#include "Components/SphereComponent.h"
 #include "Kismet/KismetSystemLibrary.h"
 
 // Sets default values
@@ -92,6 +93,10 @@ AMainCharacter::AMainCharacter()
 		ItemSlot.Push(SlotBase);
 		IsItemIn.Push(false);
 	}
+
+	HandAttackComponent = CreateDefaultSubobject<USphereComponent>(TEXT("Hand Attack Comp"));
+	HandAttackComponent->SetupAttachment(GetMesh());
+	HandAttackComponent->SetRelativeLocation({ 0.0f, 80.0f, 120.0f });
 }
 
 // Called when the game starts or when spawned
@@ -102,6 +107,8 @@ void AMainCharacter::BeginPlay()
 
 	PlayerAnimInst = Cast<UPlayerAnimInstance>(GetMesh()->GetAnimInstance());
 	FPVPlayerAnimInst = Cast<UPlayerAnimInstance>(FPVMesh->GetAnimInstance());
+
+	HandAttackComponent->SetCollisionProfileName(TEXT("NoCollision"));
 }
 
 void AMainCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -295,6 +302,22 @@ void AMainCharacter::ClientChangeMontage_Implementation()
 {
 	PlayerAnimInst->ChangeAnimation(PostureValue);
 	FPVPlayerAnimInst->ChangeAnimation(PostureValue);
+}
+
+void AMainCharacter::HandAttackCollision(AActor* _OtherActor, UPrimitiveComponent* _Collision)
+{
+	//ATestMonsterBase* Monster = Cast<ATestMonsterBase>(_OtherActor);
+	//if (nullptr == Monster)
+	//{
+	//	return;
+	//}
+
+	//Monster->Damaged(150.0f);
+}
+
+void AMainCharacter::ChangeHandAttackCollisionProfile(FName _Name)
+{
+	HandAttackComponent->SetCollisionProfileName(_Name);
 }
 
 void AMainCharacter::MapItemOverlapStart(AActor* _OtherActor, UPrimitiveComponent* _Collision)

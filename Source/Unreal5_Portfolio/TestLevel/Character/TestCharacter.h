@@ -135,8 +135,8 @@ public:
 	void CharacterPlayerToDropItem_Implementation(FName _ItemName, FTransform _Transform);
 
 	// Collision
-	UFUNCTION(BlueprintCallable)
-	void Collision(AActor* _OtherActor, UPrimitiveComponent* _Collision);
+	//UFUNCTION(BlueprintCallable)
+	//void Collision(AActor* _OtherActor, UPrimitiveComponent* _Collision);
 
 	// NotifyState에서 사용 중 (태환)
 	UFUNCTION(BlueprintCallable)
