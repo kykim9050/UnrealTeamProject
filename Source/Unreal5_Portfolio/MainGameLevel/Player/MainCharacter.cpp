@@ -50,6 +50,27 @@ AMainCharacter::AMainCharacter()
 	//MinimapIconComponent->SetupAttachment(RootComponent);
 	//MinimapIconComponent->bVisibleInSceneCaptureOnly = true;
 
+	// 아이템 장착 소켓 초기화.
+	ItemSocketMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ItemSocketMesh"));
+	ItemSocketMesh->SetupAttachment(GetMesh(), FName("ItemSocket"));
+	ItemSocketMesh->SetCollisionProfileName(TEXT("NoCollision"));
+	ItemSocketMesh->SetGenerateOverlapEvents(true);
+	ItemSocketMesh->SetOwnerNoSee(true);
+	ItemSocketMesh->SetVisibility(false);
+	ItemSocketMesh->SetIsReplicated(true);
+	ItemSocketMesh->bHiddenInSceneCapture = true;
+
+	// 1인칭 아이템 장착 소켓 초기화.
+	FPVItemSocketMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("FPVItemSocketMesh"));
+	FPVItemSocketMesh->SetupAttachment(FPVMesh, FName("FPVItemSocket"));
+	FPVItemSocketMesh->SetCollisionProfileName(TEXT("NoCollision"));
+	FPVItemSocketMesh->SetGenerateOverlapEvents(true);
+	FPVItemSocketMesh->SetOnlyOwnerSee(true);
+	FPVItemSocketMesh->SetVisibility(false);
+	FPVItemSocketMesh->SetIsReplicated(true);
+	FPVItemSocketMesh->bCastDynamicShadow = false;
+	FPVItemSocketMesh->CastShadow = false;
+
 	// Item Create Component
 	CreateItemComponent = CreateDefaultSubobject<USceneComponent>(TEXT("CreateItemComponent"));
 	CreateItemComponent->SetupAttachment(RootComponent);
@@ -116,10 +137,35 @@ void AMainCharacter::ChangePosture_Implementation(EPlayerPosture _Type)
 	if (_Type == EPlayerPosture::Barehand)
 	{
 		PostureValue = _Type;
+
+		ItemSocketMesh->SetVisibility(false);
+		FPVItemSocketMesh->SetVisibility(false);
 	}
 	else
 	{
+		int ItemSlotIndex = static_cast<int>(_Type);
+		if (IsItemIn[ItemSlotIndex] == false)
+		{
+			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("The item slot is empty."));
+			return;
+		}
 		PostureValue = _Type;
+		CurItemIndex = ItemSlotIndex;
+
+		// 아이템 static mesh 세팅
+		ItemSocketMesh->SetStaticMesh(ItemSlot[CurItemIndex].MeshRes);
+		FPVItemSocketMesh->SetStaticMesh(ItemSlot[CurItemIndex].MeshRes);
+
+		// 아이템 메시 transform 세팅
+		ItemSocketMesh->SetRelativeLocation(ItemSlot[CurItemIndex].RelLoc);
+		FPVItemSocketMesh->SetRelativeLocation(ItemSlot[CurItemIndex].RelLoc);
+
+		ItemSocketMesh->SetRelativeRotation(ItemSlot[CurItemIndex].RelRot);
+		FPVItemSocketMesh->SetRelativeRotation(ItemSlot[CurItemIndex].RelRot);
+
+		// 아이템 메시 visibility 켜기
+		ItemSocketMesh->SetVisibility(true);
+		FPVItemSocketMesh->SetVisibility(true);
 	}
 }
 

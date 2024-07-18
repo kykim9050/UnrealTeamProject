@@ -56,8 +56,15 @@ private : // 문제 발생 여지 있음 발생하면 그냥 지워야 함.
 	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	class USceneComponent* CreateItemComponent = nullptr;
 
+	// 아이템 장착 소켓
+	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	class UStaticMeshComponent* ItemSocketMesh = nullptr;
+	// 1인칭 아이템 장착 소켓
+	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	class UStaticMeshComponent* FPVItemSocketMesh = nullptr;	// => 메인캐릭터로 이전해야 함 (새로 추가됨)
 
-	// == State, Posture ==
+
+	// == Posture ==
 	
 	// 플레이어 자세 유형
 	UPROPERTY(Category = "Contents", Replicated, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
@@ -69,21 +76,20 @@ private : // 문제 발생 여지 있음 발생하면 그냥 지워야 함.
 	bool IsFPV = true;
 
 	// == Inventory ==
-
-
+	// 아이템 여부
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	TArray<bool> IsItemIn;
+	// 현재 아이템 정보.
+	UPROPERTY(VisibleAnywhere)
+	TArray<struct FPlayerItemInformation> ItemSlot;
+	// 현재 아이템 Index
+	UPROPERTY(VisibleAnywhere)
+	int CurItemIndex = -1;
 
 
 	// 맵에 있는 무기 Data
 	UPROPERTY(Category = "Contents", VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	AActor* GetMapItemData = nullptr;
-
-	// 현재 아이템 Index
-	UPROPERTY(VisibleAnywhere)
-	int CurItemIndex = -1;
-
-	// 현재 아이템 정보.
-	UPROPERTY(VisibleAnywhere)
-	TArray<struct FPlayerItemInformation> ItemSlot;
 
 	// 상체 정보
 	UPROPERTY()
