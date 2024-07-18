@@ -46,7 +46,7 @@ void ATestMonsterBase::BeginPlay()
 	UMainGameInstance* MainGameInst = UMainGameBlueprintFunctionLibrary::GetMainGameInstance(GetWorld());
 
 	AnimInst = Cast<UMonsterAnimInstance>(GetMesh()->GetAnimInstance());
-	BaseData = MainGameInst->GetMonsterData(BaseDataName);
+	const FMonsterDataRow* BaseData = MainGameInst->GetMonsterData(BaseDataName);
 
 	if (nullptr == BaseData)
 	{
@@ -62,6 +62,7 @@ void ATestMonsterBase::BeginPlay()
 
 	//  몬스터 데이터 세팅
 	SettingData = NewObject<UMonsterData>(this);
+	SettingData->BaseData = BaseData;
 	SettingData->AttackDamage = 34.0f;
 	SettingData->OriginPos = GetActorLocation();
 

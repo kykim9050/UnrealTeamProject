@@ -13,7 +13,7 @@
 
 EBTNodeResult::Type UBTTaskNode_MonsterPatrol::ExecuteTask(UBehaviorTreeComponent& _OwnerComp, uint8* _NodeMemory)
 {
-	EBTNodeResult::Type Result = Super::ExecuteTask(_OwnerComp, _NodeMemory);
+	Super::ExecuteTask(_OwnerComp, _NodeMemory);
 
 	ATestMonsterBase* Monster = GetActor<ATestMonsterBase>(_OwnerComp);
 	if (false == Monster->IsValidLowLevel())

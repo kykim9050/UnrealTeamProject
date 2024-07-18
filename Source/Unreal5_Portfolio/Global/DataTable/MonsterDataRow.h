@@ -91,6 +91,10 @@ protected:
 	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
 public:
+	// 기본 설정 Data
+	const FMonsterDataRow* BaseData;
+
+	// 개별 Data
 	FVector OriginPos = FVector::ZeroVector;
 
 	UPROPERTY(Replicated)

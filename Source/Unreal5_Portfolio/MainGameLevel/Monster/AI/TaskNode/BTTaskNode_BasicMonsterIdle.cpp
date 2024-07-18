@@ -4,6 +4,10 @@
 #include "MainGameLevel/Monster/AI/TaskNode/BTTaskNode_BasicMonsterIdle.h"
 #include "MainGameLevel/Monster/Base/BasicMonsterBase.h"
 
+#include "BehaviorTree/BlackboardComponent.h"
+
+#include "Global/MainGameBlueprintFunctionLibrary.h"
+#include "Global/MainGameState.h"
 #include "Global/ContentsLog.h"
 
 EBTNodeResult::Type UBTTaskNode_BasicMonsterIdle::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
@@ -17,9 +21,14 @@ EBTNodeResult::Type UBTTaskNode_BasicMonsterIdle::ExecuteTask(UBehaviorTreeCompo
         return EBTNodeResult::Type::Aborted;
     }
 
-    UMonsterData* SettingData = GetValueAsObject<UMonsterData>(OwnerComp, TEXT("SettingData"));
-    SettingData->IdleTime = 0.0f;
+    UMonsterData* MonsterData = GetValueAsObject<UMonsterData>(OwnerComp, TEXT("MonsterData"));
+    if (false == MonsterData->IsValidLowLevel())
+    {
+        LOG(MonsterLog, Fatal, TEXT("MonsterData Is Not Valid"));
+        return EBTNodeResult::Type::Aborted;
+    }
 
+    MonsterData->IdleTime = 2.0f;
     Monster->ChangeAniType(EBasicMonsterAnim::Idle);
 
     return EBTNodeResult::Type::InProgress;
@@ -27,4 +36,29 @@ EBTNodeResult::Type UBTTaskNode_BasicMonsterIdle::ExecuteTask(UBehaviorTreeCompo
 
 void UBTTaskNode_BasicMonsterIdle::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* pNodeMemory, float DeltaSeconds)
 {
+    Super::TickTask(OwnerComp, pNodeMemory, DeltaSeconds);
+
+    // TargetActor 존재시 Chase 상태로
+    AActor* TargetActor = GetValueAsObject<AActor>(OwnerComp, TEXT("TargetActor"));
+    if (nullptr != TargetActor)
+    {
+        StateChange(OwnerComp, ETestMonsterState::Chase);
+        return;
+    }
+
+    UMonsterData* MonsterData = GetValueAsObject<UMonsterData>(OwnerComp, TEXT("MonsterData"));
+    if (false == MonsterData->IsValidLowLevel())
+    {
+        LOG(MonsterLog, Fatal, TEXT("MonsterData Is Not Valid"));
+        return;
+    }
+
+    // IdleTime 이후 Patrol 상태로
+    if (0.0f > MonsterData->IdleTime)
+    {
+        StateChange(OwnerComp, ETestMonsterState::Patrol);
+        return;
+    }
+
+    MonsterData->IdleTime -= DeltaSeconds;
 }

@@ -9,6 +9,7 @@
 
 class USphereComponent;
 class UBasicMonsterAnimInstance;
+class ABasicMonsterAIController;
 
 UCLASS()
 class UNREAL5_PORTFOLIO_API ABasicMonsterBase : public ACharacter
@@ -19,38 +20,48 @@ public:
 	ABasicMonsterBase();
 
 public:
-	UBasicMonsterAnimInstance* GetAnimInstance() const
-	{
-		return AnimInst;
-	}
-
 	template<typename EnumType>
 	void ChangeAniType(EnumType Type)
 	{
 		ChangeAniType(static_cast<uint8>(Type));
 	}
 
-	void ChangeAniType(uint8 Type)
+	FORCEINLINE void ChangeAniType(uint8 Type)
 	{
 		AnimType = Type;
 	}
 
+	FORCEINLINE ABasicMonsterAIController* GetAIController() const
+	{
+		return AIController;
+	}
+
+	FORCEINLINE UBasicMonsterAnimInstance* GetAnimInstance() const
+	{
+		return AnimInst;
+	}
+
+	FORCEINLINE const FMonsterDataRow* GetBaseData() const
+	{
+		return SettingData->BaseData;
+	}
 
 protected:
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
 	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
-private:
-	// 기본 설정 데이터 (데이터 테이블 기반)
-	const FMonsterDataRow* BaseData;
+private:	
+	// Data
 	UPROPERTY(EditAnywhere, Category = "Data", meta = (AllowPrivateAccess = "true"))
 	FName BaseDataName;
-	
-	// 개별 설정 데이터
+
 	UPROPERTY()
 	UMonsterData* SettingData = nullptr;
-	
+
+	UPROPERTY()
+	ABasicMonsterAIController* AIController = nullptr;
+
 private:
 	// 애니메이션
 	UPROPERTY(Replicated)

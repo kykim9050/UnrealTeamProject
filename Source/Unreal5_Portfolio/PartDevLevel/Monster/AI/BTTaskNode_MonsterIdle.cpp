@@ -32,8 +32,6 @@ void UBTTaskNode_MonsterIdle::TickTask(UBehaviorTreeComponent& _OwnerComp, uint8
     Super::TickTask(_OwnerComp, _pNodeMemory, _DeltaSeconds);
 
     UMonsterData* MonsterData = GetValueAsObject<UMonsterData>(_OwnerComp, TEXT("MonsterData"));
-    AMainGameState* GameState = UMainGameBlueprintFunctionLibrary::GetMainGameState(GetWorld());
-    UActorGroup* Players = GameState->GetActorGroup(EObjectType::Player);
 
     bool CanSee = _OwnerComp.GetBlackboardComponent()->GetValueAsBool(TEXT("CanSeePlayer"));
     if (true == CanSee)

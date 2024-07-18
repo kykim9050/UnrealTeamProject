@@ -35,7 +35,7 @@ void ABasicMonsterBase::BeginPlay()
 	
 	// 데이터 세팅
 	UMainGameInstance* MainGameInst = UMainGameBlueprintFunctionLibrary::GetMainGameInstance(GetWorld());
-	BaseData = MainGameInst->GetMonsterData(BaseDataName);
+	const FMonsterDataRow* BaseData = MainGameInst->GetMonsterData(BaseDataName);
 
 	if (nullptr == BaseData)
 	{
@@ -44,6 +44,7 @@ void ABasicMonsterBase::BeginPlay()
 	}
 
 	SettingData = NewObject<UMonsterData>(this);
+	SettingData->BaseData = BaseData;
 	SettingData->AttackDamage = 34.0f;
 	SettingData->OriginPos = GetActorLocation();
 
@@ -58,7 +59,7 @@ void ABasicMonsterBase::BeginPlay()
 	}
 
 	// AI 컨트롤러 세팅
-	ABasicMonsterAIController* AIController = GetController<ABasicMonsterAIController>();
+	AIController = GetController<ABasicMonsterAIController>();
 	AIController->GetBlackboardComponent()->SetValueAsObject(TEXT("BasicMonsterData"), SettingData);
 
 }
