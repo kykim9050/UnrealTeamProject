@@ -30,6 +30,10 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+public :
+	// 하체 정보 (Controller 에서 호출함. -> 나중에 수정 필요.)
+	UPROPERTY(Category = "Contents", Replicated, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	EPlayerLowerState LowerStateValue = EPlayerLowerState::Idle;
 private : // 문제 발생 여지 있음 발생하면 그냥 지워야 함.
 	// == Components ==
 	
@@ -80,10 +84,6 @@ private : // 문제 발생 여지 있음 발생하면 그냥 지워야 함.
 	// 현재 아이템 정보.
 	UPROPERTY(VisibleAnywhere)
 	TArray<struct FPlayerItemInformation> ItemSlot;
-
-	// 하체 정보
-	UPROPERTY(Category = "Contents", Replicated, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	EPlayerLowerState LowerStateValue = EPlayerLowerState::Idle;
 
 	// 상체 정보
 	UPROPERTY()

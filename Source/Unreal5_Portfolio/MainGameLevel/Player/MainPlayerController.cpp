@@ -140,7 +140,17 @@ void AMainPlayerController::ChangePOVController()
 void AMainPlayerController::Crouch(const FInputActionValue& Value)
 {
 	AMainCharacter* Ch = GetPawn<AMainCharacter>();
-	Ch->ChangeLowerState();
+	switch (Ch->LowerStateValue)
+	{
+	case EPlayerLowerState::Idle:
+		Ch->ChangeLowerState(EPlayerLowerState::Crouch);
+		break;
+	case EPlayerLowerState::Crouch:
+		Ch->ChangeLowerState(EPlayerLowerState::Idle);
+		break;
+	default:
+		break;
+	}
 }
 
 void AMainPlayerController::ChangePosture(EPlayerPosture _Posture)
