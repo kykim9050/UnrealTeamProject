@@ -93,6 +93,10 @@ AMainCharacter::AMainCharacter()
 		ItemSlot.Push(SlotBase);
 		IsItemIn.Push(false);
 	}
+
+	HandAttackComponent = CreateDefaultSubobject<USphereComponent>(TEXT("Hand Attack Comp"));
+	HandAttackComponent->SetupAttachment(GetMesh());
+	HandAttackComponent->SetRelativeLocation({ 0.0f, 80.0f, 120.0f });
 }
 
 // Called when the game starts or when spawned
@@ -103,6 +107,8 @@ void AMainCharacter::BeginPlay()
 
 	PlayerAnimInst = Cast<UPlayerAnimInstance>(GetMesh()->GetAnimInstance());
 	FPVPlayerAnimInst = Cast<UPlayerAnimInstance>(FPVMesh->GetAnimInstance());
+
+	HandAttackComponent->SetCollisionProfileName(TEXT("NoCollision"));
 }
 
 void AMainCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
