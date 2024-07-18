@@ -13,7 +13,6 @@
 
 ASwitchObject::ASwitchObject()
 {
-	GetCollisionComponent()->OnComponentBeginOverlap.AddDynamic(this, &ASwitchObject::OnOverlapBegin);
 }
 
 void ASwitchObject::BeginPlay()
@@ -44,28 +43,26 @@ void ASwitchObject::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
-void ASwitchObject::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+void ASwitchObject::InterAction()
 {
-	if (OtherActor && (OtherActor != this) && OtherComp)
+	Super::InterAction();
+
+	AActor* OtherActor = UGameplayStatics::GetActorOfClass(GetWorld(), InteractObjClass);
+
+	if (nullptr == OtherActor)
 	{
-		// 클래스 형 받아오고
-		AActor* OtherActor = UGameplayStatics::GetActorOfClass(GetWorld(), InteractObjClass);
-		
-		if (nullptr == OtherActor)
-		{
-			UE_LOG(ObjectLog, Fatal, TEXT("%S(%u)> if (nullptr == OtherObj)"), __FUNCTION__, __LINE__);
-			return;
-		}
-
-		// 해당 클래스 형으로 다운캐스팅하기
-		AMapObjectBase* InteractObj = Cast<AMapObjectBase>(OtherActor);
-
-		if (nullptr == InteractObj)
-		{
-			UE_LOG(ObjectLog, Fatal, TEXT("%S(%u)> if (nullptr == InteractObj)"), __FUNCTION__, __LINE__);
-			return;
-		}
-
-		InteractObj->InterAction();
+		UE_LOG(ObjectLog, Fatal, TEXT("%S(%u)> if (nullptr == OtherObj)"), __FUNCTION__, __LINE__);
+		return;
 	}
+
+	// 해당 클래스 형으로 다운캐스팅하기
+	AMapObjectBase* InteractObj = Cast<AMapObjectBase>(OtherActor);
+
+	if (nullptr == InteractObj)
+	{
+		UE_LOG(ObjectLog, Fatal, TEXT("%S(%u)> if (nullptr == InteractObj)"), __FUNCTION__, __LINE__);
+		return;
+	}
+
+	InteractObj->InterAction();
 }

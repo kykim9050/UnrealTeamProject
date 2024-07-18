@@ -16,9 +16,6 @@ class UNREAL5_PORTFOLIO_API ASwitchObject : public AMapObjectBase
 	
 public:
 
-	UFUNCTION()
-	void OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
-
 	UFUNCTION(BlueprintCallable)
 	void SetInfo(FName _InfoName);
 
@@ -28,6 +25,7 @@ protected:
 	void BeginPlay() override;
 
 	void Tick(float DeltaTime) override;
+	void InterAction() override;
 
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
