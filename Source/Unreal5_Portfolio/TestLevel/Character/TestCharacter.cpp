@@ -157,7 +157,7 @@ void ATestCharacter::GetDamage(float _Damage)
 // Called when the game starts or when spawned
 void ATestCharacter::BeginPlay()
 {
-	NetStart();
+	NetCheck();
 	Super::BeginPlay();
 
 	UMainGameBlueprintFunctionLibrary::PushActor(EObjectType::Player, this);
