@@ -9,7 +9,7 @@ void UMainAnimInstance::ChangeAnimation(uint8 _Key)
 {
 	if (false == AnimMontages.Contains(_Key))
 	{
-		LOG(GlobalLog, Fatal, TEXT("AnimMontages false"));
+		LOG(GlobalLog, Fatal, "AnimMontages false");
 		return;
 	}
 
@@ -17,7 +17,7 @@ void UMainAnimInstance::ChangeAnimation(uint8 _Key)
 
 	if (nullptr == Montage)
 	{
-		LOG(GlobalLog, Fatal, TEXT("Montage is nullptr"));
+		LOG(GlobalLog, Fatal, "Montage is nullptr");
 		return;
 	}
 

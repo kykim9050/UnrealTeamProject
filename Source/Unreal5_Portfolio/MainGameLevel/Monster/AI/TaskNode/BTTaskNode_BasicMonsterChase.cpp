@@ -17,14 +17,14 @@ EBTNodeResult::Type UBTTaskNode_BasicMonsterChase::ExecuteTask(UBehaviorTreeComp
 	ABasicMonsterBase* Monster = GetSelfActor<ABasicMonsterBase>(OwnerComp);
 	if (false == Monster->IsValidLowLevel())
 	{
-		LOG(MonsterLog, Fatal, TEXT("Monster Is Not Valid"));
+		LOG(MonsterLog, Fatal, "Monster Is Not Valid");
 		return EBTNodeResult::Type::Aborted;
 	}
 
-	UMonsterData* MonsterData = GetValueAsObject<UMonsterData>(OwnerComp, TEXT("MonsterData"));
+	UMonsterData* MonsterData = GetValueAsObject<UMonsterData>(OwnerComp, "MonsterData");
 	if (false == MonsterData->IsValidLowLevel())
 	{
-		LOG(MonsterLog, Fatal, TEXT("MonsterData Is Not Valid"));
+		LOG(MonsterLog, Fatal, "MonsterData Is Not Valid");
 		return EBTNodeResult::Type::Aborted;
 	}
 
@@ -48,11 +48,11 @@ void UBTTaskNode_BasicMonsterChase::TickTask(UBehaviorTreeComponent& OwnerComp, 
 	ABasicMonsterBase* Monster = GetSelfActor<ABasicMonsterBase>(OwnerComp);
 	FVector MonsterLocation = Monster->GetActorLocation();
 
-	AActor* TargetActor = GetValueAsObject<AActor>(OwnerComp, TEXT("TargetActor"));
+	AActor* TargetActor = GetValueAsObject<AActor>(OwnerComp, "TargetActor");
 	FVector TargetLocation = TargetActor->GetActorLocation();
 
 	// 공격 범위 안에 있으면 Attack
-	UMonsterData* MonsterData = GetValueAsObject<UMonsterData>(OwnerComp, TEXT("MonsterData"));
+	UMonsterData* MonsterData = GetValueAsObject<UMonsterData>(OwnerComp, "MonsterData");
 	FVector LocationDiff = TargetLocation - MonsterLocation;
 	float DiffLength = LocationDiff.Size();
 	if (DiffLength <= MonsterData->AttackBoundary)

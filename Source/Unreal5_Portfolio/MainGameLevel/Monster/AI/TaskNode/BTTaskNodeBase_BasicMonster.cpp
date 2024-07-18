@@ -11,18 +11,18 @@ UBTTaskNodeBase_BasicMonster::UBTTaskNodeBase_BasicMonster()
 
 uint8 UBTTaskNodeBase_BasicMonster::GetCurState(UBehaviorTreeComponent& OwnerComp)
 {
-	return OwnerComp.GetBlackboardComponent()->GetValueAsEnum(TEXT("State"));
+	return OwnerComp.GetBlackboardComponent()->GetValueAsEnum("State");
 }
 
 void UBTTaskNodeBase_BasicMonster::StateChange(UBehaviorTreeComponent& OwnerComp, uint8 NextState, EBTNodeResult::Type NodeResult)
 {
-	OwnerComp.GetBlackboardComponent()->SetValueAsEnum(TEXT("State"), NextState);
+	OwnerComp.GetBlackboardComponent()->SetValueAsEnum("State", NextState);
 	FinishLatentTask(OwnerComp, NodeResult);
 }
 
 AActor* UBTTaskNodeBase_BasicMonster::GetSelfActor(UBehaviorTreeComponent& OwnerComp)
 {
-	return Cast<AActor>(OwnerComp.GetBlackboardComponent()->GetValueAsObject(TEXT("SelfActor")));
+	return Cast<AActor>(OwnerComp.GetBlackboardComponent()->GetValueAsObject("SelfActor"));
 }
 
 UObject* UBTTaskNodeBase_BasicMonster::GetValueAsObject(UBehaviorTreeComponent& OwnerComp, FName Name)

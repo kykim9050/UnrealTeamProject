@@ -18,15 +18,15 @@ EBTNodeResult::Type UBTTaskNode_BasicMonsterPatrol::ExecuteTask(UBehaviorTreeCom
 	ABasicMonsterBase* Monster = GetSelfActor<ABasicMonsterBase>(OwnerComp);
 	if (false == Monster->IsValidLowLevel())
 	{
-		LOG(MonsterLog, Fatal, TEXT("Monster Is Not Valid"));
+		LOG(MonsterLog, Fatal, "Monster Is Not Valid");
 		return EBTNodeResult::Type::Aborted;
 	}
 
 	// Find PatrolLocation
-	UMonsterData* MonsterData = GetValueAsObject<UMonsterData>(OwnerComp, TEXT("MonsterData"));
+	UMonsterData* MonsterData = GetValueAsObject<UMonsterData>(OwnerComp, "MonsterData");
 	if (false == MonsterData->IsValidLowLevel())
 	{
-		LOG(MonsterLog, Fatal, TEXT("MonsterData Is Not Valid"));
+		LOG(MonsterLog, Fatal, "MonsterData Is Not Valid");
 		return EBTNodeResult::Type::Aborted;
 	}
 
@@ -50,7 +50,7 @@ void UBTTaskNode_BasicMonsterPatrol::TickTask(UBehaviorTreeComponent& OwnerComp,
 	Super::TickTask(OwnerComp, pNodeMemory, DeltaSeconds);
 
 	// TargetActor 존재시 Chase 상태로
-	AActor* TargetActor = GetValueAsObject<AActor>(OwnerComp, TEXT("TargetActor"));
+	AActor* TargetActor = GetValueAsObject<AActor>(OwnerComp, "TargetActor");
 	if (nullptr != TargetActor)
 	{
 		StateChange(OwnerComp, EBasicMonsterState::Chase);
@@ -61,11 +61,11 @@ void UBTTaskNode_BasicMonsterPatrol::TickTask(UBehaviorTreeComponent& OwnerComp,
 	ABasicMonsterBase* Monster = GetSelfActor<ABasicMonsterBase>(OwnerComp);
 	if (false == Monster->IsValidLowLevel())
 	{
-		LOG(MonsterLog, Fatal, TEXT("Monster Is Not Valid"));
+		LOG(MonsterLog, Fatal, "Monster Is Not Valid");
 		return;
 	}
 
-	FVector PatrolLocation = GetValueAsVector(OwnerComp, TEXT("Destination"));
+	FVector PatrolLocation = GetValueAsVector(OwnerComp, "Destination");
 	EPathFollowingRequestResult::Type IsMove = Monster->GetAIController()->MoveToLocation(PatrolLocation);
 	if (EPathFollowingRequestResult::Type::AlreadyAtGoal == IsMove)
 	{

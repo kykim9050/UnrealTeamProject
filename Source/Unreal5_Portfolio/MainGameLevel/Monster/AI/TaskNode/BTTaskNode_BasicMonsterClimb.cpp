@@ -18,7 +18,7 @@ EBTNodeResult::Type UBTTaskNode_BasicMonsterClimb::ExecuteTask(UBehaviorTreeComp
 	ABasicMonsterBase* Monster = GetSelfActor<ABasicMonsterBase>(OwnerComp);
 	if (false == Monster->IsValidLowLevel())
 	{
-		LOG(MonsterLog, Fatal, TEXT("Monster Is Not Valid"));
+		LOG(MonsterLog, Fatal, "Monster Is Not Valid");
 		return EBTNodeResult::Type::Aborted;
 	}
 
