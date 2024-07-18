@@ -157,7 +157,9 @@ void ATestCharacter::GetDamage(float _Damage)
 // Called when the game starts or when spawned
 void ATestCharacter::BeginPlay()
 {
+	NetStart();
 	Super::BeginPlay();
+
 	UMainGameBlueprintFunctionLibrary::PushActor(EObjectType::Player, this);
 
 	// 몽타주 변경에 필요한 세팅 추가 필요 (태환)
@@ -192,6 +194,8 @@ void ATestCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLi
 	// LowerState (태환)
 	DOREPLIFETIME(ATestCharacter, LowerStateValue);
 	DOREPLIFETIME(ATestCharacter, DirValue);
+
+	DOREPLIFETIME(ATestCharacter, Token);
 }
 
 void ATestCharacter::TestRayCast(float _DeltaTime, FVector _StartPos, FVector _EndPos, FRotator _CameraRot)
@@ -482,4 +486,27 @@ void ATestCharacter::ChangeSocketRelTrans()
 
 	ItemSocketMesh->SetRelativeRotation(FRotator(-0.685624f, -7.766383f, 7.876074f));
 	FPVItemSocketMesh->SetRelativeRotation(FRotator(-0.685624f, -7.766383f, 7.876074f));
+}
+
+void ATestCharacter::NetCheck()
+{
+	IsServer = GetWorld()->GetAuthGameMode() != nullptr;
+	IsClient = !IsServer;
+
+	if (true == IsServer)
+	{
+		IsCanControlled = (GetLocalRole() == ROLE_Authority) ? true : false;
+	}
+	else
+	{
+		IsCanControlled = (GetLocalRole() == ROLE_AutonomousProxy) ? true : false;
+	}
+
+	if (true == IsServer)
+	{
+		UMainGameInstance* Inst = GetGameInstance<UMainGameInstance>();
+		// 이토큰은 그 인덱스가 아니다.
+		Token = Inst->GetNetToken();
+		// UGameplayStatics::GetPlayerPawn(Token)
+	}
 }
