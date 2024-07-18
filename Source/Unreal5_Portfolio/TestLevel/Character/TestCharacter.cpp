@@ -186,9 +186,9 @@ void ATestCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	DefaultRayCast(DeltaTime);
-
 	UpdatePlayerHp(DeltaTime);
+
+	//DefaultRayCast(DeltaTime);
 	//TArray<FItemInformation> I = ItemSlot;
 	//AGameModeBase* Ptr = GetWorld()->GetAuthGameMode();
 }
@@ -211,88 +211,88 @@ void ATestCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLi
 	DOREPLIFETIME(ATestCharacter, Token);
 }
 
-void ATestCharacter::TestRayCast(float _DeltaTime, FVector _StartPos, FVector _EndPos, FRotator _CameraRot)
-{
-	FVector Start = GetActorLocation();
-	Start.X += _StartPos.X;
-	Start.Y += _StartPos.Y;
-	Start.Z += _StartPos.Z;
-
-	CameraComponent->AddLocalRotation(_CameraRot);
-	FVector ForwardVector = CameraComponent->GetForwardVector();
-
-	Start = FVector(Start.X + (ForwardVector.X * 100), Start.Y + (ForwardVector.Y * 100), Start.Z + (ForwardVector.Z * 100));
-
-	FVector End = Start + (ForwardVector * 1000);
-
-	FHitResult Hit;
-	if (GetWorld())
-	{
-		bool ActorHit = GetWorld()->LineTraceSingleByChannel(Hit, Start, End, ECC_GameTraceChannel3, FCollisionQueryParams(), FCollisionResponseParams());
-		//DrawDebugLine(GetWorld(), Start, End, FColor::Red, false, 1.0f, 0.0f, 0.0f);
-		DrawDebugLine(GetWorld(), Start, End, FColor::Red, false, _DeltaTime, 0.0f, 0.0f);
-
-		if (true == ActorHit && Hit.GetActor())
-		{
-			//GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, Hit.GetActor()->GetFName().ToString());
-			//Hit.GetActor()->ActorHasTag(TEXT(""));
-			//AActor* GetActorTest = Hit.GetActor();
-			GetMapItem = Hit.GetActor();
-			int TagCount = Hit.GetActor()->Tags.Num();
-			if (0 != TagCount)
-			{
-				for (size_t i = 0; i < Hit.GetActor()->Tags.Num(); i++)
-				{
-					FString TagName = Hit.GetActor()->Tags[i].ToString();
-					RayCastToItemName = TagName;
-					GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, TagName);
-				}
-			}
-		}
-		else
-		{
-			GetMapItem = nullptr;
-			RayCastToItemName = "";
-		}
-	}
-}
-
-void ATestCharacter::DefaultRayCast(float _DeltaTime)
-{
-	FVector Start = GetActorLocation();
-	FVector ForwardVector = CameraComponent->GetForwardVector();
-	Start = FVector(Start.X + (ForwardVector.X * 100), Start.Y + (ForwardVector.Y * 100), Start.Z + (ForwardVector.Z * 100));
-	FVector End = Start + (ForwardVector * 1000);
-
-	// 아이템 줍기.
-	FHitResult Hit;
-	if (GetWorld())
-	{
-		// 아이템 콜리전 충돌.
-		bool ActorHit = GetWorld()->LineTraceSingleByChannel(Hit, Start, End, ECC_GameTraceChannel3, FCollisionQueryParams(), FCollisionResponseParams());
-		DrawDebugLine(GetWorld(), Start, End, FColor::Green, false, _DeltaTime, 0.0f, 0.0f);
-
-		if (true == ActorHit && Hit.GetActor())
-		{
-			GetMapItem = Hit.GetActor();
-			int TagCount = Hit.GetActor()->Tags.Num();
-			if (0 != TagCount)
-			{
-				for (size_t i = 0; i < Hit.GetActor()->Tags.Num(); i++)
-				{
-					FString TagName = Hit.GetActor()->Tags[i].ToString();
-					RayCastToItemName = TagName;
-					GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, TagName);
-				}
-			}
-		}
-		else
-		{
-			GetMapItem = nullptr;
-			RayCastToItemName = "";
-		}
-	}
-}
+//void ATestCharacter::TestRayCast(float _DeltaTime, FVector _StartPos, FVector _EndPos, FRotator _CameraRot)
+//{
+//	FVector Start = GetActorLocation();
+//	Start.X += _StartPos.X;
+//	Start.Y += _StartPos.Y;
+//	Start.Z += _StartPos.Z;
+//
+//	CameraComponent->AddLocalRotation(_CameraRot);
+//	FVector ForwardVector = CameraComponent->GetForwardVector();
+//
+//	Start = FVector(Start.X + (ForwardVector.X * 100), Start.Y + (ForwardVector.Y * 100), Start.Z + (ForwardVector.Z * 100));
+//
+//	FVector End = Start + (ForwardVector * 1000);
+//
+//	FHitResult Hit;
+//	if (GetWorld())
+//	{
+//		bool ActorHit = GetWorld()->LineTraceSingleByChannel(Hit, Start, End, ECC_GameTraceChannel3, FCollisionQueryParams(), FCollisionResponseParams());
+//		//DrawDebugLine(GetWorld(), Start, End, FColor::Red, false, 1.0f, 0.0f, 0.0f);
+//		DrawDebugLine(GetWorld(), Start, End, FColor::Red, false, _DeltaTime, 0.0f, 0.0f);
+//
+//		if (true == ActorHit && Hit.GetActor())
+//		{
+//			//GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, Hit.GetActor()->GetFName().ToString());
+//			//Hit.GetActor()->ActorHasTag(TEXT(""));
+//			//AActor* GetActorTest = Hit.GetActor();
+//			GetMapItem = Hit.GetActor();
+//			int TagCount = Hit.GetActor()->Tags.Num();
+//			if (0 != TagCount)
+//			{
+//				for (size_t i = 0; i < Hit.GetActor()->Tags.Num(); i++)
+//				{
+//					FString TagName = Hit.GetActor()->Tags[i].ToString();
+//					RayCastToItemName = TagName;
+//					GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, TagName);
+//				}
+//			}
+//		}
+//		else
+//		{
+//			GetMapItem = nullptr;
+//			RayCastToItemName = "";
+//		}
+//	}
+//}
+//
+//void ATestCharacter::DefaultRayCast(float _DeltaTime)
+//{
+//	FVector Start = GetActorLocation();
+//	FVector ForwardVector = CameraComponent->GetForwardVector();
+//	Start = FVector(Start.X + (ForwardVector.X * 100), Start.Y + (ForwardVector.Y * 100), Start.Z + (ForwardVector.Z * 100));
+//	FVector End = Start + (ForwardVector * 1000);
+//
+//	// 아이템 줍기.
+//	FHitResult Hit;
+//	if (GetWorld())
+//	{
+//		// 아이템 콜리전 충돌.
+//		bool ActorHit = GetWorld()->LineTraceSingleByChannel(Hit, Start, End, ECC_GameTraceChannel3, FCollisionQueryParams(), FCollisionResponseParams());
+//		DrawDebugLine(GetWorld(), Start, End, FColor::Green, false, _DeltaTime, 0.0f, 0.0f);
+//
+//		if (true == ActorHit && Hit.GetActor())
+//		{
+//			GetMapItem = Hit.GetActor();
+//			int TagCount = Hit.GetActor()->Tags.Num();
+//			if (0 != TagCount)
+//			{
+//				for (size_t i = 0; i < Hit.GetActor()->Tags.Num(); i++)
+//				{
+//					FString TagName = Hit.GetActor()->Tags[i].ToString();
+//					RayCastToItemName = TagName;
+//					GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, TagName);
+//				}
+//			}
+//		}
+//		else
+//		{
+//			GetMapItem = nullptr;
+//			RayCastToItemName = "";
+//		}
+//	}
+//}
 
 void ATestCharacter::FireRayCast_Implementation(float _DeltaTime)	// => 메인캐릭터로 이전해야 함 (내용 수정됨)
 {
@@ -404,7 +404,7 @@ void ATestCharacter::ChangePlayerDir_Implementation(EPlayerMoveDir _Dir)
 	DirValue = _Dir;
 }
 
-void ATestCharacter::PickUpItem_Implementation()	// => 메인캐릭터로 이전해야 함 (내용 수정됨)
+void ATestCharacter::PickUpItem_Implementation()	// => 메인캐릭터로 이전해야 함 (내용 수정됨!!!)
 {
 	// RayCast를 통해 Tag 이름을 가져온다.
 	FString GetItemName = "";
@@ -417,13 +417,15 @@ void ATestCharacter::PickUpItem_Implementation()	// => 메인캐릭터로 이전해야 함 
 		return;
 	}
 
+	// 1. 맵오브젝트일 경우
 	AMapObjectBase* GetMapItem = Cast<AMapObjectBase>(GetMapItemData);
 	if (nullptr != GetMapItem)
 	{
-		// 맵 아이템.
 		GetMapItem->InterAction();
 		return;
 	}
+
+	// 2. 주울 수 있는 아이템일 경우
 
 	// 맵에 아이템이 있다면 해당 아이템의 Tag를 가져온다.
 	FString TagName = "";
@@ -513,6 +515,97 @@ void ATestCharacter::MapItemOverlapStart(AActor* _OtherActor, UPrimitiveComponen
 	GetMapItemData = _OtherActor;
 }
 
-	ItemSocketMesh->SetRelativeRotation(FRotator(-0.685624f, -7.766383f, 7.876074f));
-	FPVItemSocketMesh->SetRelativeRotation(FRotator(-0.685624f, -7.766383f, 7.876074f));
+void ATestCharacter::MapItemOverlapEnd()
+{
+	if (nullptr != GetMapItemData)
+	{
+		GetMapItemData = nullptr;
+	}
+}
+
+void ATestCharacter::NetCheck()
+{
+	IsServer = GetWorld()->GetAuthGameMode() != nullptr;
+	IsClient = !IsServer;
+
+	if (true == IsServer)
+	{
+		IsCanControlled = (GetLocalRole() == ROLE_Authority) ? true : false;
+	}
+	else // client
+	{
+		IsCanControlled = (GetLocalRole() == ROLE_AutonomousProxy) ? true : false;
+	}
+
+	if (true == IsServer)
+	{
+		UMainGameInstance* Inst = GetGameInstance<UMainGameInstance>();
+		// 이토큰은 그 인덱스가 아니다.
+		Token = Inst->GetNetToken();
+		MyMaxHp = Inst->GetPlayerData(FName("TestPlayer"))->GetHp();
+
+		// UGameplayStatics::GetPlayerPawn(Token)
+	}
+	else // client
+	{
+
+	}
+}
+
+void ATestCharacter::UISetting()
+{
+	ATestPlayerController* Con = Cast<ATestPlayerController>(GetController());
+	if (nullptr == Con)
+	{
+		return;
+	}
+	ATestPlayHUD* PlayHUD = Cast<ATestPlayHUD>(Con->GetHUD());
+	if (nullptr == PlayHUD)
+	{
+		return;
+	}
+	UTestHpBarUserWidget* MyHpWidget = Cast<UTestHpBarUserWidget>(PlayHUD->GetWidget(EInGameUIType::HpBar));
+	if (nullptr == MyHpWidget)
+	{
+		return;
+	}
+
+	if (true == IsCanControlled && -1 != Token)
+	{
+		MyHpWidget->HpbarInit_ForMainPlayer(Token);
+	}
+	else
+	{
+		int a = 0;
+		return;
+	}
+}
+
+void ATestCharacter::UpdatePlayerHp(float _DeltaTime)
+{
+	ATestPlayerState* MyTestPlayerState = Cast<ATestPlayerState>(GetPlayerState());
+	if (nullptr == MyTestPlayerState)
+	{
+		int a = 0;
+		return;
+	}
+
+	float GetHp = MyTestPlayerState->GetPlayerHp();
+	if (CulHp != GetHp || /*test*/MyMaxHp != PlayerHp)
+	{
+		CulHp = MyTestPlayerState->GetPlayerHp();
+
+		ATestPlayerController* MyController = Cast<ATestPlayerController>(GetController());
+		if (nullptr == MyController)
+		{
+			return;
+		}
+		ATestPlayHUD* PlayHUD = Cast<ATestPlayHUD>(MyController->GetHUD());
+		if (nullptr != PlayHUD && Token != -1)
+		{
+			UTestHpBarUserWidget* MyHpWidget = Cast<UTestHpBarUserWidget>(PlayHUD->GetWidget(EInGameUIType::HpBar));
+			MyHpWidget->NickNameUpdate(Token, FText::FromString(FString("CORORO")));
+			MyHpWidget->HpbarUpdate(Token, CulHp, 100.0f);
+		}
+	}
 }
