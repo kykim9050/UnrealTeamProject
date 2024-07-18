@@ -45,7 +45,7 @@ void UBTTaskNode_MonsterFall::TickTask(UBehaviorTreeComponent& _OwnerComp, uint8
 	FVector LocationDiff = MonsterLocation - LandingLocation;
 	if (50.0f >= LocationDiff.Size())
 	{
-		StateChange(_OwnerComp, EMonsterState::Chase);
+		StateChange(_OwnerComp, ETestMonsterState::Chase);
 		return;
 	}
 

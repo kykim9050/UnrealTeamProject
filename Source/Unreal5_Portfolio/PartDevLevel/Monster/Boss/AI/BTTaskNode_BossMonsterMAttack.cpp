@@ -24,7 +24,7 @@ EBTNodeResult::Type UBTTaskNode_BossMonsterMAttack::ExecuteTask(UBehaviorTreeCom
 	}
 
 	UBossData* BossData = GetValueAsObject<UBossData>(_OwnerComp, TEXT("BossMonsterData"));
-	BossMonster->ChangeAniValue(EMonsterAnim::Attack);
+	BossMonster->ChangeAniValue(ETestMonsterAnim::Attack);
 
 	return EBTNodeResult::Type::InProgress;
 }
@@ -54,7 +54,7 @@ void UBTTaskNode_BossMonsterMAttack::TickTask(UBehaviorTreeComponent& _OwnerComp
 
 	if (0.0f >= TargetPlayerState->GetPlayerHp())
 	{
-		StateChange(_OwnerComp, EMonsterState::Idle);
+		StateChange(_OwnerComp, ETestMonsterState::Idle);
 		_OwnerComp.GetBlackboardComponent()->SetValueAsObject(TEXT("TargetActor"),nullptr);
 		_OwnerComp.GetBlackboardComponent()->SetValueAsBool(TEXT("CanSeePlayer"), false);
 		return;

@@ -43,7 +43,7 @@ enum class EPlayerPosture : uint8
 };
 
 UENUM(BlueprintType)
-enum class EMonsterState : uint8
+enum class ETestMonsterState : uint8
 {
 	Idle,
 	Patrol,
@@ -71,7 +71,19 @@ enum class EBasicMonsterState : uint8
 };
 
 UENUM(BlueprintType)
-enum class EMonsterAnim : uint8
+enum class ETestMonsterAnim : uint8
+{
+	Idle		UMETA(DisplayName = "Idle"),
+	Walk		UMETA(DisplayName = "Walk"),
+	Run			UMETA(DisplayName = "Run"),
+	Attack		UMETA(DisplayName = "Attack"),
+	Dead		UMETA(DisplayName = "Dead"),
+	Climb		UMETA(DisplayName = "Climb"),
+	ClimbEnd	UMETA(DisplayName = "ClimbEnd")
+};
+
+UENUM(BlueprintType)
+enum class EBasicMonsterAnim : uint8
 {
 	Idle		UMETA(DisplayName = "Idle"),
 	Walk		UMETA(DisplayName = "Walk"),

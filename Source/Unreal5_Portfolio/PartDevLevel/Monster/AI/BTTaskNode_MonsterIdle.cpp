@@ -22,7 +22,7 @@ EBTNodeResult::Type UBTTaskNode_MonsterIdle::ExecuteTask(UBehaviorTreeComponent&
     UMonsterData* MonsterData = GetValueAsObject<UMonsterData>(_OwnerComp, TEXT("MonsterData"));
     MonsterData->IdleTime = 0.0f;
 
-    Monster->ChangeAniValue(EMonsterAnim::Idle);
+    Monster->ChangeAniValue(ETestMonsterAnim::Idle);
 
     return EBTNodeResult::Type::InProgress;
 }
@@ -38,13 +38,13 @@ void UBTTaskNode_MonsterIdle::TickTask(UBehaviorTreeComponent& _OwnerComp, uint8
     bool CanSee = _OwnerComp.GetBlackboardComponent()->GetValueAsBool(TEXT("CanSeePlayer"));
     if (true == CanSee)
     {
-        StateChange(_OwnerComp, EMonsterState::Chase);
+        StateChange(_OwnerComp, ETestMonsterState::Chase);
         return;
     }
 
     if (2.0f < MonsterData->IdleTime)
     {
-        StateChange(_OwnerComp, EMonsterState::Patrol); 
+        StateChange(_OwnerComp, ETestMonsterState::Patrol); 
         return;
     }
 

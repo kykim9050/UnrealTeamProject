@@ -20,6 +20,11 @@ void UBTTaskNodeBase_BasicMonster::StateChange(UBehaviorTreeComponent& OwnerComp
 	FinishLatentTask(OwnerComp, NodeResult);
 }
 
+AActor* UBTTaskNodeBase_BasicMonster::GetSelfActor(UBehaviorTreeComponent& OwnerComp)
+{
+	return Cast<AActor>(OwnerComp.GetBlackboardComponent()->GetValueAsObject(TEXT("SelfActor")));
+}
+
 UObject* UBTTaskNodeBase_BasicMonster::GetValueAsObject(UBehaviorTreeComponent& OwnerComp, FName Name)
 {
 	return OwnerComp.GetBlackboardComponent()->GetValueAsObject(Name);

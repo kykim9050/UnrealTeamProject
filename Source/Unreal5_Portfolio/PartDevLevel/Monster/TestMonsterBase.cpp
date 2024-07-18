@@ -54,8 +54,8 @@ void ATestMonsterBase::BeginPlay()
 		return;
 	}
 
-	TMap<EMonsterAnim, FAnimMontageGroup> TestAnimMontages = BaseData->GetTestAnimMontage();
-	for (TPair<EMonsterAnim, FAnimMontageGroup> AnimMontageGroup : TestAnimMontages)
+	TMap<ETestMonsterAnim, FAnimMontageGroup> TestAnimMontages = BaseData->GetTestAnimMontage();
+	for (TPair<ETestMonsterAnim, FAnimMontageGroup> AnimMontageGroup : TestAnimMontages)
 	{
 		AnimInst->PushRandomAnimation(AnimMontageGroup.Key, AnimMontageGroup.Value);
 	}
@@ -134,9 +134,9 @@ void ATestMonsterBase::Attack(AActor* _OtherActor, UPrimitiveComponent* _Collisi
 		return;
 	}
 
-	EMonsterState MonsterState = static_cast<EMonsterState>(BlackBoard->GetValueAsEnum(TEXT("State")));
+	ETestMonsterState MonsterState = static_cast<ETestMonsterState>(BlackBoard->GetValueAsEnum(TEXT("State")));
 	ATestCharacter* HitCharacter = Cast<ATestCharacter>(_OtherActor);
-	if (nullptr != HitCharacter && EMonsterState::Attack == MonsterState)
+	if (nullptr != HitCharacter && ETestMonsterState::Attack == MonsterState)
 	{
 		ATestPlayerState* HitPlayerState = Cast<ATestPlayerState>(HitCharacter->GetPlayerState());
 
@@ -206,7 +206,7 @@ void ATestMonsterBase::SetOnDead_Implementation()
 void ATestMonsterBase::OnDead()
 {
 	SetOnDead();
-	ChangeAniValue(EMonsterAnim::Dead);
+	ChangeAniValue(ETestMonsterAnim::Dead);
 
 	ATestMonsterBaseAIController* AIController = GetController<ATestMonsterBaseAIController>();
 	AIController->UnPossess();

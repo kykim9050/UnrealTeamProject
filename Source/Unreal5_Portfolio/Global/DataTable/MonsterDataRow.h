@@ -42,12 +42,12 @@ public:
 		return RunSpeed;
 	}
 
-	TMap<EMonsterAnim, class UAnimMontage*> GetAnimMontage() const
+	TMap<ETestMonsterAnim, class UAnimMontage*> GetAnimMontage() const
 	{
 		return AnimMontages;
 	}
 
-	TMap<EMonsterAnim, FAnimMontageGroup> GetTestAnimMontage() const
+	TMap<ETestMonsterAnim, FAnimMontageGroup> GetTestAnimMontage() const
 	{
 		return TestAnimMontages;
 	}
@@ -75,10 +75,10 @@ private:
 	/// ¸ùÅ¸ÁÖ
 	/// </summary>
 	UPROPERTY(EditAnywhere, meta = (AllowprivateAccess = "true"))
-	TMap<EMonsterAnim, class UAnimMontage*> AnimMontages;
+	TMap<ETestMonsterAnim, class UAnimMontage*> AnimMontages;
 
 	UPROPERTY(EditAnywhere, meta = (AllowprivateAccess = "true"))
-	TMap<EMonsterAnim, FAnimMontageGroup> TestAnimMontages;
+	TMap<ETestMonsterAnim, FAnimMontageGroup> TestAnimMontages;
 
 };
 
