@@ -42,8 +42,9 @@ void UBTTaskNode_MonsterClimb::TickTask(UBehaviorTreeComponent& _OwnerComp, uint
 	FVector CurPos = Monster->GetActorLocation();
 	FVector ForwardVector = Monster->GetActorForwardVector();
 	
-	if (CurPos.Z >= Dest.Z - Monster->GetCapsuleComponent()->GetUnscaledCapsuleHalfHeight())
+	if (CurPos.Z >= Dest.Z - (Monster->GetCapsuleComponent()->GetUnscaledCapsuleHalfHeight() + 45.0f))
 	{
+		Monster->GetCapsuleComponent()->SetCapsuleRadius(34.0f);
 		Monster->GetCharacterMovement()->MovementMode = EMovementMode::MOVE_None;
 		StateChange(_OwnerComp, EMonsterState::ClimbEnd);
 		return;
