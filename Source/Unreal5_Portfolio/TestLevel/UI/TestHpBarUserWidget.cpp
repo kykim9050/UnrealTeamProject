@@ -1,42 +1,53 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "TestLevel/UI/TestHpBarUserWidget.h"
-#include "Kismet/GameplayStatics.h"
-#include "TestLevel/Character/TestCharacter.h"
-#include "Global/MainGameBlueprintFunctionLibrary.h"
-#include "Global/DataTable/PlayerDataRow.h"
-#include "Components/ProgressBar.h"
-#include "TestLevel/Character/TestPlayerState.h"
+#include "TestHpBarUserWidget.h"
+#include "DefaultHpBarUserWidget.h"
 
 
 void UTestHpBarUserWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
 
-	MyCharacter = Cast<ATestCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
-	Inst = UMainGameBlueprintFunctionLibrary::GetMainGameInstance(GetWorld());
-	MaxHp = static_cast<float>(Inst->GetPlayerData(FName("TestPlayer"))->GetHp());
+	WidgetInit();
 }
 
-void UTestHpBarUserWidget::NativeTick(const FGeometry& _MyGeometry, float _InDeltaTime)
+void UTestHpBarUserWidget::WidgetInit()
 {
-	Super::NativeTick(_MyGeometry, _InDeltaTime);
+	// HpWidgets 세팅
+	HpWidgets.Add(MainPlayer);
+	HpWidgets.Add(Player2);
+	HpWidgets.Add(Player3);
+	HpWidgets.Add(Player4);
 
-	PB_HpBar->SetPercent(HPUpdate());
-}
-
-float UTestHpBarUserWidget::HPUpdate()
-{
-	AGameModeBase* Mode = GetWorld()->GetAuthGameMode();
-	int b = 0;
-
-	ATestPlayerState* MyPlayerState = Cast<ATestPlayerState>(UGameplayStatics::GetPlayerState(GetWorld(), 0));
-	if(MyPlayerState != nullptr)
+	// NickName 초기화
+	for (int i = 0; i < 4; ++i)
 	{
-		CurHp = MyPlayerState->GetPlayerHp();
+		FString NameInit = "Player" + FString::FromInt(i);
+		NickNameUpdate(i, FText::FromString(NameInit));
 	}
 
-	// 현재 체력 / MAX 체력 
-	return CurHp / MaxHp;
+	// HP 초기화
+	for (int i = 0; i < 4; ++i)
+	{
+		HpbarUpdate(i, 10.f, 10.f);
+	}
 }
+
+//void UTestHpBarUserWidget::NativeTick(const FGeometry& _MyGeometry, float _InDeltaTime)
+//{
+//	Super::NativeTick(_MyGeometry, _InDeltaTime);
+//
+//}
+
+void UTestHpBarUserWidget::HpbarUpdate(int _Token, float _CurHp, float _MaxHp)
+{
+	HpWidgets[_Token]->SetHp(_CurHp / _MaxHp);
+}
+
+void UTestHpBarUserWidget::NickNameUpdate(int _Token, FText _nickname)
+{
+	HpWidgets[_Token]->SetNickName(_nickname);
+}
+
+

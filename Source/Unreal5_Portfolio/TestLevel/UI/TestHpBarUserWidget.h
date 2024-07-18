@@ -7,27 +7,34 @@
 #include "TestHpBarUserWidget.generated.h"
 
 /**
- * 
+ * 전체 HpBar 위젯을 들고 있는 애가 될 클래스로 변경 중.
  */
-class UMainGameInstance;
-class ATestCharacter;
 UCLASS()
 class UNREAL5_PORTFOLIO_API UTestHpBarUserWidget : public UUserWidget
 {
 	GENERATED_BODY()
 
+	// 위젯 구성요소
 	UPROPERTY(meta = (BindWidget))
-	class UProgressBar* PB_HpBar;
+	class UDefaultHpBarUserWidget* MainPlayer;
+
+	UPROPERTY(meta = (BindWidget))
+	class UDefaultHpBarUserWidget* Player2;
+
+	UPROPERTY(meta = (BindWidget))
+	class UDefaultHpBarUserWidget* Player3;
+
+	UPROPERTY(meta = (BindWidget))
+	class UDefaultHpBarUserWidget* Player4;
 
 public:
 	void NativeConstruct() override;
-	void NativeTick(const FGeometry& _MyGeometry, float _InDeltaTime) override;
+	//void NativeTick(const FGeometry& _MyGeometry, float _InDeltaTime) override;
 
-	UFUNCTION(BlueprintCallable)
-	float HPUpdate();
+	void HpbarUpdate(int _Token, float _CurHp, float _MaxHp);
+	void NickNameUpdate(int _Token, FText _nickname);
 
-	UMainGameInstance* Inst;
-	ATestCharacter* MyCharacter;
-	float CurHp;
-	float MaxHp;
+private:
+	void WidgetInit();
+	TArray<UDefaultHpBarUserWidget*> HpWidgets;
 };
