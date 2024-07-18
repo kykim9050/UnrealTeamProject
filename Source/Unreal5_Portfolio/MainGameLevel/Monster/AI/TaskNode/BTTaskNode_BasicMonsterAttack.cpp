@@ -29,7 +29,7 @@ EBTNodeResult::Type UBTTaskNode_BasicMonsterAttack::ExecuteTask(UBehaviorTreeCom
 		return EBTNodeResult::Type::Aborted;
 	}
 
-	Monster->ChangeAniType(ETestMonsterAnim::Attack);
+	Monster->ChangeAniType(EBasicMonsterAnim::Attack);
 
 	return EBTNodeResult::Type::InProgress;
 }
@@ -42,7 +42,7 @@ void UBTTaskNode_BasicMonsterAttack::TickTask(UBehaviorTreeComponent& OwnerComp,
 	AMainCharacter* TargetPlayer = GetValueAsObject<AMainCharacter>(OwnerComp, TEXT("TargetActor"));
 	if (nullptr == TargetPlayer)
 	{
-		StateChange(OwnerComp, ETestMonsterState::Idle);
+		StateChange(OwnerComp, EBasicMonsterState::Idle);
 		return;
 	}
 
@@ -51,7 +51,7 @@ void UBTTaskNode_BasicMonsterAttack::TickTask(UBehaviorTreeComponent& OwnerComp,
 	if (0.0f >= TargetPlayerState->GetPlayerHp())
 	{
 		OwnerComp.GetBlackboardComponent()->SetValueAsObject(TEXT("TargetActor"), nullptr);
-		StateChange(OwnerComp, ETestMonsterState::Idle);
+		StateChange(OwnerComp, EBasicMonsterState::Idle);
 		return;
 	}
 
@@ -71,7 +71,7 @@ void UBTTaskNode_BasicMonsterAttack::TickTask(UBehaviorTreeComponent& OwnerComp,
 	}
 	else
 	{
-		StateChange(OwnerComp, ETestMonsterState::Chase);
+		StateChange(OwnerComp, EBasicMonsterState::Chase);
 		return;
 	}
 }

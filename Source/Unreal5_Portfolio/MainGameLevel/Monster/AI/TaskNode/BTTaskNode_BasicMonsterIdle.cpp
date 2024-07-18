@@ -42,7 +42,7 @@ void UBTTaskNode_BasicMonsterIdle::TickTask(UBehaviorTreeComponent& OwnerComp, u
     AActor* TargetActor = GetValueAsObject<AActor>(OwnerComp, TEXT("TargetActor"));
     if (nullptr != TargetActor)
     {
-        StateChange(OwnerComp, ETestMonsterState::Chase);
+        StateChange(OwnerComp, EBasicMonsterState::Chase);
         return;
     }
 
@@ -56,7 +56,7 @@ void UBTTaskNode_BasicMonsterIdle::TickTask(UBehaviorTreeComponent& OwnerComp, u
     // IdleTime 이후 Patrol 상태로
     if (0.0f > MonsterData->IdleTime)
     {
-        StateChange(OwnerComp, ETestMonsterState::Patrol);
+        StateChange(OwnerComp, EBasicMonsterState::Patrol);
         return;
     }
 

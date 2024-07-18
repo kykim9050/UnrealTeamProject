@@ -38,8 +38,8 @@ void UBTTaskNode_MonsterFall::TickTask(UBehaviorTreeComponent& _OwnerComp, uint8
 	FVector MonsterLocation = Monster->GetActorLocation();
 	FVector LandingLocation = GetValueAsVector(_OwnerComp, TEXT("DestinationLocation"));
 
-	//MonsterLocation.Z = 0;
-	//LandingLocation.Z = 0;
+	MonsterLocation.Z = 0;
+	LandingLocation.Z = 0;
 	
 	FVector LocationDiff = MonsterLocation - LandingLocation;
 	if (50.0f >= LocationDiff.Size())

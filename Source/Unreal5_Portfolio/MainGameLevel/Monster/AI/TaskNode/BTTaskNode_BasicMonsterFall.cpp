@@ -38,12 +38,15 @@ void UBTTaskNode_BasicMonsterFall::TickTask(UBehaviorTreeComponent& OwnerComp, u
 	FVector MonsterLocation = Monster->GetActorLocation();
 	FVector LandingLocation = GetValueAsVector(OwnerComp, TEXT("Destination"));
 
+	MonsterLocation.Z = 0;
+	LandingLocation.Z = 0;
+
 	FVector LocationDiff = MonsterLocation - LandingLocation;
 	float Distance = LocationDiff.Size();
 
 	if (50.0f >= Distance)
 	{
-		StateChange(OwnerComp, ETestMonsterState::Chase);
+		StateChange(OwnerComp, EBasicMonsterState::Chase);
 		return;
 	}
 }

@@ -57,7 +57,7 @@ void UBTTaskNode_BasicMonsterChase::TickTask(UBehaviorTreeComponent& OwnerComp, 
 	float DiffLength = LocationDiff.Size();
 	if (DiffLength <= MonsterData->AttackBoundary)
 	{
-		StateChange(OwnerComp, ETestMonsterState::Attack);
+		StateChange(OwnerComp, EBasicMonsterState::Attack);
 		return;
 	}
 
