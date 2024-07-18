@@ -93,18 +93,6 @@ ATestCharacter::ATestCharacter()
 	UEnum* Enum = StaticEnum<EPlayerPosture>();
 	for (size_t i = 0; i < static_cast<size_t>(EPlayerPosture::Barehand); i++)
 	{
-		/*
-		// Weapon Meshes
-		FString Name = Enum->GetNameStringByValue(i) + "Socket";
-		UStaticMeshComponent* NewSocketMesh = CreateDefaultSubobject<UStaticMeshComponent>(*Name);
-		NewSocketMesh->SetupAttachment(GetMesh(), *Name);
-		NewSocketMesh->SetCollisionProfileName(TEXT("NoCollision"));
-		NewSocketMesh->SetGenerateOverlapEvents(true);
-		NewSocketMesh->SetVisibility(false);
-		NewSocketMesh->SetIsReplicated(true);
-		ItemMeshes.Push(NewSocketMesh);
-		*/
-
 		// Inventory (for UI Test)
 		FItemInformation NewSlot;
 		NewSlot.Name = "";
@@ -318,7 +306,7 @@ void ATestCharacter::FireRayCast_Implementation(float _DeltaTime)	// => 메인캐릭
 		GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, FString::Printf(TEXT("Bullet left : %d / %d"), ItemSlot[CurItemIndex].ReloadLeftNum, ItemSlot[CurItemIndex].ReloadMaxNum));
 
 		bool ActorHit = GetWorld()->LineTraceSingleByChannel(Hit, Start, End, ECC_GameTraceChannel9, FCollisionQueryParams(), FCollisionResponseParams());
-		DrawDebugLine(GetWorld(), Start, End, FColor::Red, false, _DeltaTime, 0.0f, 0.0f);
+		DrawDebugLine(GetWorld(), Start, End, FColor::Red, false, 1.0f, 0.0f, 0.0f);
 
 		if (true == ActorHit && nullptr != Hit.GetActor())
 		{
