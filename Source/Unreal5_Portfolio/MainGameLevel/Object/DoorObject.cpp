@@ -19,6 +19,15 @@ void ADoorObject::BeginPlay()
 void ADoorObject::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	if (true == SlideDoorOpen)
+	{
+		Sliding(DeltaTime);
+	}
+	else if(true == RotateDoorOpen)
+	{
+		Rotating(DeltaTime);
+	}
 }
 
 void ADoorObject::SetMesh(FName _ObjName)
@@ -35,14 +44,37 @@ void ADoorObject::SetMesh(FName _ObjName)
 	GetMeshComponent()->SetStaticMesh(TableData->GetMesh());
 }
 
-void ADoorObject::Sliding()
+void ADoorObject::Sliding(float _DeltaTime)
 {
-	AddActorLocalOffset(FVector(0.0f, 100.0f, 0.0f));
+	//AddActorLocalOffset(FVector(0.0f, 100.0f, 0.0f));
+	//if (false == IsDoorOpen)
+	//{
+	//	if (MoveAmount < 0)
+	//	{
+	//		return;
+	//	}
+
+	//	AddActorLocalOffset(FVector(0.0f, 60.0f, 0.0f) * _DeltaTime);
+	//	MoveAmount -= 60.f * _DeltaTime;
+	//}
+
+	if (MoveAmount > 200)
+	{
+		return;
+	}
+
+	AddActorLocalOffset(FVector(0.0f, -60.0f, 0.0f) * _DeltaTime);
+	MoveAmount += 60.f * _DeltaTime;
 }
 
-void ADoorObject::Rotating()
+void ADoorObject::Rotating(float _DeltaTime)
 {
-	AddActorLocalRotation(FRotator(0.0f, 30.f, 0.0f));
+	if (MoveAmount > 150)
+	{
+		return;
+	}
+	MoveAmount += 30.f * _DeltaTime;
+	AddActorLocalRotation(FRotator(0.f, 30.f, 0.f) * _DeltaTime);
 }
 
 void ADoorObject::InterAction()
@@ -52,10 +84,10 @@ void ADoorObject::InterAction()
 	switch (Type)
 	{
 	case EDoorType::Silding:
-		Sliding();
+		SlideDoorOpen = true;
 		break;
 	case EDoorType::Rotating:
-		Rotating();
+		RotateDoorOpen = true;
 		break;
 	default:
 		UE_LOG(ObjectLog, Fatal, TEXT("%S(%u)> EDoorType Type = EDoorType::None"), __FUNCTION__, __LINE__);

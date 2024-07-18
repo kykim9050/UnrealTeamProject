@@ -28,10 +28,10 @@ public:
 	void SetMesh(FName _ObjName);
 
 	UFUNCTION()
-	void Sliding(/*float _DeltaTime*/);
+	void Sliding(float _DeltaTime);
 
 	UFUNCTION()
-	void Rotating();
+	void Rotating(float _DeltaTime);
 
 	UFUNCTION()
 	void InterAction() override;
@@ -49,7 +49,13 @@ protected:
 
 	void Tick(float DeltaTime) override;
 
+	float MoveAmount = 0.f;
+	bool SlideDoorOpen = false;
+	bool RotateDoorOpen = false;
+
 private:
 	UPROPERTY()
 	EDoorType Type = EDoorType::None;
+
+
 };
