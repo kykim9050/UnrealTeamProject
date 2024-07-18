@@ -188,6 +188,18 @@ private:
 	UPROPERTY()
 	class UPlayerAnimInstance* FPVPlayerAnimInst;
 
+	UFUNCTION()
+	void UISetting();
+	
+	UFUNCTION()
+	void UpdatePlayerHp(float _DeltaTime);
+
+	UPROPERTY()
+	float CulHp = 0.0f;
+
+	UPROPERTY()
+	float MyMaxHp = 0.0f;
+
 public:
 	//UFUNCTION(BlueprintCallable)
 	//void TestRayCast(float _DeltaTime, FVector _StartPos, FVector _EndPos, FRotator _CameraRot);
@@ -208,4 +220,18 @@ public:
 	UFUNCTION(Reliable, NetMulticast)
 	void ClientChangeMontage();
 	void ClientChangeMontage_Implementation();
+
+	UFUNCTION()
+	void NetCheck();
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	bool IsServer = false;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	bool IsClient = false;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	bool IsCanControlled = false;
+
+	UPROPERTY(Category = "TPSNet", Replicated, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	int Token = -1;
 };

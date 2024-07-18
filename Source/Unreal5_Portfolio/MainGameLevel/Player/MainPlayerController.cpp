@@ -6,6 +6,8 @@
 #include "Global/DataAssets/InputDatas.h"
 #include "MainCharacter.h"
 
+#include "Kismet/GameplayStatics.h"
+
 AMainPlayerController::AMainPlayerController()
 {
 	TeamId = FGenericTeamId(0);
@@ -89,14 +91,21 @@ void AMainPlayerController::MoveLeft(const FInputActionValue& Value)
 void AMainPlayerController::Jump(const FInputActionValue& Value)
 {
 	ChangeLowerState(EPlayerLowerState::Idle);
-	AMainCharacter* Ch = GetPawn<AMainCharacter>();
-	Ch->Jump();
+
+	ACharacter* MyPlayerState = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
+	MyPlayerState->Jump();
+
+	//AMainCharacter* Ch = GetPawn<AMainCharacter>();
+	//Ch->Jump();
 }
 
 void AMainPlayerController::JumpEnd(const FInputActionValue& Value)
 {
-	AMainCharacter* Ch = GetPawn<AMainCharacter>();
-	Ch->StopJumping();
+	//AMainCharacter* Ch = GetPawn<AMainCharacter>();
+	//Ch->StopJumping();
+
+	ACharacter* MyPlayerState = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
+	MyPlayerState->StopJumping();
 }
 
 void AMainPlayerController::FireStart(const FInputActionValue& Value)

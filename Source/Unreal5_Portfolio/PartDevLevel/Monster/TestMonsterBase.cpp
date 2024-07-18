@@ -31,10 +31,8 @@ ATestMonsterBase::ATestMonsterBase()
 	AttackComponent = CreateDefaultSubobject<USphereComponent>(TEXT("Attack Comp"));
 	AttackComponent->SetupAttachment(RootComponent);
 
-	GetMesh()->SetCollisionEnabled(ECollisionEnabled::Type::NoCollision);
-
-	DeadTimelineFinish.BindUFunction(this, FName("OnDeadFinish"));
-	DeadDissolveCallBack.BindUFunction(this, FName("OnDeadDissolveInterp"));
+	DeadTimelineFinish.BindUFunction(this, "OnDeadFinish");
+	DeadDissolveCallBack.BindUFunction(this, "OnDeadDissolveInterp");
 
 }
 

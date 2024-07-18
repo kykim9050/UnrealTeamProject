@@ -25,6 +25,7 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	class ATestCharacter* OwnerPlayer = nullptr;
+	//class AMainCharacter* OwnerPlayer = nullptr; // main - kjb
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	EPlayerPosture PlayerPosture = EPlayerPosture::Barehand;

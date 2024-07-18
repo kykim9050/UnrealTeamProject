@@ -96,6 +96,12 @@ public:
 	FNetDataRow CurNetInfo;
 	FRandomStream Random;
 
+	UFUNCTION()
+	FORCEINLINE int GetNetToken()
+	{
+		return ++NetToken;
+	}
+
 protected:
 
 private:
@@ -130,4 +136,7 @@ private:
 	TMap<FString, TSubclassOf<UUserWidget>> TestInGameWidgets;
 private:
 	UMainGameInstance();
+
+	UPROPERTY()
+	int NetToken = -1;
 };
