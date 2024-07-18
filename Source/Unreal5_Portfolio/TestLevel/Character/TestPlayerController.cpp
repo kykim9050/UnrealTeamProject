@@ -142,9 +142,11 @@ void ATestPlayerController::Crouch(const FInputActionValue& Value)
 	switch (Ch->LowerStateValue)
 	{
 	case EPlayerLowerState::Idle:
+		Ch->CrouchCameraMove();
 		Ch->ChangeLowerState(EPlayerLowerState::Crouch);
 		break;
 	case EPlayerLowerState::Crouch:
+		Ch->CrouchCameraMove();
 		Ch->ChangeLowerState(EPlayerLowerState::Idle);
 		break;
 	default:

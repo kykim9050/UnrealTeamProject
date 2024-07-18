@@ -523,6 +523,21 @@ void ATestCharacter::MapItemOverlapEnd()
 	}
 }
 
+void ATestCharacter::CrouchCameraMove()
+{
+	switch (LowerStateValue)
+	{
+	case EPlayerLowerState::Idle:
+		SpringArmComponent->AddRelativeLocation(FVector(0.0f, 0.0f, -60.0f));
+		break;
+	case EPlayerLowerState::Crouch:
+		SpringArmComponent->AddRelativeLocation(FVector(0.0f, 0.0f, 60.0f));
+		break;
+	default:
+		break;
+	}
+}
+
 void ATestCharacter::NetCheck()
 {
 	IsServer = GetWorld()->GetAuthGameMode() != nullptr;

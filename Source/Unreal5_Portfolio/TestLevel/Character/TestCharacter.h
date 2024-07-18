@@ -221,6 +221,10 @@ public:
 	void ClientChangeMontage();
 	void ClientChangeMontage_Implementation();
 
+	// Crouch 카메라 이동
+	UFUNCTION()
+	void CrouchCameraMove();
+
 	UFUNCTION()
 	void NetCheck();
 
