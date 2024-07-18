@@ -27,10 +27,10 @@ EBTNodeResult::Type UBTTaskNode_Monster_ClimbEnd::ExecuteTask(UBehaviorTreeCompo
 		return EBTNodeResult::Aborted;
 	}
 
-	Monster->ChangeAniValue(EMonsterAnim::ClimbEnd);
+	//Monster->ChangeAniValue(EMonsterAnim::ClimbEnd);
 	Monster->ChangeAniValue(ETestMonsterAnim::ClimbEnd);
 	UMonsterData* MonsterData = GetValueAsObject<UMonsterData>(_OwnerComp, TEXT("MonsterData"));
-	MonsterData->ClimbTime = Monster->GetAnimInstance()->GetKeyAnimMontage(static_cast<uint8>(EMonsterAnim::ClimbEnd))->GetPlayLength();
+	MonsterData->ClimbTime = Monster->GetAnimInstance()->GetKeyAnimMontage(static_cast<uint8>(ETestMonsterAnim::ClimbEnd))->GetPlayLength();
 
 	return EBTNodeResult::InProgress;
 }
@@ -47,23 +47,23 @@ void UBTTaskNode_Monster_ClimbEnd::TickTask(UBehaviorTreeComponent& _OwnerComp, 
 		return;
 	}
 
-		FVector DirVector = (Dest - CurPos);
+		/*FVector DirVector = (Dest - CurPos);
 		DirVector.Normalize();
 		if (abs(CurPos.X - Dest.X) >= 50.0f || abs(CurPos.Y - Dest.Y) >= 50.0f)
 		{
 			Monster->SetActorLocation(CurPos + DirVector * 50.0f);
 		}
 		else
-		{
-			Dest.Z += Monster->GetCapsuleComponent()->GetUnscaledCapsuleHalfHeight();
+		{*/
+			/*Dest.Z += Monster->GetCapsuleComponent()->GetUnscaledCapsuleHalfHeight();
 			Monster->GetCapsuleComponent()->SetCapsuleRadius(34.0f);
-			Monster->SetActorRelativeLocation(Dest);
+			Monster->SetActorRelativeLocation(Dest);*/
 			Monster->GetCharacterMovement()->SetMovementMode(MOVE_NavWalking);
-			StateChange(_OwnerComp, EMonsterState::Chase);
+			StateChange(_OwnerComp, ETestMonsterState::Chase);
 			return;
-		}
-	}
-	else
+		//}
+	//}
+	/*else
 	{
 		FVector FirstPos = Monster->GetActorLocation();
 		float ClimbDist = Monster->GetCapsuleComponent()->GetUnscaledCapsuleHalfHeight() * 2.0f;
