@@ -20,6 +20,11 @@ void ASwitchObject::BeginPlay()
 {
 	Super::BeginPlay();
 
+	//GetCollisionComponent()->AddRelativeLocation(CollisionOffset);
+}
+
+void ASwitchObject::SetInfo(FName _InfoName)
+{
 	UMainGameInstance* Inst = UMainGameBlueprintFunctionLibrary::GetMainGameInstance(GetWorld());
 
 	if (nullptr == Inst)
@@ -28,19 +33,10 @@ void ASwitchObject::BeginPlay()
 		return;
 	}
 
-	const FMapObjDataRow* TableData = Inst->GetMapObjDataTable(FName(TEXT("Armory_Switch")));
+	const FMapObjDataRow* TableData = Inst->GetMapObjDataTable(_InfoName);
 	GetMeshComponent()->SetStaticMesh(TableData->GetMesh());
 
 	InteractObjClass = TableData->GetInteractObjClass();
-
-	//FVector CurPos = GetCollisionComponent()->GetComponentLocation();
-	//FVector CurActorPos = GetActorLocation();
-	//FVector CurMeshPos = GetMeshComponent()->GetComponentLocation();
-
-	GetCollisionComponent()->AddRelativeLocation(CollisionOffset);
-	//FVector NextPos = GetCollisionComponent()->GetComponentLocation();
-	//FVector NextActorPos = GetActorLocation();
-	//FVector NextMeshPos = GetMeshComponent()->GetComponentLocation();
 }
 
 void ASwitchObject::Tick(float DeltaTime)

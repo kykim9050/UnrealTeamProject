@@ -12,6 +12,7 @@ AMapObjectBase::AMapObjectBase()
 	PrimaryActorTick.bCanEverTick = true;
 
 	CollisionComponent = CreateDefaultSubobject<UCapsuleComponent>(TEXT("MapObjCollision"));
+	//SetRootComponent(CollisionComponent);
 	CollisionComponent->SetupAttachment(RootComponent);
 
 	MeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MapObjMesh"));

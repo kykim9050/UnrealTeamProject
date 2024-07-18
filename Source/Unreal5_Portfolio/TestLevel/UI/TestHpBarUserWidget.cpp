@@ -24,13 +24,13 @@ void UTestHpBarUserWidget::WidgetInit()
 	for (int i = 0; i < 4; ++i)
 	{
 		FString NameInit = "Player" + FString::FromInt(i);
-		NickNameUpdate(i, FText::FromString(NameInit));
+		HpWidgets[i]->SetNickName(FText::FromString(NameInit));
 	}
 
 	// HP 초기화
 	for (int i = 0; i < 4; ++i)
 	{
-		HpbarUpdate(i, 10.f, 10.f);
+		HpWidgets[i]->SetHp(1.f);
 	}
 }
 
@@ -40,14 +40,56 @@ void UTestHpBarUserWidget::WidgetInit()
 //
 //}
 
+// 이 함수는 메인 플레이어만 실행해야 합니다. (플레이하는 컴퓨터당 1회 실행)
+void UTestHpBarUserWidget::HpbarInit_ForMainPlayer(int _MainPlayerToken)
+{
+	MainPlayerIndex = _MainPlayerToken;
+
+	for (int i = 0; i < 4; ++i)
+	{
+		if (i == MainPlayerIndex)
+		{
+			continue;
+		}
+		OtherPlayerNum.Add(i);
+	}
+}
+
 void UTestHpBarUserWidget::HpbarUpdate(int _Token, float _CurHp, float _MaxHp)
 {
-	HpWidgets[_Token]->SetHp(_CurHp / _MaxHp);
+	if (MainPlayerIndex == _Token)
+	{
+		HpWidgets[0]->SetHp(_CurHp / _MaxHp);
+		return;
+	}
+
+	for (int i = 0; i < 3; ++i)
+	{
+		if (OtherPlayerNum[i] == _Token)
+		{
+			HpWidgets[i + 1]->SetHp(_CurHp / _MaxHp);
+			return;
+		}
+	}
+	
 }
 
 void UTestHpBarUserWidget::NickNameUpdate(int _Token, FText _nickname)
 {
-	HpWidgets[_Token]->SetNickName(_nickname);
+	if (MainPlayerIndex == _Token)
+	{
+		HpWidgets[0]->SetNickName(_nickname);
+		return;
+	}
+
+	for (int i = 0; i < 3; ++i)
+	{
+		if (OtherPlayerNum[i] == _Token)
+		{
+			HpWidgets[i + 1]->SetNickName(_nickname);
+			return;
+		}
+	}
 }
 
 

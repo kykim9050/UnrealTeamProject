@@ -31,10 +31,14 @@ public:
 	void NativeConstruct() override;
 	//void NativeTick(const FGeometry& _MyGeometry, float _InDeltaTime) override;
 
+	void HpbarInit_ForMainPlayer(int _MainPlayerToken);
 	void HpbarUpdate(int _Token, float _CurHp, float _MaxHp);
 	void NickNameUpdate(int _Token, FText _nickname);
 
 private:
 	void WidgetInit();
 	TArray<UDefaultHpBarUserWidget*> HpWidgets;
+
+	int MainPlayerIndex = -1;
+	TArray<int> OtherPlayerNum;
 };
