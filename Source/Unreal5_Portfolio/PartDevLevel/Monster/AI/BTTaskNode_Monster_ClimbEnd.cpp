@@ -24,9 +24,9 @@ EBTNodeResult::Type UBTTaskNode_Monster_ClimbEnd::ExecuteTask(UBehaviorTreeCompo
 		UE_LOG(MonsterLog, Fatal, TEXT("Monster Is Not Valid"));
 		return EBTNodeResult::Aborted;
 	}
-	Monster->ChangeAniValue(EMonsterAnim::ClimbEnd);
+	Monster->ChangeAniValue(ETestMonsterAnim::ClimbEnd);
 	UMonsterData* MonsterData = GetValueAsObject<UMonsterData>(_OwnerComp, TEXT("MonsterData"));
-	MonsterData->ClimbTime = Monster->GetAnimInstance()->GetKeyAnimMontage(static_cast<uint8>(EMonsterAnim::ClimbEnd))->GetPlayLength();
+	MonsterData->ClimbTime = Monster->GetAnimInstance()->GetKeyAnimMontage(static_cast<uint8>(ETestMonsterAnim::ClimbEnd))->GetPlayLength();
 
 	return EBTNodeResult::InProgress;
 }
@@ -57,7 +57,7 @@ void UBTTaskNode_Monster_ClimbEnd::TickTask(UBehaviorTreeComponent& _OwnerComp, 
 			Monster->GetCapsuleComponent()->SetCapsuleRadius(34.0f);
 			Monster->SetActorRelativeLocation(Dest);
 			Monster->GetCharacterMovement()->SetMovementMode(MOVE_NavWalking);
-			StateChange(_OwnerComp, EMonsterState::Chase);
+			StateChange(_OwnerComp, ETestMonsterState::Chase);
 			return;
 		}
 	}

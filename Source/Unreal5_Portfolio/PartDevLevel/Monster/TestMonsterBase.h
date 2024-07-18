@@ -55,7 +55,7 @@ public:
 
 	FORCEINLINE const FMonsterDataRow* GetBaseData() const
 	{
-		return BaseData;
+		return SettingData->BaseData;
 	}
 
 	void Damaged(float Damage);
@@ -86,8 +86,6 @@ private:
 	}
 
 private:
-	const FMonsterDataRow* BaseData;
-
 	UPROPERTY()
 	UMonsterData* SettingData;
 

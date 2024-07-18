@@ -40,9 +40,10 @@ public:
 	template<typename OwnerType>
 	OwnerType* GetSelfActor(UBehaviorTreeComponent& OwnerComp)
 	{
-		UObject* SelfObject = OwnerComp.GetBlackboardComponent()->GetValueAsObject(TEXT("SelfActor"));
-		return Cast<OwnerType>(SelfObject);
+		return Cast<OwnerType>(GetSelfActor(OwnerComp));
 	}
+
+	FORCEINLINE AActor* GetSelfActor(UBehaviorTreeComponent& OwnerComp);
 
 	// Object
 	template<typename ObjectType>

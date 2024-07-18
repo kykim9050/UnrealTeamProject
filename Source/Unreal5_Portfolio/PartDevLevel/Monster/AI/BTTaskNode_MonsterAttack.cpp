@@ -23,9 +23,8 @@ EBTNodeResult::Type UBTTaskNode_MonsterAttack::ExecuteTask(UBehaviorTreeComponen
 	}
 
 	UMonsterData* MonsterData = GetValueAsObject<UMonsterData>(_OwnerComp, TEXT("MonsterData"));
-	MonsterData->IdleTime = 0.0f;
-	Monster->ChangeAniValue(EMonsterAnim::Attack);
-	MonsterData->AttackTime = Monster->GetAnimInstance()->GetKeyAnimMontage(static_cast<uint8>(EMonsterAnim::Attack))->GetPlayLength();
+	Monster->ChangeAniValue(ETestMonsterAnim::Attack);
+	MonsterData->AttackTime = Monster->GetAnimInstance()->GetKeyAnimMontage(static_cast<uint8>(ETestMonsterAnim::Attack))->GetPlayLength();
 
 	return EBTNodeResult::Type::InProgress;
 }
@@ -52,7 +51,7 @@ void UBTTaskNode_MonsterAttack::TickTask(UBehaviorTreeComponent& _OwnerComp, uin
 
 		if (0.0f >= TargetPlayerState->GetPlayerHp())
 		{
-			StateChange(_OwnerComp, EMonsterState::Idle);
+			StateChange(_OwnerComp, ETestMonsterState::Idle);
 			_OwnerComp.GetBlackboardComponent()->SetValueAsObject(TEXT("TargetActor"), nullptr);
 			_OwnerComp.GetBlackboardComponent()->SetValueAsBool(TEXT("CanSeePlayer"), false);
 			return;
@@ -63,12 +62,12 @@ void UBTTaskNode_MonsterAttack::TickTask(UBehaviorTreeComponent& _OwnerComp, uin
 			float Dist = LocationDiff.Size();
 			if (MonsterData->AttackBoundary >= Dist)
 			{
-				MonsterData->AttackTime = Monster->GetAnimInstance()->GetKeyAnimMontage(static_cast<uint8>(EMonsterAnim::Attack))->GetPlayLength();
+				MonsterData->AttackTime = Monster->GetAnimInstance()->GetKeyAnimMontage(static_cast<uint8>(ETestMonsterAnim::Attack))->GetPlayLength();
 			}
 			else
 			{
 				MonsterData->AttackTime = 0.0f;
-				StateChange(_OwnerComp, EMonsterState::Chase);
+				StateChange(_OwnerComp, ETestMonsterState::Chase);
 				return;
 			}
 		}

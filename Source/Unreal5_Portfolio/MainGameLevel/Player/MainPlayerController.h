@@ -54,6 +54,18 @@ public :
 	UFUNCTION(BlueprintCallable)
 	void ChangePosture(EPlayerPosture _Posture);
 
+	// 하체
+	UFUNCTION(BlueprintCallable)
+	void ChangeLowerState(EPlayerLowerState _State);
+
+	// 플레이어 방향
+	UFUNCTION(BlueprintCallable)
+	void ChangePlayerDir(EPlayerMoveDir _Dir);
+
+	// 공격
+	UFUNCTION(BlueprintCallable)
+	void AttackMontagePlay();
+
 	// Generic Team Id
 	virtual FGenericTeamId GetGenericTeamId() const override;
 

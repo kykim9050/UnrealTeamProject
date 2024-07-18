@@ -24,7 +24,7 @@ EBTNodeResult::Type UBTTaskNode_MonsterChase::ExecuteTask(UBehaviorTreeComponent
 
 	UMonsterData* MonsterData = GetValueAsObject<UMonsterData>(_OwnerComp, TEXT("MonsterData"));
 	Monster->GetCharacterMovement()->MaxWalkSpeed = Monster->GetBaseData()->GetRunSpeed();
-	Monster->ChangeAniValue(EMonsterAnim::Run);
+	Monster->ChangeAniValue(ETestMonsterAnim::Run);
 
 	return EBTNodeResult::Type::InProgress;
 }
@@ -33,7 +33,7 @@ void UBTTaskNode_MonsterChase::TickTask(UBehaviorTreeComponent& _OwnerComp, uint
 {
 	Super::TickTask(_OwnerComp, _pNodeMemory, _DeltaSeconds);
 
-	if (EMonsterState::Chase != static_cast<EMonsterState>(GetCurState(_OwnerComp)))
+	if (ETestMonsterState::Chase != static_cast<ETestMonsterState>(GetCurState(_OwnerComp)))
 	{
 		FinishLatentTask(_OwnerComp, EBTNodeResult::Failed);
 		return;
@@ -53,7 +53,7 @@ void UBTTaskNode_MonsterChase::TickTask(UBehaviorTreeComponent& _OwnerComp, uint
 	double DiffLength = LocationDiff.Size();
 	if (DiffLength <= MonsterData->AttackBoundary)
 	{
-		StateChange(_OwnerComp, EMonsterState::Attack);
+		StateChange(_OwnerComp, ETestMonsterState::Attack);
 		return;
 	}
 }
