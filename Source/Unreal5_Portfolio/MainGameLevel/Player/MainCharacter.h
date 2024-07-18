@@ -101,6 +101,10 @@ private : // 문제 발생 여지 있음 발생하면 그냥 지워야 함.
 	UPROPERTY(Category = "Contents", Replicated, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	EPlayerMoveDir DirValue = EPlayerMoveDir::Forward;
 
+	// 근접 공격에 사용
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	class USphereComponent* HandAttackComponent = nullptr;
+
 
 	// == Server ==
 public :
@@ -142,6 +146,13 @@ public :
 	UFUNCTION(Reliable, NetMulticast)
 	void ClientChangeMontage();
 	void ClientChangeMontage_Implementation();
+
+	// Notify State에서 호출.
+	UFUNCTION(BlueprintCallable)
+	void HandAttackCollision(AActor* _OtherActor, UPrimitiveComponent* _Collision);
+
+	UFUNCTION()
+	void ChangeHandAttackCollisionProfile(FName _Name);
 
 	// == Client ==
 private :	
