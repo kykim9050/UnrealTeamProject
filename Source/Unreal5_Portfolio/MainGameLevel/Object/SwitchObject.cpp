@@ -31,7 +31,6 @@ void ASwitchObject::BeginPlay()
 	const FMapObjDataRow* TableData = Inst->GetMapObjDataTable(FName(TEXT("Armory_Switch")));
 	GetMeshComponent()->SetStaticMesh(TableData->GetMesh());
 
-	SwitchValue = TableData->GetWorkValue();
 	InteractObjClass = TableData->GetInteractObjClass();
 
 	//FVector CurPos = GetCollisionComponent()->GetComponentLocation();

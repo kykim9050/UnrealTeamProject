@@ -20,16 +20,6 @@ public:
 		return Mesh;
 	}
 
-	FORCEINLINE bool GetWorkValue() const
-	{
-		return WorkValue;
-	}
-
-	FORCEINLINE void SetWorkValue(bool _Value)
-	{
-		WorkValue = _Value;
-	}
-
 	FORCEINLINE TSubclassOf<UObject> GetInteractObjClass() const
 	{
 		return InteractObjClass;
@@ -43,12 +33,6 @@ private:
 	/// </summary>
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowprivateAccess = "true"))
 	class UStaticMesh* Mesh = nullptr;
-
-	/// <summary>
-	/// 맵 오브젝트 작동 여부
-	/// </summary>
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowprivateAccess = "true"))
-	bool WorkValue = false;
 
 	/// <summary>
 	/// 상호작용할 오브젝트

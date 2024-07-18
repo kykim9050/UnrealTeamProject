@@ -33,8 +33,6 @@ void ADoorObject::SetMesh(FName _ObjName)
 
 	const FMapObjDataRow* TableData = Inst->GetMapObjDataTable(_ObjName);
 	GetMeshComponent()->SetStaticMesh(TableData->GetMesh());
-
-
 }
 
 void ADoorObject::Sliding()
@@ -51,5 +49,16 @@ void ADoorObject::InterAction()
 {
 	Super::InterAction();
 
-	Sliding();
+	switch (Type)
+	{
+	case EDoorType::Silding:
+		Sliding();
+		break;
+	case EDoorType::Rotating:
+		Rotating();
+		break;
+	default:
+		UE_LOG(ObjectLog, Fatal, TEXT("%S(%u)> EDoorType Type = EDoorType::None"), __FUNCTION__, __LINE__);
+		return;
+	}
 }
