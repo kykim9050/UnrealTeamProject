@@ -92,6 +92,11 @@ private : // 문제 발생 여지 있음 발생하면 그냥 지워야 함.
 	// 상체 정보
 
 
+	// 캐릭터 방향 정보
+	UPROPERTY(Category = "Contents", Replicated, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	EPlayerMoveDir DirValue = EPlayerMoveDir::Forward;
+
+
 	// == Server ==
 public :
 	// 상채 변경
@@ -101,8 +106,13 @@ public :
 
 	// 하제 변경
 	UFUNCTION(Reliable, Server)
-	void ChangeLowerState();
-	void ChangeLowerState_Implementation();
+	void ChangeLowerState(EPlayerLowerState _LowerState);
+	void ChangeLowerState_Implementation(EPlayerLowerState _LowerState);
+
+	// 캐릭터 방향
+	UFUNCTION(Reliable, Server)
+	void ChangePlayerDir(EPlayerMoveDir _Dir);
+	void ChangePlayerDir_Implementation(EPlayerMoveDir _Dir);
 
 	// 아이템 변경
 	UFUNCTION(Reliable, Server, BlueprintCallable)

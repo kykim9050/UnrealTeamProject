@@ -153,6 +153,24 @@ void AMainPlayerController::ChangePosture(EPlayerPosture _Posture)
 	Ch->ChangePosture(_Posture);
 }
 
+void AMainPlayerController::ChangeLowerState(EPlayerLowerState _State)
+{
+	AMainCharacter* Ch = GetPawn<AMainCharacter>();
+	Ch->ChangeLowerState(_State);
+}
+
+void AMainPlayerController::ChangePlayerDir(EPlayerMoveDir _Dir)
+{
+	AMainCharacter* Ch = GetPawn<AMainCharacter>();
+	Ch->ChangePlayerDir(_Dir);
+}
+
+void AMainPlayerController::AttackMontagePlay()
+{
+	AMainCharacter* Ch = GetPawn<AMainCharacter>();
+	Ch->ChangeMontage();
+}
+
 FGenericTeamId AMainPlayerController::GetGenericTeamId() const
 {
 	return TeamId;
