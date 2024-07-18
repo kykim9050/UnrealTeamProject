@@ -18,8 +18,14 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void SetMesh(FName _ObjName);
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION()
 	void Sliding(/*float _DeltaTime*/);
+
+	UFUNCTION()
+	void Rotating();
+
+	UFUNCTION()
+	void InterAction() override;
 
 protected:
 	ADoorObject();
@@ -27,6 +33,7 @@ protected:
 	void BeginPlay() override;
 
 	void Tick(float DeltaTime) override;
+
 
 private:
 

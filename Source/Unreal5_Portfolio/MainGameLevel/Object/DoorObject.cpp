@@ -33,9 +33,23 @@ void ADoorObject::SetMesh(FName _ObjName)
 
 	const FMapObjDataRow* TableData = Inst->GetMapObjDataTable(_ObjName);
 	GetMeshComponent()->SetStaticMesh(TableData->GetMesh());
+
+
 }
 
 void ADoorObject::Sliding()
 {
 	AddActorLocalOffset(FVector(0.0f, 100.0f, 0.0f));
+}
+
+void ADoorObject::Rotating()
+{
+	AddActorLocalRotation(FRotator(0.0f, 30.f, 0.0f));
+}
+
+void ADoorObject::InterAction()
+{
+	Super::InterAction();
+
+	Sliding();
 }

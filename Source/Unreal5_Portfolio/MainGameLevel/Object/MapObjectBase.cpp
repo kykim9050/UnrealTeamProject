@@ -29,6 +29,4 @@ void AMapObjectBase::BeginPlay()
 void AMapObjectBase::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
-
