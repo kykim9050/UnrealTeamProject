@@ -30,6 +30,10 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+public :
+	// 하체 정보 (Controller 에서 호출함. -> 나중에 수정 필요.)
+	UPROPERTY(Category = "Contents", Replicated, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	EPlayerLowerState LowerStateValue = EPlayerLowerState::Idle;
 private : // 문제 발생 여지 있음 발생하면 그냥 지워야 함.
 	// == Components ==
 	
@@ -52,12 +56,15 @@ private : // 문제 발생 여지 있음 발생하면 그냥 지워야 함.
 	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	class USceneComponent* CreateItemComponent = nullptr;
 
-	// 몽타주 변경을 위한 AnimInstance
-	UPROPERTY()
-	class UPlayerAnimInstance* PlayerAnimInst;
+	// 아이템 장착 소켓
+	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	class UStaticMeshComponent* ItemSocketMesh = nullptr;
+	// 1인칭 아이템 장착 소켓
+	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	class UStaticMeshComponent* FPVItemSocketMesh = nullptr;	// => 메인캐릭터로 이전해야 함 (새로 추가됨)
 
 
-	// == State, Posture ==
+	// == Posture ==
 	
 	// 플레이어 자세 유형
 	UPROPERTY(Category = "Contents", Replicated, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
@@ -69,27 +76,34 @@ private : // 문제 발생 여지 있음 발생하면 그냥 지워야 함.
 	bool IsFPV = true;
 
 	// == Inventory ==
-
-
+	// 아이템 여부
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	TArray<bool> IsItemIn;
+	// 현재 아이템 정보.
+	UPROPERTY(VisibleAnywhere)
+	TArray<struct FPlayerItemInformation> ItemSlot;
+	// 현재 아이템 Index
+	UPROPERTY(VisibleAnywhere)
+	int CurItemIndex = -1;
 
 
 	// 맵에 있는 무기 Data
 	UPROPERTY(Category = "Contents", VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	AActor* GetMapItemData = nullptr;
 
-	// 현재 아이템 Index
-	UPROPERTY(VisibleAnywhere)
-	int CurItemIndex = -1;
-
-	// 현재 아이템 정보.
-	UPROPERTY(VisibleAnywhere)
-	TArray<struct FPlayerItemInformation> ItemSlot;
-
-	// 하체 정보
-	UPROPERTY(Category = "Contents", Replicated, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	EPlayerLowerState LowerStateValue = EPlayerLowerState::Idle;
-
 	// 상체 정보
+	UPROPERTY()
+	class UPlayerAnimInstance* PlayerAnimInst;
+	UPROPERTY()
+	class UPlayerAnimInstance* FPVPlayerAnimInst;
+
+	// 캐릭터 방향 정보
+	UPROPERTY(Category = "Contents", Replicated, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	EPlayerMoveDir DirValue = EPlayerMoveDir::Forward;
+
+	// 근접 공격에 사용
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	class USphereComponent* HandAttackComponent = nullptr;
 
 
 	// == Server ==
@@ -101,8 +115,13 @@ public :
 
 	// 하제 변경
 	UFUNCTION(Reliable, Server)
-	void ChangeLowerState();
-	void ChangeLowerState_Implementation();
+	void ChangeLowerState(EPlayerLowerState _LowerState);
+	void ChangeLowerState_Implementation(EPlayerLowerState _LowerState);
+
+	// 캐릭터 방향
+	UFUNCTION(Reliable, Server)
+	void ChangePlayerDir(EPlayerMoveDir _Dir);
+	void ChangePlayerDir_Implementation(EPlayerMoveDir _Dir);
 
 	// 아이템 변경
 	UFUNCTION(Reliable, Server, BlueprintCallable)
@@ -127,6 +146,13 @@ public :
 	UFUNCTION(Reliable, NetMulticast)
 	void ClientChangeMontage();
 	void ClientChangeMontage_Implementation();
+
+	// Notify State에서 호출.
+	UFUNCTION(BlueprintCallable)
+	void HandAttackCollision(AActor* _OtherActor, UPrimitiveComponent* _Collision);
+
+	UFUNCTION()
+	void ChangeHandAttackCollisionProfile(FName _Name);
 
 	// == Client ==
 private :	

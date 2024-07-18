@@ -27,6 +27,15 @@ public:
 	int ReloadLeftNum = -1;
 	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	int Damage = 0;
+
+	// 스태틱 메시
 	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	class UStaticMesh* MeshRes = nullptr;
+
+	// 스태틱 메시 컴포넌트 상대적 위치
+	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	FVector RelLoc = FVector(0.0f, 0.0f, 0.0f);
+	// 스태틱 메시 컴포넌트 상대적 회전
+	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	FRotator RelRot = FRotator(0.0f, 0.0f, 0.0f);
 };

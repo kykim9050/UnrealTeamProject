@@ -6,7 +6,8 @@
 #include "Global/ContentsLog.h"
 #include "Global/DataTable/MapObjDataRow.h"
 #include "Components/CapsuleComponent.h"
-#include "MainGameLevel/Object/DoorObject.h"
+//#include "MainGameLevel/Object/DoorObject.h"
+#include "MainGameLevel/Object/MapObjectBase.h"
 #include "Kismet/GameplayStatics.h"
 
 
@@ -30,7 +31,6 @@ void ASwitchObject::BeginPlay()
 	const FMapObjDataRow* TableData = Inst->GetMapObjDataTable(FName(TEXT("Armory_Switch")));
 	GetMeshComponent()->SetStaticMesh(TableData->GetMesh());
 
-	SwitchValue = TableData->GetWorkValue();
 	InteractObjClass = TableData->GetInteractObjClass();
 
 	//FVector CurPos = GetCollisionComponent()->GetComponentLocation();
@@ -53,16 +53,16 @@ void ASwitchObject::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, cl
 	if (OtherActor && (OtherActor != this) && OtherComp)
 	{
 		// 클래스 형 받아오고
-		AActor* OtherObj = UGameplayStatics::GetActorOfClass(GetWorld(), InteractObjClass);
+		AActor* OtherActor = UGameplayStatics::GetActorOfClass(GetWorld(), InteractObjClass);
 		
-		if (nullptr == OtherObj)
+		if (nullptr == OtherActor)
 		{
 			UE_LOG(ObjectLog, Fatal, TEXT("%S(%u)> if (nullptr == OtherObj)"), __FUNCTION__, __LINE__);
 			return;
 		}
 
 		// 해당 클래스 형으로 다운캐스팅하기
-		ADoorObject* InteractObj = Cast<ADoorObject>(OtherObj);
+		AMapObjectBase* InteractObj = Cast<AMapObjectBase>(OtherActor);
 
 		if (nullptr == InteractObj)
 		{
@@ -70,7 +70,6 @@ void ASwitchObject::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, cl
 			return;
 		}
 
-		// 그리고 Sliding함수 실행
-		InteractObj->Sliding();
+		InteractObj->InterAction();
 	}
 }

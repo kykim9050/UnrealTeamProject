@@ -11,7 +11,8 @@
 #include "MainPlayerController.h"
 #include "PlayerItemInformation.h"
 #include "PartDevLevel/Character/PlayerAnimInstance.h"
-
+#include "Components/SphereComponent.h"
+#include "Kismet/KismetSystemLibrary.h"
 
 // Sets default values
 AMainCharacter::AMainCharacter()
@@ -50,6 +51,27 @@ AMainCharacter::AMainCharacter()
 	//MinimapIconComponent->SetupAttachment(RootComponent);
 	//MinimapIconComponent->bVisibleInSceneCaptureOnly = true;
 
+	// 아이템 장착 소켓 초기화.
+	ItemSocketMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ItemSocketMesh"));
+	ItemSocketMesh->SetupAttachment(GetMesh(), FName("ItemSocket"));
+	ItemSocketMesh->SetCollisionProfileName(TEXT("NoCollision"));
+	ItemSocketMesh->SetGenerateOverlapEvents(true);
+	ItemSocketMesh->SetOwnerNoSee(true);
+	ItemSocketMesh->SetVisibility(false);
+	ItemSocketMesh->SetIsReplicated(true);
+	ItemSocketMesh->bHiddenInSceneCapture = true;
+
+	// 1인칭 아이템 장착 소켓 초기화.
+	FPVItemSocketMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("FPVItemSocketMesh"));
+	FPVItemSocketMesh->SetupAttachment(FPVMesh, FName("FPVItemSocket"));
+	FPVItemSocketMesh->SetCollisionProfileName(TEXT("NoCollision"));
+	FPVItemSocketMesh->SetGenerateOverlapEvents(true);
+	FPVItemSocketMesh->SetOnlyOwnerSee(true);
+	FPVItemSocketMesh->SetVisibility(false);
+	FPVItemSocketMesh->SetIsReplicated(true);
+	FPVItemSocketMesh->bCastDynamicShadow = false;
+	FPVItemSocketMesh->CastShadow = false;
+
 	// Item Create Component
 	CreateItemComponent = CreateDefaultSubobject<USceneComponent>(TEXT("CreateItemComponent"));
 	CreateItemComponent->SetupAttachment(RootComponent);
@@ -62,18 +84,19 @@ AMainCharacter::AMainCharacter()
 	GetMapItemCollisonComponent->SetCollisionProfileName(FName("MapItemSearch"));
 
 	// Inventory
-	UEnum* Enum = StaticEnum<EPlayerPosture>();
 	for (size_t i = 0; i < static_cast<size_t>(EPlayerPosture::Barehand); i++)
 	{
-		/*
-		FItemInformation NewSlot;
-		NewSlot.Name = "";
-		NewSlot.ReloadMaxNum = -1;
-		NewSlot.ReloadLeftNum = -1;
-		ItemSlot.Push(NewSlot);
+		FPlayerItemInformation SlotBase;
+		SlotBase.Name = "";
+		SlotBase.ReloadMaxNum = -1;
+		SlotBase.ReloadLeftNum = -1;
+		ItemSlot.Push(SlotBase);
 		IsItemIn.Push(false);
-		*/
 	}
+
+	HandAttackComponent = CreateDefaultSubobject<USphereComponent>(TEXT("Hand Attack Comp"));
+	HandAttackComponent->SetupAttachment(GetMesh());
+	HandAttackComponent->SetRelativeLocation({ 0.0f, 80.0f, 120.0f });
 }
 
 // Called when the game starts or when spawned
@@ -83,6 +106,9 @@ void AMainCharacter::BeginPlay()
 	UMainGameBlueprintFunctionLibrary::PushActor(EObjectType::Player, this);
 
 	PlayerAnimInst = Cast<UPlayerAnimInstance>(GetMesh()->GetAnimInstance());
+	FPVPlayerAnimInst = Cast<UPlayerAnimInstance>(FPVMesh->GetAnimInstance());
+
+	HandAttackComponent->SetCollisionProfileName(TEXT("NoCollision"));
 }
 
 void AMainCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -93,6 +119,7 @@ void AMainCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLi
 	DOREPLIFETIME(AMainCharacter, LowerStateValue);
 	// 플레이어 자세 유형.
 	DOREPLIFETIME(AMainCharacter, PostureValue);
+	DOREPLIFETIME(AMainCharacter, DirValue);
 }
 
 // Called every frame
@@ -114,38 +141,58 @@ void AMainCharacter::ChangePosture_Implementation(EPlayerPosture _Type)
 	if (_Type == EPlayerPosture::Barehand)
 	{
 		PostureValue = _Type;
+
+		ItemSocketMesh->SetVisibility(false);
+		FPVItemSocketMesh->SetVisibility(false);
 	}
 	else
 	{
+		int ItemSlotIndex = static_cast<int>(_Type);
+		if (IsItemIn[ItemSlotIndex] == false)
+		{
+			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("The item slot is empty."));
+			return;
+		}
 		PostureValue = _Type;
+		CurItemIndex = ItemSlotIndex;
+
+		// 아이템 static mesh 세팅
+		ItemSocketMesh->SetStaticMesh(ItemSlot[CurItemIndex].MeshRes);
+		FPVItemSocketMesh->SetStaticMesh(ItemSlot[CurItemIndex].MeshRes);
+
+		// 아이템 메시 transform 세팅
+		ItemSocketMesh->SetRelativeLocation(ItemSlot[CurItemIndex].RelLoc);
+		FPVItemSocketMesh->SetRelativeLocation(ItemSlot[CurItemIndex].RelLoc);
+
+		ItemSocketMesh->SetRelativeRotation(ItemSlot[CurItemIndex].RelRot);
+		FPVItemSocketMesh->SetRelativeRotation(ItemSlot[CurItemIndex].RelRot);
+
+		// 아이템 메시 visibility 켜기
+		ItemSocketMesh->SetVisibility(true);
+		FPVItemSocketMesh->SetVisibility(true);
 	}
 }
 
-void AMainCharacter::ChangeLowerState_Implementation()
+void AMainCharacter::ChangeLowerState_Implementation(EPlayerLowerState _LowerState)
 {
-	switch (LowerStateValue)
-	{
-	case EPlayerLowerState::Idle:
-		LowerStateValue = EPlayerLowerState::Crouch;
-		break;
-	case EPlayerLowerState::Crouch:
-		LowerStateValue = EPlayerLowerState::Idle;
-		break;
-	default:
-		break;
-	}
+	LowerStateValue = _LowerState;
+}
+
+void AMainCharacter::ChangePlayerDir_Implementation(EPlayerMoveDir _Dir)
+{
+	DirValue = _Dir;
 }
 
 void AMainCharacter::PickUpItem_Implementation()
 {
-	// 아이템이 없을 경우.
+	// 맵에 아이템이 없을 경우.
 	if (nullptr == GetMapItemData)
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, TEXT("Not Item"));
 		return;
 	}
 
-	// 아이템이 있다면 해당 아이템의 Tag를 가져온다.
+	// 맵에 아이템이 있다면 해당 아이템의 Tag를 가져온다.
 	FString TagName = "";
 	for (size_t i = 0; i < GetMapItemData->Tags.Num(); i++)
 	{
@@ -154,23 +201,43 @@ void AMainCharacter::PickUpItem_Implementation()
 
 	FName ItemName = FName(*TagName);
 
-	// 손에 아이템이 있다면,
-	// 소켓에 있는 것을 지워주고,
-	
+	// ItemName에 맞는 아이템 정보를 DT에서 가져온다.
+	UMainGameInstance* Inst = GetGameInstance<UMainGameInstance>();
+	const FItemDataRow* ItemData = Inst->GetItemData(ItemName);
 
+	EPlayerPosture ItemType = ItemData->GetType();		// 아이템 타입
+	int ItemReloadNum = ItemData->GetReloadNum();		// 무기 장전 단위 (30, 40)	// -1일 경우 총기류 무기가 아님
+	int ItemDamage = ItemData->GetDamage();				// 무기 공격력				// 0일 경우 무기가 아님
+	UStaticMesh* ItemMeshRes = ItemData->GetResMesh();	// 스태틱 메시
+	FVector ItemRelLoc = ItemData->GetRelLoc();			// 스태틱 메시 컴포넌트 상대적 위치
+	FRotator ItemRelRot = ItemData->GetRelRot();		// 스태틱 메시 컴포넌트 상대적 회전
 
-	// Map에 아이템 생성.
-	// FTransform CreatePos = CreateItemComponent->GetComponentToWorld(); // 체크 필요.
-	// CharacterPlayerToDropItem(ItemName, CreatePos);
+	uint8 ItemIndex = static_cast<uint8>(ItemType);		// 아이템을 넣을 인벤토리 인덱스
+	// 손에 아이템이 있어?
+	if (true == IsItemIn[ItemIndex])
+	{
+		// Map에 아이템 생성.
+		FTransform CreatePos = CreateItemComponent->GetComponentToWorld(); // 체크 필요.
+		CharacterPlayerToDropItem(ItemName, CreatePos);
+	}
 
-	
 	// 손에 아이템을 생성한다.
-	//UMainGameInstance* Inst = GetGameInstance<UMainGameInstance>();
-	//const FItemDataRow* ItemData = Inst->GetItemData(ItemName);
+	// 인벤토리에 아이템 집어넣기. (스태틱메시로 아이템을 가져가는 방식 채택!!!)
+	IsItemIn[ItemIndex] = true;
 
+	ItemSlot[ItemIndex].Name = ItemName;
+	ItemSlot[ItemIndex].ReloadMaxNum = ItemReloadNum;
+	ItemSlot[ItemIndex].ReloadLeftNum = ItemReloadNum;
+	ItemSlot[ItemIndex].Damage = ItemDamage;
+	ItemSlot[ItemIndex].MeshRes = ItemMeshRes;
+	ItemSlot[ItemIndex].RelLoc = ItemRelLoc;
+	ItemSlot[ItemIndex].RelRot = ItemRelRot;
 
 	// 주은 무기 삭제.
-	// GetMapItemData->Destroy();
+	GetMapItemData->Destroy();
+
+	// 무기 Type에 따른 애니메이션 변화 함수 호출.
+	ChangePosture(ItemType);
 }
 
 void AMainCharacter::CharacterPlayerToDropItem_Implementation(FName _ItemName, FTransform _Transform)
@@ -204,8 +271,10 @@ void AMainCharacter::FireRayCast_Implementation(float _DeltaTime)
 		ItemSlot[CurItemIndex].ReloadLeftNum -= 1;
 
 		// Ray Cast
-		bool ActorHit = GetWorld()->LineTraceSingleByChannel(Hit, Start, End, ECC_GameTraceChannel9, FCollisionQueryParams(), FCollisionResponseParams());
-		DrawDebugLine(GetWorld(), Start, End, FColor::Red, false, _DeltaTime, 0.0f, 0.0f);
+		//bool ActorHit = GetWorld()->LineTraceSingleByChannel(Hit, Start, End, ECC_GameTraceChannel9, FCollisionQueryParams(), FCollisionResponseParams());
+		//DrawDebugLine(GetWorld(), Start, End, FColor::Red, false, _DeltaTime, 0.0f, 0.0f);
+		TArray<AActor*> IgnorActors; // 무시할 Actor들.
+		bool ActorHit = UKismetSystemLibrary::LineTraceSingle(GetWorld(), Start, End, ETraceTypeQuery::TraceTypeQuery1, false, IgnorActors, EDrawDebugTrace::None, Hit, true, FLinearColor::Red, FLinearColor::Green, 5.0f);
 		
 		if (true == ActorHit && nullptr != Hit.GetActor())
 		{
@@ -224,6 +293,7 @@ void AMainCharacter::FireRayCast_Implementation(float _DeltaTime)
 void AMainCharacter::ChangeMontage_Implementation()
 {
 	PlayerAnimInst->ChangeAnimation(PostureValue);
+	FPVPlayerAnimInst->ChangeAnimation(PostureValue);
 
 	ClientChangeMontage();
 }
@@ -231,6 +301,23 @@ void AMainCharacter::ChangeMontage_Implementation()
 void AMainCharacter::ClientChangeMontage_Implementation()
 {
 	PlayerAnimInst->ChangeAnimation(PostureValue);
+	FPVPlayerAnimInst->ChangeAnimation(PostureValue);
+}
+
+void AMainCharacter::HandAttackCollision(AActor* _OtherActor, UPrimitiveComponent* _Collision)
+{
+	//ATestMonsterBase* Monster = Cast<ATestMonsterBase>(_OtherActor);
+	//if (nullptr == Monster)
+	//{
+	//	return;
+	//}
+
+	//Monster->Damaged(150.0f);
+}
+
+void AMainCharacter::ChangeHandAttackCollisionProfile(FName _Name)
+{
+	HandAttackComponent->SetCollisionProfileName(_Name);
 }
 
 void AMainCharacter::MapItemOverlapStart(AActor* _OtherActor, UPrimitiveComponent* _Collision)

@@ -124,14 +124,14 @@ void ATestCharacter::CharacterPlayerToDropItem_Implementation(FName _ItemName, F
 	GetWorld()->SpawnActor<AActor>(ItemBase->GetItemUClass(), _Transform);
 }
 
-void ATestCharacter::Collision(AActor* _OtherActor, UPrimitiveComponent* _Collision)
-{
-	ATestMonsterBase* Monster = Cast<ATestMonsterBase>(_OtherActor);
-	if (nullptr == Monster)
-	{
-		return;
-	}
-}
+//void ATestCharacter::Collision(AActor* _OtherActor, UPrimitiveComponent* _Collision)
+//{
+//	ATestMonsterBase* Monster = Cast<ATestMonsterBase>(_OtherActor);
+//	if (nullptr == Monster)
+//	{
+//		return;
+//	}
+//}
 
 void ATestCharacter::HandAttackCollision(AActor* _OtherActor, UPrimitiveComponent* _Collision)
 {

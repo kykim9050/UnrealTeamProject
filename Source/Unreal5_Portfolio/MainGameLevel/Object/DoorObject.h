@@ -6,9 +6,18 @@
 #include "MainGameLevel/Object/MapObjectBase.h"
 #include "DoorObject.generated.h"
 
-/**
- * 
- */
+
+
+UENUM(BlueprintType)
+enum class EDoorType : uint8
+{
+	None,
+	Silding		UMETA(DisplayName = "Sliding"),		
+	Rotating	UMETA(DisplayName = "Rotating"),	
+};
+
+
+
 UCLASS()
 class UNREAL5_PORTFOLIO_API ADoorObject : public AMapObjectBase
 {
@@ -18,8 +27,20 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void SetMesh(FName _ObjName);
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION()
 	void Sliding(/*float _DeltaTime*/);
+
+	UFUNCTION()
+	void Rotating();
+
+	UFUNCTION()
+	void InterAction() override;
+
+	UFUNCTION(BlueprintCallable)
+	FORCEINLINE void SetDoorType(EDoorType _Type)
+	{
+		Type = _Type;
+	}
 
 protected:
 	ADoorObject();
@@ -29,5 +50,6 @@ protected:
 	void Tick(float DeltaTime) override;
 
 private:
-
+	UPROPERTY()
+	EDoorType Type = EDoorType::None;
 };

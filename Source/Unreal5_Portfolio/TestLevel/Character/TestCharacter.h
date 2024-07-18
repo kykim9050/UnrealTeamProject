@@ -52,7 +52,7 @@ public:
 	UPROPERTY(Category = "Contents", VisibleDefaultsOnly)
 	USkeletalMeshComponent* FPVMesh = nullptr;	// => 메인캐릭터로 이전해야 함 (새로 추가됨)
 	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-	class UStaticMeshComponent* RidingMesh = nullptr;	// => 메인캐릭터로 이전해야 함 (새로 추가됨)
+	class UStaticMeshComponent* RidingMesh = nullptr;	// => 메인캐릭터로 이전해야 함 (새로 추가됨) [뭐하는 Component?]
 	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	class UStaticMeshComponent* ItemSocketMesh = nullptr;	// => 메인캐릭터로 이전해야 함 (새로 추가됨)
 	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
@@ -133,8 +133,8 @@ public:
 	void CharacterPlayerToDropItem_Implementation(FName _ItemName, FTransform _Transform);
 
 	// Collision
-	UFUNCTION(BlueprintCallable)
-	void Collision(AActor* _OtherActor, UPrimitiveComponent* _Collision);
+	//UFUNCTION(BlueprintCallable)
+	//void Collision(AActor* _OtherActor, UPrimitiveComponent* _Collision);
 
 	// NotifyState에서 사용 중 (태환)
 	UFUNCTION(BlueprintCallable)

@@ -32,6 +32,8 @@ EBTNodeResult::Type UBTTaskNode_MonsterJump::ExecuteTask(UBehaviorTreeComponent&
 
 void UBTTaskNode_MonsterJump::TickTask(UBehaviorTreeComponent& _OwnerComp, uint8* _pNodeMemory, float _DeltaSeconds)
 {
+	Super::TickTask(_OwnerComp, _pNodeMemory, _DeltaSeconds);
+
 	ATestMonsterBase* Monster = GetActor<ATestMonsterBase>(_OwnerComp);
 	FVector MonsterLocation = Monster->GetActorLocation();
 	FVector LandingLocation = GetValueAsVector(_OwnerComp, TEXT("DestinationLocation"));

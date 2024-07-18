@@ -18,7 +18,7 @@ ABasicMonsterBase::ABasicMonsterBase()
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	AttackComponent = CreateDefaultSubobject<USphereComponent>(TEXT("Attack Comp"));
+	AttackComponent = CreateDefaultSubobject<USphereComponent>("Attack Component");
 	AttackComponent->SetupAttachment(RootComponent);
 }
 
@@ -39,7 +39,7 @@ void ABasicMonsterBase::BeginPlay()
 
 	if (nullptr == BaseData)
 	{
-		LOG(MonsterLog, Fatal, TEXT("BaseData Is Null"));
+		LOG(MonsterLog, Fatal, "BaseData Is Null");
 		return;
 	}
 
@@ -60,7 +60,7 @@ void ABasicMonsterBase::BeginPlay()
 
 	// AI 컨트롤러 세팅
 	AIController = GetController<ABasicMonsterAIController>();
-	AIController->GetBlackboardComponent()->SetValueAsObject(TEXT("BasicMonsterData"), SettingData);
+	AIController->GetBlackboardComponent()->SetValueAsObject("BasicMonsterData", SettingData);
 
 }
 
