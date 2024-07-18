@@ -83,6 +83,7 @@ void AMainCharacter::BeginPlay()
 	UMainGameBlueprintFunctionLibrary::PushActor(EObjectType::Player, this);
 
 	PlayerAnimInst = Cast<UPlayerAnimInstance>(GetMesh()->GetAnimInstance());
+	FPVPlayerAnimInst = Cast<UPlayerAnimInstance>(FPVMesh->GetAnimInstance());
 }
 
 void AMainCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -220,6 +221,7 @@ void AMainCharacter::FireRayCast_Implementation(float _DeltaTime)
 void AMainCharacter::ChangeMontage_Implementation()
 {
 	PlayerAnimInst->ChangeAnimation(PostureValue);
+	FPVPlayerAnimInst->ChangeAnimation(PostureValue);
 
 	ClientChangeMontage();
 }
@@ -227,6 +229,7 @@ void AMainCharacter::ChangeMontage_Implementation()
 void AMainCharacter::ClientChangeMontage_Implementation()
 {
 	PlayerAnimInst->ChangeAnimation(PostureValue);
+	FPVPlayerAnimInst->ChangeAnimation(PostureValue);
 }
 
 void AMainCharacter::MapItemOverlapStart(AActor* _OtherActor, UPrimitiveComponent* _Collision)

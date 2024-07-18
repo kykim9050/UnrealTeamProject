@@ -52,10 +52,6 @@ private : // 문제 발생 여지 있음 발생하면 그냥 지워야 함.
 	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	class USceneComponent* CreateItemComponent = nullptr;
 
-	// 몽타주 변경을 위한 AnimInstance
-	UPROPERTY()
-	class UPlayerAnimInstance* PlayerAnimInst;
-
 
 	// == State, Posture ==
 	
@@ -90,7 +86,10 @@ private : // 문제 발생 여지 있음 발생하면 그냥 지워야 함.
 	EPlayerLowerState LowerStateValue = EPlayerLowerState::Idle;
 
 	// 상체 정보
-
+	UPROPERTY()
+	class UPlayerAnimInstance* PlayerAnimInst;
+	UPROPERTY()
+	class UPlayerAnimInstance* FPVPlayerAnimInst;
 
 	// 캐릭터 방향 정보
 	UPROPERTY(Category = "Contents", Replicated, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
