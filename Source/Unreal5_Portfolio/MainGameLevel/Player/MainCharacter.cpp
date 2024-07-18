@@ -83,6 +83,7 @@ void AMainCharacter::BeginPlay()
 	UMainGameBlueprintFunctionLibrary::PushActor(EObjectType::Player, this);
 
 	PlayerAnimInst = Cast<UPlayerAnimInstance>(GetMesh()->GetAnimInstance());
+	FPVPlayerAnimInst = Cast<UPlayerAnimInstance>(FPVMesh->GetAnimInstance());
 }
 
 void AMainCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -93,6 +94,7 @@ void AMainCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLi
 	DOREPLIFETIME(AMainCharacter, LowerStateValue);
 	// 플레이어 자세 유형.
 	DOREPLIFETIME(AMainCharacter, PostureValue);
+	DOREPLIFETIME(AMainCharacter, DirValue);
 }
 
 // Called every frame
@@ -121,19 +123,14 @@ void AMainCharacter::ChangePosture_Implementation(EPlayerPosture _Type)
 	}
 }
 
-void AMainCharacter::ChangeLowerState_Implementation()
+void AMainCharacter::ChangeLowerState_Implementation(EPlayerLowerState _LowerState)
 {
-	switch (LowerStateValue)
-	{
-	case EPlayerLowerState::Idle:
-		LowerStateValue = EPlayerLowerState::Crouch;
-		break;
-	case EPlayerLowerState::Crouch:
-		LowerStateValue = EPlayerLowerState::Idle;
-		break;
-	default:
-		break;
-	}
+	LowerStateValue = _LowerState;
+}
+
+void AMainCharacter::ChangePlayerDir_Implementation(EPlayerMoveDir _Dir)
+{
+	DirValue = _Dir;
 }
 
 void AMainCharacter::PickUpItem_Implementation()
@@ -224,6 +221,7 @@ void AMainCharacter::FireRayCast_Implementation(float _DeltaTime)
 void AMainCharacter::ChangeMontage_Implementation()
 {
 	PlayerAnimInst->ChangeAnimation(PostureValue);
+	FPVPlayerAnimInst->ChangeAnimation(PostureValue);
 
 	ClientChangeMontage();
 }
@@ -231,6 +229,7 @@ void AMainCharacter::ChangeMontage_Implementation()
 void AMainCharacter::ClientChangeMontage_Implementation()
 {
 	PlayerAnimInst->ChangeAnimation(PostureValue);
+	FPVPlayerAnimInst->ChangeAnimation(PostureValue);
 }
 
 void AMainCharacter::MapItemOverlapStart(AActor* _OtherActor, UPrimitiveComponent* _Collision)
