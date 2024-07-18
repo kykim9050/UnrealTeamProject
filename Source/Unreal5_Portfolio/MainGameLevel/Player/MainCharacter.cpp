@@ -11,6 +11,7 @@
 #include "MainPlayerController.h"
 #include "PlayerItemInformation.h"
 #include "PartDevLevel/Character/PlayerAnimInstance.h"
+#include "Components/SphereComponent.h"
 #include "Kismet/KismetSystemLibrary.h"
 
 // Sets default values
@@ -295,6 +296,22 @@ void AMainCharacter::ClientChangeMontage_Implementation()
 {
 	PlayerAnimInst->ChangeAnimation(PostureValue);
 	FPVPlayerAnimInst->ChangeAnimation(PostureValue);
+}
+
+void AMainCharacter::HandAttackCollision(AActor* _OtherActor, UPrimitiveComponent* _Collision)
+{
+	//ATestMonsterBase* Monster = Cast<ATestMonsterBase>(_OtherActor);
+	//if (nullptr == Monster)
+	//{
+	//	return;
+	//}
+
+	//Monster->Damaged(150.0f);
+}
+
+void AMainCharacter::ChangeHandAttackCollisionProfile(FName _Name)
+{
+	HandAttackComponent->SetCollisionProfileName(_Name);
 }
 
 void AMainCharacter::MapItemOverlapStart(AActor* _OtherActor, UPrimitiveComponent* _Collision)
