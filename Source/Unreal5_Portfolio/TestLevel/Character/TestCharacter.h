@@ -61,6 +61,8 @@ public:
 	class UStaticMeshComponent* FPVItemSocketMesh = nullptr;	// => 메인캐릭터로 이전해야 함 (새로 추가됨)
 	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	class UTestMinimapIconComponent* MinimapIconComponent = nullptr;
+	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	class UBoxComponent* GetMapItemCollisonComponent = nullptr;
 
 	// State, Posture
 	UPROPERTY(Category = "Contents", Replicated, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
@@ -108,16 +110,21 @@ public:
 	int CurItemIndex = -1;
 
 	// Item
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	AActor* GetMapItem = nullptr;
-	//UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	// 맵에 있는 무기 Data
+	UPROPERTY(Category = "Contents", VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	AActor* GetMapItemData = nullptr;
+	UFUNCTION(BlueprintCallable)
+	void MapItemOverlapStart(AActor* _OtherActor, UPrimitiveComponent* _Collision);
+	UFUNCTION(BlueprintCallable)
+	void MapItemOverlapEnd();
+
+	/*UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	AActor* GetMapItem = nullptr;*/
 	UPROPERTY(Category = "Contents", Replicated, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	FString RayCastToItemName = "";
 	UFUNCTION(Reliable, Server)
 	void PickUpItem();
 	void PickUpItem_Implementation();
-	UFUNCTION()
-	void ChangeSocketRelTrans();
 
 	UFUNCTION(BlueprintCallable)
 	FORCEINLINE bool GetPickUp()
@@ -182,11 +189,11 @@ private:
 	class UPlayerAnimInstance* FPVPlayerAnimInst;
 
 public:
-	UFUNCTION(BlueprintCallable)
-	void TestRayCast(float _DeltaTime, FVector _StartPos, FVector _EndPos, FRotator _CameraRot);
+	//UFUNCTION(BlueprintCallable)
+	//void TestRayCast(float _DeltaTime, FVector _StartPos, FVector _EndPos, FRotator _CameraRot);
 
-	UFUNCTION(BlueprintCallable)
-	void DefaultRayCast(float _DeltaTime);
+	//UFUNCTION(BlueprintCallable)
+	//void DefaultRayCast(float _DeltaTime);
 
 	UFUNCTION(Reliable, Server, BlueprintCallable)	// => 메인캐릭터로 이전해야 함
 	void FireRayCast(float _DeltaTime);
