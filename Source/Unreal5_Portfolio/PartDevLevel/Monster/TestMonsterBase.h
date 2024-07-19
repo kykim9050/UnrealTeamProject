@@ -53,6 +53,11 @@ public:
 		return SettingData->Hp;
 	}
 
+	FORCEINLINE int GetAniIndex()
+	{
+		return AniIndex;
+	}
+
 	FORCEINLINE const FMonsterDataRow* GetBaseData() const
 	{
 		return SettingData->BaseData;
