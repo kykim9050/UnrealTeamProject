@@ -13,6 +13,7 @@
 #include "PartDevLevel/Character/PlayerAnimInstance.h"
 #include "Components/SphereComponent.h"
 #include "Kismet/KismetSystemLibrary.h"
+#include "MainGameLevel/Monster/Base/BasicMonsterBase.h"
 
 // Sets default values
 AMainCharacter::AMainCharacter()
@@ -259,10 +260,10 @@ void AMainCharacter::FireRayCast_Implementation(float _DeltaTime)
 		ItemSlot[CurItemIndex].ReloadLeftNum = ItemSlot[CurItemIndex].ReloadMaxNum;
 	}
 
-	FVector Start = GetMesh()->GetSocketLocation(FName("weapon_r_muzzle"));
-	Start.Z -= 20.0f;
 
 	AMainPlayerController* Con = Cast<AMainPlayerController>(GetController());
+	FVector Start = GetMesh()->GetSocketLocation(FName("weapon_r_muzzle"));
+	Start.Z -= 20.0f;
 	FVector End = (Con->GetControlRotation().Vector() * 2000.0f) + Start;
 	
 	FHitResult Hit;
@@ -271,21 +272,18 @@ void AMainCharacter::FireRayCast_Implementation(float _DeltaTime)
 		ItemSlot[CurItemIndex].ReloadLeftNum -= 1;
 
 		// Ray Cast
-		//bool ActorHit = GetWorld()->LineTraceSingleByChannel(Hit, Start, End, ECC_GameTraceChannel9, FCollisionQueryParams(), FCollisionResponseParams());
-		//DrawDebugLine(GetWorld(), Start, End, FColor::Red, false, _DeltaTime, 0.0f, 0.0f);
-		TArray<AActor*> IgnorActors; // 무시할 Actor들.
-		bool ActorHit = UKismetSystemLibrary::LineTraceSingle(GetWorld(), Start, End, ETraceTypeQuery::TraceTypeQuery1, false, IgnorActors, EDrawDebugTrace::None, Hit, true, FLinearColor::Red, FLinearColor::Green, 5.0f);
+		TArray<AActor*> IgnoreActors; // 무시할 Actor들.
+		bool ActorHit = UKismetSystemLibrary::LineTraceSingle(GetWorld(), Start, End, ETraceTypeQuery::TraceTypeQuery1, false, IgnoreActors, EDrawDebugTrace::None, Hit, true, FLinearColor::Red, FLinearColor::Green, 5.0f);
 		
 		if (true == ActorHit && nullptr != Hit.GetActor())
 		{
 			FString BoneName = Hit.BoneName.ToString();
 			UE_LOG(LogTemp, Warning, TEXT("Bone Name : %s"), *BoneName);
-			//ATestMonsterBase* Monster = Cast<ATestMonsterBase>(Hit.GetActor()); // Main Monster 대기 중.
-			//if (nullptr != Monster)
-			//{
-			//	Monster->Damaged(50.0f);
-			//	GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, FString::Printf(TEXT("%s got damage : -50"), *Monster->GetName()));
-			//}
+			ABasicMonsterBase* Monster = Cast<ABasicMonsterBase>(Hit.GetActor());
+			if (nullptr != Monster)
+			{
+				Monster->Damaged(ItemSlot[CurItemIndex].Damage);
+			}
 		}
 	}
 }
@@ -306,12 +304,13 @@ void AMainCharacter::ClientChangeMontage_Implementation()
 
 void AMainCharacter::HandAttackCollision(AActor* _OtherActor, UPrimitiveComponent* _Collision)
 {
-	//ATestMonsterBase* Monster = Cast<ATestMonsterBase>(_OtherActor);
-	//if (nullptr == Monster)
-	//{
-	//	return;
-	//}
+	ABasicMonsterBase* Monster = Cast<ABasicMonsterBase>(_OtherActor);
+	if (nullptr == Monster)
+	{
+		return;
+	}
 
+	int a = 0;
 	//Monster->Damaged(150.0f);
 }
 

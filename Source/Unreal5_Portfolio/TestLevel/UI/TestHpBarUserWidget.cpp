@@ -57,6 +57,26 @@ void UTestHpBarUserWidget::HpbarInit_ForMainPlayer(int _MainPlayerToken)
 
 void UTestHpBarUserWidget::HpbarUpdate(int _Token, float _CurHp, float _MaxHp)
 {
+	// 테스트용
+	//if (_Token == 1)
+	//{
+	//	int a = 0;
+	//}
+	//else if (_Token == 0)
+	//{
+	//	int a = 0;
+	//	_CurHp = 40.f;
+	//}
+
+	//if (MainPlayerIndex == 1)
+	//{
+	//	int a = 0;
+	//}
+	//else if (MainPlayerIndex == 0)
+	//{
+	//	int a = 0;
+	//}
+
 	if (MainPlayerIndex == _Token)
 	{
 		HpWidgets[0]->SetHp(_CurHp / _MaxHp);

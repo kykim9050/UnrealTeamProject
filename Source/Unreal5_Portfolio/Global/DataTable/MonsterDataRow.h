@@ -5,18 +5,9 @@
 #include "CoreMinimal.h"
 #include "Engine/DataTable.h"
 #include "Global/ContentsEnum.h"
+#include "Global/Animation/MainMultiAnimInstance.h"
 #include "MonsterDataRow.generated.h"
 
-USTRUCT()
-struct UNREAL5_PORTFOLIO_API FAnimMontageGroup
-{
-	GENERATED_BODY()
-
-public:
-	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true"))
-	TArray<UAnimMontage*> AnimMontages;
-
-};
 
 /**
  * 
@@ -42,14 +33,9 @@ public:
 		return RunSpeed;
 	}
 
-	TMap<ETestMonsterAnim, class UAnimMontage*> GetAnimMontage() const
+	TMap<ETestMonsterAnim, FAnimMontageGroup> GetAllAnimMontage() const
 	{
-		return AnimMontages;
-	}
-
-	TMap<ETestMonsterAnim, FAnimMontageGroup> GetTestAnimMontage() const
-	{
-		return TestAnimMontages;
+		return AllAnimMontages;
 	}
 
 private:
@@ -75,10 +61,7 @@ private:
 	/// ¸ùÅ¸ÁÖ
 	/// </summary>
 	UPROPERTY(EditAnywhere, meta = (AllowprivateAccess = "true"))
-	TMap<ETestMonsterAnim, class UAnimMontage*> AnimMontages;
-
-	UPROPERTY(EditAnywhere, meta = (AllowprivateAccess = "true"))
-	TMap<ETestMonsterAnim, FAnimMontageGroup> TestAnimMontages;
+	TMap<ETestMonsterAnim, FAnimMontageGroup> AllAnimMontages;
 
 };
 

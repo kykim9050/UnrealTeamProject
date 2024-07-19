@@ -52,10 +52,10 @@ void ATestMonsterBase::BeginPlay()
 		return;
 	}
 
-	TMap<ETestMonsterAnim, FAnimMontageGroup> TestAnimMontages = BaseData->GetTestAnimMontage();
-	for (TPair<ETestMonsterAnim, FAnimMontageGroup> AnimMontageGroup : TestAnimMontages)
+	TMap<ETestMonsterAnim, FAnimMontageGroup> AllAnimMontages = BaseData->GetAllAnimMontage();
+	for (TPair<ETestMonsterAnim, FAnimMontageGroup> AnimMontageGroup : AllAnimMontages)
 	{
-		AnimInst->PushRandomAnimation(AnimMontageGroup.Key, AnimMontageGroup.Value);
+		AnimInst->PushAnimation(AnimMontageGroup.Key, AnimMontageGroup.Value);
 	}
 
 	//  몬스터 데이터 세팅
@@ -84,7 +84,7 @@ void ATestMonsterBase::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 	DeadTimeLine.TickTimeline(DeltaTime);
-	AnimInst->ChangeAnimation(AniValue);
+	AnimInst->ChangeAnimation(AniType, AniIndex);
 }
 
 // Called to bind functionality to input
@@ -97,7 +97,8 @@ void ATestMonsterBase::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Out
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
-	DOREPLIFETIME(ATestMonsterBase, AniValue);
+	DOREPLIFETIME(ATestMonsterBase, AniType);
+	DOREPLIFETIME(ATestMonsterBase, AniIndex);
 }
 
 void ATestMonsterBase::OnAttackOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
@@ -120,9 +121,10 @@ UMonsterAnimInstance* ATestMonsterBase::GetAnimInstance()
 	return AnimInst;
 }
 
-void ATestMonsterBase::ChangeAniValue(uint8 _Type)
+void ATestMonsterBase::ChangeRandomAnimation(uint8 _Type)
 {
-	AniValue = _Type;
+	AniType = _Type;
+	AnimInst->SetRandomAniIndex(_Type, AniIndex);
 }
 
 void ATestMonsterBase::Attack(AActor* _OtherActor, UPrimitiveComponent* _Collision)
@@ -205,7 +207,7 @@ void ATestMonsterBase::SetOnDead_Implementation()
 void ATestMonsterBase::OnDead()
 {
 	SetOnDead();
-	ChangeAniValue(ETestMonsterAnim::Dead);
+	ChangeRandomAnimation(ETestMonsterAnim::Dead);
 
 	ATestMonsterBaseAIController* AIController = GetController<ATestMonsterBaseAIController>();
 	AIController->UnPossess();

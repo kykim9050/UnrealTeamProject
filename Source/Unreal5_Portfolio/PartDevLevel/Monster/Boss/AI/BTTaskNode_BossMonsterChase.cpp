@@ -11,7 +11,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Navigation/PathFollowingComponent.h"
 #include "Kismet/KismetMathLibrary.h"
-#include <Kismet/GameplayStatics.h>
+#include "Kismet/GameplayStatics.h"
 
 #include "Global/ContentsLog.h"
 
@@ -45,6 +45,7 @@ void UBTTaskNode_BossMonsterChase::TickTask(UBehaviorTreeComponent& _OwnerComp, 
 
 	UBossData* BossData = GetValueAsObject<UBossData>(_OwnerComp, TEXT("BossMonsterData"));
 	ATestBossMonsterBase* BossMonster = GetActor<ATestBossMonsterBase>(_OwnerComp);
+	BossMonster->GetCharacterMovement()->MovementMode = EMovementMode::MOVE_NavWalking;
 	FVector MonsterLocation = BossMonster->GetActorLocation();
 
 	AActor* TargetActor = GetValueAsObject<AActor>(_OwnerComp, TEXT("TargetActor"));
@@ -55,7 +56,12 @@ void UBTTaskNode_BossMonsterChase::TickTask(UBehaviorTreeComponent& _OwnerComp, 
 	// 범위 안에 있으면 공격상태로 변경
 	FVector LocationDiff = TargetLocation - MonsterLocation;
 	double DiffLength = LocationDiff.Size();
-	if (DiffLength <= BossData->Data->GetMeleeAttackBoundary())
+	if(DiffLength <= BossData->Data->GetMeleeAttackBoundary())
+	{
+		StateChange(_OwnerComp, EBossMonsterState::RangedAttack);
+		return;
+	}
+	else if (DiffLength <= BossData->Data->GetRangedAttackBoundary())
 	{
 		StateChange(_OwnerComp, EBossMonsterState::MeleeAttack);
 		return;

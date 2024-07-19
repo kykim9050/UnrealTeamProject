@@ -137,9 +137,9 @@ public:
 		PickUp = _PickUp;
 	}
 
-	UFUNCTION(Reliable, Server, BlueprintCallable)
-	void CharacterPlayerToDropItem(FName _ItemName, FTransform _Transform);
-	void CharacterPlayerToDropItem_Implementation(FName _ItemName, FTransform _Transform);
+	UFUNCTION(Reliable, Server, BlueprintCallable)	// => 메인캐릭터로 이전해야 함 (24.07.19 수정됨)
+	void CharacterPlayerToDropItem(FTransform _Transform);
+	void CharacterPlayerToDropItem_Implementation(FTransform _Transform);
 
 	// Collision
 	//UFUNCTION(BlueprintCallable)
@@ -195,7 +195,7 @@ private:
 	void UpdatePlayerHp(float _DeltaTime);
 
 	UPROPERTY()
-	float CulHp = 0.0f;
+	float CurHp = 0.0f;
 
 	UPROPERTY()
 	float MyMaxHp = 0.0f;

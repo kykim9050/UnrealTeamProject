@@ -8,9 +8,11 @@
 #include "TestLevel/Character/TestPlayerState.h"
 #include "TestLevel/Character/TestCharacter.h"
 
-#include "Global/ContentsLog.h"
-#include "Global/MainGameInstance.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/KismetMathLibrary.h"
+
+#include "Global/MainGameInstance.h"
+#include "Global/ContentsLog.h"
 
 EBTNodeResult::Type UBTTaskNode_BossMonsterMAttack::ExecuteTask(UBehaviorTreeComponent& _OwnerComp, uint8* _NodeMemory)
 {
@@ -24,7 +26,8 @@ EBTNodeResult::Type UBTTaskNode_BossMonsterMAttack::ExecuteTask(UBehaviorTreeCom
 	}
 
 	UBossData* BossData = GetValueAsObject<UBossData>(_OwnerComp, TEXT("BossMonsterData"));
-	BossMonster->ChangeAniValue(ETestMonsterAnim::Attack);
+	BossMonster->GetCharacterMovement()->MovementMode = EMovementMode::MOVE_None;
+	BossMonster->ChangeAniValue(EBossMonsterAnim::MeleeAttack);
 
 	return EBTNodeResult::Type::InProgress;
 }
@@ -58,19 +61,5 @@ void UBTTaskNode_BossMonsterMAttack::TickTask(UBehaviorTreeComponent& _OwnerComp
 		_OwnerComp.GetBlackboardComponent()->SetValueAsObject(TEXT("TargetActor"),nullptr);
 		_OwnerComp.GetBlackboardComponent()->SetValueAsBool(TEXT("CanSeePlayer"), false);
 		return;
-	}
-	else if (Dist >= BossData->Data->GetMeleeAttackBoundary())
-	{
-		int RandomIndex = MainGameInst->Random.FRandRange(0, 10);
-
-		if (5 >= RandomIndex)
-		{
-			StateChange(_OwnerComp, EBossMonsterState::Chase);
-		}
-		else
-		{
-			// 원거리 상태로 변경
-			//StateChange(_OwnerComp, EBossMonsterState::RangedAttack);
-		}
 	}
 }

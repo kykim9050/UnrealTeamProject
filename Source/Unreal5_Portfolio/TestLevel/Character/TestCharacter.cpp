@@ -10,6 +10,7 @@
 #include "Global/DataTable/ItemDataRow.h"
 #include "Components/SphereComponent.h"
 #include "Components/BoxComponent.h"
+#include "Kismet/KismetSystemLibrary.h"
 #include "TestPlayerController.h"
 #include "TestLevel/UI/TestMinimapIconComponent.h"
 #include "PartDevLevel/Monster/TestMonsterBase.h"
@@ -19,6 +20,8 @@
 #include "TestLevel/UI/TestPlayHUD.h"
 #include "TestLevel/UI/TestHpBarUserWidget.h"
 #include "TestLevel/Character/TestPlayerState.h"
+
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 ATestCharacter::ATestCharacter()
@@ -95,9 +98,9 @@ ATestCharacter::ATestCharacter()
 	{
 		// Inventory (for UI Test)
 		FItemInformation NewSlot;
-		NewSlot.Name = "";
+		/*NewSlot.Name = "";
 		NewSlot.ReloadMaxNum = -1;
-		NewSlot.ReloadLeftNum = -1;
+		NewSlot.ReloadLeftNum = -1;*/
 		ItemSlot.Push(NewSlot);
 		IsItemIn.Push(false);
 	}
@@ -111,16 +114,36 @@ ATestCharacter::ATestCharacter()
 	//HandAttackComponent->SetCollisionProfileName(TEXT("NoCollision"));
 }
 
-void ATestCharacter::CharacterPlayerToDropItem_Implementation(FName _ItemName, FTransform _Transform)
+void ATestCharacter::CharacterPlayerToDropItem_Implementation(FTransform _Transform)	// => 메인캐릭터로 이전해야 함 (24.07.19 수정됨)
 {
+	// DropItem 할 수 없는 경우 1: 맨손일 때
+	if (CurItemIndex == -1)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, FString::Printf(TEXT("There's no item to drop. (Current posture is 'Barehand')")));
+		return;
+	}
+
+	// DropItem 할 수 없는 경우 2: (그럴리는 없겠지만) 현재 Posture에 해당하는 무기가 인벤토리에 없을 때
+	if (IsItemIn[CurItemIndex] == false)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, FString::Printf(TEXT("There's no item to drop. (The item slot is empty)")));
+		return;
+	}
+
+	// 떨어트릴 아이템을 Actor로 생성
+	FName ItemName = ItemSlot[CurItemIndex].Name;
 	UMainGameInstance* MainGameInst = GetWorld()->GetGameInstanceChecked<UMainGameInstance>();
-	//const FItemDataRow* ItemBase = MainGameInst->GetItemData(_ItemName);
-	//GetWorld()->SpawnActor<AActor>(ItemBase->GetItemUClass(), _Transform);
-
-
-	const FItemDataRow* ItemBase = MainGameInst->GetItemData(FName("TestRifle"));
+	const FItemDataRow* ItemBase = MainGameInst->GetItemData(ItemName);
 
 	GetWorld()->SpawnActor<AActor>(ItemBase->GetItemUClass(), _Transform);
+
+	// 손에 들고 있던 아이템을 인벤토리에서 삭제
+	FItemInformation NewSlot;
+	ItemSlot[CurItemIndex] = NewSlot;
+	IsItemIn[CurItemIndex] = false;
+
+	// 자세를 맨손으로 변경
+	ChangePosture(EPlayerPosture::Barehand);
 }
 
 //void ATestCharacter::Collision(AActor* _OtherActor, UPrimitiveComponent* _Collision)
@@ -305,7 +328,9 @@ void ATestCharacter::FireRayCast_Implementation(float _DeltaTime)	// => 메인캐릭
 		ItemSlot[CurItemIndex].ReloadLeftNum -= 1;
 		GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, FString::Printf(TEXT("Bullet left : %d / %d"), ItemSlot[CurItemIndex].ReloadLeftNum, ItemSlot[CurItemIndex].ReloadMaxNum));
 
-		bool ActorHit = GetWorld()->LineTraceSingleByChannel(Hit, Start, End, ECC_GameTraceChannel9, FCollisionQueryParams(), FCollisionResponseParams());
+		//bool ActorHit = GetWorld()->LineTraceSingleByChannel(Hit, Start, End, ECC_GameTraceChannel9, FCollisionQueryParams(), FCollisionResponseParams());
+		TArray<AActor*> IgnoreActors;
+		bool ActorHit = UKismetSystemLibrary::LineTraceSingle(GetWorld(), Start, End, ETraceTypeQuery::TraceTypeQuery1, false, IgnoreActors, EDrawDebugTrace::None, Hit, true, FLinearColor::Red, FLinearColor::Green, 5.0f);
 		DrawDebugLine(GetWorld(), Start, End, FColor::Red, false, 1.0f, 0.0f, 0.0f);
 
 		if (true == ActorHit && nullptr != Hit.GetActor())
@@ -315,8 +340,8 @@ void ATestCharacter::FireRayCast_Implementation(float _DeltaTime)	// => 메인캐릭
 			ATestMonsterBase* Monster = Cast<ATestMonsterBase>(Hit.GetActor());
 			if (nullptr != Monster)
 			{
-				Monster->Damaged(50.0f);
-				GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, FString::Printf(TEXT("%s got damage : -50"), *Monster->GetName()));
+				Monster->Damaged(ItemSlot[CurItemIndex].Damage);
+				GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, FString::Printf(TEXT("%s got damage : %d"), *Monster->GetName(), ItemSlot[CurItemIndex].Damage));
 			}
 		}
 	}
@@ -513,16 +538,19 @@ void ATestCharacter::MapItemOverlapEnd()
 
 void ATestCharacter::CrouchCameraMove()
 {
-	switch (LowerStateValue)
+	if (IsFPV)
 	{
-	case EPlayerLowerState::Idle:
-		SpringArmComponent->AddRelativeLocation(FVector(0.0f, 0.0f, -60.0f));
-		break;
-	case EPlayerLowerState::Crouch:
-		SpringArmComponent->AddRelativeLocation(FVector(0.0f, 0.0f, 60.0f));
-		break;
-	default:
-		break;
+		switch (LowerStateValue)
+		{
+		case EPlayerLowerState::Idle:
+			SpringArmComponent->SetRelativeLocation(FVector(0.0f, 0.0f, 10.0f));
+			break;
+		case EPlayerLowerState::Crouch:
+			SpringArmComponent->SetRelativeLocation(FVector(0.0f, 0.0f, 80.0f));
+			break;
+		default:
+			break;
+		}
 	}
 }
 
@@ -586,29 +614,31 @@ void ATestCharacter::UISetting()
 
 void ATestCharacter::UpdatePlayerHp(float _DeltaTime)
 {
-	ATestPlayerState* MyTestPlayerState = Cast<ATestPlayerState>(GetPlayerState());
+	ATestPlayerController* MyController = Cast<ATestPlayerController>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
+	if (nullptr == MyController)
+	{
+		return;
+	}
+
+	ATestPlayerState* MyTestPlayerState = MyController->GetPlayerState<ATestPlayerState>();
 	if (nullptr == MyTestPlayerState)
 	{
-		int a = 0;
 		return;
 	}
 
 	float GetHp = MyTestPlayerState->GetPlayerHp();
-	if (CulHp != GetHp || /*test*/MyMaxHp != PlayerHp)
-	{
-		CulHp = MyTestPlayerState->GetPlayerHp();
 
-		ATestPlayerController* MyController = Cast<ATestPlayerController>(GetController());
-		if (nullptr == MyController)
-		{
-			return;
-		}
+	if (CurHp != GetHp || /*test*/MyMaxHp != PlayerHp)
+	{		
+		
+		CurHp = MyTestPlayerState->GetPlayerHp();
+
 		ATestPlayHUD* PlayHUD = Cast<ATestPlayHUD>(MyController->GetHUD());
 		if (nullptr != PlayHUD && Token != -1)
 		{
 			UTestHpBarUserWidget* MyHpWidget = Cast<UTestHpBarUserWidget>(PlayHUD->GetWidget(EInGameUIType::HpBar));
 			MyHpWidget->NickNameUpdate(Token, FText::FromString(FString("CORORO")));
-			MyHpWidget->HpbarUpdate(Token, CulHp, 100.0f);
+			MyHpWidget->HpbarUpdate(Token, CurHp, 100.0f);
 		}
 	}
 }
