@@ -318,7 +318,7 @@ void ATestCharacter::FireRayCast_Implementation(float _DeltaTime)	// => 메인캐릭
 			ATestMonsterBase* Monster = Cast<ATestMonsterBase>(Hit.GetActor());
 			if (nullptr != Monster)
 			{
-				Monster->Damaged(50.0f);
+				Monster->Damaged(ItemSlot[CurItemIndex].Damage);
 				GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, FString::Printf(TEXT("%s got damage : -50"), *Monster->GetName()));
 			}
 		}
