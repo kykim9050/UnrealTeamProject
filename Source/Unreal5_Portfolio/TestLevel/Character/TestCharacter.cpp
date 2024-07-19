@@ -134,8 +134,11 @@ void ATestCharacter::CharacterPlayerToDropItem_Implementation(FTransform _Transf
 	FName ItemName = ItemSlot[CurItemIndex].Name;
 	UMainGameInstance* MainGameInst = GetWorld()->GetGameInstanceChecked<UMainGameInstance>();
 	const FItemDataRow* ItemBase = MainGameInst->GetItemData(ItemName);
+	AActor* DropItem = GetWorld()->SpawnActor<AActor>(ItemBase->GetItemUClass(), _Transform);
 
-	GetWorld()->SpawnActor<AActor>(ItemBase->GetItemUClass(), _Transform);
+	// 아이템을 앞으로 던지기 (미완)
+	//GetMesh()->SetSimulatePhysics(true);
+	//GetMesh()->AddImpulse();
 
 	// 손에 들고 있던 아이템을 인벤토리에서 삭제
 	FItemInformation NewSlot;
