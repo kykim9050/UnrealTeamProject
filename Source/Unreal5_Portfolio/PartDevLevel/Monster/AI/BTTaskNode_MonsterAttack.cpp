@@ -23,8 +23,8 @@ EBTNodeResult::Type UBTTaskNode_MonsterAttack::ExecuteTask(UBehaviorTreeComponen
 	}
 
 	UMonsterData* MonsterData = GetValueAsObject<UMonsterData>(_OwnerComp, TEXT("MonsterData"));
-	Monster->ChangeAniValue(ETestMonsterAnim::Attack);
-	MonsterData->AttackTime = Monster->GetAnimInstance()->GetKeyAnimMontage(static_cast<uint8>(ETestMonsterAnim::Attack))->GetPlayLength();
+	Monster->ChangeRandomAnimation(ETestMonsterAnim::Attack);
+	MonsterData->AttackTime = Monster->GetAnimInstance()->GetKeyAnimMontage(ETestMonsterAnim::Attack, 0)->GetPlayLength();
 
 	return EBTNodeResult::Type::InProgress;
 }
@@ -62,7 +62,7 @@ void UBTTaskNode_MonsterAttack::TickTask(UBehaviorTreeComponent& _OwnerComp, uin
 			float Dist = LocationDiff.Size();
 			if (MonsterData->AttackBoundary >= Dist)
 			{
-				MonsterData->AttackTime = Monster->GetAnimInstance()->GetKeyAnimMontage(static_cast<uint8>(ETestMonsterAnim::Attack))->GetPlayLength();
+				MonsterData->AttackTime = Monster->GetAnimInstance()->GetKeyAnimMontage(ETestMonsterAnim::Attack, 0)->GetPlayLength();
 			}
 			else
 			{

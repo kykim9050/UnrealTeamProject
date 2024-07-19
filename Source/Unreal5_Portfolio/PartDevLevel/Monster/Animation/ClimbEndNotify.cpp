@@ -45,6 +45,6 @@ void UClimbEndNotify::NotifyEnd(USkeletalMeshComponent* MeshComp, UAnimSequenceB
 	if (nullptr != Monster)
 	{
 		Monster->GetCharacterMovement()->SetMovementMode(MOVE_NavWalking);
-		Monster->ChangeAniValue(ETestMonsterAnim::Idle);
+		Monster->ChangeRandomAnimation(ETestMonsterAnim::Idle);
 	}
 }
