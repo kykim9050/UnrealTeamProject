@@ -98,9 +98,9 @@ ATestCharacter::ATestCharacter()
 	{
 		// Inventory (for UI Test)
 		FItemInformation NewSlot;
-		NewSlot.Name = "";
+		/*NewSlot.Name = "";
 		NewSlot.ReloadMaxNum = -1;
-		NewSlot.ReloadLeftNum = -1;
+		NewSlot.ReloadLeftNum = -1;*/
 		ItemSlot.Push(NewSlot);
 		IsItemIn.Push(false);
 	}
@@ -114,16 +114,36 @@ ATestCharacter::ATestCharacter()
 	//HandAttackComponent->SetCollisionProfileName(TEXT("NoCollision"));
 }
 
-void ATestCharacter::CharacterPlayerToDropItem_Implementation(FName _ItemName, FTransform _Transform)
+void ATestCharacter::CharacterPlayerToDropItem_Implementation(FTransform _Transform)	// => 메인캐릭터로 이전해야 함 (24.07.19 수정됨)
 {
+	// DropItem 할 수 없는 경우 1: 맨손일 때
+	if (CurItemIndex == -1)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, FString::Printf(TEXT("There's no item to drop. (Current posture is 'Barehand')")));
+		return;
+	}
+
+	// DropItem 할 수 없는 경우 2: (그럴리는 없겠지만) 현재 Posture에 해당하는 무기가 인벤토리에 없을 때
+	if (IsItemIn[CurItemIndex] == false)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, FString::Printf(TEXT("There's no item to drop. (The item slot is empty)")));
+		return;
+	}
+
+	// 떨어트릴 아이템을 Actor로 생성
+	FName ItemName = ItemSlot[CurItemIndex].Name;
 	UMainGameInstance* MainGameInst = GetWorld()->GetGameInstanceChecked<UMainGameInstance>();
-	//const FItemDataRow* ItemBase = MainGameInst->GetItemData(_ItemName);
-	//GetWorld()->SpawnActor<AActor>(ItemBase->GetItemUClass(), _Transform);
-
-
-	const FItemDataRow* ItemBase = MainGameInst->GetItemData(FName("TestRifle"));
+	const FItemDataRow* ItemBase = MainGameInst->GetItemData(ItemName);
 
 	GetWorld()->SpawnActor<AActor>(ItemBase->GetItemUClass(), _Transform);
+
+	// 손에 들고 있던 아이템을 인벤토리에서 삭제
+	FItemInformation NewSlot;
+	ItemSlot[CurItemIndex] = NewSlot;
+	IsItemIn[CurItemIndex] = false;
+
+	// 자세를 맨손으로 변경
+	ChangePosture(EPlayerPosture::Barehand);
 }
 
 //void ATestCharacter::Collision(AActor* _OtherActor, UPrimitiveComponent* _Collision)
