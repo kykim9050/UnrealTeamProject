@@ -24,7 +24,7 @@ EBTNodeResult::Type UBTTaskNode_BossMonsterMAttack::ExecuteTask(UBehaviorTreeCom
 	}
 
 	UBossData* BossData = GetValueAsObject<UBossData>(_OwnerComp, TEXT("BossMonsterData"));
-	BossMonster->ChangeAniValue(EMonsterAnim::Attack);
+	BossMonster->ChangeAniValue(EBossMonsterAnim::MeleeAttack);
 
 	return EBTNodeResult::Type::InProgress;
 }

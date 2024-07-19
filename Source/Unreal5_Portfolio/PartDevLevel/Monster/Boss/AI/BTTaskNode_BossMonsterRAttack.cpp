@@ -54,7 +54,7 @@ void UBTTaskNode_BossMonsterRAttack::TickTask(UBehaviorTreeComponent& _OwnerComp
 
 	if (0.0f >= TargetPlayerState->GetPlayerHp())
 	{
-		StateChange(_OwnerComp, EMonsterState::Idle);
+		StateChange(_OwnerComp, EBossMonsterState::Idle);
 		_OwnerComp.GetBlackboardComponent()->SetValueAsObject(TEXT("TargetActor"), nullptr);
 		_OwnerComp.GetBlackboardComponent()->SetValueAsBool(TEXT("CanSeePlayer"), false);
 		return;
