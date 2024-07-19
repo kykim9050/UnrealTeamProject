@@ -60,4 +60,9 @@ void UBTTaskNode_BossMonsterChase::TickTask(UBehaviorTreeComponent& _OwnerComp, 
 		StateChange(_OwnerComp, EBossMonsterState::MeleeAttack);
 		return;
 	}
+	else if(DiffLength <= BossData->Data->GetRangedAttackBoundary())
+	{
+		StateChange(_OwnerComp, EBossMonsterState::RangedAttack);
+		return;
+	}
 }
