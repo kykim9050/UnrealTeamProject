@@ -26,7 +26,7 @@ ADestinationSpriteActor::ADestinationSpriteActor()
 	}
 
 	sprite->bVisibleInSceneCaptureOnly = true;
-	SetActorEnableCollision(true);
+	SetActorEnableCollision(false);
 }
 
 void ADestinationSpriteActor::SetDestinationValue(FVector _value)
