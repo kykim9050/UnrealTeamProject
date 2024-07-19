@@ -10,7 +10,7 @@ void AMonsterDevMode::BeginPlay()
 {
 	Super::BeginPlay();
 
-	for (int i = 0; i < 3; i++)
+	for (int i = 0; i < 1; i++)
 	{
 		FString MonsterType = "MonsterType_1";
 		UMainGameInstance* MainGameInst = UMainGameBlueprintFunctionLibrary::GetMainGameInstance(GetWorld());
@@ -19,7 +19,5 @@ void AMonsterDevMode::BeginPlay()
 		FTransform Transform;
 		Transform.SetLocation(FVector(-270.0f + i * 100.0f, -40.0f, 298.0f));
 		GetWorld()->SpawnActor<AActor>(MonsterData->GetMonsterUClass(), Transform);
-
-
 	}
 }
