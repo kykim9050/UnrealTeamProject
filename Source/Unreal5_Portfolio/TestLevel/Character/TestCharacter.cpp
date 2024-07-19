@@ -21,6 +21,8 @@
 #include "TestLevel/UI/TestHpBarUserWidget.h"
 #include "TestLevel/Character/TestPlayerState.h"
 
+#include "Kismet/GameplayStatics.h"
+
 // Sets default values
 ATestCharacter::ATestCharacter()
 {
@@ -516,16 +518,19 @@ void ATestCharacter::MapItemOverlapEnd()
 
 void ATestCharacter::CrouchCameraMove()
 {
-	switch (LowerStateValue)
+	if (IsFPV)
 	{
-	case EPlayerLowerState::Idle:
-		SpringArmComponent->AddRelativeLocation(FVector(0.0f, 0.0f, -60.0f));
-		break;
-	case EPlayerLowerState::Crouch:
-		SpringArmComponent->AddRelativeLocation(FVector(0.0f, 0.0f, 60.0f));
-		break;
-	default:
-		break;
+		switch (LowerStateValue)
+		{
+		case EPlayerLowerState::Idle:
+			SpringArmComponent->SetRelativeLocation(FVector(0.0f, 0.0f, 10.0f));
+			break;
+		case EPlayerLowerState::Crouch:
+			SpringArmComponent->SetRelativeLocation(FVector(0.0f, 0.0f, 80.0f));
+			break;
+		default:
+			break;
+		}
 	}
 }
 
@@ -589,29 +594,31 @@ void ATestCharacter::UISetting()
 
 void ATestCharacter::UpdatePlayerHp(float _DeltaTime)
 {
-	ATestPlayerState* MyTestPlayerState = Cast<ATestPlayerState>(GetPlayerState());
+	ATestPlayerController* MyController = Cast<ATestPlayerController>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
+	if (nullptr == MyController)
+	{
+		return;
+	}
+
+	ATestPlayerState* MyTestPlayerState = MyController->GetPlayerState<ATestPlayerState>();
 	if (nullptr == MyTestPlayerState)
 	{
-		int a = 0;
 		return;
 	}
 
 	float GetHp = MyTestPlayerState->GetPlayerHp();
-	if (CulHp != GetHp || /*test*/MyMaxHp != PlayerHp)
-	{
-		CulHp = MyTestPlayerState->GetPlayerHp();
 
-		ATestPlayerController* MyController = Cast<ATestPlayerController>(GetController());
-		if (nullptr == MyController)
-		{
-			return;
-		}
+	if (CurHp != GetHp || /*test*/MyMaxHp != PlayerHp)
+	{		
+		
+		CurHp = MyTestPlayerState->GetPlayerHp();
+
 		ATestPlayHUD* PlayHUD = Cast<ATestPlayHUD>(MyController->GetHUD());
 		if (nullptr != PlayHUD && Token != -1)
 		{
 			UTestHpBarUserWidget* MyHpWidget = Cast<UTestHpBarUserWidget>(PlayHUD->GetWidget(EInGameUIType::HpBar));
 			MyHpWidget->NickNameUpdate(Token, FText::FromString(FString("CORORO")));
-			MyHpWidget->HpbarUpdate(Token, CulHp, 100.0f);
+			MyHpWidget->HpbarUpdate(Token, CurHp, 100.0f);
 		}
 	}
 }

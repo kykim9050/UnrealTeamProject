@@ -195,7 +195,7 @@ private:
 	void UpdatePlayerHp(float _DeltaTime);
 
 	UPROPERTY()
-	float CulHp = 0.0f;
+	float CurHp = 0.0f;
 
 	UPROPERTY()
 	float MyMaxHp = 0.0f;

@@ -2,6 +2,7 @@
 
 
 #include "PartDevLevel/Monster/MonsterDevMode.h"
+#include "TestLevel/Character/TestPlayerState.h"
 #include "Global/MainGameBlueprintFunctionLibrary.h"
 #include "Global/DataTable/MonsterDataRow.h"
 #include "Global/MainGameInstance.h"
@@ -10,7 +11,7 @@ void AMonsterDevMode::BeginPlay()
 {
 	Super::BeginPlay();
 
-	for (int i = 0; i < 3; i++)
+	for (int i = 0; i < 1; i++)
 	{
 		FString MonsterType = "MonsterType_1";
 		UMainGameInstance* MainGameInst = UMainGameBlueprintFunctionLibrary::GetMainGameInstance(GetWorld());
@@ -19,7 +20,14 @@ void AMonsterDevMode::BeginPlay()
 		FTransform Transform;
 		Transform.SetLocation(FVector(-270.0f + i * 100.0f, -40.0f, 298.0f));
 		GetWorld()->SpawnActor<AActor>(MonsterData->GetMonsterUClass(), Transform);
-
-
 	}
+}
+
+void AMonsterDevMode::PostLogin(APlayerController* NewPlayer)
+{
+	Super::PostLogin(NewPlayer);
+
+	// 새로 로그인한 플레이어 처리
+	ATestPlayerState* NewPlayerState = NewPlayer->GetPlayerState<ATestPlayerState>();
+	NewPlayerState->InitPlayerData();
 }
