@@ -28,9 +28,9 @@ EBTNodeResult::Type UBTTaskNode_Monster_ClimbEnd::ExecuteTask(UBehaviorTreeCompo
 	}
 
 	//Monster->ChangeAniValue(EMonsterAnim::ClimbEnd);
-	Monster->ChangeAniValue(ETestMonsterAnim::ClimbEnd);
+	Monster->ChangeRandomAnimation(ETestMonsterAnim::ClimbEnd);
 	UMonsterData* MonsterData = GetValueAsObject<UMonsterData>(_OwnerComp, TEXT("MonsterData"));
-	MonsterData->ClimbTime = Monster->GetAnimInstance()->GetKeyAnimMontage(static_cast<uint8>(ETestMonsterAnim::ClimbEnd))->GetPlayLength();
+	MonsterData->ClimbTime = Monster->GetAnimInstance()->GetKeyAnimMontage(ETestMonsterAnim::ClimbEnd, Monster->GetAniIndex())->GetPlayLength();
 	MonsterData->LerpPos = Monster->GetActorLocation();
 	MonsterData->ClimbTotal = 0.0f;
 	return EBTNodeResult::InProgress;
