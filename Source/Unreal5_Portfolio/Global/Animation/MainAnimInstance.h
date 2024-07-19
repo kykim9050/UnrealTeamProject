@@ -16,22 +16,22 @@ class UNREAL5_PORTFOLIO_API UMainAnimInstance : public UAnimInstance
 
 public:
 	template<typename EnumType>
-	void ChangeAnimation(EnumType _Key)
+	void ChangeAnimation(EnumType Key)
 	{
-		ChangeAnimation(static_cast<uint8>(_Key));
+		ChangeAnimation(static_cast<uint8>(Key));
 	}
 
-	virtual void ChangeAnimation(uint8 _Key);
+	void ChangeAnimation(uint8 Key);
 
 	template<typename EnumType>
-	void PushAnimation(EnumType _Key, class UAnimMontage* _Montage)
+	void PushAnimation(EnumType Key, UAnimMontage* Montage)
 	{
-		PushAnimation(static_cast<uint8>(_Key), _Montage);
+		PushAnimation(static_cast<uint8>(Key), Montage);
 	}
 
-	void PushAnimation(uint8 _Key, class UAnimMontage* _Montage);
+	void PushAnimation(uint8 Key, UAnimMontage* Montage);
 
-	TMap<uint8, class UAnimMontage*> GetAnimMontages()
+	TMap<uint8, UAnimMontage*> GetAnimMontages()
 	{
 		return AnimMontages;
 	}
@@ -43,5 +43,5 @@ public:
 
 private:
 	UPROPERTY()
-	TMap<uint8, class UAnimMontage*> AnimMontages;
+	TMap<uint8, UAnimMontage*> AnimMontages;
 };

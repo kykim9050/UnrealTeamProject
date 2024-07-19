@@ -86,6 +86,15 @@ public:
 		return RelRot;
 	}
 
+	/// <summary>
+	/// 아이템 static mesh component의 relative scale 값 반환
+	/// </summary>
+	/// <returns></returns>
+	FORCEINLINE FVector GetRelScale() const
+	{
+		return RelScale;
+	}
+
 protected:
 
 private:
@@ -136,4 +145,10 @@ private:
 	/// </summary>
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowprivateAccess = "true"))
 	FRotator RelRot = FRotator(0.0f, 0.0f, 0.0f);
+
+	/// <summary>
+	/// 아이템 static mesh component의 relative scale
+	/// </summary>
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowprivateAccess = "true"))
+	FVector RelScale = FVector(1.0f, 1.0f, 1.0f);
 };

@@ -6,19 +6,24 @@
 #include "Global/ContentsLog.h"
 #include "Global/DataTable/MapObjDataRow.h"
 #include "Components/CapsuleComponent.h"
-#include "MainGameLevel/Object/DoorObject.h"
+//#include "MainGameLevel/Object/DoorObject.h"
+#include "MainGameLevel/Object/MapObjectBase.h"
 #include "Kismet/GameplayStatics.h"
 
 
 ASwitchObject::ASwitchObject()
 {
-	GetCollisionComponent()->OnComponentBeginOverlap.AddDynamic(this, &ASwitchObject::OnOverlapBegin);
 }
 
 void ASwitchObject::BeginPlay()
 {
 	Super::BeginPlay();
 
+	//GetCollisionComponent()->AddRelativeLocation(CollisionOffset);
+}
+
+void ASwitchObject::SetInfo(FName _InfoName)
+{
 	UMainGameInstance* Inst = UMainGameBlueprintFunctionLibrary::GetMainGameInstance(GetWorld());
 
 	if (nullptr == Inst)
@@ -27,20 +32,10 @@ void ASwitchObject::BeginPlay()
 		return;
 	}
 
-	const FMapObjDataRow* TableData = Inst->GetMapObjDataTable(FName(TEXT("Armory_Switch")));
+	const FMapObjDataRow* TableData = Inst->GetMapObjDataTable(_InfoName);
 	GetMeshComponent()->SetStaticMesh(TableData->GetMesh());
 
-	SwitchValue = TableData->GetWorkValue();
 	InteractObjClass = TableData->GetInteractObjClass();
-
-	//FVector CurPos = GetCollisionComponent()->GetComponentLocation();
-	//FVector CurActorPos = GetActorLocation();
-	//FVector CurMeshPos = GetMeshComponent()->GetComponentLocation();
-
-	GetCollisionComponent()->AddRelativeLocation(CollisionOffset);
-	//FVector NextPos = GetCollisionComponent()->GetComponentLocation();
-	//FVector NextActorPos = GetActorLocation();
-	//FVector NextMeshPos = GetMeshComponent()->GetComponentLocation();
 }
 
 void ASwitchObject::Tick(float DeltaTime)
@@ -48,29 +43,26 @@ void ASwitchObject::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
-void ASwitchObject::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+void ASwitchObject::InterAction()
 {
-	if (OtherActor && (OtherActor != this) && OtherComp)
+	Super::InterAction();
+
+	AActor* OtherActor = UGameplayStatics::GetActorOfClass(GetWorld(), InteractObjClass);
+
+	if (nullptr == OtherActor)
 	{
-		// 클래스 형 받아오고
-		AActor* OtherObj = UGameplayStatics::GetActorOfClass(GetWorld(), InteractObjClass);
-		
-		if (nullptr == OtherObj)
-		{
-			UE_LOG(ObjectLog, Fatal, TEXT("%S(%u)> if (nullptr == OtherObj)"), __FUNCTION__, __LINE__);
-			return;
-		}
-
-		// 해당 클래스 형으로 다운캐스팅하기
-		ADoorObject* InteractObj = Cast<ADoorObject>(OtherObj);
-
-		if (nullptr == InteractObj)
-		{
-			UE_LOG(ObjectLog, Fatal, TEXT("%S(%u)> if (nullptr == InteractObj)"), __FUNCTION__, __LINE__);
-			return;
-		}
-
-		// 그리고 Sliding함수 실행
-		InteractObj->Sliding();
+		UE_LOG(ObjectLog, Fatal, TEXT("%S(%u)> if (nullptr == OtherObj)"), __FUNCTION__, __LINE__);
+		return;
 	}
+
+	// 해당 클래스 형으로 다운캐스팅하기
+	AMapObjectBase* InteractObj = Cast<AMapObjectBase>(OtherActor);
+
+	if (nullptr == InteractObj)
+	{
+		UE_LOG(ObjectLog, Fatal, TEXT("%S(%u)> if (nullptr == InteractObj)"), __FUNCTION__, __LINE__);
+		return;
+	}
+
+	InteractObj->InterAction();
 }

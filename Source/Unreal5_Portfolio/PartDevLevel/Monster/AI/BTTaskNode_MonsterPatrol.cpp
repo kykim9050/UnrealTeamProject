@@ -13,7 +13,7 @@
 
 EBTNodeResult::Type UBTTaskNode_MonsterPatrol::ExecuteTask(UBehaviorTreeComponent& _OwnerComp, uint8* _NodeMemory)
 {
-	EBTNodeResult::Type Result = Super::ExecuteTask(_OwnerComp, _NodeMemory);
+	Super::ExecuteTask(_OwnerComp, _NodeMemory);
 
 	ATestMonsterBase* Monster = GetActor<ATestMonsterBase>(_OwnerComp);
 	if (false == Monster->IsValidLowLevel())
@@ -38,7 +38,7 @@ EBTNodeResult::Type UBTTaskNode_MonsterPatrol::ExecuteTask(UBehaviorTreeComponen
 	SetValueAsVector(_OwnerComp, "DestinationLocation", PatrolLocation.Location);
 
 	Monster->GetCharacterMovement()->MaxWalkSpeed = Monster->GetBaseData()->GetWalkSpeed();
-	Monster->ChangeAniValue(EMonsterAnim::Walk);
+	Monster->ChangeAniValue(ETestMonsterAnim::Walk);
 
 	return EBTNodeResult::Type::InProgress;
 }
@@ -54,13 +54,13 @@ void UBTTaskNode_MonsterPatrol::TickTask(UBehaviorTreeComponent& _OwnerComp, uin
 	bool CanSee = _OwnerComp.GetBlackboardComponent()->GetValueAsBool(TEXT("CanSeePlayer"));
 	if (true == CanSee)
 	{
-		StateChange(_OwnerComp, EMonsterState::Chase);
+		StateChange(_OwnerComp, ETestMonsterState::Chase);
 		return;
 	}
 
 	if (EPathFollowingRequestResult::Type::AlreadyAtGoal == IsMove)
 	{
-		StateChange(_OwnerComp, EMonsterState::Idle);
+		StateChange(_OwnerComp, ETestMonsterState::Idle);
 		return;
 	}
 }

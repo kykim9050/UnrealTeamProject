@@ -33,6 +33,8 @@ public:
 	FVector RelLoc = FVector(0.0f, 0.0f, 0.0f);		// 스태틱 메시 컴포넌트 상대적 위치
 	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	FRotator RelRot = FRotator(0.0f, 0.0f, 0.0f);	// 스태틱 메시 컴포넌트 상대적 회전
+	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	FVector RelScale = FVector(1.0f, 1.0f, 1.0f);	// 스태틱 메시 컴포넌트 상대적 크기
 };
 
 UCLASS()
@@ -52,13 +54,15 @@ public:
 	UPROPERTY(Category = "Contents", VisibleDefaultsOnly)
 	USkeletalMeshComponent* FPVMesh = nullptr;	// => 메인캐릭터로 이전해야 함 (새로 추가됨)
 	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-	class UStaticMeshComponent* RidingMesh = nullptr;	// => 메인캐릭터로 이전해야 함 (새로 추가됨)
+	class UStaticMeshComponent* RidingMesh = nullptr;	// => 메인캐릭터로 이전해야 함 (새로 추가됨) [뭐하는 Component?]
 	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	class UStaticMeshComponent* ItemSocketMesh = nullptr;	// => 메인캐릭터로 이전해야 함 (새로 추가됨)
 	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	class UStaticMeshComponent* FPVItemSocketMesh = nullptr;	// => 메인캐릭터로 이전해야 함 (새로 추가됨)
 	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	class UTestMinimapIconComponent* MinimapIconComponent = nullptr;
+	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	class UBoxComponent* GetMapItemCollisonComponent = nullptr;
 
 	// State, Posture
 	UPROPERTY(Category = "Contents", Replicated, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
@@ -106,16 +110,21 @@ public:
 	int CurItemIndex = -1;
 
 	// Item
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	AActor* GetMapItem = nullptr;
-	//UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	// 맵에 있는 무기 Data
+	UPROPERTY(Category = "Contents", VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	AActor* GetMapItemData = nullptr;
+	UFUNCTION(BlueprintCallable)
+	void MapItemOverlapStart(AActor* _OtherActor, UPrimitiveComponent* _Collision);
+	UFUNCTION(BlueprintCallable)
+	void MapItemOverlapEnd();
+
+	/*UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	AActor* GetMapItem = nullptr;*/
 	UPROPERTY(Category = "Contents", Replicated, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	FString RayCastToItemName = "";
 	UFUNCTION(Reliable, Server)
 	void PickUpItem();
 	void PickUpItem_Implementation();
-	UFUNCTION()
-	void ChangeSocketRelTrans();
 
 	UFUNCTION(BlueprintCallable)
 	FORCEINLINE bool GetPickUp()
@@ -133,8 +142,8 @@ public:
 	void CharacterPlayerToDropItem_Implementation(FName _ItemName, FTransform _Transform);
 
 	// Collision
-	UFUNCTION(BlueprintCallable)
-	void Collision(AActor* _OtherActor, UPrimitiveComponent* _Collision);
+	//UFUNCTION(BlueprintCallable)
+	//void Collision(AActor* _OtherActor, UPrimitiveComponent* _Collision);
 
 	// NotifyState에서 사용 중 (태환)
 	UFUNCTION(BlueprintCallable)
@@ -179,12 +188,24 @@ private:
 	UPROPERTY()
 	class UPlayerAnimInstance* FPVPlayerAnimInst;
 
-public:
-	UFUNCTION(BlueprintCallable)
-	void TestRayCast(float _DeltaTime, FVector _StartPos, FVector _EndPos, FRotator _CameraRot);
+	UFUNCTION()
+	void UISetting();
+	
+	UFUNCTION()
+	void UpdatePlayerHp(float _DeltaTime);
 
-	UFUNCTION(BlueprintCallable)
-	void DefaultRayCast(float _DeltaTime);
+	UPROPERTY()
+	float CulHp = 0.0f;
+
+	UPROPERTY()
+	float MyMaxHp = 0.0f;
+
+public:
+	//UFUNCTION(BlueprintCallable)
+	//void TestRayCast(float _DeltaTime, FVector _StartPos, FVector _EndPos, FRotator _CameraRot);
+
+	//UFUNCTION(BlueprintCallable)
+	//void DefaultRayCast(float _DeltaTime);
 
 	UFUNCTION(Reliable, Server, BlueprintCallable)	// => 메인캐릭터로 이전해야 함
 	void FireRayCast(float _DeltaTime);
@@ -199,4 +220,22 @@ public:
 	UFUNCTION(Reliable, NetMulticast)
 	void ClientChangeMontage();
 	void ClientChangeMontage_Implementation();
+
+	// Crouch 카메라 이동
+	UFUNCTION()
+	void CrouchCameraMove();
+
+	UFUNCTION()
+	void NetCheck();
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	bool IsServer = false;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	bool IsClient = false;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	bool IsCanControlled = false;
+
+	UPROPERTY(Category = "TPSNet", Replicated, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	int Token = -1;
 };

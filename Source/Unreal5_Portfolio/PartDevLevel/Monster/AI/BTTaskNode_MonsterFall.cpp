@@ -4,7 +4,6 @@
 #include "PartDevLevel/Monster/AI/BTTaskNode_MonsterFall.h"
 #include "PartDevLevel/Monster/TestMonsterBase.h"
 
-#include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
 
@@ -45,10 +44,10 @@ void UBTTaskNode_MonsterFall::TickTask(UBehaviorTreeComponent& _OwnerComp, uint8
 	FVector LocationDiff = MonsterLocation - LandingLocation;
 	if (50.0f >= LocationDiff.Size())
 	{
-		StateChange(_OwnerComp, EMonsterState::Chase);
+		StateChange(_OwnerComp, ETestMonsterState::Chase);
 		return;
 	}
 
-	FRotator TurnRot = UKismetMathLibrary::FindLookAtRotation(MonsterLocation, LandingLocation);
-	Monster->SetActorRotation(TurnRot);
+	//FRotator TurnRot = UKismetMathLibrary::FindLookAtRotation(MonsterLocation, LandingLocation);
+	//Monster->SetActorRotation(TurnRot);
 }

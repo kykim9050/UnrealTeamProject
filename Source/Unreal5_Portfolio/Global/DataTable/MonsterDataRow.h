@@ -5,18 +5,9 @@
 #include "CoreMinimal.h"
 #include "Engine/DataTable.h"
 #include "Global/ContentsEnum.h"
+#include "Global/Animation/MainMultiAnimInstance.h"
 #include "MonsterDataRow.generated.h"
 
-USTRUCT()
-struct UNREAL5_PORTFOLIO_API FAnimMontageGroup
-{
-	GENERATED_BODY()
-
-public:
-	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true"))
-	TArray<UAnimMontage*> AnimMontages;
-
-};
 
 /**
  * 
@@ -42,14 +33,9 @@ public:
 		return RunSpeed;
 	}
 
-	TMap<EMonsterAnim, class UAnimMontage*> GetAnimMontage() const
+	TMap<ETestMonsterAnim, FAnimMontageGroup> GetAllAnimMontage() const
 	{
-		return AnimMontages;
-	}
-
-	TMap<EMonsterAnim, FAnimMontageGroup> GetTestAnimMontage() const
-	{
-		return TestAnimMontages;
+		return AllAnimMontages;
 	}
 
 private:
@@ -75,10 +61,7 @@ private:
 	/// 몽타주
 	/// </summary>
 	UPROPERTY(EditAnywhere, meta = (AllowprivateAccess = "true"))
-	TMap<EMonsterAnim, class UAnimMontage*> AnimMontages;
-
-	UPROPERTY(EditAnywhere, meta = (AllowprivateAccess = "true"))
-	TMap<EMonsterAnim, FAnimMontageGroup> TestAnimMontages;
+	TMap<ETestMonsterAnim, FAnimMontageGroup> AllAnimMontages;
 
 };
 
@@ -91,6 +74,10 @@ protected:
 	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
 public:
+	// 기본 설정 Data
+	const FMonsterDataRow* BaseData;
+
+	// 개별 Data
 	FVector OriginPos = FVector::ZeroVector;
 
 	UPROPERTY(Replicated)

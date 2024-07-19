@@ -6,6 +6,8 @@
 #include "Global/DataAssets/InputDatas.h"
 #include "MainCharacter.h"
 
+#include "Kismet/GameplayStatics.h"
+
 AMainPlayerController::AMainPlayerController()
 {
 	TeamId = FGenericTeamId(0);
@@ -88,10 +90,22 @@ void AMainPlayerController::MoveLeft(const FInputActionValue& Value)
 
 void AMainPlayerController::Jump(const FInputActionValue& Value)
 {
+	ChangeLowerState(EPlayerLowerState::Idle);
+
+	ACharacter* MyPlayerState = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
+	MyPlayerState->Jump();
+
+	//AMainCharacter* Ch = GetPawn<AMainCharacter>();
+	//Ch->Jump();
 }
 
 void AMainPlayerController::JumpEnd(const FInputActionValue& Value)
 {
+	//AMainCharacter* Ch = GetPawn<AMainCharacter>();
+	//Ch->StopJumping();
+
+	ACharacter* MyPlayerState = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
+	MyPlayerState->StopJumping();
 }
 
 void AMainPlayerController::FireStart(const FInputActionValue& Value)
@@ -140,7 +154,17 @@ void AMainPlayerController::ChangePOVController()
 void AMainPlayerController::Crouch(const FInputActionValue& Value)
 {
 	AMainCharacter* Ch = GetPawn<AMainCharacter>();
-	Ch->ChangeLowerState();
+	switch (Ch->LowerStateValue)
+	{
+	case EPlayerLowerState::Idle:
+		Ch->ChangeLowerState(EPlayerLowerState::Crouch);
+		break;
+	case EPlayerLowerState::Crouch:
+		Ch->ChangeLowerState(EPlayerLowerState::Idle);
+		break;
+	default:
+		break;
+	}
 }
 
 void AMainPlayerController::ChangePosture(EPlayerPosture _Posture)
@@ -151,6 +175,24 @@ void AMainPlayerController::ChangePosture(EPlayerPosture _Posture)
 		return;
 	}
 	Ch->ChangePosture(_Posture);
+}
+
+void AMainPlayerController::ChangeLowerState(EPlayerLowerState _State)
+{
+	AMainCharacter* Ch = GetPawn<AMainCharacter>();
+	Ch->ChangeLowerState(_State);
+}
+
+void AMainPlayerController::ChangePlayerDir(EPlayerMoveDir _Dir)
+{
+	AMainCharacter* Ch = GetPawn<AMainCharacter>();
+	Ch->ChangePlayerDir(_Dir);
+}
+
+void AMainPlayerController::AttackMontagePlay()
+{
+	AMainCharacter* Ch = GetPawn<AMainCharacter>();
+	Ch->ChangeMontage();
 }
 
 FGenericTeamId AMainPlayerController::GetGenericTeamId() const

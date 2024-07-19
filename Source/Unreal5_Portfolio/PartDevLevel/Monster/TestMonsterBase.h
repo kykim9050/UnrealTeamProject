@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+ // Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
@@ -55,7 +55,7 @@ public:
 
 	FORCEINLINE const FMonsterDataRow* GetBaseData() const
 	{
-		return BaseData;
+		return SettingData->BaseData;
 	}
 
 	void Damaged(float Damage);
@@ -86,8 +86,6 @@ private:
 	}
 
 private:
-	const FMonsterDataRow* BaseData;
-
 	UPROPERTY()
 	UMonsterData* SettingData;
 

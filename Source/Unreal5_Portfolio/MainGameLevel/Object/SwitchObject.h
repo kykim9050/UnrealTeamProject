@@ -16,14 +16,8 @@ class UNREAL5_PORTFOLIO_API ASwitchObject : public AMapObjectBase
 	
 public:
 
-	UFUNCTION()
-	void OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
-
-	UFUNCTION()
-	FORCEINLINE void SetSwitchValue(bool _Value)
-	{
-		SwitchValue = _Value;
-	}
+	UFUNCTION(BlueprintCallable)
+	void SetInfo(FName _InfoName);
 
 protected:
 	ASwitchObject();
@@ -31,13 +25,11 @@ protected:
 	void BeginPlay() override;
 
 	void Tick(float DeltaTime) override;
+	void InterAction() override;
 
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<AActor> InteractObjClass = TSubclassOf<AActor>();
-
-	UPROPERTY()
-	bool SwitchValue = false;
 
 	UPROPERTY()
 	FVector CollisionOffset = FVector(0.0f, 60.0f, 0.0f);

@@ -7,7 +7,7 @@
 #include "TestTeamHpBarUserWidget.generated.h"
 
 /**
- * 
+ * 현재 안 쓰는 클래스
  */
 class UProgressBar;
 class UTextBlock;

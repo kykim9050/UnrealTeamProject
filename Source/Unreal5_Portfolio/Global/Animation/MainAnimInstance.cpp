@@ -1,41 +1,40 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "MainAnimInstance.h"
-#include "TestLevel/Character/TestCharacter.h"
-#include "../ContentsLog.h"
+#include "Global/Animation/MainAnimInstance.h"
+#include "Global/ContentsLog.h"
 
-void UMainAnimInstance::ChangeAnimation(uint8 _Key)
+void UMainAnimInstance::ChangeAnimation(uint8 Key)
 {
-	if (false == AnimMontages.Contains(_Key))
+	if (false == AnimMontages.Contains(Key))
 	{
-		LOG(GlobalLog, Fatal, TEXT("AnimMontages false"));
+		LOG(GlobalLog, Fatal, "AnimMontages is Empty");
 		return;
 	}
 
-	UAnimMontage* Montage = AnimMontages[_Key];
+	UAnimMontage* NextMontage = AnimMontages[Key];
 
-	if (nullptr == Montage)
+	if (nullptr == NextMontage)
 	{
-		LOG(GlobalLog, Fatal, TEXT("Montage is nullptr"));
+		LOG(GlobalLog, Fatal, "Montage is nullptr");
 		return;
 	}
 
-	UAnimMontage* PrevMontage = GetCurrentActiveMontage();
+	UAnimMontage* CurMontage = GetCurrentActiveMontage();
 
-	if (PrevMontage != Montage)
+	if (CurMontage != NextMontage)
 	{
-		Montage_Play(Montage);
+		Montage_Play(NextMontage);
 	}
 }
 
-void UMainAnimInstance::PushAnimation(uint8 _Key, UAnimMontage* _Montage)
+void UMainAnimInstance::PushAnimation(uint8 Key, UAnimMontage* Montage)
 {
-	if (true == AnimMontages.Contains(_Key))
+	if (true == AnimMontages.Contains(Key))
 	{
 		return;
 	}
 
-	AnimMontages.Add(_Key, _Montage);
+	AnimMontages.Add(Key, Montage);
 }
 
