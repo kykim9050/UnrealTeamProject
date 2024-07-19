@@ -16,10 +16,67 @@ EBTNodeResult::Type UBTTaskNode_BossMonsterRAttack::ExecuteTask(UBehaviorTreeCom
 {
     Super::ExecuteTask(_OwnerComp, _NodeMemory);
 
-    return EBTNodeResult::Type();
+	ATestBossMonsterBase* BossMonster = GetActor<ATestBossMonsterBase>(_OwnerComp);
+	if (false == BossMonster->IsValidLowLevel())
+	{
+		LOG(MonsterLog, Fatal, TEXT("Monster Is Not Valid"));
+		return EBTNodeResult::Type::Aborted;
+	}
+
+	UBossData* BossData = GetValueAsObject<UBossData>(_OwnerComp, TEXT("BossMonsterData"));
+	BossMonster->ChangeAniValue(EBossMonsterAnim::RangedAttack);
+
+	return EBTNodeResult::Type::InProgress;
 }
 
 void UBTTaskNode_BossMonsterRAttack::TickTask(UBehaviorTreeComponent& _OwnerComp, uint8* _pNodeMemory, float _DeltaSeconds)
 {
     Super::TickTask(_OwnerComp, _pNodeMemory, _DeltaSeconds);
+
+	UMainGameInstance* MainGameInst = UMainGameBlueprintFunctionLibrary::GetMainGameInstance(GetWorld());
+
+	UBossData* BossData = GetValueAsObject<UBossData>(_OwnerComp, TEXT("BossMonsterData"));
+
+	ATestBossMonsterBase* BossMonster = GetActor<ATestBossMonsterBase>(_OwnerComp);
+	AActor* TargetActor = GetValueAsObject<AActor>(_OwnerComp, TEXT("TargetActor"));
+
+	FVector MonsterLocation = BossMonster->GetActorLocation();
+	FVector TargetLocation = TargetActor->GetActorLocation();
+
+	FRotator TurnRot = UKismetMathLibrary::FindLookAtRotation(MonsterLocation, TargetLocation);
+	BossMonster->SetActorRotation(TurnRot);
+
+	ATestCharacter* TargetPlayer = Cast<ATestCharacter>(TargetActor);
+	ATestPlayerState* TargetPlayerState = Cast<ATestPlayerState>(TargetPlayer->GetPlayerState());
+
+	FVector LocationDiff = TargetLocation - MonsterLocation;
+	float Dist = LocationDiff.Size();
+
+	if (0.0f >= TargetPlayerState->GetPlayerHp())
+	{
+		StateChange(_OwnerComp, EMonsterState::Idle);
+		_OwnerComp.GetBlackboardComponent()->SetValueAsObject(TEXT("TargetActor"), nullptr);
+		_OwnerComp.GetBlackboardComponent()->SetValueAsBool(TEXT("CanSeePlayer"), false);
+		return;
+	}
+	else if (Dist <= BossData->Data->GetRangedAttackBoundary())
+	{
+		int RandomIndex = MainGameInst->Random.FRandRange(0, 10);
+
+		if (5 > RandomIndex)
+		{
+			StateChange(_OwnerComp, EBossMonsterState::RangedAttack);
+			return;
+		}
+		else
+		{
+			StateChange(_OwnerComp, EBossMonsterState::Chase);
+			return;
+		}
+	}
+	else if (Dist >= BossData->Data->GetRangedAttackBoundary())
+	{
+		StateChange(_OwnerComp, EBossMonsterState::Chase);
+		return;
+	}
 }
