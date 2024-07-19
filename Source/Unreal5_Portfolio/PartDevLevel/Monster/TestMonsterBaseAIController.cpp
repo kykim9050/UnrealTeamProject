@@ -10,6 +10,7 @@
 #include "GenericTeamAgentInterface.h"
 
 #include "TestLevel/Character/TestCharacter.h"
+#include "TestLevel/Character/TestPlayerState.h"
 
 #include "Global/MainGameBlueprintFunctionLibrary.h"
 #include "Global/ContentsEnum.h"
@@ -29,8 +30,14 @@ void ATestMonsterBaseAIController::BeginPlay()
 
 void ATestMonsterBaseAIController::PlayerDetect(AActor* Actor, FAIStimulus const Stimulus)
 {
-	ATestCharacter* Player = Cast<ATestCharacter>(Actor);
-	if (nullptr != Player && 0 < Player->GetPlayerHp())
+ 	ATestCharacter* DetectPlayer = Cast<ATestCharacter>(Actor);
+	if (nullptr == DetectPlayer)
+	{
+		return;
+	}
+
+	ATestPlayerState* DetectPlayerState = Cast<ATestPlayerState>(DetectPlayer->GetPlayerState());
+	if (nullptr != DetectPlayerState && 0.0f < DetectPlayerState->GetPlayerHp())
 	{
 		GetBlackboardComponent()->SetValueAsBool(TEXT("CanSeePlayer"), Stimulus.WasSuccessfullySensed());
 		if (true == GetBlackboardComponent()->GetValueAsBool(TEXT("CanSeePlayer")))
