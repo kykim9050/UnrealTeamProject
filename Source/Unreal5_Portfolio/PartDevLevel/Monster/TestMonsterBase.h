@@ -28,20 +28,20 @@ protected:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-	
+
 	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
 public:
 	class ATestMonsterBaseAIController* GetAIController();
 	class UMonsterAnimInstance* GetAnimInstance();
 	
-	void ChangeAniValue(uint8 _Type);
-
 	template<typename EnumType>
-	void ChangeAniValue(EnumType _Type)
+	void ChangeRandomAnimation(EnumType _Type)
 	{
-		ChangeAniValue(static_cast<uint8>(_Type));
+		ChangeRandomAnimation(static_cast<uint8>(_Type));
 	}
+
+	void ChangeRandomAnimation(uint8 _Type);
 
 	FORCEINLINE float GetAttackDamage()
 	{
@@ -51,6 +51,11 @@ public:
 	FORCEINLINE float GetMonsterHp()
 	{
 		return SettingData->Hp;
+	}
+
+	FORCEINLINE int GetAniIndex()
+	{
+		return AniIndex;
 	}
 
 	FORCEINLINE const FMonsterDataRow* GetBaseData() const
@@ -92,11 +97,14 @@ private:
 	UPROPERTY(Category = "Data", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	FName BaseDataName;
 
-	UPROPERTY(Replicated)
-	uint8 AniValue;
-
 	UPROPERTY()
 	class UMonsterAnimInstance* AnimInst;
+
+	UPROPERTY(Replicated)
+	uint8 AniType;
+
+	UPROPERTY(Replicated)
+	int AniIndex;
 
 	TArray<class UMaterialInstanceDynamic*> DynamicMaterials;
 	

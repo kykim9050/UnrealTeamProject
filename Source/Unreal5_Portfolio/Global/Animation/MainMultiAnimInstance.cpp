@@ -34,7 +34,8 @@ void UMainMultiAnimInstance::PushAnimation(uint8 Key, const FAnimMontageGroup& A
 	{
 		return;
 	}
-	
+
+	AllAnimMontages.Add(Key, FAnimMontageGroup());
 	for (int32 i = 0; i < AnimMontageGroup.AnimMontages.Num(); i++)
 	{
 		AllAnimMontages[Key].AnimMontages.Add(AnimMontageGroup.AnimMontages[i]);

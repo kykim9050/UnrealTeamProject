@@ -35,10 +35,15 @@ public:
 	void HpbarUpdate(int _Token, float _CurHp, float _MaxHp);
 	void NickNameUpdate(int _Token, FText _nickname);
 
+
+	UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	int MainPlayerIndex = -1;
 private:
 	void WidgetInit();
+
+	UPROPERTY()
 	TArray<UDefaultHpBarUserWidget*> HpWidgets;
 
-	int MainPlayerIndex = -1;
+	UPROPERTY()
 	TArray<int> OtherPlayerNum;
 };

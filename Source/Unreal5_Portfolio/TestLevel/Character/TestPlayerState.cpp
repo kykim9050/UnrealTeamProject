@@ -21,6 +21,7 @@ void ATestPlayerState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Out
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 	
+	DOREPLIFETIME(ATestPlayerState, PlayerHp);
 }
 
 void ATestPlayerState::SetPlayerHp(float _Hp)

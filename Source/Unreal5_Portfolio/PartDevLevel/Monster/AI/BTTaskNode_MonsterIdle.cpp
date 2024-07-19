@@ -22,7 +22,7 @@ EBTNodeResult::Type UBTTaskNode_MonsterIdle::ExecuteTask(UBehaviorTreeComponent&
     UMonsterData* MonsterData = GetValueAsObject<UMonsterData>(_OwnerComp, TEXT("MonsterData"));
     MonsterData->IdleTime = 0.0f;
 
-    Monster->ChangeAniValue(ETestMonsterAnim::Idle);
+    Monster->ChangeRandomAnimation(ETestMonsterAnim::Idle);
 
     return EBTNodeResult::Type::InProgress;
 }
