@@ -11,6 +11,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "PartDevLevel/Monster/TestMonsterBaseAIController.h"
 #include "Components/CapsuleComponent.h"
+#include "Navigation/PathFollowingComponent.h"
 
 EBTNodeResult::Type UBTTaskNode_MonsterClimb::ExecuteTask(UBehaviorTreeComponent& _OwnerComp, uint8* _NodeMemory)
 {
@@ -23,11 +24,10 @@ EBTNodeResult::Type UBTTaskNode_MonsterClimb::ExecuteTask(UBehaviorTreeComponent
 		return EBTNodeResult::Type::Aborted;
 	}
 
-	//Monster->GetCharacterMovement()->GravityScale = 0.0f;
 	Monster->GetCharacterMovement()->Velocity = FVector::ZeroVector;
 	Monster->GetCharacterMovement()->MovementMode = EMovementMode::MOVE_Flying;
 	Monster->GetCharacterMovement()->MaxFlySpeed = 200.0f;
-	Monster->GetCapsuleComponent()->SetCapsuleRadius(50.0f);
+	Monster->GetCapsuleComponent()->SetCapsuleRadius(60.0f);
 	Monster->ChangeAniValue(ETestMonsterAnim::Climb);
 	return EBTNodeResult::InProgress;
 }
@@ -40,13 +40,19 @@ void UBTTaskNode_MonsterClimb::TickTask(UBehaviorTreeComponent& _OwnerComp, uint
 	ATestMonsterBaseAIController* Controller = Cast<ATestMonsterBaseAIController>(Monster->GetController());
 	FVector Dest = Controller->GetBlackboardComponent()->GetValueAsVector("DestinationLocation");
 	FVector CurPos = Monster->GetActorLocation();
-	FVector ForwardVector = Monster->GetActorForwardVector();
-	
-	if (CurPos.Z >= Dest.Z - (Monster->GetCapsuleComponent()->GetUnscaledCapsuleHalfHeight() + 45.0f))
+
+	if (CurPos.Z >= Dest.Z - (Monster->GetCapsuleComponent()->GetUnscaledCapsuleHalfHeight()))
 	{
 		Monster->GetCapsuleComponent()->SetCapsuleRadius(34.0f);
 		Monster->GetCharacterMovement()->MovementMode = EMovementMode::MOVE_None;
+		//Monster->ChangeAniValue(ETestMonsterAnim::ClimbEnd);
 		StateChange(_OwnerComp, ETestMonsterState::ClimbEnd);
 		return;
 	}
+
+	Monster->AddMovementInput(Monster->GetActorForwardVector(), 20.0f);
+	Monster->AddMovementInput(Monster->GetActorUpVector(), 20.0f);
+
+	
+	
 }

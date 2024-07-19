@@ -31,7 +31,8 @@ EBTNodeResult::Type UBTTaskNode_Monster_ClimbEnd::ExecuteTask(UBehaviorTreeCompo
 	Monster->ChangeAniValue(ETestMonsterAnim::ClimbEnd);
 	UMonsterData* MonsterData = GetValueAsObject<UMonsterData>(_OwnerComp, TEXT("MonsterData"));
 	MonsterData->ClimbTime = Monster->GetAnimInstance()->GetKeyAnimMontage(static_cast<uint8>(ETestMonsterAnim::ClimbEnd))->GetPlayLength();
-
+	MonsterData->LerpPos = Monster->GetActorLocation();
+	MonsterData->ClimbTotal = 0.0f;
 	return EBTNodeResult::InProgress;
 }
 
@@ -41,35 +42,24 @@ void UBTTaskNode_Monster_ClimbEnd::TickTask(UBehaviorTreeComponent& _OwnerComp, 
 
 	UMonsterData* MonsterData = GetValueAsObject<UMonsterData>(_OwnerComp, TEXT("MonsterData"));
 	ATestMonsterBase* Monster = GetActor<ATestMonsterBase>(_OwnerComp);
+	ATestMonsterBaseAIController* Controller = Cast<ATestMonsterBaseAIController>(Monster->GetController());
+	FVector DestLoc = Controller->GetBlackboardComponent()->GetValueAsVector("DestinationLocation");
 	if (nullptr == Monster)
 	{
 		UE_LOG(MonsterLog, Fatal, TEXT("Monster Is Null"));
 		return;
 	}
-
-		/*FVector DirVector = (Dest - CurPos);
-		DirVector.Normalize();
-		if (abs(CurPos.X - Dest.X) >= 50.0f || abs(CurPos.Y - Dest.Y) >= 50.0f)
-		{
-			Monster->SetActorLocation(CurPos + DirVector * 50.0f);
-		}
-		else
-		{*/
-			/*Dest.Z += Monster->GetCapsuleComponent()->GetUnscaledCapsuleHalfHeight();
-			Monster->GetCapsuleComponent()->SetCapsuleRadius(34.0f);
-			Monster->SetActorRelativeLocation(Dest);*/
-			Monster->GetCharacterMovement()->SetMovementMode(MOVE_NavWalking);
-			StateChange(_OwnerComp, ETestMonsterState::Chase);
-			return;
-		//}
-	//}
-	/*else
+	Monster->AddMovementInput(Monster->GetActorForwardVector(), 20.0f);
+	if (0.0f >= MonsterData->ClimbTime)
 	{
-		FVector FirstPos = Monster->GetActorLocation();
-		float ClimbDist = Monster->GetCapsuleComponent()->GetUnscaledCapsuleHalfHeight() * 2.0f;
-		FVector Result = FirstPos;
-		Result.Z += ClimbDist;
+		Monster->GetCharacterMovement()->SetMovementMode(MOVE_NavWalking);
+		StateChange(_OwnerComp, ETestMonsterState::Chase);
+		return;
+	}
 
-		Monster->AddActorLocalOffset()
-	}*/
+	
+	FVector LerpMove = FMath::Lerp(MonsterData->LerpPos, DestLoc, FMath::Clamp(MonsterData->ClimbTotal, 0.0f, 1.0f));
+	Monster->SetActorLocation(LerpMove, false);
+	MonsterData->ClimbTotal += _DeltaSeconds;
+	MonsterData->ClimbTime -= _DeltaSeconds;
 }

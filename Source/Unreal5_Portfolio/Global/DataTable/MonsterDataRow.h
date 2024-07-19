@@ -97,6 +97,8 @@ public:
 	// °³º° Data
 	FVector OriginPos = FVector::ZeroVector;
 
+	FVector LerpPos = FVector::ZeroVector;
+
 	UPROPERTY(Replicated)
 	float Hp = 100.0f;
 
@@ -109,5 +111,5 @@ public:
 	float AttackBoundary = 200.0f;
 
 	float ClimbTime = 0.0f;
-	
+	float ClimbTotal = 0.0f;
 };
