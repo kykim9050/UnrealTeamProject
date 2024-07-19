@@ -16,5 +16,6 @@ class UNREAL5_PORTFOLIO_API AMonsterDevMode : public AGameMode
 
 public:
 	void BeginPlay() override;
+	void PostLogin(APlayerController* NewPlayer) override; // 플레이어 성공적인 입장(Login) 후 호출되는 함수 
 	
 };
