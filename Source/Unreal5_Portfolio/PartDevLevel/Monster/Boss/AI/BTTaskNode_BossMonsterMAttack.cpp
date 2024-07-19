@@ -24,7 +24,7 @@ EBTNodeResult::Type UBTTaskNode_BossMonsterMAttack::ExecuteTask(UBehaviorTreeCom
 	}
 
 	UBossData* BossData = GetValueAsObject<UBossData>(_OwnerComp, TEXT("BossMonsterData"));
-	BossMonster->ChangeAniValue(ETestMonsterAnim::Attack);
+	BossMonster->ChangeAniValue(EBossMonsterAnim::MeleeAttack);
 
 	return EBTNodeResult::Type::InProgress;
 }
@@ -63,14 +63,15 @@ void UBTTaskNode_BossMonsterMAttack::TickTask(UBehaviorTreeComponent& _OwnerComp
 	{
 		int RandomIndex = MainGameInst->Random.FRandRange(0, 10);
 
-		if (5 >= RandomIndex)
+		if (5 > RandomIndex)
 		{
-			StateChange(_OwnerComp, EBossMonsterState::Chase);
+			StateChange(_OwnerComp, EBossMonsterState::RangedAttack);
+			return;
 		}
 		else
 		{
-			// 원거리 상태로 변경
-			//StateChange(_OwnerComp, EBossMonsterState::RangedAttack);
+			StateChange(_OwnerComp, EBossMonsterState::Chase);
+			return;
 		}
 	}
 }

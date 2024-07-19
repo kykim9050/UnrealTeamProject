@@ -43,7 +43,18 @@ public:
 
 	void PushAnimation(uint8 Key, const FAnimMontageGroup& AnimMontageGroup);
 
-private:
+	template<typename EnumType>
+	UAnimMontage* GetKeyAnimMontage(EnumType Key, int GroupIndex)
+	{
+		return GetKeyAnimMontage(static_cast<uint8>(Key), GroupIndex);
+	}
+
+	UAnimMontage* GetKeyAnimMontage(uint8 Key, int GroupIndex)
+	{
+		return AllAnimMontages[Key].AnimMontages[GroupIndex];
+	}
+
+protected:
 	UPROPERTY()
 	TMap<uint8, FAnimMontageGroup> AllAnimMontages;
 	
