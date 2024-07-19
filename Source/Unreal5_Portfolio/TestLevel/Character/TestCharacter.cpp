@@ -10,6 +10,7 @@
 #include "Global/DataTable/ItemDataRow.h"
 #include "Components/SphereComponent.h"
 #include "Components/BoxComponent.h"
+#include "Kismet/KismetSystemLibrary.h"
 #include "TestPlayerController.h"
 #include "TestLevel/UI/TestMinimapIconComponent.h"
 #include "PartDevLevel/Monster/TestMonsterBase.h"
@@ -305,7 +306,9 @@ void ATestCharacter::FireRayCast_Implementation(float _DeltaTime)	// => 메인캐릭
 		ItemSlot[CurItemIndex].ReloadLeftNum -= 1;
 		GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, FString::Printf(TEXT("Bullet left : %d / %d"), ItemSlot[CurItemIndex].ReloadLeftNum, ItemSlot[CurItemIndex].ReloadMaxNum));
 
-		bool ActorHit = GetWorld()->LineTraceSingleByChannel(Hit, Start, End, ECC_GameTraceChannel9, FCollisionQueryParams(), FCollisionResponseParams());
+		//bool ActorHit = GetWorld()->LineTraceSingleByChannel(Hit, Start, End, ECC_GameTraceChannel9, FCollisionQueryParams(), FCollisionResponseParams());
+		TArray<AActor*> IgnoreActors;
+		bool ActorHit = UKismetSystemLibrary::LineTraceSingle(GetWorld(), Start, End, ETraceTypeQuery::TraceTypeQuery1, false, IgnoreActors, EDrawDebugTrace::None, Hit, true, FLinearColor::Red, FLinearColor::Green, 5.0f);
 		DrawDebugLine(GetWorld(), Start, End, FColor::Red, false, 1.0f, 0.0f, 0.0f);
 
 		if (true == ActorHit && nullptr != Hit.GetActor())
@@ -315,8 +318,8 @@ void ATestCharacter::FireRayCast_Implementation(float _DeltaTime)	// => 메인캐릭
 			ATestMonsterBase* Monster = Cast<ATestMonsterBase>(Hit.GetActor());
 			if (nullptr != Monster)
 			{
-				Monster->Damaged(50.0f);
-				GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, FString::Printf(TEXT("%s got damage : -50"), *Monster->GetName()));
+				Monster->Damaged(ItemSlot[CurItemIndex].Damage);
+				GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, FString::Printf(TEXT("%s got damage : %d"), *Monster->GetName(), ItemSlot[CurItemIndex].Damage));
 			}
 		}
 	}
