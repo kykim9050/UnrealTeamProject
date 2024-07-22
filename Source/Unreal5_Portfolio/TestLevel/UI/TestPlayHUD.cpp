@@ -56,3 +56,18 @@ void ATestPlayHUD::UIOff(EInGameUIType _Type)
 {
 	AllTestPlayWidgets[_Type]->SetVisibility(ESlateVisibility::Collapsed);
 }
+
+void ATestPlayHUD::UISwitch(EInGameUIType _Type)
+{
+	UUserWidget** WidgetPtr = AllTestPlayWidgets.Find(_Type);
+	UUserWidget* Widget = *WidgetPtr;
+
+	if (ESlateVisibility::Visible == Widget->GetVisibility())
+	{
+		UIOff(_Type);
+	}
+	else if (ESlateVisibility::Collapsed == Widget->GetVisibility())
+	{
+		UIOn(_Type);
+	}
+}
