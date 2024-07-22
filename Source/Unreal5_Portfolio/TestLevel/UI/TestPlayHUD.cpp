@@ -66,7 +66,7 @@ void ATestPlayHUD::UISwitch(EInGameUIType _Type)
 	{
 		UIOff(_Type);
 	}
-	else if (ESlateVisibility::Hidden == Widget->GetVisibility())
+	else if (ESlateVisibility::Collapsed == Widget->GetVisibility())
 	{
 		UIOn(_Type);
 	}
