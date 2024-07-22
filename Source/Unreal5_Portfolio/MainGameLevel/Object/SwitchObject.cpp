@@ -43,7 +43,7 @@ void ASwitchObject::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
-void ASwitchObject::InterAction()
+void ASwitchObject::InterAction() 
 {
 	Super::InterAction();
 
