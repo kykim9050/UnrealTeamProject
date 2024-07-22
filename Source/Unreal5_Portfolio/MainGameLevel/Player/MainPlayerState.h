@@ -18,21 +18,19 @@ class UNREAL5_PORTFOLIO_API AMainPlayerState : public APlayerState
 public :
 	AMainPlayerState();
 
-	UFUNCTION()
-	FORCEINLINE float GetPlayerHp() const
-	{
-		return PlayerHp;
-	}
+	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const;
 
-
-
-public :
 	UFUNCTION()
 	void InitPlayerData();
 
+	UFUNCTION()
+	float GetPlayerHp() const;
+
+	UFUNCTION()
+	void AddDamage(float _Damage);
 
 
-public :
-	UPROPERTY()
-	float PlayerHp = 0;
+private:
+	UPROPERTY(Replicated)
+	float PlayerHp = 0.0f;
 };

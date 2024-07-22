@@ -93,6 +93,11 @@ void AMainPlayerController::Jump(const FInputActionValue& Value)
 	ChangeLowerState(EPlayerLowerState::Idle);
 
 	ACharacter* MyPlayerState = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
+	if(nullptr == MyPlayerState)
+	{
+		return;
+	}
+
 	MyPlayerState->Jump();
 
 	//AMainCharacter* Ch = GetPawn<AMainCharacter>();
@@ -105,6 +110,11 @@ void AMainPlayerController::JumpEnd(const FInputActionValue& Value)
 	//Ch->StopJumping();
 
 	ACharacter* MyPlayerState = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
+	if (nullptr == MyPlayerState)
+	{
+		return;
+	}
+
 	MyPlayerState->StopJumping();
 }
 
@@ -154,6 +164,11 @@ void AMainPlayerController::ChangePOVController()
 void AMainPlayerController::Crouch(const FInputActionValue& Value)
 {
 	AMainCharacter* Ch = GetPawn<AMainCharacter>();
+	if (nullptr == Ch)
+	{
+		return;
+	}
+
 	switch (Ch->LowerStateValue)
 	{
 	case EPlayerLowerState::Idle:
@@ -174,24 +189,40 @@ void AMainPlayerController::ChangePosture(EPlayerPosture _Posture)
 	{
 		return;
 	}
+
 	Ch->ChangePosture(_Posture);
 }
 
 void AMainPlayerController::ChangeLowerState(EPlayerLowerState _State)
 {
 	AMainCharacter* Ch = GetPawn<AMainCharacter>();
+	if (nullptr == Ch)
+	{
+		return;
+	}
+
 	Ch->ChangeLowerState(_State);
 }
 
 void AMainPlayerController::ChangePlayerDir(EPlayerMoveDir _Dir)
 {
 	AMainCharacter* Ch = GetPawn<AMainCharacter>();
+	if (nullptr == Ch)
+	{
+		return;
+	}
+
 	Ch->ChangePlayerDir(_Dir);
 }
 
 void AMainPlayerController::AttackMontagePlay()
 {
 	AMainCharacter* Ch = GetPawn<AMainCharacter>();
+	if (nullptr == Ch)
+	{
+		return;
+	}
+
 	Ch->ChangeMontage();
 }
 

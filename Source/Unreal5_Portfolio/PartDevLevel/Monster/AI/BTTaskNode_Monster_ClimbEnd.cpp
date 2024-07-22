@@ -27,12 +27,9 @@ EBTNodeResult::Type UBTTaskNode_Monster_ClimbEnd::ExecuteTask(UBehaviorTreeCompo
 		return EBTNodeResult::Aborted;
 	}
 
-	//Monster->ChangeAniValue(EMonsterAnim::ClimbEnd);
 	Monster->ChangeRandomAnimation(ETestMonsterAnim::ClimbEnd);
 	UMonsterData* MonsterData = GetValueAsObject<UMonsterData>(_OwnerComp, TEXT("MonsterData"));
 	MonsterData->ClimbTime = Monster->GetAnimInstance()->GetKeyAnimMontage(ETestMonsterAnim::ClimbEnd, Monster->GetAniIndex())->GetPlayLength();
-	MonsterData->LerpPos = Monster->GetActorLocation();
-	MonsterData->ClimbTotal = 0.0f;
 	return EBTNodeResult::InProgress;
 }
 
@@ -40,16 +37,15 @@ void UBTTaskNode_Monster_ClimbEnd::TickTask(UBehaviorTreeComponent& _OwnerComp, 
 {
 	Super::TickTask(_OwnerComp, _pNodeMemory, _DeltaSeconds);
 
-	UMonsterData* MonsterData = GetValueAsObject<UMonsterData>(_OwnerComp, TEXT("MonsterData"));
 	ATestMonsterBase* Monster = GetActor<ATestMonsterBase>(_OwnerComp);
-	ATestMonsterBaseAIController* Controller = Cast<ATestMonsterBaseAIController>(Monster->GetController());
-	FVector DestLoc = Controller->GetBlackboardComponent()->GetValueAsVector("DestinationLocation");
+	UMonsterData* MonsterData = GetValueAsObject<UMonsterData>(_OwnerComp, TEXT("MonsterData"));
+
 	if (nullptr == Monster)
 	{
 		UE_LOG(MonsterLog, Fatal, TEXT("Monster Is Null"));
 		return;
 	}
-	Monster->AddMovementInput(Monster->GetActorForwardVector(), 20.0f);
+
 	if (0.0f >= MonsterData->ClimbTime)
 	{
 		Monster->GetCharacterMovement()->SetMovementMode(MOVE_NavWalking);
@@ -57,9 +53,5 @@ void UBTTaskNode_Monster_ClimbEnd::TickTask(UBehaviorTreeComponent& _OwnerComp, 
 		return;
 	}
 
-	
-	FVector LerpMove = FMath::Lerp(MonsterData->LerpPos, DestLoc, FMath::Clamp(MonsterData->ClimbTotal, 0.0f, 1.0f));
-	Monster->SetActorLocation(LerpMove, false);
-	MonsterData->ClimbTotal += _DeltaSeconds;
 	MonsterData->ClimbTime -= _DeltaSeconds;
 }

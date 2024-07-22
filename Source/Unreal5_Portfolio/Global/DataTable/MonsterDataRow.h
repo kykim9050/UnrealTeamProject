@@ -95,4 +95,7 @@ public:
 
 	float ClimbTime = 0.0f;
 	float ClimbTotal = 0.0f;
+
+	FVector DestLoc = FVector::ZeroVector;
+	float ClimbEndUpTime = 0.0f;
 };

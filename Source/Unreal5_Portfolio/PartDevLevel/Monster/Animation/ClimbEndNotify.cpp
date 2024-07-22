@@ -10,26 +10,38 @@
 
 void UClimbEndNotify::NotifyBegin(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation, float TotalDuration)
 {
+	ATestMonsterBase* Monster = Cast<ATestMonsterBase>(MeshComp->GetOwner());
+	if (nullptr != Monster)
+	{
+		ATestMonsterBaseAIController* Controller = Cast<ATestMonsterBaseAIController>(Monster->GetController());
+		if (nullptr != Controller)
+		{
+			UMonsterData* MonsterData = Cast<UMonsterData>(Controller->GetBlackboardComponent()->GetValueAsObject(TEXT("MonsterData")));
+			FVector ClimbDestLoc = Controller->GetBlackboardComponent()->GetValueAsVector("DestinationLocation");
+			FVector CurLoc = MonsterData->LerpPos;
+			CurLoc.Z = ClimbDestLoc.Z;
+			MonsterData->DestLoc = CurLoc;
+			MonsterData->ClimbEndUpTime = 2.3f;
+		}
+	}
 }
 
 void UClimbEndNotify::NotifyTick(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation, float FrameDeltaTime)
 {
 	ATestMonsterBase* Monster = Cast<ATestMonsterBase>(MeshComp->GetOwner());
-
 	if (nullptr != Monster)
 	{
-		//Monster->AddActorLocalOffset(FVector(0.0f, 0.0f, 5.0f) * FrameDeltaTime);
+		ATestMonsterBaseAIController* Controller = Cast<ATestMonsterBaseAIController>(Monster->GetController());
+		if (nullptr != Controller)
+		{
+			/*UMonsterData* MonsterData = Cast<UMonsterData>(Controller->GetBlackboardComponent()->GetValueAsObject(TEXT("MonsterData")));
+			FVector LerpMove = FMath::Lerp(MonsterData->LerpPos, MonsterData->DestLoc, FMath::Clamp(MonsterData->ClimbEndUpTime, 0.0f, 1.0f));
+			Monster->SetActorLocation(LerpMove, false);
+			MonsterData->ClimbEndUpTime += FrameDeltaTime;*/
+		}
 	}
 }
 
 void UClimbEndNotify::NotifyEnd(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation)
 {
-	//ATestMonsterBase* Monster = Cast<ATestMonsterBase>(MeshComp->GetOwner());
-	//ATestMonsterBaseAIController* Controller = Cast<ATestMonsterBaseAIController>(Monster->GetController());
-	//FVector DestLoc = Controller->GetBlackboardComponent()->GetValueAsVector("DestinationLocation");
-	//if (nullptr != Monster)
-	//{
-	//	Monster->SetActorLocation(DestLoc);
-	//}
-	
 }

@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Global/ContentsEnum.h"
 #include "MinimapCaptureCamera.generated.h"
 
 class ATestCharacter;
@@ -24,6 +25,16 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 	void SetCharacter(ATestCharacter* _MyCharacter);
+
+	UFUNCTION(BlueprintCallable)
+	void FollowCharacter();
+
+	UFUNCTION(BlueprintCallable)
+	void SetSceneCameraType(EInGameUIType _Type);
 private:
+	UPROPERTY()
 	ATestCharacter* MyCharacter = nullptr;
+
+	UPROPERTY()
+	EInGameUIType SceneCameraType = EInGameUIType::WorldMap; // MiniMap인지 WorldMap인지 (Default - WorldMap)
 };

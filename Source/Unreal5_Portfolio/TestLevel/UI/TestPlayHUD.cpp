@@ -4,6 +4,7 @@
 #include "TestLevel/UI/TestPlayHUD.h"
 #include "Global/MainGameBlueprintFunctionLibrary.h"
 #include "Blueprint/UserWidget.h"
+#include "Global/DataTable/InGameUserWidgetDataRow.h"
 
 void ATestPlayHUD::BeginPlay()
 {
@@ -11,17 +12,28 @@ void ATestPlayHUD::BeginPlay()
 
 	UMainGameInstance* Inst = UMainGameBlueprintFunctionLibrary::GetMainGameInstance(GetWorld());
 
-	TMap<FString, TSubclassOf<UUserWidget>>& AllUI = Inst->GetInGameWidgets();
+	TMap<FString, FInGameUserWidgetDataRow>& AllUI = Inst->GetInGameWidgets();
 	UEnum* Enum = StaticEnum<EInGameUIType>();
 
-	for (TPair<FString, TSubclassOf<UUserWidget>> Pair : AllUI)
+	for (TPair<FString, FInGameUserWidgetDataRow> Pair : AllUI)
 	{
-		UUserWidget* Widget = CreateWidget<UUserWidget>(GetWorld(), Pair.Value);
+		FInGameUserWidgetDataRow& Data = Pair.Value;
+
+		UUserWidget* Widget = CreateWidget<UUserWidget>(GetWorld(), Data.GetWidget());
 		Widget->AddToViewport();
 
 		EInGameUIType Type = static_cast<EInGameUIType>(Enum->GetValueByName(*Pair.Key));
 
 		AllTestPlayWidgets.Add(Type, Widget);
+
+		if (true == Data.GetStartOn())
+		{
+			Widget->SetVisibility(ESlateVisibility::Visible);
+		}
+		else if (false == Data.GetStartOn())
+		{
+			Widget->SetVisibility(ESlateVisibility::Collapsed);
+		}
 	}
 }
 
@@ -43,4 +55,19 @@ void ATestPlayHUD::UIOn(EInGameUIType _Type)
 void ATestPlayHUD::UIOff(EInGameUIType _Type)
 {
 	AllTestPlayWidgets[_Type]->SetVisibility(ESlateVisibility::Collapsed);
+}
+
+void ATestPlayHUD::UISwitch(EInGameUIType _Type)
+{
+	UUserWidget** WidgetPtr = AllTestPlayWidgets.Find(_Type);
+	UUserWidget* Widget = *WidgetPtr;
+
+	if (ESlateVisibility::Visible == Widget->GetVisibility())
+	{
+		UIOff(_Type);
+	}
+	else if (ESlateVisibility::Collapsed == Widget->GetVisibility())
+	{
+		UIOn(_Type);
+	}
 }
