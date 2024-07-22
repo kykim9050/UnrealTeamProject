@@ -31,6 +31,6 @@ public :
 
 
 private:
-	UPROPERTY()
+	UPROPERTY(Replicated)
 	float PlayerHp = 0.0f;
 };

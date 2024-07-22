@@ -93,6 +93,11 @@ void AMainPlayerController::Jump(const FInputActionValue& Value)
 	ChangeLowerState(EPlayerLowerState::Idle);
 
 	ACharacter* MyPlayerState = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
+	if(nullptr == MyPlayerState)
+	{
+		return;
+	}
+
 	MyPlayerState->Jump();
 
 	//AMainCharacter* Ch = GetPawn<AMainCharacter>();
@@ -105,6 +110,11 @@ void AMainPlayerController::JumpEnd(const FInputActionValue& Value)
 	//Ch->StopJumping();
 
 	ACharacter* MyPlayerState = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
+	if (nullptr == MyPlayerState)
+	{
+		return;
+	}
+
 	MyPlayerState->StopJumping();
 }
 

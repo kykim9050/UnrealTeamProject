@@ -56,7 +56,7 @@ private : // 문제 발생 여지 있음 발생하면 그냥 지워야 함.
 	// 일인칭 메시
 	UPROPERTY(Category = "Contents", VisibleDefaultsOnly)
 	USkeletalMeshComponent* FPVMesh = nullptr;
-	//
+	// 탈 것?
 	//UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	//class UStaticMeshComponent* RidingMesh = nullptr;
 	// 미니맵 아이콘
@@ -168,7 +168,7 @@ private :
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	bool IsCanControlled = false;
 
-	UPROPERTY(Category = "TPSNet", Replicated, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(Category = "PlayerNet", Replicated, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	int Token = -1;
 
 public :
