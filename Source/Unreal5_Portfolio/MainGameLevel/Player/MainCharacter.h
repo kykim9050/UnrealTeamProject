@@ -158,6 +158,9 @@ private :
 	
 	UFUNCTION(BlueprintCallable)
 	void MapItemOverlapEnd();
+
+	UFUNCTION()
+	void UpdatePlayerHp(float _DeltaTime);
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	bool IsServer = false;

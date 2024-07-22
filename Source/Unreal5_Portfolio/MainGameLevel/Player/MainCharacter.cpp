@@ -12,8 +12,10 @@
 #include "PlayerItemInformation.h"
 #include "PartDevLevel/Character/PlayerAnimInstance.h"
 #include "Components/SphereComponent.h"
-#include "Kismet/KismetSystemLibrary.h"
+#include "MainGameLevel/Player/MainPlayerState.h"
 #include "MainGameLevel/Monster/Base/BasicMonsterBase.h"
+#include <Kismet/KismetSystemLibrary.h>
+#include <Kismet/GameplayStatics.h>
 
 // Sets default values
 AMainCharacter::AMainCharacter()
@@ -331,6 +333,30 @@ void AMainCharacter::MapItemOverlapEnd()
 		// 삭제 방지
 		//GetMapItemData = nullptr;
 	}
+}
+
+void AMainCharacter::UpdatePlayerHp(float _DeltaTime)
+{
+	AMainPlayerState* MyTestPlayerState = GetPlayerState<AMainPlayerState>();
+	if (nullptr == MyTestPlayerState)
+	{
+		return;
+	}
+
+	AMainPlayerController* MyController = Cast<AMainPlayerController>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
+	if (nullptr == MyController)
+	{
+		return;
+	}
+
+	// Get HUD
+	// AMainPlayHUD PlayHUD = Cast<AMainPlayHUD>(MyController->GetHUD());
+	// if(nullptr == )
+	// {
+	//     UHpBarUserWidget* MyHpWidget = Cast<UHpBarUserWidget>(PlayHUD->GetWidget(EInGameUIType::HpBar));
+	//     MyHpWidget->NickNameUpdate(Token, FText::FromString(FString("")));
+	//     MyHpWidget->HpbarUpdate(Token, CurHp, 100.0f);
+	// {
 }
 
 void AMainCharacter::ChangePOV()
