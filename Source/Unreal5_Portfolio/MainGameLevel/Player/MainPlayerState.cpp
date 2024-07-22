@@ -24,6 +24,11 @@ void AMainPlayerState::InitPlayerData()
 	PlayerHp = MainGameInst->GetPlayerData(FName("TestPlayer"))->GetHp();
 }
 
+float AMainPlayerState::GetPlayerHp() const
+{
+	return PlayerHp;
+}
+
 void AMainPlayerState::AddDamage(float _Damage)
 {
 	PlayerHp -= _Damage;

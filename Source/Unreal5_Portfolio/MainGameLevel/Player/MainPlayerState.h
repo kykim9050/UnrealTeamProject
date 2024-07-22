@@ -24,10 +24,7 @@ public :
 	void InitPlayerData();
 
 	UFUNCTION()
-	FORCEINLINE float GetPlayerHp() const
-	{
-		return PlayerHp;
-	}
+	float GetPlayerHp() const;
 
 	UFUNCTION()
 	void AddDamage(float _Damage);
