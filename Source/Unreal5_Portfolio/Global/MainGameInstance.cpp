@@ -6,7 +6,6 @@
 #include "Global/DataTable/NetDataRow.h"
 #include "Global/DataTable/MonsterDataRow.h"
 #include "Global/DataTable/MonsterSpawnerDataRow.h"
-#include "Global/DataTable/InGameUserWidgetDataRow.h"
 #include "Global/DataTable/ItemDataRow.h"
 #include "Global/DataTable/BossDataRow.h"
 #include "Global/DataTable/GlobalObjectRow.h"
@@ -33,7 +32,7 @@ void UMainGameInstance::Init()
 
 	for (size_t i = 0; i < Data.Num(); ++i)
 	{
-		TestInGameWidgets.Add(Names[i].ToString(), TSubclassOf<UUserWidget>(Data[i]->GetWidget()));
+		TestInGameWidgets.Add(Names[i].ToString(), *Data[i]);
 	}
 }
 

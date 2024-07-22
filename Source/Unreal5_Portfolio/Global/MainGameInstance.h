@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Engine/GameInstance.h"
 #include "DataTable/NetDataRow.h"
+#include "DataTable/InGameUserWidgetDataRow.h"
 #include "MainGameInstance.generated.h"
 
 /**
@@ -80,7 +81,7 @@ public:
 	/// <summary>
 	/// TestInGameWidgets 를 받아오는 함수
 	/// </summary>
-	TMap<FString, TSubclassOf<UUserWidget>>& GetInGameWidgets()
+	TMap<FString, FInGameUserWidgetDataRow>& GetInGameWidgets()
 	{
 		return TestInGameWidgets;
 	}
@@ -133,7 +134,7 @@ private:
 	UDataTable* MapObjDataTable = nullptr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	TMap<FString, TSubclassOf<UUserWidget>> TestInGameWidgets;
+	TMap<FString, FInGameUserWidgetDataRow> TestInGameWidgets;
 private:
 	UMainGameInstance();
 
