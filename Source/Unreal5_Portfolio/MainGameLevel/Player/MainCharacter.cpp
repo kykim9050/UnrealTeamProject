@@ -158,6 +158,7 @@ void AMainCharacter::ChangePosture_Implementation(EPlayerPosture _Type)
 	if (_Type == EPlayerPosture::Barehand)
 	{
 		PostureValue = _Type;
+		CurItemIndex = -1;
 
 		ItemSocketMesh->SetVisibility(false);
 		FPVItemSocketMesh->SetVisibility(false);
@@ -327,7 +328,8 @@ void AMainCharacter::MapItemOverlapEnd()
 {
 	if (nullptr != GetMapItemData)
 	{
-		GetMapItemData = nullptr;
+		// »èÁ¦ ¹æÁö
+		//GetMapItemData = nullptr;
 	}
 }
 
@@ -340,10 +342,15 @@ void AMainCharacter::ChangePOV()
 		SpringArmComponent->SetRelativeLocation(FVector(0.0f, 0.0f, 80.0f));
 
 		// Character Mesh ÀüÈ¯
-		GetMesh()->SetOnlyOwnerSee(true);
 		GetMesh()->SetOwnerNoSee(false);
 		FPVMesh->SetOwnerNoSee(true);
-		FPVMesh->SetOnlyOwnerSee(false);
+
+		// Item Mesh
+		for (int i = 0; i < int(EPlayerPosture::Barehand); i++)
+		{
+			ItemSocketMesh->SetOwnerNoSee(false);
+			FPVItemSocketMesh->SetOwnerNoSee(true);
+		}
 
 		// ÀÏÀÎÄª -> »ïÀÎÄª
 		IsFPV = false;
@@ -356,9 +363,14 @@ void AMainCharacter::ChangePOV()
 
 		// Character Mesh ÀüÈ¯
 		GetMesh()->SetOwnerNoSee(true);
-		GetMesh()->SetOnlyOwnerSee(false);
-		FPVMesh->SetOnlyOwnerSee(true);
 		FPVMesh->SetOwnerNoSee(false);
+
+		// Item Mesh
+		for (int i = 0; i < int(EPlayerPosture::Barehand); i++)
+		{
+			ItemSocketMesh->SetOwnerNoSee(true);
+			FPVItemSocketMesh->SetOwnerNoSee(false);
+		}
 
 		// »ïÀÎÄª -> ÀÏÀÎÄª
 		IsFPV = true;
