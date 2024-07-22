@@ -594,17 +594,18 @@ void ATestCharacter::UISetting()
 
 void ATestCharacter::UpdatePlayerHp(float _DeltaTime)
 {
+	ATestPlayerState* MyTestPlayerState = GetPlayerState<ATestPlayerState>();
+	if (nullptr == MyTestPlayerState)
+	{
+		return;
+	}
+
 	ATestPlayerController* MyController = Cast<ATestPlayerController>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
 	if (nullptr == MyController)
 	{
 		return;
 	}
 
-	ATestPlayerState* MyTestPlayerState = MyController->GetPlayerState<ATestPlayerState>();
-	if (nullptr == MyTestPlayerState)
-	{
-		return;
-	}
 
 	float GetHp = MyTestPlayerState->GetPlayerHp();
 
