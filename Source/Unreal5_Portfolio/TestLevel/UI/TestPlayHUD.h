@@ -34,4 +34,7 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void UIOff(EInGameUIType _Type);
+
+	UFUNCTION(BlueprintCallable)
+	void UISwitch(EInGameUIType _Type);
 };

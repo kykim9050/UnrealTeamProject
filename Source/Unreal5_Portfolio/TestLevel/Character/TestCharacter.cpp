@@ -532,6 +532,11 @@ void ATestCharacter::ChangePOV()	// => 메인캐릭터로 이전해야 함 (내용 수정됨)
 	}
 }
 
+void ATestCharacter::CharacterReload()
+{
+	ItemSlot[CurItemIndex].ReloadLeftNum = ItemSlot[CurItemIndex].ReloadMaxNum;
+}
+
 void ATestCharacter::MapItemOverlapStart(AActor* _OtherActor, UPrimitiveComponent* _Collision)
 {
 	GetMapItemData = _OtherActor;
@@ -623,17 +628,18 @@ void ATestCharacter::UISetting()
 
 void ATestCharacter::UpdatePlayerHp(float _DeltaTime)
 {
+	ATestPlayerState* MyTestPlayerState = GetPlayerState<ATestPlayerState>();
+	if (nullptr == MyTestPlayerState)
+	{
+		return;
+	}
+
 	ATestPlayerController* MyController = Cast<ATestPlayerController>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
 	if (nullptr == MyController)
 	{
 		return;
 	}
 
-	ATestPlayerState* MyTestPlayerState = MyController->GetPlayerState<ATestPlayerState>();
-	if (nullptr == MyTestPlayerState)
-	{
-		return;
-	}
 
 	float GetHp = MyTestPlayerState->GetPlayerHp();
 

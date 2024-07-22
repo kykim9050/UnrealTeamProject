@@ -66,6 +66,7 @@ void ATestPlayerController::SetupInputComponent()
 			EnhancedInputComponent->BindAction(InputData->Actions[13], ETriggerEvent::Completed, this, &ATestPlayerController::PickUpItemEnd);
 			EnhancedInputComponent->BindAction(InputData->Actions[14], ETriggerEvent::Triggered, this, &ATestPlayerController::ChangePOVController);
 			EnhancedInputComponent->BindAction(InputData->Actions[15], ETriggerEvent::Started, this, &ATestPlayerController::Crouch);
+			EnhancedInputComponent->BindAction(InputData->Actions[16], ETriggerEvent::Started, this, &ATestPlayerController::IAReload);
 		}
 	}
 }
@@ -233,6 +234,12 @@ void ATestPlayerController::ChangePOVController()
 {
 	ATestCharacter* Ch = GetPawn<ATestCharacter>();
 	Ch->ChangePOV();
+}
+
+void ATestPlayerController::IAReload()
+{
+	ATestCharacter* Ch = GetPawn<ATestCharacter>();
+	Ch->CharacterReload();
 }
 
 void ATestPlayerController::ChangeLowerState(EPlayerLowerState _State)

@@ -18,4 +18,6 @@ public:
 	UFUNCTION()
 	void AnimNotify_RAttackEnd();
 	
+	UFUNCTION()
+	void AnimNotify_MAttackEnd();
 };

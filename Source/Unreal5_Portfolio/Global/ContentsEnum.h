@@ -132,6 +132,7 @@ enum class EInGameUIType : uint8
 	Leaderboard,
 	Crosshair,
 	TeamHpBar,
+	WorldMap,
 };
 
 

@@ -101,6 +101,9 @@ public:
 	UFUNCTION()
 	void ChangePOV();
 
+	UFUNCTION()
+	void CharacterReload();
+
 	// Inventory => 메인캐릭터로 이전해야 함 (PickUpItem 함수에 필요)
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	TArray<FItemInformation> ItemSlot;
@@ -159,7 +162,7 @@ public:
 	}
 
 	UFUNCTION(BlueprintCallable)
-	void GetDamage(float _Damage);
+	void GetDamage(float _Damage); // Player State로 이동.
 
 protected:
 	// Called when the game starts or when spawned
