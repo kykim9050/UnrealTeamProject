@@ -78,6 +78,10 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void ChangePOVController();
 
+	// Reload (k)
+	UFUNCTION(BlueprintCallable)
+	void IAReload();
+
 	// LowerStateChange 함수 (태환)
 	UFUNCTION(BlueprintCallable)
 	void ChangeLowerState(EPlayerLowerState _State);
