@@ -56,10 +56,13 @@ private : // 문제 발생 여지 있음 발생하면 그냥 지워야 함.
 	// 일인칭 메시
 	UPROPERTY(Category = "Contents", VisibleDefaultsOnly)
 	USkeletalMeshComponent* FPVMesh = nullptr;
+	//
+	//UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	//class UStaticMeshComponent* RidingMesh = nullptr;
 	// 미니맵 아이콘
 	//UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	//class UTestMinimapIconComponent* MinimapIconComponent = nullptr;
-	// 맵에 있는 아이템 탐색 콜리전
+	// 맵에 있는 아이템 탐색 전용 콜리전
 	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	class UBoxComponent* GetMapItemCollisonComponent = nullptr;
 	// 버리는 아이템 생성 위치
@@ -148,13 +151,6 @@ public :
 	void ClientChangeMontage();
 	void ClientChangeMontage_Implementation();
 
-	// Notify State에서 호출.
-	UFUNCTION(BlueprintCallable)
-	void HandAttackCollision(AActor* _OtherActor, UPrimitiveComponent* _Collision);
-
-	UFUNCTION()
-	void ChangeHandAttackCollisionProfile(FName _Name);
-
 	// == Client ==
 private :	
 	UFUNCTION(BlueprintCallable)
@@ -163,8 +159,30 @@ private :
 	UFUNCTION(BlueprintCallable)
 	void MapItemOverlapEnd();
 	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	bool IsServer = false;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	bool IsClient = false;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	bool IsCanControlled = false;
+
+	UPROPERTY(Category = "TPSNet", Replicated, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	int Token = -1;
+
 public :
 	// == 인칭 변경 함수 ==
 	UFUNCTION()
 	void ChangePOV();
+
+	// Notify State에서 호출.
+	UFUNCTION(BlueprintCallable)
+	void HandAttackCollision(AActor* _OtherActor, UPrimitiveComponent* _Collision);
+
+	UFUNCTION()
+	void ChangeHandAttackCollisionProfile(FName _Name);
+
+	UFUNCTION()
+	void NetCheck();
 };

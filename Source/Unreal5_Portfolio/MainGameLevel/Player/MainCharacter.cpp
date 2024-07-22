@@ -29,7 +29,7 @@ AMainCharacter::AMainCharacter()
 	SpringArmComponent->SetRelativeLocation(FVector(20.0f, 0.0f, 67.0f));
 	SpringArmComponent->TargetArmLength = 0.0f;
 	SpringArmComponent->bUsePawnControlRotation = true;
-	SpringArmComponent->bDoCollisionTest = false;
+	SpringArmComponent->bDoCollisionTest = true;
 
 	// Camera Component
 	CameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("CameraComponent"));
@@ -40,6 +40,15 @@ AMainCharacter::AMainCharacter()
 	GetMesh()->SetOwnerNoSee(true);
 	GetMesh()->bHiddenInSceneCapture = true;
 
+	// MinimapIcon Component
+	//MinimapIconComponent = CreateDefaultSubobject<UTestMinimapIconComponent>(TEXT("MinimapPlayerIcon"));
+	//MinimapIconComponent->SetupAttachment(RootComponent);
+	//MinimapIconComponent->bVisibleInSceneCaptureOnly = true;
+
+	// character Mesh
+	GetMesh()->SetOwnerNoSee(true);
+	GetMesh()->bHiddenInSceneCapture = true;
+
 	// FPV Character Mesh
 	FPVMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("FirstPersonMesh"));
 	FPVMesh->SetupAttachment(CameraComponent);
@@ -47,10 +56,13 @@ AMainCharacter::AMainCharacter()
 	FPVMesh->bCastDynamicShadow = false;
 	FPVMesh->CastShadow = false;
 
-	// MinimapIcon Component
-	//MinimapIconComponent = CreateDefaultSubobject<UTestMinimapIconComponent>(TEXT("MinimapPlayerIcon"));
-	//MinimapIconComponent->SetupAttachment(RootComponent);
-	//MinimapIconComponent->bVisibleInSceneCaptureOnly = true;
+	// Riding Character Mesh
+	//RidingMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("RidingMesh"));
+	//RidingMesh->SetupAttachment(GetMesh());
+	//RidingMesh->SetCollisionProfileName(TEXT("NoCollision"));
+	//RidingMesh->SetVisibility(false);
+	//RidingMesh->SetIsReplicated(true);
+	//RidingMesh->bHiddenInSceneCapture = true;
 
 	// 아이템 장착 소켓 초기화.
 	ItemSocketMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ItemSocketMesh"));
@@ -95,6 +107,7 @@ AMainCharacter::AMainCharacter()
 		IsItemIn.Push(false);
 	}
 
+	// Hand Attack Component
 	HandAttackComponent = CreateDefaultSubobject<USphereComponent>(TEXT("Hand Attack Comp"));
 	HandAttackComponent->SetupAttachment(GetMesh());
 	HandAttackComponent->SetRelativeLocation({ 0.0f, 80.0f, 120.0f });
@@ -103,6 +116,7 @@ AMainCharacter::AMainCharacter()
 // Called when the game starts or when spawned
 void AMainCharacter::BeginPlay()
 {
+	NetCheck();
 	Super::BeginPlay();
 	UMainGameBlueprintFunctionLibrary::PushActor(EObjectType::Player, this);
 
@@ -121,6 +135,8 @@ void AMainCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLi
 	// 플레이어 자세 유형.
 	DOREPLIFETIME(AMainCharacter, PostureValue);
 	DOREPLIFETIME(AMainCharacter, DirValue);
+
+	DOREPLIFETIME(AMainCharacter, Token);
 }
 
 // Called every frame
@@ -142,6 +158,7 @@ void AMainCharacter::ChangePosture_Implementation(EPlayerPosture _Type)
 	if (_Type == EPlayerPosture::Barehand)
 	{
 		PostureValue = _Type;
+		CurItemIndex = -1;
 
 		ItemSocketMesh->SetVisibility(false);
 		FPVItemSocketMesh->SetVisibility(false);
@@ -302,23 +319,6 @@ void AMainCharacter::ClientChangeMontage_Implementation()
 	FPVPlayerAnimInst->ChangeAnimation(PostureValue);
 }
 
-void AMainCharacter::HandAttackCollision(AActor* _OtherActor, UPrimitiveComponent* _Collision)
-{
-	ABasicMonsterBase* Monster = Cast<ABasicMonsterBase>(_OtherActor);
-	if (nullptr == Monster)
-	{
-		return;
-	}
-
-	int a = 0;
-	//Monster->Damaged(150.0f);
-}
-
-void AMainCharacter::ChangeHandAttackCollisionProfile(FName _Name)
-{
-	HandAttackComponent->SetCollisionProfileName(_Name);
-}
-
 void AMainCharacter::MapItemOverlapStart(AActor* _OtherActor, UPrimitiveComponent* _Collision)
 {
 	GetMapItemData = _OtherActor;
@@ -328,7 +328,8 @@ void AMainCharacter::MapItemOverlapEnd()
 {
 	if (nullptr != GetMapItemData)
 	{
-		GetMapItemData = nullptr;
+		// 삭제 방지
+		//GetMapItemData = nullptr;
 	}
 }
 
@@ -341,10 +342,15 @@ void AMainCharacter::ChangePOV()
 		SpringArmComponent->SetRelativeLocation(FVector(0.0f, 0.0f, 80.0f));
 
 		// Character Mesh 전환
-		GetMesh()->SetOnlyOwnerSee(true);
 		GetMesh()->SetOwnerNoSee(false);
 		FPVMesh->SetOwnerNoSee(true);
-		FPVMesh->SetOnlyOwnerSee(false);
+
+		// Item Mesh
+		for (int i = 0; i < int(EPlayerPosture::Barehand); i++)
+		{
+			ItemSocketMesh->SetOwnerNoSee(false);
+			FPVItemSocketMesh->SetOwnerNoSee(true);
+		}
 
 		// 일인칭 -> 삼인칭
 		IsFPV = false;
@@ -357,11 +363,54 @@ void AMainCharacter::ChangePOV()
 
 		// Character Mesh 전환
 		GetMesh()->SetOwnerNoSee(true);
-		GetMesh()->SetOnlyOwnerSee(false);
-		FPVMesh->SetOnlyOwnerSee(true);
 		FPVMesh->SetOwnerNoSee(false);
+
+		// Item Mesh
+		for (int i = 0; i < int(EPlayerPosture::Barehand); i++)
+		{
+			ItemSocketMesh->SetOwnerNoSee(true);
+			FPVItemSocketMesh->SetOwnerNoSee(false);
+		}
 
 		// 삼인칭 -> 일인칭
 		IsFPV = true;
+	}
+}
+
+void AMainCharacter::HandAttackCollision(AActor* _OtherActor, UPrimitiveComponent* _Collision)
+{
+	ABasicMonsterBase* Monster = Cast<ABasicMonsterBase>(_OtherActor);
+	if (nullptr == Monster)
+	{
+		return;
+	}
+
+	Monster->Damaged(150.0f);
+}
+
+void AMainCharacter::ChangeHandAttackCollisionProfile(FName _Name)
+{
+	HandAttackComponent->SetCollisionProfileName(_Name);
+}
+
+void AMainCharacter::NetCheck()
+{
+	IsServer = GetWorld()->GetAuthGameMode() != nullptr;
+	IsClient = !IsServer;
+
+	if (true == IsServer)
+	{
+		IsCanControlled = (GetLocalRole() == ROLE_Authority) ? true : false;
+	}
+	else // client
+	{
+		IsCanControlled = (GetLocalRole() == ROLE_AutonomousProxy) ? true : false;
+	}
+
+	if (true == IsServer)
+	{
+		UMainGameInstance* Inst = GetGameInstance<UMainGameInstance>();
+		// 이토큰은 그 인덱스가 아니다.
+		Token = Inst->GetNetToken();
 	}
 }

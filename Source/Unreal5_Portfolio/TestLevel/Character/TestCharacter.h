@@ -159,7 +159,7 @@ public:
 	}
 
 	UFUNCTION(BlueprintCallable)
-	void GetDamage(float _Damage);
+	void GetDamage(float _Damage); // Player State∑Œ ¿Ãµø.
 
 protected:
 	// Called when the game starts or when spawned

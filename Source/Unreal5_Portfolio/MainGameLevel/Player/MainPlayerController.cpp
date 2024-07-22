@@ -154,6 +154,11 @@ void AMainPlayerController::ChangePOVController()
 void AMainPlayerController::Crouch(const FInputActionValue& Value)
 {
 	AMainCharacter* Ch = GetPawn<AMainCharacter>();
+	if (nullptr == Ch)
+	{
+		return;
+	}
+
 	switch (Ch->LowerStateValue)
 	{
 	case EPlayerLowerState::Idle:
@@ -174,24 +179,40 @@ void AMainPlayerController::ChangePosture(EPlayerPosture _Posture)
 	{
 		return;
 	}
+
 	Ch->ChangePosture(_Posture);
 }
 
 void AMainPlayerController::ChangeLowerState(EPlayerLowerState _State)
 {
 	AMainCharacter* Ch = GetPawn<AMainCharacter>();
+	if (nullptr == Ch)
+	{
+		return;
+	}
+
 	Ch->ChangeLowerState(_State);
 }
 
 void AMainPlayerController::ChangePlayerDir(EPlayerMoveDir _Dir)
 {
 	AMainCharacter* Ch = GetPawn<AMainCharacter>();
+	if (nullptr == Ch)
+	{
+		return;
+	}
+
 	Ch->ChangePlayerDir(_Dir);
 }
 
 void AMainPlayerController::AttackMontagePlay()
 {
 	AMainCharacter* Ch = GetPawn<AMainCharacter>();
+	if (nullptr == Ch)
+	{
+		return;
+	}
+
 	Ch->ChangeMontage();
 }
 
