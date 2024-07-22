@@ -36,6 +36,12 @@ void UBTTaskNode_BossMonsterMAttack::TickTask(UBehaviorTreeComponent& _OwnerComp
 {
 	Super::TickTask(_OwnerComp, _pNodeMemory, _DeltaSeconds);
 
+	if (EBossMonsterState::MeleeAttack != static_cast<EBossMonsterState>(GetCurState(_OwnerComp)))
+	{
+		FinishLatentTask(_OwnerComp, EBTNodeResult::Failed);
+		return;
+	}
+
 	UMainGameInstance* MainGameInst = UMainGameBlueprintFunctionLibrary::GetMainGameInstance(GetWorld());
 
 	UBossData* BossData = GetValueAsObject<UBossData>(_OwnerComp, TEXT("BossMonsterData"));
@@ -57,7 +63,7 @@ void UBTTaskNode_BossMonsterMAttack::TickTask(UBehaviorTreeComponent& _OwnerComp
 
 	if (0.0f >= TargetPlayerState->GetPlayerHp())
 	{
-		StateChange(_OwnerComp, ETestMonsterState::Idle);
+		StateChange(_OwnerComp, EBossMonsterState::Idle);
 		_OwnerComp.GetBlackboardComponent()->SetValueAsObject(TEXT("TargetActor"),nullptr);
 		_OwnerComp.GetBlackboardComponent()->SetValueAsBool(TEXT("CanSeePlayer"), false);
 		return;

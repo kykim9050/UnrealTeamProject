@@ -27,3 +27,20 @@ void UBossMonsterAnimInstance::AnimNotify_RAttackEnd()
 	BossMonster->GetBossAIController()->GetBlackboardComponent()->SetValueAsEnum("State", static_cast<uint8>(EBossMonsterState::Chase));
 
 }
+
+void UBossMonsterAnimInstance::AnimNotify_MAttackEnd()
+{
+	ATestBossMonsterBase* BossMonster = Cast<ATestBossMonsterBase>(GetOwningActor());
+	if (nullptr == BossMonster)
+	{
+		LOG(MonsterLog, Fatal, "BossMonster is nullptr");
+		return;
+	}
+
+	if (false == BossMonster->HasAuthority())
+	{
+		return;
+	}
+
+	BossMonster->GetBossAIController()->GetBlackboardComponent()->SetValueAsEnum("State", static_cast<uint8>(EBossMonsterState::Chase));
+}

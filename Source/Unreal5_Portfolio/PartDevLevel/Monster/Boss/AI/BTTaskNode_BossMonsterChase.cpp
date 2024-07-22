@@ -27,8 +27,8 @@ EBTNodeResult::Type UBTTaskNode_BossMonsterChase::ExecuteTask(UBehaviorTreeCompo
 	}
 
 	UBossData* BossData = GetValueAsObject<UBossData>(_OwnerComp, TEXT("BossMonsterData"));
-	BossMonster->GetCharacterMovement()->MaxWalkSpeed = BossData->Data->GetRunSpeed();
-	BossMonster->ChangeAniValue(EBossMonsterAnim::Run);
+	BossMonster->GetCharacterMovement()->MaxWalkSpeed = BossData->Data->GetWalkSpeed();
+	BossMonster->ChangeAniValue(EBossMonsterAnim::WalK);
 
 	return EBTNodeResult::Type::InProgress;
 }
@@ -53,17 +53,36 @@ void UBTTaskNode_BossMonsterChase::TickTask(UBehaviorTreeComponent& _OwnerComp, 
 
 	EPathFollowingRequestResult::Type IsMove = BossMonster->GetBossAIController()->MoveToLocation(TargetLocation);
 
-	// 범위 안에 있으면 공격상태로 변경
+	// 플레이어와 거리 계산
 	FVector LocationDiff = TargetLocation - MonsterLocation;
 	double DiffLength = LocationDiff.Size();
-	if(DiffLength <= BossData->Data->GetMeleeAttackBoundary())
+
+	bool bMeleeChase = _OwnerComp.GetBlackboardComponent()->GetValueAsBool(TEXT("MeleeChase"));
+
+	// 원거리 공격 범위 내에 플레이어가 있는지 확인
+	if (DiffLength <= BossData->Data->GetRangedAttackBoundary())
 	{
-		StateChange(_OwnerComp, EBossMonsterState::RangedAttack);
-		return;
-	}
-	else if (DiffLength <= BossData->Data->GetRangedAttackBoundary())
-	{
-		StateChange(_OwnerComp, EBossMonsterState::MeleeAttack);
-		return;
+		if (false == bMeleeChase)
+		{
+			int32 RandomValue = FMath::RandRange(0, 99);
+			if (30 < RandomValue)
+			{
+				StateChange(_OwnerComp, EBossMonsterState::RangedAttack);
+				return;
+			}
+			else
+			{
+				_OwnerComp.GetBlackboardComponent()->SetValueAsBool(TEXT("MeleeChase"), true);
+				BossMonster->GetCharacterMovement()->MaxWalkSpeed = BossData->Data->GetRunSpeed();
+				BossMonster->ChangeAniValue(EBossMonsterAnim::Run);
+
+			}
+		}
+		else if (DiffLength <= BossData->Data->GetMeleeAttackBoundary())
+		{
+			_OwnerComp.GetBlackboardComponent()->SetValueAsBool(TEXT("MeleeChase"), false);
+			StateChange(_OwnerComp, EBossMonsterState::MeleeAttack);
+			return;
+		}
 	}
 }
