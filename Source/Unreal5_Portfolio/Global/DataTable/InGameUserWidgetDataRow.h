@@ -14,9 +14,14 @@ struct FInGameUserWidgetDataRow : public FTableRowBase
 {
 	GENERATED_BODY()
 public:
-	TSubclassOf<UUserWidget> GetWidget() const
+	FORCEINLINE TSubclassOf<UUserWidget> GetWidget() const
 	{
 		return Widget;
+	}
+
+	FORCEINLINE bool GetStartOn() const
+	{
+		return StartOn;
 	}
 
 protected:
@@ -28,4 +33,9 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowprivateAccess = "true"))
 	TSubclassOf<UUserWidget> Widget = TSubclassOf<UUserWidget>();
 
+	/// <summary>
+	/// 시작할 때 On, Off상태 (True : 켜고 시작, False : 끄고 시작)
+	/// </summary>
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowprivateAccess = "true"))
+	bool StartOn = true;
 };
