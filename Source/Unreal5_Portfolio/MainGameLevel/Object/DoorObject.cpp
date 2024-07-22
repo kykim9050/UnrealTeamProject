@@ -63,7 +63,7 @@ void ADoorObject::Sliding(float _DeltaTime)
 		return;
 	}
 
-	AddActorLocalOffset(FVector(0.0f, -60.0f, 0.0f) * _DeltaTime);
+	AddActorLocalOffset(FVector(-60.0f, 0.0f, 0.0f) * _DeltaTime);
 	MoveAmount += 60.f * _DeltaTime;
 }
 

@@ -8,9 +8,11 @@
 #include "TestLevel/Character/TestPlayerState.h"
 #include "TestLevel/Character/TestCharacter.h"
 
-#include "Global/ContentsLog.h"
-#include "Global/MainGameInstance.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/KismetMathLibrary.h"
+
+#include "Global/MainGameInstance.h"
+#include "Global/ContentsLog.h"
 
 EBTNodeResult::Type UBTTaskNode_BossMonsterRAttack::ExecuteTask(UBehaviorTreeComponent& _OwnerComp, uint8* _NodeMemory)
 {
@@ -24,6 +26,7 @@ EBTNodeResult::Type UBTTaskNode_BossMonsterRAttack::ExecuteTask(UBehaviorTreeCom
 	}
 
 	UBossData* BossData = GetValueAsObject<UBossData>(_OwnerComp, TEXT("BossMonsterData"));
+	BossMonster->GetCharacterMovement()->MovementMode = EMovementMode::MOVE_None;
 	BossMonster->ChangeAniValue(EBossMonsterAnim::RangedAttack);
 
 	return EBTNodeResult::Type::InProgress;
@@ -32,6 +35,12 @@ EBTNodeResult::Type UBTTaskNode_BossMonsterRAttack::ExecuteTask(UBehaviorTreeCom
 void UBTTaskNode_BossMonsterRAttack::TickTask(UBehaviorTreeComponent& _OwnerComp, uint8* _pNodeMemory, float _DeltaSeconds)
 {
     Super::TickTask(_OwnerComp, _pNodeMemory, _DeltaSeconds);
+
+	if (EBossMonsterState::RangedAttack != static_cast<EBossMonsterState>(GetCurState(_OwnerComp)))
+	{
+		FinishLatentTask(_OwnerComp, EBTNodeResult::Failed);
+		return;
+	}
 
 	UMainGameInstance* MainGameInst = UMainGameBlueprintFunctionLibrary::GetMainGameInstance(GetWorld());
 
@@ -57,26 +66,6 @@ void UBTTaskNode_BossMonsterRAttack::TickTask(UBehaviorTreeComponent& _OwnerComp
 		StateChange(_OwnerComp, EBossMonsterState::Idle);
 		_OwnerComp.GetBlackboardComponent()->SetValueAsObject(TEXT("TargetActor"), nullptr);
 		_OwnerComp.GetBlackboardComponent()->SetValueAsBool(TEXT("CanSeePlayer"), false);
-		return;
-	}
-	else if (Dist <= BossData->Data->GetRangedAttackBoundary())
-	{
-		int RandomIndex = MainGameInst->Random.FRandRange(0, 10);
-
-		if (5 > RandomIndex)
-		{
-			StateChange(_OwnerComp, EBossMonsterState::RangedAttack);
-			return;
-		}
-		else
-		{
-			StateChange(_OwnerComp, EBossMonsterState::Chase);
-			return;
-		}
-	}
-	else if (Dist >= BossData->Data->GetRangedAttackBoundary())
-	{
-		StateChange(_OwnerComp, EBossMonsterState::Chase);
 		return;
 	}
 }

@@ -38,12 +38,12 @@ void AMeleeWP::Tick(float DeltaTime)
 
 void AMeleeWP::HandlePickUp(ATestCharacter* PickUpCharacter)
 {
-	if (WeaponComponent)
+	/*if (WeaponComponent)
 	{
 		WeaponComponent->AttachWeapon(PickUpCharacter);
 		PickUpCharacter->PickUpItem();
 		Destroy();
-	}
+	}*/
 }
 
 void AMeleeWP::HandlePutDown(ATestCharacter* PutDownCharacter)
