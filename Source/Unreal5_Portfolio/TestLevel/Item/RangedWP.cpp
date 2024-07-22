@@ -41,12 +41,12 @@ void ARangedWP::Tick(float DeltaTime)
 
 void ARangedWP::HandlePickUp(ATestCharacter* PickUpCharacter)
 {
-	if (WeaponComponent)
+	/*if (WeaponComponent)
 	{
 		WeaponComponent->AttachWeapon(PickUpCharacter);
 		PickUpCharacter->PickUpItem();
 		Destroy();
-	}
+	}*/
 }
 
 void ARangedWP::HandlePutDown(ATestCharacter* PutDownCharacter)
