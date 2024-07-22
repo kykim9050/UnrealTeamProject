@@ -54,7 +54,7 @@ public:
 	UPROPERTY(Category = "Contents", VisibleDefaultsOnly)
 	USkeletalMeshComponent* FPVMesh = nullptr;	// => 메인캐릭터로 이전해야 함 (새로 추가됨)
 	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-	class UStaticMeshComponent* RidingMesh = nullptr;	// => 메인캐릭터로 이전해야 함 (새로 추가됨) [뭐하는 Component?]
+	class UStaticMeshComponent* RidingMesh = nullptr;	// => 메인캐릭터로 이전해야 함 (새로 추가됨) [뭐하는 Component?] [탈것 테스팅용 (성우님 요청)]
 	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	class UStaticMeshComponent* ItemSocketMesh = nullptr;	// => 메인캐릭터로 이전해야 함 (새로 추가됨)
 	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
