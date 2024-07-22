@@ -13,6 +13,8 @@
 #include "Kismet/KismetSystemLibrary.h"
 #include "TestPlayerController.h"
 #include "TestLevel/UI/TestMinimapIconComponent.h"
+#include "TestLevel/Item/WeaponComponent.h"
+#include "TestLevel/Item/WeaponBase.h"
 #include "PartDevLevel/Monster/TestMonsterBase.h"
 #include "PartDevLevel/Character/PlayerAnimInstance.h"
 #include "MainGameLevel/Object/MapObjectBase.h"
@@ -134,11 +136,15 @@ void ATestCharacter::CharacterPlayerToDropItem_Implementation(FTransform _Transf
 	FName ItemName = ItemSlot[CurItemIndex].Name;
 	UMainGameInstance* MainGameInst = GetWorld()->GetGameInstanceChecked<UMainGameInstance>();
 	const FItemDataRow* ItemBase = MainGameInst->GetItemData(ItemName);
-	AActor* DropItem = GetWorld()->SpawnActor<AActor>(ItemBase->GetItemUClass(), _Transform);
+	FVector BoneLoc = GetMesh()->GetBoneLocation(FName("weapon_r"), EBoneSpaces::WorldSpace);
+	FTransform SpawnTrans;
+	SpawnTrans.SetLocation(BoneLoc);
+
+	AActor* DropItem = GetWorld()->SpawnActor<AActor>(ItemBase->GetItemUClass(), SpawnTrans);
 
 	// 아이템을 앞으로 던지기 (미완)
 	//GetMesh()->SetSimulatePhysics(true);
-	//GetMesh()->AddImpulse();
+	GetMesh()->AddImpulse(GetActorForwardVector(), FName("weapon_r"), false);
 
 	// 손에 들고 있던 아이템을 인벤토리에서 삭제
 	FItemInformation NewSlot;
@@ -489,8 +495,8 @@ void ATestCharacter::ChangePOV()	// => 메인캐릭터로 이전해야 함 (내용 수정됨)
 	if (IsFPV)	// 일인칭 -> 삼인칭
 	{
 		// SpringArm Component
-		SpringArmComponent->TargetArmLength = 200.0f;
-		SpringArmComponent->SetRelativeLocation(FVector(0.0f, 0.0f, 80.0f));
+		SpringArmComponent->TargetArmLength = 300.0f;
+		SpringArmComponent->SetRelativeLocation(FVector(110.0f, 60.0f, 110.0f));
 
 		// Character Mesh
 		GetMesh()->SetOwnerNoSee(false);
@@ -524,6 +530,11 @@ void ATestCharacter::ChangePOV()	// => 메인캐릭터로 이전해야 함 (내용 수정됨)
 
 		IsFPV = true;
 	}
+}
+
+void ATestCharacter::CharacterReload()
+{
+	ItemSlot[CurItemIndex].ReloadLeftNum = ItemSlot[CurItemIndex].ReloadMaxNum;
 }
 
 void ATestCharacter::MapItemOverlapStart(AActor* _OtherActor, UPrimitiveComponent* _Collision)
