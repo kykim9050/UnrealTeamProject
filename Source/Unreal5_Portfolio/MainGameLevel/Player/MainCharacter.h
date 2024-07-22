@@ -158,7 +158,7 @@ private :
 	
 	UFUNCTION(BlueprintCallable)
 	void MapItemOverlapEnd();
-
+	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	bool IsServer = false;
 

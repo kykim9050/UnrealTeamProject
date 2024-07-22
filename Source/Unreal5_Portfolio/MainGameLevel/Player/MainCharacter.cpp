@@ -54,7 +54,7 @@ AMainCharacter::AMainCharacter()
 	FPVMesh->SetupAttachment(CameraComponent);
 	FPVMesh->SetOnlyOwnerSee(true);
 	FPVMesh->bCastDynamicShadow = false;
-	FPVMesh->CastShadow = false;	
+	FPVMesh->CastShadow = false;
 
 	// Riding Character Mesh
 	//RidingMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("RidingMesh"));
