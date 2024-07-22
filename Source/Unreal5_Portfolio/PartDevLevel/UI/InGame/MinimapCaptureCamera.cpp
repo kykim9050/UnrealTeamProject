@@ -20,6 +20,9 @@ void AMinimapCaptureCamera::BeginPlay()
 {
 	Super::BeginPlay();
 
+	FVector StartPos = FVector(0, 0, 4000);
+	SetActorLocation(StartPos);
+
 	if(nullptr == MyCharacter)
 	{
 		MyCharacter = Cast<ATestCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
@@ -31,16 +34,33 @@ void AMinimapCaptureCamera::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	AGameModeBase* Ptr = GetWorld()->GetAuthGameMode();
+	switch (SceneCameraType)
+	{
+	case EInGameUIType::MiniMap:
+		FollowCharacter();	// 미니맵 씬카메라일 때만 캐릭터 따라다니는 코드  
+		break;
+	case EInGameUIType::WorldMap:
+		break;
+	default:
+		break;
+	}
 	
+}
 
+void AMinimapCaptureCamera::SetCharacter(ATestCharacter* _MyCharacter)
+{
+	MyCharacter = _MyCharacter;
+}
+
+void AMinimapCaptureCamera::FollowCharacter()
+{
 	MyCharacter = Cast<ATestCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 	FVector CharacterPos = MyCharacter->GetActorLocation();
 	CharacterPos.Z = 4000.f;
 	SetActorLocation(CharacterPos);
 }
 
-void AMinimapCaptureCamera::SetCharacter(ATestCharacter* _MyCharacter)
+void AMinimapCaptureCamera::SetSceneCameraType(EInGameUIType _Type)
 {
-	MyCharacter = _MyCharacter;
+	SceneCameraType = _Type;
 }
