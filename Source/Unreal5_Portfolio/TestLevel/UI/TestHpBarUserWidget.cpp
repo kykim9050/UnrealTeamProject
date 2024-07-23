@@ -3,13 +3,25 @@
 
 #include "TestHpBarUserWidget.h"
 #include "DefaultHpBarUserWidget.h"
-
+#include "TestLevel/Character/TestCharacter.h"
 
 void UTestHpBarUserWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
 
 	WidgetInit();
+}
+
+void UTestHpBarUserWidget::NativeTick(const FGeometry& _MyGeometry, float _InDeltaTime)
+{
+	Super::NativeTick(_MyGeometry, _InDeltaTime);
+
+	ATestCharacter* MyCharacter = Cast<ATestCharacter>(GetOwningPlayerPawn());
+	if (-1 == MainPlayerToken && nullptr != MyCharacter)
+	{
+		MyCharacter->SendTokenToHpBarWidget();
+	}
+
 }
 
 void UTestHpBarUserWidget::WidgetInit()
@@ -43,11 +55,11 @@ void UTestHpBarUserWidget::WidgetInit()
 // 이 함수는 메인 플레이어만 실행해야 합니다. (플레이하는 컴퓨터당 1회 실행)
 void UTestHpBarUserWidget::HpbarInit_ForMainPlayer(int _MainPlayerToken)
 {
-	MainPlayerIndex = _MainPlayerToken;
+	MainPlayerToken = _MainPlayerToken;
 
 	for (int i = 0; i < 4; ++i)
 	{
-		if (i == MainPlayerIndex)
+		if (i == MainPlayerToken)
 		{
 			continue;
 		}
@@ -57,6 +69,11 @@ void UTestHpBarUserWidget::HpbarInit_ForMainPlayer(int _MainPlayerToken)
 
 void UTestHpBarUserWidget::HpbarUpdate(int _Token, float _CurHp, float _MaxHp)
 {
+	if (-1 == MainPlayerToken)
+	{
+		return;
+	}
+
 	// 테스트용
 	//if (_Token == 1)
 	//{
@@ -77,7 +94,7 @@ void UTestHpBarUserWidget::HpbarUpdate(int _Token, float _CurHp, float _MaxHp)
 	//	int a = 0;
 	//}
 
-	if (MainPlayerIndex == _Token)
+	if (MainPlayerToken == _Token)
 	{
 		HpWidgets[0]->SetHp(_CurHp / _MaxHp);
 		return;
@@ -96,7 +113,12 @@ void UTestHpBarUserWidget::HpbarUpdate(int _Token, float _CurHp, float _MaxHp)
 
 void UTestHpBarUserWidget::NickNameUpdate(int _Token, FText _nickname)
 {
-	if (MainPlayerIndex == _Token)
+	if (-1 == MainPlayerToken)
+	{
+		return;
+	}
+
+	if (MainPlayerToken == _Token)
 	{
 		HpWidgets[0]->SetNickName(_nickname);
 		return;

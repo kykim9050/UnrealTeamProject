@@ -127,7 +127,7 @@ public:
 	FString RayCastToItemName = "";
 	UFUNCTION(Reliable, Server)
 	void PickUpItem();
-	void PickUpItem_Implementation();
+	void PickUpItem_Implementation(); // 박성우 : Bomb 내용 수정
 
 	UFUNCTION(BlueprintCallable)
 	FORCEINLINE bool GetPickUp()
@@ -164,6 +164,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void GetDamage(float _Damage); // Player State로 이동.
 
+	UFUNCTION()
+	void SendTokenToHpBarWidget();
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -190,10 +193,7 @@ private:
 	class UPlayerAnimInstance* PlayerAnimInst;
 	UPROPERTY()
 	class UPlayerAnimInstance* FPVPlayerAnimInst;
-
-	UFUNCTION()
-	void UISetting();
-	
+		
 	UFUNCTION()
 	void UpdatePlayerHp(float _DeltaTime);
 

@@ -200,7 +200,7 @@ void ATestCharacter::BeginPlay()
 	FPVPlayerAnimInst = Cast<UPlayerAnimInstance>(FPVMesh->GetAnimInstance());
 
 	HandAttackComponent->SetCollisionProfileName(TEXT("NoCollision"));
-	UISetting();
+	//UISetting();
 }
 
 // Called every frame
@@ -607,7 +607,7 @@ void ATestCharacter::NetCheck()
 	}
 }
 
-void ATestCharacter::UISetting()
+void ATestCharacter::SendTokenToHpBarWidget()
 {
 	ATestPlayerController* Con = Cast<ATestPlayerController>(GetController());
 	if (nullptr == Con)
