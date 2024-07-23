@@ -11,16 +11,6 @@
 void ATestPlayMode::BeginPlay()
 {
 	Super::BeginPlay();
-
-	UMainGameInstance* MainGameInst = GetWorld()->GetGameInstanceChecked<UMainGameInstance>();
-	const FMonsterDataRow* MonsterData = MainGameInst->GetMonsterData(TEXT("MonsterType_1"));
-
-	for (int i = 0; i < 5; i++)
-	{
-		FTransform Transform;
-		Transform.SetLocation({ 500.0f, -200.0f + (100.0f * i), 500.0f});
-		GetWorld()->SpawnActor<AActor>(MonsterData->GetMonsterUClass(), Transform);
-	}
 }
 
 void ATestPlayMode::PostLogin(APlayerController* NewPlayer)

@@ -44,3 +44,13 @@ void UBossMonsterAnimInstance::AnimNotify_MAttackEnd()
 
 	BossMonster->GetBossAIController()->GetBlackboardComponent()->SetValueAsEnum("State", static_cast<uint8>(EBossMonsterState::Chase));
 }
+
+void UBossMonsterAnimInstance::AnimNotify_FireProjectile()
+{
+	ATestBossMonsterBase* BossMonster = Cast<ATestBossMonsterBase>(TryGetPawnOwner());
+	if (BossMonster && BossMonster->HasAuthority())
+	{
+		// 총알을 발사하는 로직
+		BossMonster->FireProjectile();
+	}
+}

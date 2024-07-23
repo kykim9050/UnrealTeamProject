@@ -20,4 +20,7 @@ public:
 	
 	UFUNCTION()
 	void AnimNotify_MAttackEnd();
+
+	UFUNCTION()
+	void AnimNotify_FireProjectile();
 };
