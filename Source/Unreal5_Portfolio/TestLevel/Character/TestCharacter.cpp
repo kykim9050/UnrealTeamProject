@@ -481,7 +481,7 @@ void ATestCharacter::PickUpItem_Implementation()	// => 메인캐릭터로 이전해야 함 
 	EPlayerPosture ItemType = ItemData->GetType();		// 아이템 타입
 
 	// 이미 인벤토리에 같은 이름을 가진 아이템이 있을 경우.
-	if (ItemStringToName == ItemSlot[int(ItemType)].Name)
+	if (ItemStringToName == ItemSlot[static_cast<int>(ItemType)].Name)
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, TEXT("The same item is already in inventory."));
 		return;
