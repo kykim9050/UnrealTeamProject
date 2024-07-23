@@ -127,7 +127,7 @@ public:
 	FString RayCastToItemName = "";
 	UFUNCTION(Reliable, Server)
 	void PickUpItem();
-	void PickUpItem_Implementation(); // 박성우 : Bomb Destroy 추가 부탁드립니다.
+	void PickUpItem_Implementation(); // 박성??: Bomb Destroy 추�? 부?�드립니??
 
 	UFUNCTION(BlueprintCallable)
 	FORCEINLINE bool GetPickUp()
