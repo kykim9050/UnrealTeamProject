@@ -22,6 +22,7 @@
 #include "TestLevel/UI/TestPlayHUD.h"
 #include "TestLevel/UI/TestHpBarUserWidget.h"
 #include "TestLevel/Character/TestPlayerState.h"
+#include "MainGameLevel/Object/Bomb.h"
 
 #include "Kismet/GameplayStatics.h"
 
@@ -446,6 +447,20 @@ void ATestCharacter::PickUpItem_Implementation()	// => 메인캐릭터로 이전해야 함 
 	if (nullptr != GetMapItem)
 	{
 		GetMapItem->InterAction();
+
+		ABomb* GetSampleData = Cast<ABomb>(GetMapItem);
+		if (nullptr != GetSampleData)
+		{
+			for (size_t i = 0; i < GetSampleData->Tags.Num(); i++)
+			{
+				FName GetItemTag = GetSampleData->Tags[i];
+				if ("Sample" == GetItemTag)
+				{
+					GetSampleData->CharacterToDestroy();
+				}
+			}
+		}
+
 		return;
 	}
 
