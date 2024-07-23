@@ -330,15 +330,14 @@ void AMainCharacter::MapItemOverlapEnd()
 {
 	if (nullptr != GetMapItemData)
 	{
-		// 삭제 방지
-		//GetMapItemData = nullptr;
+		GetMapItemData = nullptr;
 	}
 }
 
 void AMainCharacter::UpdatePlayerHp(float _DeltaTime)
 {
-	AMainPlayerState* MyTestPlayerState = GetPlayerState<AMainPlayerState>();
-	if (nullptr == MyTestPlayerState)
+	AMainPlayerState* MyMainPlayerState = GetPlayerState<AMainPlayerState>();
+	if (nullptr == MyMainPlayerState)
 	{
 		return;
 	}
