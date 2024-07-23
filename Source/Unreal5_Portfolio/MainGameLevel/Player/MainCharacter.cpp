@@ -403,6 +403,11 @@ void AMainCharacter::ChangePOV()
 	}
 }
 
+void AMainCharacter::CharacterReload()
+{
+	ItemSlot[CurItemIndex].ReloadLeftNum = ItemSlot[CurItemIndex].ReloadMaxNum;
+}
+
 void AMainCharacter::HandAttackCollision(AActor* _OtherActor, UPrimitiveComponent* _Collision)
 {
 	ABasicMonsterBase* Monster = Cast<ABasicMonsterBase>(_OtherActor);
