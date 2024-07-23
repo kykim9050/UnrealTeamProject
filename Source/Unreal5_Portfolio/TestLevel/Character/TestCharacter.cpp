@@ -22,6 +22,7 @@
 #include "TestLevel/UI/TestPlayHUD.h"
 #include "TestLevel/UI/TestHpBarUserWidget.h"
 #include "TestLevel/Character/TestPlayerState.h"
+#include "MainGameLevel/Object/Bomb.h"
 
 #include "Kismet/GameplayStatics.h"
 
@@ -446,6 +447,20 @@ void ATestCharacter::PickUpItem_Implementation()	// => 메인캐릭터로 이전해야 함 
 	if (nullptr != GetMapItem)
 	{
 		GetMapItem->InterAction();
+
+		ABomb* GetSampleData = Cast<ABomb>(GetMapItem);
+		if (nullptr != GetSampleData)
+		{
+			for (size_t i = 0; i < GetSampleData->Tags.Num(); i++)
+			{
+				FName GetItemTag = GetSampleData->Tags[i];
+				if ("Sample" == GetItemTag)
+				{
+					GetSampleData->CharacterToDestroy();
+				}
+			}
+		}
+
 		return;
 	}
 
@@ -466,7 +481,7 @@ void ATestCharacter::PickUpItem_Implementation()	// => 메인캐릭터로 이전해야 함 
 	EPlayerPosture ItemType = ItemData->GetType();		// 아이템 타입
 
 	// 이미 인벤토리에 같은 이름을 가진 아이템이 있을 경우.
-	if (ItemStringToName == ItemSlot[int(ItemType)].Name)
+	if (ItemStringToName == ItemSlot[static_cast<int>(ItemType)].Name)
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, TEXT("The same item is already in inventory."));
 		return;
@@ -506,7 +521,7 @@ void ATestCharacter::ChangePOV()	// => 메인캐릭터로 이전해야 함 (24.07.22 수정됨
 	{
 		// SpringArm Component
 		SpringArmComponent->TargetArmLength = 300.0f;
-		SpringArmComponent->SetRelativeLocation(FVector(110.0f, 60.0f, 110.0f));
+		SpringArmComponent->SetRelativeLocation(FVector(0.0f, 60.0f, 110.0f));
 
 		// Character Mesh
 		GetMesh()->SetOwnerNoSee(false);
