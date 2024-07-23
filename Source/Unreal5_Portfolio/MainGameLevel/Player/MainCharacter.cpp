@@ -337,8 +337,8 @@ void AMainCharacter::MapItemOverlapEnd()
 
 void AMainCharacter::UpdatePlayerHp(float _DeltaTime)
 {
-	AMainPlayerState* MyTestPlayerState = GetPlayerState<AMainPlayerState>();
-	if (nullptr == MyTestPlayerState)
+	AMainPlayerState* MyMainPlayerState = GetPlayerState<AMainPlayerState>();
+	if (nullptr == MyMainPlayerState)
 	{
 		return;
 	}
