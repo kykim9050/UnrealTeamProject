@@ -47,22 +47,25 @@ void ASwitchObject::InterAction()
 {
 	Super::InterAction();
 
-	AActor* OtherActor = UGameplayStatics::GetActorOfClass(GetWorld(), InteractObjClass);
-
-	if (nullptr == OtherActor)
+	if (nullptr != InteractObjClass)
 	{
-		UE_LOG(ObjectLog, Fatal, TEXT("%S(%u)> if (nullptr == OtherObj)"), __FUNCTION__, __LINE__);
-		return;
+		AActor* OtherActor = UGameplayStatics::GetActorOfClass(GetWorld(), InteractObjClass);
+
+		if (nullptr == OtherActor)
+		{
+			UE_LOG(ObjectLog, Fatal, TEXT("%S(%u)> if (nullptr == OtherObj)"), __FUNCTION__, __LINE__);
+			return;
+		}
+
+		// 해당 클래스 형으로 다운캐스팅하기
+		AMapObjectBase* InteractObj = Cast<AMapObjectBase>(OtherActor);
+
+		if (nullptr == InteractObj)
+		{
+			UE_LOG(ObjectLog, Fatal, TEXT("%S(%u)> if (nullptr == InteractObj)"), __FUNCTION__, __LINE__);
+			return;
+		}
+
+		InteractObj->InterAction();
 	}
-
-	// 해당 클래스 형으로 다운캐스팅하기
-	AMapObjectBase* InteractObj = Cast<AMapObjectBase>(OtherActor);
-
-	if (nullptr == InteractObj)
-	{
-		UE_LOG(ObjectLog, Fatal, TEXT("%S(%u)> if (nullptr == InteractObj)"), __FUNCTION__, __LINE__);
-		return;
-	}
-
-	InteractObj->InterAction();
 }

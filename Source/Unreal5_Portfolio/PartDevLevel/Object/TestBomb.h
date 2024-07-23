@@ -35,7 +35,10 @@ private:
 	UFUNCTION(BlueprintCallable)
 	void CharactorCollision(AActor* _OtherActor, UPrimitiveComponent* _Collision);
 
+	void BombActivation(float _DeltaTime);
 
 	bool CharctorOn = false;
+
+	float BombTime = 0.f;
 
 };
