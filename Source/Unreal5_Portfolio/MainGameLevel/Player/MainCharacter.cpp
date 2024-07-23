@@ -330,15 +330,14 @@ void AMainCharacter::MapItemOverlapEnd()
 {
 	if (nullptr != GetMapItemData)
 	{
-		// ªË¡¶ πÊ¡ˆ
-		//GetMapItemData = nullptr;
+		GetMapItemData = nullptr;
 	}
 }
 
 void AMainCharacter::UpdatePlayerHp(float _DeltaTime)
 {
-	AMainPlayerState* MyTestPlayerState = GetPlayerState<AMainPlayerState>();
-	if (nullptr == MyTestPlayerState)
+	AMainPlayerState* MyMainPlayerState = GetPlayerState<AMainPlayerState>();
+	if (nullptr == MyMainPlayerState)
 	{
 		return;
 	}
@@ -401,6 +400,11 @@ void AMainCharacter::ChangePOV()
 		// ªÔ¿Œƒ™ -> ¿œ¿Œƒ™
 		IsFPV = true;
 	}
+}
+
+void AMainCharacter::CharacterReload()
+{
+	ItemSlot[CurItemIndex].ReloadLeftNum = ItemSlot[CurItemIndex].ReloadMaxNum;
 }
 
 void AMainCharacter::HandAttackCollision(AActor* _OtherActor, UPrimitiveComponent* _Collision)

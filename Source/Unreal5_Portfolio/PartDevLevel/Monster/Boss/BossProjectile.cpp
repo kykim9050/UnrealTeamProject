@@ -8,6 +8,9 @@
 #include "Components/CapsuleComponent.h"
 #include "Components/SphereComponent.h"
 
+#include "Components/StaticMeshComponent.h"
+#include "Kismet/GameplayStatics.h"
+
 // Sets default values
 ABossProjectile::ABossProjectile()
 {
@@ -27,13 +30,13 @@ ABossProjectile::ABossProjectile()
 	ProjectileMovement->bRotationFollowsVelocity = true;
 	ProjectileMovement->bShouldBounce = false;
 
+	ProjectileColComponent->OnComponentHit.AddDynamic(this, &ABossProjectile::OnHit);
 }
 
 // Called when the game starts or when spawned
 void ABossProjectile::BeginPlay()
 {
 	Super::BeginPlay();
-	
 }
 
 // Called every frame

@@ -179,6 +179,10 @@ public :
 	UFUNCTION()
 	void ChangePOV();
 
+	// 리로드.
+	UFUNCTION()
+	void CharacterReload();
+
 	// Notify State에서 호출.
 	UFUNCTION(BlueprintCallable)
 	void HandAttackCollision(AActor* _OtherActor, UPrimitiveComponent* _Collision);
