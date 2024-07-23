@@ -192,7 +192,7 @@ private:
 	class UPlayerAnimInstance* FPVPlayerAnimInst;
 
 	UFUNCTION()
-	void UISetting();
+	void SendTokenToHpBarWidget();
 	
 	UFUNCTION()
 	void UpdatePlayerHp(float _DeltaTime);
