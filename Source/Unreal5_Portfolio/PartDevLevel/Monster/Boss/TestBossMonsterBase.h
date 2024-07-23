@@ -34,7 +34,7 @@ protected:
 public:
 	class ATestBossMonsterAIControllerBase* GetBossAIController();
 	class UMainAnimInstance* GetAnimInstance();
-
+	void FireProjectile();
 
 	void ChangeAniValue(uint8 _Type);
 
@@ -95,5 +95,11 @@ private:
 
 	UPROPERTY(EditAnywhere, Category = "Particle", meta = (AllowPrivateAccess = true))
 	UParticleSystem* BloodParticle;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Projectile")
+	TSubclassOf<class ABossProjectile> ProjectileClass;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Projectile")
+	FVector MuzzleOffset;
 
 };

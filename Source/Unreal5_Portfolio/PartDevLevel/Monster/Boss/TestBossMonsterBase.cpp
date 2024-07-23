@@ -2,7 +2,7 @@
 
 
 #include "PartDevLevel/Monster/Boss/TestBossMonsterBase.h"
-#include "PartDevLevel/Monster/Animation/MonsterAnimInstance.h"
+#include "PartDevLevel/Monster/Boss/BossProjectile.h"
 #include "TestBossMonsterAIControllerBase.h"
 
 #include "TestLevel/Character/TestPlayerState.h"
@@ -19,6 +19,7 @@
 #include "Global/MainGameBlueprintFunctionLibrary.h"
 #include "Global/ContentsEnum.h"
 #include "Global/ContentsLog.h"
+#include "Global/Animation/MainAnimInstance.h"
 
 #include "Components/SphereComponent.h"
 
@@ -159,5 +160,30 @@ void ATestBossMonsterBase::SetAttackCollision(bool Active)
 	else
 	{
 		MeleeAttackComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	}
+}
+
+void ATestBossMonsterBase::FireProjectile()
+{
+	if (ProjectileClass)
+	{
+		FVector MuzzleLocation = GetActorLocation() + FTransform(GetControlRotation()).TransformVector(MuzzleOffset);
+		FRotator MuzzleRotation = GetControlRotation();
+
+		UWorld* World = GetWorld();
+		if (World)
+		{
+			FActorSpawnParameters SpawnParams;
+			SpawnParams.Owner = this;
+			SpawnParams.Instigator = GetInstigator();
+
+			ABossProjectile* Projectile = World->SpawnActor<ABossProjectile>(ProjectileClass, MuzzleLocation, MuzzleRotation, SpawnParams);
+			if (Projectile)
+			{
+				// 발사 방향 설정
+				FVector LaunchDirection = MuzzleRotation.Vector();
+				Projectile->FireInDirection(LaunchDirection);
+			}
+		}
 	}
 }
