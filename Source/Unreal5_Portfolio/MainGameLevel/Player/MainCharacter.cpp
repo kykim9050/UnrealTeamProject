@@ -330,8 +330,7 @@ void AMainCharacter::MapItemOverlapEnd()
 {
 	if (nullptr != GetMapItemData)
 	{
-		// 삭제 방지
-		//GetMapItemData = nullptr;
+		GetMapItemData = nullptr;
 	}
 }
 
