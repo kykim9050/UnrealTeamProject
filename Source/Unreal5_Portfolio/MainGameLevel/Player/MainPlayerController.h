@@ -49,6 +49,10 @@ public :
 	void ChangePOVController();
 	UFUNCTION(BlueprintCallable)
 	void Crouch(const FInputActionValue& Value);
+	// Reload (k)
+	UFUNCTION(BlueprintCallable)
+	void IAReload();
+
 
 	// Posture
 	UFUNCTION(BlueprintCallable)

@@ -54,6 +54,7 @@ void AMainPlayerController::SetupInputComponent()
 		EnhancedInputComponent->BindAction(InputData->Actions[13], ETriggerEvent::Started, this, &AMainPlayerController::PickUpItem);
 		EnhancedInputComponent->BindAction(InputData->Actions[14], ETriggerEvent::Started, this, &AMainPlayerController::ChangePOVController);
 		EnhancedInputComponent->BindAction(InputData->Actions[15], ETriggerEvent::Started, this, &AMainPlayerController::Crouch);
+		EnhancedInputComponent->BindAction(InputData->Actions[16], ETriggerEvent::Started, this, &AMainPlayerController::IAReload);
 	}
 }
 
@@ -180,6 +181,12 @@ void AMainPlayerController::Crouch(const FInputActionValue& Value)
 	default:
 		break;
 	}
+}
+
+void AMainPlayerController::IAReload()
+{
+	AMainCharacter* Ch = GetPawn<AMainCharacter>();
+	Ch->CharacterReload();
 }
 
 void AMainPlayerController::ChangePosture(EPlayerPosture _Posture)
