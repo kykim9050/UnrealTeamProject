@@ -7,6 +7,7 @@
 #include "TestLevel/Item/WeaponComponent.h"
 #include "TestLevel/Item/RangedWPComponent.h"
 #include "TestLevel/Character/TestCharacter.h"
+#include "Components/CapsuleComponent.h"
 
 // Sets default values
 ARangedWP::ARangedWP()
@@ -14,11 +15,13 @@ ARangedWP::ARangedWP()
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	CapsuleComponent = CreateDefaultSubobject<UCapsuleComponent>(TEXT("FPS_Capsule"));
 	WeaponComponent = CreateDefaultSubobject<URangedWPComponent>(TEXT("FPS_Weapon"));
 	PickUpComponent = CreateDefaultSubobject<UPickUpComponent>(TEXT("FPS_PickUp"));
 
+	RootComponent = CapsuleComponent;
 	WeaponComponent->SetupAttachment(RootComponent);
-	PickUpComponent->SetupAttachment(WeaponComponent);
+	PickUpComponent->SetupAttachment(RootComponent);
 
 	bReplicates = true;
 }

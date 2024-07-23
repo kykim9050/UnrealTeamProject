@@ -4,6 +4,7 @@
 #include "TestLevel/Item/WeaponBase.h"
 #include "TestLevel/Item/PickUpComponent.h"
 #include "TestLevel/Item/WeaponComponent.h"
+#include "Components/CapsuleComponent.h"
 
 // Sets default values
 AWeaponBase::AWeaponBase()
