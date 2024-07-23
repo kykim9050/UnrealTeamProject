@@ -140,9 +140,9 @@ public:
 		PickUp = _PickUp;
 	}
 
-	UFUNCTION(Reliable, Server, BlueprintCallable)	// => 메인캐릭터로 이전해야 함 (24.07.19 수정됨)
-	void CharacterPlayerToDropItem(FTransform _Transform);
-	void CharacterPlayerToDropItem_Implementation(FTransform _Transform);
+	UFUNCTION(Reliable, Server, BlueprintCallable)	// => 메인캐릭터로 이전해야 함 (24.07.23 수정됨)
+	void CharacterPlayerToDropItem();
+	void CharacterPlayerToDropItem_Implementation();
 
 	// Collision
 	//UFUNCTION(BlueprintCallable)

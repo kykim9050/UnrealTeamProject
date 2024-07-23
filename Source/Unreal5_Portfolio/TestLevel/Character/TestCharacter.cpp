@@ -116,7 +116,7 @@ ATestCharacter::ATestCharacter()
 	//HandAttackComponent->SetCollisionProfileName(TEXT("NoCollision"));
 }
 
-void ATestCharacter::CharacterPlayerToDropItem_Implementation(FTransform _Transform)	// => 메인캐릭터로 이전해야 함 (24.07.19 수정됨)
+void ATestCharacter::CharacterPlayerToDropItem_Implementation()	// => 메인캐릭터로 이전해야 함 (24.07.23 수정됨)
 {
 	// DropItem 할 수 없는 경우 1: 맨손일 때
 	if (CurItemIndex == -1)
@@ -137,9 +137,6 @@ void ATestCharacter::CharacterPlayerToDropItem_Implementation(FTransform _Transf
 	UMainGameInstance* MainGameInst = GetWorld()->GetGameInstanceChecked<UMainGameInstance>();
 	const FItemDataRow* ItemBase = MainGameInst->GetItemData(ItemName);
 	FTransform BoneTrans = GetMesh()->GetBoneTransform(FName("weapon_r"), ERelativeTransformSpace::RTS_World);
-	//FVector BoneLoc = GetMesh()->GetBoneLocation(FName("weapon_r"), EBoneSpaces::WorldSpace);
-	//FTransform SpawnTrans;
-	//SpawnTrans.SetLocation(BoneLoc);
 
 	AActor* DropItem = GetWorld()->SpawnActor<AActor>(ItemBase->GetItemUClass(), BoneTrans);
 
@@ -451,18 +448,18 @@ void ATestCharacter::PickUpItem_Implementation()	// => 메인캐릭터로 이전해야 함 
 
 	// 2. 주울 수 있는 아이템일 경우
 
-	// 맵에 아이템이 있다면 해당 아이템의 Tag를 가져온다.
+	// 아이템의 Tag 이름을 통해 FName을 가져온다.
 	FString TagName = "";
 	for (size_t i = 0; i < GetMapItemData->Tags.Num(); i++)
 	{
 		TagName = GetMapItemData->Tags[i].ToString();
 	}
-
-	FName ItemStringToName = FName(*TagName);		// 아이템 이름
+	FName ItemStringToName = FName(*TagName);			// 아이템 이름
 
 	// Data Table에서 아이템 검색하기.
 	UMainGameInstance* Inst = GetGameInstance<UMainGameInstance>();
 	const FItemDataRow* ItemData = Inst->GetItemData(ItemStringToName);
+
 	EPlayerPosture ItemType = ItemData->GetType();		// 아이템 타입
 
 	// 이미 인벤토리에 같은 이름을 가진 아이템이 있을 경우.
@@ -470,6 +467,12 @@ void ATestCharacter::PickUpItem_Implementation()	// => 메인캐릭터로 이전해야 함 
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, TEXT("The same item is already in inventory."));
 		return;
+	}
+
+	// 이미 인벤토리에 같은 타입의 아이템이 있을 경우. (추후 수정될 수도 있음)
+	if (true == IsItemIn[static_cast<uint8>(ItemType)])
+	{
+		CharacterPlayerToDropItem();
 	}
 
 	// Data Table에 있는 아이템 정보 가져오기.
