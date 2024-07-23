@@ -29,7 +29,7 @@ class UNREAL5_PORTFOLIO_API UTestHpBarUserWidget : public UUserWidget
 
 public:
 	void NativeConstruct() override;
-	//void NativeTick(const FGeometry& _MyGeometry, float _InDeltaTime) override;
+	void NativeTick(const FGeometry& _MyGeometry, float _InDeltaTime) override;
 
 	void HpbarInit_ForMainPlayer(int _MainPlayerToken);
 	void HpbarUpdate(int _Token, float _CurHp, float _MaxHp);
@@ -37,7 +37,7 @@ public:
 
 
 	UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	int MainPlayerIndex = -1;
+	int MainPlayerToken = -1;
 private:
 	void WidgetInit();
 

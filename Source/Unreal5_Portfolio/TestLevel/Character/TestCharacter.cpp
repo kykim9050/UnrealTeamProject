@@ -22,6 +22,7 @@
 #include "TestLevel/UI/TestPlayHUD.h"
 #include "TestLevel/UI/TestHpBarUserWidget.h"
 #include "TestLevel/Character/TestPlayerState.h"
+#include "MainGameLevel/Object/Bomb.h"
 
 #include "Kismet/GameplayStatics.h"
 
@@ -136,15 +137,17 @@ void ATestCharacter::CharacterPlayerToDropItem_Implementation(FTransform _Transf
 	FName ItemName = ItemSlot[CurItemIndex].Name;
 	UMainGameInstance* MainGameInst = GetWorld()->GetGameInstanceChecked<UMainGameInstance>();
 	const FItemDataRow* ItemBase = MainGameInst->GetItemData(ItemName);
-	FVector BoneLoc = GetMesh()->GetBoneLocation(FName("weapon_r"), EBoneSpaces::WorldSpace);
-	FTransform SpawnTrans;
-	SpawnTrans.SetLocation(BoneLoc);
+	FTransform BoneTrans = GetMesh()->GetBoneTransform(FName("weapon_r"), ERelativeTransformSpace::RTS_World);
+	//FVector BoneLoc = GetMesh()->GetBoneLocation(FName("weapon_r"), EBoneSpaces::WorldSpace);
+	//FTransform SpawnTrans;
+	//SpawnTrans.SetLocation(BoneLoc);
 
-	AActor* DropItem = GetWorld()->SpawnActor<AActor>(ItemBase->GetItemUClass(), SpawnTrans);
+	AActor* DropItem = GetWorld()->SpawnActor<AActor>(ItemBase->GetItemUClass(), BoneTrans);
 
 	// 아이템을 앞으로 던지기 (미완)
 	//GetMesh()->SetSimulatePhysics(true);
-	GetMesh()->AddImpulse(GetActorForwardVector(), FName("weapon_r"), false);
+	FVector ImpulseVector = GetActorForwardVector() * 1000.0f;
+	GetMesh()->AddImpulse(ImpulseVector, FName("weapon_r"), false);
 
 	// 손에 들고 있던 아이템을 인벤토리에서 삭제
 	FItemInformation NewSlot;
@@ -198,7 +201,7 @@ void ATestCharacter::BeginPlay()
 	FPVPlayerAnimInst = Cast<UPlayerAnimInstance>(FPVMesh->GetAnimInstance());
 
 	HandAttackComponent->SetCollisionProfileName(TEXT("NoCollision"));
-	UISetting();
+	//UISetting();
 }
 
 // Called every frame
@@ -426,7 +429,7 @@ void ATestCharacter::ChangePlayerDir_Implementation(EPlayerMoveDir _Dir)
 	DirValue = _Dir;
 }
 
-void ATestCharacter::PickUpItem_Implementation()	// => 메인캐릭터로 이전해야 함 (내용 수정됨!!!)
+void ATestCharacter::PickUpItem_Implementation()	// => 메인캐릭터로 이전해야 함 (24.07.23 수정됨)
 {
 	// RayCast를 통해 Tag 이름을 가져온다.
 	FString GetItemName = "";
@@ -435,7 +438,7 @@ void ATestCharacter::PickUpItem_Implementation()	// => 메인캐릭터로 이전해야 함 
 	// 맵에 아이템이 없을 경우.
 	if (nullptr == GetMapItemData)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, TEXT("Not Item"));
+		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, TEXT("There is no item."));
 		return;
 	}
 
@@ -444,6 +447,20 @@ void ATestCharacter::PickUpItem_Implementation()	// => 메인캐릭터로 이전해야 함 
 	if (nullptr != GetMapItem)
 	{
 		GetMapItem->InterAction();
+
+		ABomb* GetSampleData = Cast<ABomb>(GetMapItem);
+		if (nullptr != GetSampleData)
+		{
+			for (size_t i = 0; i < GetSampleData->Tags.Num(); i++)
+			{
+				FName GetItemTag = GetSampleData->Tags[i];
+				if ("Sample" == GetItemTag)
+				{
+					GetSampleData->CharacterToDestroy();
+				}
+			}
+		}
+
 		return;
 	}
 
@@ -458,14 +475,22 @@ void ATestCharacter::PickUpItem_Implementation()	// => 메인캐릭터로 이전해야 함 
 
 	FName ItemStringToName = FName(*TagName);		// 아이템 이름
 
-	// Data Table에 있는 아이템 정보 가져오기.
+	// Data Table에서 아이템 검색하기.
 	UMainGameInstance* Inst = GetGameInstance<UMainGameInstance>();
 	const FItemDataRow* ItemData = Inst->GetItemData(ItemStringToName);
-
 	EPlayerPosture ItemType = ItemData->GetType();		// 아이템 타입
+
+	// 이미 인벤토리에 같은 이름을 가진 아이템이 있을 경우.
+	if (ItemStringToName == ItemSlot[int(ItemType)].Name)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, TEXT("The same item is already in inventory."));
+		return;
+	}
+
+	// Data Table에 있는 아이템 정보 가져오기.
 	int ItemReloadNum = ItemData->GetReloadNum();		// 무기 장전 단위 (30, 40)	// -1일 경우 총기류 무기가 아님
 	int ItemDamage = ItemData->GetDamage();				// 무기 공격력				// 0일 경우 무기가 아님
-	UStaticMesh* ItemMeshRes = ItemData->GetResMesh();	// 스태틱 메시
+	UStaticMesh* ItemMeshRes = ItemData->GetResMesh();	// 스태틱 메시 리소스
 	FVector ItemRelLoc = ItemData->GetRelLoc();			// 스태틱 메시 컴포넌트 상대적 위치
 	FRotator ItemRelRot = ItemData->GetRelRot();		// 스태틱 메시 컴포넌트 상대적 회전
 	FVector ItemRelScale = ItemData->GetRelScale();		// 스태틱 메시 컴포넌트 상대적 크기
@@ -490,7 +515,7 @@ void ATestCharacter::PickUpItem_Implementation()	// => 메인캐릭터로 이전해야 함 
 	ChangePosture(ItemType);
 }
 
-void ATestCharacter::ChangePOV()	// => 메인캐릭터로 이전해야 함 (내용 수정됨)
+void ATestCharacter::ChangePOV()	// => 메인캐릭터로 이전해야 함 (24.07.22 수정됨)
 {
 	if (IsFPV)	// 일인칭 -> 삼인칭
 	{
@@ -597,7 +622,7 @@ void ATestCharacter::NetCheck()
 	}
 }
 
-void ATestCharacter::UISetting()
+void ATestCharacter::SendTokenToHpBarWidget()
 {
 	ATestPlayerController* Con = Cast<ATestPlayerController>(GetController());
 	if (nullptr == Con)
