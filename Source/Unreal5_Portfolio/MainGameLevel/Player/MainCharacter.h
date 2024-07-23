@@ -179,7 +179,7 @@ public :
 	UFUNCTION()
 	void ChangePOV();
 
-	// 리로드 함수.
+	// 리로드.
 	UFUNCTION()
 	void CharacterReload();
 

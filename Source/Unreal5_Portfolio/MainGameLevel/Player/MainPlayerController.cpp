@@ -186,6 +186,10 @@ void AMainPlayerController::Crouch(const FInputActionValue& Value)
 void AMainPlayerController::IAReload()
 {
 	AMainCharacter* Ch = GetPawn<AMainCharacter>();
+	if (nullptr == Ch)
+	{
+		return;
+	}
 	Ch->CharacterReload();
 }
 
