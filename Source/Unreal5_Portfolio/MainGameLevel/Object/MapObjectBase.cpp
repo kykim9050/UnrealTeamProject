@@ -11,6 +11,9 @@ AMapObjectBase::AMapObjectBase()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	bReplicates = true;
+	SetReplicateMovement(true);
+
 	CollisionComponent = CreateDefaultSubobject<UCapsuleComponent>(TEXT("MapObjCollision"));
 	SetRootComponent(CollisionComponent);
 	//CollisionComponent->SetupAttachment(RootComponent);
@@ -23,7 +26,7 @@ AMapObjectBase::AMapObjectBase()
 void AMapObjectBase::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
 }
 
 // Called every frame
