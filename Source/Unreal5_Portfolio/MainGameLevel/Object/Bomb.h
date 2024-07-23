@@ -18,6 +18,9 @@ public:
 
 	void SetInfo(FName _InfoName);
 
+	UFUNCTION()
+	void CharacterToDestroy();
+
 protected:
 	ABomb();
 

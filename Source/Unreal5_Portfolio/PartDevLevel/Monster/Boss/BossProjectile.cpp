@@ -17,26 +17,32 @@ ABossProjectile::ABossProjectile()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	ProjectileColComponent = CreateDefaultSubobject<USphereComponent>(TEXT("Projcetilecol Comp"));
+	RootComponent = ProjectileColComponent;
+
 	ProjectileMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ProjectileMesh"));
 	ProjectileMesh->SetupAttachment(RootComponent);
-	// RootComponent = ProjectileMesh;
-
-	ProjectileColComponent = CreateDefaultSubobject<USphereComponent>(TEXT("Projcetilecol Comp"));
-	ProjectileColComponent->SetupAttachment(RootComponent);
 
 	ProjectileMovement = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("ProjectileMovement"));
-	ProjectileMovement->InitialSpeed = 3000.f;
-	ProjectileMovement->MaxSpeed = 3000.f;
+	ProjectileMovement->InitialSpeed = 5000.f;
+	ProjectileMovement->MaxSpeed = 5000.f;
 	ProjectileMovement->bRotationFollowsVelocity = true;
 	ProjectileMovement->bShouldBounce = false;
 
-	ProjectileColComponent->OnComponentHit.AddDynamic(this, &ABossProjectile::OnHit);
+	// 콜리전 크기 초기 값
+	ProjectileCollisionRadius = 50.0f;
+	ProjectileColComponent->InitSphereRadius(ProjectileCollisionRadius);
+
+	ProjectileColComponent->OnComponentBeginOverlap.AddDynamic(this, &ABossProjectile::BeginOverlap);
+
+	SetLifeSpan(3.0f);
 }
 
 // Called when the game starts or when spawned
 void ABossProjectile::BeginPlay()
 {
 	Super::BeginPlay();
+	ProjectileColComponent->SetSphereRadius(ProjectileCollisionRadius);
 }
 
 // Called every frame
@@ -50,7 +56,7 @@ void ABossProjectile::FireInDirection(const FVector& ShootDirection)
 	ProjectileMovement->Velocity = ShootDirection * ProjectileMovement->InitialSpeed;
 }
 
-void ABossProjectile::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit)
+void ABossProjectile::BeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	// 총알이 플레이어와 충돌했을 때 파괴
 	if (OtherActor->IsA(ATestCharacter::StaticClass()))
