@@ -28,12 +28,19 @@ void ABomb::SetInfo(FName _InfoName)
 	InteractObjClass = TableData->GetInteractObjClass();
 }
 
+void ABomb::CharacterToDestroy()
+{
+	this->Destroy();
+}
+
 void ABomb::BeginPlay()
 {
+	Super::BeginPlay();
 }
 
 void ABomb::Tick(float DeltaTime)
 {
+	Super::Tick(DeltaTime);
 }
 
 void ABomb::InterAction()
