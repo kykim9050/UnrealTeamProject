@@ -496,7 +496,7 @@ void ATestCharacter::ChangePOV()	// => 메인캐릭터로 이전해야 함 (내용 수정됨)
 	{
 		// SpringArm Component
 		SpringArmComponent->TargetArmLength = 300.0f;
-		SpringArmComponent->SetRelativeLocation(FVector(110.0f, 60.0f, 110.0f));
+		SpringArmComponent->SetRelativeLocation(FVector(0.0f, 60.0f, 110.0f));
 
 		// Character Mesh
 		GetMesh()->SetOwnerNoSee(false);
