@@ -127,7 +127,7 @@ public:
 	FString RayCastToItemName = "";
 	UFUNCTION(Reliable, Server)
 	void PickUpItem();
-	void PickUpItem_Implementation(); // ë°•ì„±??: Bomb Destroy ì¶”ê? ë¶€?ë“œë¦½ë‹ˆ??
+	void PickUpItem_Implementation(); // ¹Ú¼º¿ì : Bomb ³»¿ë ¼öÁ¤
 
 	UFUNCTION(BlueprintCallable)
 	FORCEINLINE bool GetPickUp()
