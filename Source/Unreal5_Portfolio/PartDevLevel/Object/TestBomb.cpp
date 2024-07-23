@@ -30,7 +30,13 @@ void ATestBomb::BeginPlay()
 // Called every frame
 void ATestBomb::Tick(float DeltaTime)
 {
-	Super::Tick(DeltaTime);
+	Super::Tick(DeltaTime);	
+
+	if (true == CharctorOn)
+	{
+		BombActivation(DeltaTime);
+	}
+
 
 }
 
@@ -43,5 +49,15 @@ void ATestBomb::CharactorCollision(AActor* _OtherActor, UPrimitiveComponent* _Co
 	}
 
 	CharctorOn = true;
+
 }
+
+void ATestBomb::BombActivation(float _DeltaTime)
+{
+	// ÆøÅºÈ°¼ºÈ­ UI
+	// Å¸ÀÌ¸Ó start
+	int a = 0;
+}
+
+
 
