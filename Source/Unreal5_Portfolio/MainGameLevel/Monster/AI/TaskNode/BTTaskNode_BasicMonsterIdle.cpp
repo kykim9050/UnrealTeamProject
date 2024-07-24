@@ -29,7 +29,7 @@ EBTNodeResult::Type UBTTaskNode_BasicMonsterIdle::ExecuteTask(UBehaviorTreeCompo
     }
 
     MonsterData->IdleTime = 2.0f;
-    Monster->ChangeAniType(EBasicMonsterAnim::Idle);
+    Monster->ChangeRandomAnimation(EBasicMonsterAnim::Idle);
 
     return EBTNodeResult::Type::InProgress;
 }

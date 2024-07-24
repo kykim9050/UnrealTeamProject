@@ -71,6 +71,20 @@ void ATestBossMonsterBase::BeginPlay()
 		return;
 	}
 
+	UBlackboardComponent* BlackboardComp = AIController->GetBlackboardComponent();
+	if (!BlackboardComp)
+	{
+		UE_LOG(LogTemp, Error, TEXT("BlackboardComponent is nullptr in ATestBossMonsterBase::BeginPlay"));
+		return;
+	}
+
+	// SettingBossData가 nullptr이 아닌지 확인
+	if (!SettingBossData)
+	{
+		UE_LOG(LogTemp, Error, TEXT("SettingBossData is nullptr in ATestBossMonsterBase::BeginPlay"));
+		return;
+	}
+
 	AIController->GetBlackboardComponent()->SetValueAsObject(TEXT("BossMonsterData"), SettingBossData);
 
 	MeleeAttackComponent->OnComponentEndOverlap.AddDynamic(this, &ATestBossMonsterBase::OnAttackOverlapEnd);

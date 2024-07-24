@@ -10,6 +10,7 @@
 #include "Global/DataTable/BossDataRow.h"
 #include "Global/DataTable/GlobalObjectRow.h"
 #include "Global/DataTable/MapObjDataRow.h"
+#include "Global/DataTable/QuestDataRow.h"
 
 UMainGameInstance::UMainGameInstance()
 {
@@ -234,7 +235,7 @@ const TSubclassOf<UObject> UMainGameInstance::GetGlobalObjectClass(FName _Name)
 
 	if (nullptr == Data)
 	{
-		UE_LOG(UILog, Error, TEXT("%S(%u)> %s Name Data Is Nullptr"), __FUNCTION__, __LINE__, *_Name.ToString());
+		UE_LOG(GlobalLog, Error, TEXT("%S(%u)> %s Name Data Is Nullptr"), __FUNCTION__, __LINE__, *_Name.ToString());
 		return nullptr;
 	}
 
@@ -252,7 +253,25 @@ FMapObjDataRow* UMainGameInstance::GetMapObjDataTable(FName _Name)
 
 	if (nullptr == Data)
 	{
-		UE_LOG(MonsterLog, Error, TEXT("%S(%u)> %s Name Data Is Nullptr"), __FUNCTION__, __LINE__, *_Name.ToString());
+		UE_LOG(ObjectLog, Error, TEXT("%S(%u)> %s Name Data Is Nullptr"), __FUNCTION__, __LINE__, *_Name.ToString());
+		return nullptr;
+	}
+
+	return Data;
+}
+
+const FQuestDataRow* UMainGameInstance::GetQuestDataTable(FName _Name)
+{
+	if (nullptr == QuestDataTable)
+	{
+		UE_LOG(UILog, Fatal, TEXT("%S(%u)> if (nullptr == QuestDataTable)"), __FUNCTION__, __LINE__);
+	}
+
+	FQuestDataRow* Data = QuestDataTable->FindRow<FQuestDataRow>(_Name, nullptr);
+
+	if (nullptr == Data)
+	{
+		UE_LOG(UILog, Error, TEXT("%S(%u)> %s Name Data Is Nullptr"), __FUNCTION__, __LINE__, *_Name.ToString());
 		return nullptr;
 	}
 

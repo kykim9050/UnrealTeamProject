@@ -29,7 +29,7 @@ EBTNodeResult::Type UBTTaskNode_BasicMonsterChase::ExecuteTask(UBehaviorTreeComp
 	}
 
 	Monster->GetCharacterMovement()->MaxWalkSpeed = Monster->GetBaseData()->GetRunSpeed();
-	Monster->ChangeAniType(EBasicMonsterAnim::Run);
+	Monster->ChangeRandomAnimation(EBasicMonsterAnim::Run);
 
 	return EBTNodeResult::Type::InProgress;
 }
