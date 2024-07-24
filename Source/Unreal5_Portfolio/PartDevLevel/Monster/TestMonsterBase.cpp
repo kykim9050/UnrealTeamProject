@@ -211,6 +211,7 @@ void ATestMonsterBase::OnDead()
 
 	ATestMonsterBaseAIController* AIController = GetController<ATestMonsterBaseAIController>();
 	AIController->UnPossess();
+	AIController->Destroy();
 }
 
 void ATestMonsterBase::OnDeadDissolveInterp(float _Value)
