@@ -38,10 +38,8 @@ public:
 	// Server Only
 	void Damaged(float Damage);
 
-	void SetAttackCollision(bool Active);
-
 public:
-	// Get / Set
+	// Get, Set
 	FORCEINLINE ABasicMonsterAIController* GetAIController() const
 	{
 		return AIController;
@@ -50,6 +48,11 @@ public:
 	FORCEINLINE UBasicMonsterAnimInstance* GetAnimInstance() const
 	{
 		return AnimInst;
+	}
+
+	FORCEINLINE USphereComponent* GetAttackComponent() const
+	{
+		return AttackComponent;
 	}
 
 	FORCEINLINE const FMonsterDataRow* GetBaseData() const
@@ -62,7 +65,7 @@ protected:
 	virtual void Tick(float DeltaTime) override;
 	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
-	void Attack(AActor* _OtherActor, UPrimitiveComponent* _Collision);
+	// Attack
 	void OnAttackOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
 private:

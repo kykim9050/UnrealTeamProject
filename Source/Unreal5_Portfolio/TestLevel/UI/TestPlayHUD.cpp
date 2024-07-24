@@ -4,7 +4,7 @@
 #include "TestLevel/UI/TestPlayHUD.h"
 #include "Global/MainGameBlueprintFunctionLibrary.h"
 #include "Blueprint/UserWidget.h"
-#include "Global/DataTable/InGameUserWidgetDataRow.h"
+#include "Global/DataTable/WidgetDataRow.h"
 
 void ATestPlayHUD::BeginPlay()
 {
@@ -12,17 +12,17 @@ void ATestPlayHUD::BeginPlay()
 
 	UMainGameInstance* Inst = UMainGameBlueprintFunctionLibrary::GetMainGameInstance(GetWorld());
 
-	TMap<FString, FInGameUserWidgetDataRow>& AllUI = Inst->GetInGameWidgets();
-	UEnum* Enum = StaticEnum<EInGameUIType>();
+	TMap<FString, FWidgetDataRow>& AllUI = Inst->GetInGameWidgets();
+	UEnum* Enum = StaticEnum<EUserWidgetType>();
 
-	for (TPair<FString, FInGameUserWidgetDataRow> Pair : AllUI)
+	for (TPair<FString, FWidgetDataRow> Pair : AllUI)
 	{
-		FInGameUserWidgetDataRow& Data = Pair.Value;
+		FWidgetDataRow& Data = Pair.Value;
 
 		UUserWidget* Widget = CreateWidget<UUserWidget>(GetWorld(), Data.GetWidget());
 		Widget->AddToViewport();
 
-		EInGameUIType Type = static_cast<EInGameUIType>(Enum->GetValueByName(*Pair.Key));
+		EUserWidgetType Type = static_cast<EUserWidgetType>(Enum->GetValueByName(*Pair.Key));
 
 		AllTestPlayWidgets.Add(Type, Widget);
 
@@ -37,27 +37,27 @@ void ATestPlayHUD::BeginPlay()
 	}
 }
 
-TMap<EInGameUIType, UUserWidget*> ATestPlayHUD::GetAllTestPlayWidgets()
+TMap<EUserWidgetType, UUserWidget*> ATestPlayHUD::GetAllTestPlayWidgets()
 {
 	return AllTestPlayWidgets;
 }
 
-UUserWidget* ATestPlayHUD::GetWidget(EInGameUIType _Type)
+UUserWidget* ATestPlayHUD::GetWidget(EUserWidgetType _Type)
 {
 	return AllTestPlayWidgets[_Type];
 }
 
-void ATestPlayHUD::UIOn(EInGameUIType _Type)
+void ATestPlayHUD::UIOn(EUserWidgetType _Type)
 {
 	AllTestPlayWidgets[_Type]->SetVisibility(ESlateVisibility::Visible);
 }
 
-void ATestPlayHUD::UIOff(EInGameUIType _Type)
+void ATestPlayHUD::UIOff(EUserWidgetType _Type)
 {
 	AllTestPlayWidgets[_Type]->SetVisibility(ESlateVisibility::Collapsed);
 }
 
-void ATestPlayHUD::UISwitch(EInGameUIType _Type)
+void ATestPlayHUD::UISwitch(EUserWidgetType _Type)
 {
 	UUserWidget** WidgetPtr = AllTestPlayWidgets.Find(_Type);
 	UUserWidget* Widget = *WidgetPtr;

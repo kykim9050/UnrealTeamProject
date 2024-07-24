@@ -25,14 +25,14 @@ void UMainGameInstance::Init()
 		LOG(UILog, Error, TEXT("InGameUserWidgetDataTable is nullptr"));
 	}
 
-	TArray<FInGameUserWidgetDataRow*> Data;
+	TArray<FWidgetDataRow*> Data;
 
 	TArray<FName> Names = InGameUserWidgetDataTable->GetRowNames();
 	InGameUserWidgetDataTable->GetAllRows(TEXT(""), Data);
 
 	for (size_t i = 0; i < Data.Num(); ++i)
 	{
-		TestInGameWidgets.Add(Names[i].ToString(), *Data[i]);
+		InGameWidgets.Add(Names[i].ToString(), *Data[i]);
 	}
 }
 
@@ -126,14 +126,14 @@ const FItemDataRow* UMainGameInstance::GetItemData(FName _Name)
 	return Data;
 }
 
-const FInGameUserWidgetDataRow* UMainGameInstance::GetInGameUserWidgetDataTable(FName _Name)
+const FWidgetDataRow* UMainGameInstance::GetInGameUserWidgetDataTable(FName _Name)
 {
 	if (nullptr == InGameUserWidgetDataTable)
 	{
 		UE_LOG(UILog, Fatal, TEXT("%S(%u)> if (nullptr == InGameUserWidgetDataTable)"), __FUNCTION__, __LINE__);
 	}
 
-	FInGameUserWidgetDataRow* Data = InGameUserWidgetDataTable->FindRow<FInGameUserWidgetDataRow>(_Name, nullptr);
+	FWidgetDataRow* Data = InGameUserWidgetDataTable->FindRow<FWidgetDataRow>(_Name, nullptr);
 
 	if (nullptr == Data)
 	{
@@ -143,6 +143,43 @@ const FInGameUserWidgetDataRow* UMainGameInstance::GetInGameUserWidgetDataTable(
 
 	return Data;
 }
+
+const FWidgetDataRow* UMainGameInstance::GetTitleUserWidgetDataTable(FName _Name)
+{
+	if (nullptr == TitleUserWidgetDataTable)
+	{
+		UE_LOG(UILog, Fatal, TEXT("%S(%u)> if (nullptr == TitleUserWidgetDataTable)"), __FUNCTION__, __LINE__);
+	}
+
+	FWidgetDataRow* Data = TitleUserWidgetDataTable->FindRow<FWidgetDataRow>(_Name, nullptr);
+
+	if (nullptr == Data)
+	{
+		UE_LOG(UILog, Error, TEXT("%S(%u)> %s Name Data Is Nullptr"), __FUNCTION__, __LINE__, *_Name.ToString());
+		return nullptr;
+	}
+
+	return Data;
+}
+
+const FWidgetDataRow* UMainGameInstance::GetLobbyUserWidgetDataTable(FName _Name)
+{
+	if (nullptr == LobbyUserWidgetDataTable)
+	{
+		UE_LOG(UILog, Fatal, TEXT("%S(%u)> if (nullptr == LobbyUserWidgetDataTable)"), __FUNCTION__, __LINE__);
+	}
+
+	FWidgetDataRow* Data = LobbyUserWidgetDataTable->FindRow<FWidgetDataRow>(_Name, nullptr);
+
+	if (nullptr == Data)
+	{
+		UE_LOG(UILog, Error, TEXT("%S(%u)> %s Name Data Is Nullptr"), __FUNCTION__, __LINE__, *_Name.ToString());
+		return nullptr;
+	}
+
+	return Data;
+}
+
 
 
 const FBossDataRow* UMainGameInstance::GetBossDataTable(FName _Name)

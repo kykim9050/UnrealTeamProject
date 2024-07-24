@@ -20,21 +20,21 @@ protected:
 
 private:
 	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-	TMap<EInGameUIType, UUserWidget*> AllTestPlayWidgets;
+	TMap<EUserWidgetType, UUserWidget*> AllTestPlayWidgets;
 
 public:
 	UFUNCTION(BlueprintCallable)
-	TMap<EInGameUIType, UUserWidget*> GetAllTestPlayWidgets();
+	TMap<EUserWidgetType, UUserWidget*> GetAllTestPlayWidgets();
 
 	UFUNCTION(BlueprintCallable)
-	UUserWidget* GetWidget(EInGameUIType _Type);
+	UUserWidget* GetWidget(EUserWidgetType _Type);
 
 	UFUNCTION(BlueprintCallable)
-	void UIOn(EInGameUIType _Type);
+	void UIOn(EUserWidgetType _Type);
 
 	UFUNCTION(BlueprintCallable)
-	void UIOff(EInGameUIType _Type);
+	void UIOff(EUserWidgetType _Type);
 
 	UFUNCTION(BlueprintCallable)
-	void UISwitch(EInGameUIType _Type);
+	void UISwitch(EUserWidgetType _Type);
 };

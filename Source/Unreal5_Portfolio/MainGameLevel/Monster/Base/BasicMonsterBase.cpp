@@ -26,6 +26,7 @@ ABasicMonsterBase::ABasicMonsterBase()
 
 	// Attack Component
 	AttackComponent = CreateDefaultSubobject<USphereComponent>("Attack Component");
+	AttackComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	AttackComponent->SetupAttachment(RootComponent);
 
 	// Dissolve
@@ -79,7 +80,6 @@ void ABasicMonsterBase::BeginPlay()
 	AIController->GetBlackboardComponent()->SetValueAsObject("BasicMonsterData", SettingData);
 
 	AttackComponent->OnComponentEndOverlap.AddDynamic(this, &ABasicMonsterBase::OnAttackOverlapEnd);
-	SetAttackCollision(false);
 }
 
 void ABasicMonsterBase::Tick(float DeltaTime)
@@ -90,7 +90,7 @@ void ABasicMonsterBase::Tick(float DeltaTime)
 	DeadTimeLine.TickTimeline(DeltaTime);
 }
 
-void ABasicMonsterBase::Attack(AActor* _OtherActor, UPrimitiveComponent* _Collision)
+void ABasicMonsterBase::OnAttackOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
 	UBlackboardComponent* BlackBoard = UAIBlueprintHelperLibrary::GetBlackboard(this);
 	if (nullptr == BlackBoard)
@@ -99,7 +99,7 @@ void ABasicMonsterBase::Attack(AActor* _OtherActor, UPrimitiveComponent* _Collis
 	}
 
 	EBasicMonsterState MonsterState = static_cast<EBasicMonsterState>(BlackBoard->GetValueAsEnum("State"));
-	AMainCharacter* HitCharacter = Cast<AMainCharacter>(_OtherActor);
+	AMainCharacter* HitCharacter = Cast<AMainCharacter>(OtherActor);
 	if (nullptr != HitCharacter && EBasicMonsterState::Attack == MonsterState)
 	{
 		AMainPlayerState* HitPlayerState = Cast<AMainPlayerState>(HitCharacter->GetPlayerState());
@@ -109,23 +109,6 @@ void ABasicMonsterBase::Attack(AActor* _OtherActor, UPrimitiveComponent* _Collis
 		}
 
 		//HitPlayerState->AddDamage(SettingData->AttackDamage);
-	}
-}
-
-void ABasicMonsterBase::OnAttackOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
-{
-	Attack(OtherActor, OtherComp);
-}
-
-void ABasicMonsterBase::SetAttackCollision(bool Active)
-{
-	if (true == Active)
-	{
-		AttackComponent->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
-	}
-	else
-	{
-		AttackComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	}
 }
 
@@ -139,11 +122,13 @@ void ABasicMonsterBase::Damaged(float Damage)
 
 	SettingData->Hp -= Damage;
 
+	// Dead
 	if (0.0f >= SettingData->Hp)
 	{
 		SetDead();
 		ChangeAniType(EBasicMonsterAnim::Dead);
 		AIController->UnPossess();
+		AIController->Destroy();
 	}
 }
 
