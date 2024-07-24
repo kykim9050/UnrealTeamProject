@@ -169,21 +169,18 @@ void ATestCharacter::HandAttackCollision(AActor* _OtherActor, UPrimitiveComponen
 {
 	{
 		ATestMonsterBase* Monster = Cast<ATestMonsterBase>(_OtherActor);
-		if (nullptr == Monster)
+		if (nullptr != Monster)
 		{
-			return;
+			Monster->Damaged(150.0f);
 		}
-
-		Monster->Damaged(150.0f);
 	}
 
 	{
 		ATestBossMonsterBase* BossMonster = Cast<ATestBossMonsterBase>(_OtherActor);
-		if (nullptr == BossMonster)
+		if (nullptr != BossMonster)
 		{
-			return;
+			BossMonster->Damaged(150.0f);
 		}
-		BossMonster->Damaged(150.0f);
 	}
 }
 
