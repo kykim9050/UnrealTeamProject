@@ -30,11 +30,11 @@ public:
 	void FollowCharacter();
 
 	UFUNCTION(BlueprintCallable)
-	void SetSceneCameraType(EInGameUIType _Type);
+	void SetSceneCameraType(EUserWidgetType _Type);
 private:
 	UPROPERTY()
 	ATestCharacter* MyCharacter = nullptr;
 
 	UPROPERTY()
-	EInGameUIType SceneCameraType = EInGameUIType::WorldMap; // MiniMap인지 WorldMap인지 (Default - WorldMap)
+	EUserWidgetType SceneCameraType = EUserWidgetType::WorldMap; // MiniMap인지 WorldMap인지 (Default - WorldMap)
 };

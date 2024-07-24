@@ -5,26 +5,30 @@
 #include "CoreMinimal.h"
 #include "Global/GlobalHUD.h"
 #include "Global/ContentsEnum.h"
-#include "TestPlayHUD.generated.h"
+#include "Global/DataTable/WidgetDataRow.h"
+#include "MainParentHUD.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class UNREAL5_PORTFOLIO_API ATestPlayHUD : public AGlobalHUD
+class UNREAL5_PORTFOLIO_API AMainParentHUD : public AGlobalHUD
 {
 	GENERATED_BODY()
-	
 protected:
 	void BeginPlay() override;
 
-private:
+	virtual void AllUISetting();
+
+	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	class UMainGameInstance* Inst = nullptr;
+
 	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-	TMap<EUserWidgetType, UUserWidget*> AllTestPlayWidgets;
+	TMap<EUserWidgetType, UUserWidget*> AllWidgets;
 
 public:
 	UFUNCTION(BlueprintCallable)
-	TMap<EUserWidgetType, UUserWidget*> GetAllTestPlayWidgets();
+	TMap<EUserWidgetType, UUserWidget*> GetAllWidgets();
 
 	UFUNCTION(BlueprintCallable)
 	UUserWidget* GetWidget(EUserWidgetType _Type);

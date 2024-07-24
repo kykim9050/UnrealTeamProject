@@ -92,11 +92,27 @@ public:
 	const TSubclassOf<UObject> GetGlobalObjectClass(FName _Name);
 
 	/// <summary>
-	/// TestInGameWidgets 를 받아오는 함수
+	/// InGameWidgets 를 받아오는 함수
 	/// </summary>
 	TMap<FString, FWidgetDataRow>& GetInGameWidgets()
 	{
-		return TestInGameWidgets;
+		return InGameWidgets;
+	}
+
+	/// <summary>
+	/// TitleWidgets 를 받아오는 함수
+	/// </summary>
+	TMap<FString, FWidgetDataRow>& GetTitleWidgets()
+	{
+		return TitleWidgets;
+	}
+
+	/// <summary>
+	/// LobbyWidgets 를 받아오는 함수
+	/// </summary>
+	TMap<FString, FWidgetDataRow>& GetLobbyWidgets()
+	{
+		return LobbyWidgets;
 	}
 
 	/// <summary>
@@ -153,7 +169,13 @@ private:
 	UDataTable* MapObjDataTable = nullptr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	TMap<FString, FWidgetDataRow> TestInGameWidgets;
+	TMap<FString, FWidgetDataRow> InGameWidgets;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	TMap<FString, FWidgetDataRow> TitleWidgets;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	TMap<FString, FWidgetDataRow> LobbyWidgets;
 private:
 	UMainGameInstance();
 
