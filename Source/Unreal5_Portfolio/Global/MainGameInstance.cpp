@@ -58,6 +58,24 @@ void UMainGameInstance::Init()
 			InGameWidgets.Add(Names[i].ToString(), *Data[i]);
 		}
 	}
+
+	// Lobby UI
+	{
+		if (nullptr == LobbyUserWidgetDataTable)
+		{
+			LOG(UILog, Error, TEXT("LobbyUserWidgetDataTable is nullptr"));
+		}
+
+		TArray<FWidgetDataRow*> Data;
+
+		TArray<FName> Names = LobbyUserWidgetDataTable->GetRowNames();
+		LobbyUserWidgetDataTable->GetAllRows(TEXT(""), Data);
+
+		for (size_t i = 0; i < Data.Num(); ++i)
+		{
+			LobbyWidgets.Add(Names[i].ToString(), *Data[i]);
+		}
+	}
 }
 
 const FPlayerDataRow* UMainGameInstance::GetPlayerData(FName _Name)

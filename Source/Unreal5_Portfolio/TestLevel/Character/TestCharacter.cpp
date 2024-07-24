@@ -194,6 +194,7 @@ void ATestCharacter::GetDamage(float _Damage)
 	PlayerHp -= _Damage;
 }
 
+// 메인 플레이어 추가 필요 코드 (태환) 07/24
 void ATestCharacter::PostInitializeComponents()
 {
 	if (GetWorld()->WorldType == EWorldType::Game
