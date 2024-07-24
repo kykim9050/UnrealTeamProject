@@ -73,8 +73,8 @@ void ATestBossMonsterBase::BeginPlay()
 
 	AIController->GetBlackboardComponent()->SetValueAsObject(TEXT("BossMonsterData"), SettingBossData);
 
-	MeleeAttackComponent->OnComponentEndOverlap.AddDynamic(this, &ATestBossMonsterBase::OnAttackOverlapEnd);
-	SetAttackCollision(false);
+	//MeleeAttackComponent->OnComponentEndOverlap.AddDynamic(this, &ATestBossMonsterBase::OnAttackOverlapEnd);
+	//SetAttackCollision(false);
 
 }
 
