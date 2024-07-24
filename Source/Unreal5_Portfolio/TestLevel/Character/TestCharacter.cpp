@@ -596,6 +596,10 @@ void ATestCharacter::ChangePOV()	// => 메인캐릭터로 이전해야 함 (24.07.22 수정됨
 
 void ATestCharacter::CharacterReload()
 {
+	if (-1 == CurItemIndex)
+	{
+		return;
+	}
 	ItemSlot[CurItemIndex].ReloadLeftNum = ItemSlot[CurItemIndex].ReloadMaxNum;
 }
 
