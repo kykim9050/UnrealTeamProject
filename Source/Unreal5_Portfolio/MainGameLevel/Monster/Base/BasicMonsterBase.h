@@ -24,24 +24,19 @@ public:
 
 public:
 	template<typename EnumType>
-	void ChangeAniType(EnumType Type)
+	void ChangeRandomAnimation(EnumType Type)
 	{
-		ChangeAniType(static_cast<uint8>(Type));
+		ChangeRandomAnimation(static_cast<uint8>(Type));
 	}
 
-	FORCEINLINE void ChangeAniType(uint8 Type)
-	{
-		AnimType = Type;
-	}
+	void ChangeRandomAnimation(uint8 Type);
 
 public:
 	// Server Only
 	void Damaged(float Damage);
 
-	void SetAttackCollision(bool Active);
-
 public:
-	// Get / Set
+	// Get, Set
 	FORCEINLINE ABasicMonsterAIController* GetAIController() const
 	{
 		return AIController;
@@ -52,9 +47,19 @@ public:
 		return AnimInst;
 	}
 
+	FORCEINLINE USphereComponent* GetAttackComponent() const
+	{
+		return AttackComponent;
+	}
+
 	FORCEINLINE const FMonsterDataRow* GetBaseData() const
 	{
 		return SettingData->BaseData;
+	}
+
+	FORCEINLINE int GetAnimIndex()
+	{
+		return AnimIndex;
 	}
 
 protected:
@@ -62,7 +67,8 @@ protected:
 	virtual void Tick(float DeltaTime) override;
 	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
-	void Attack(AActor* _OtherActor, UPrimitiveComponent* _Collision);
+	// Attack
+	UFUNCTION()
 	void OnAttackOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
 private:
@@ -94,6 +100,9 @@ private:
 	UPROPERTY(Replicated)
 	uint8 AnimType;
 
+	UPROPERTY(Replicated)
+	int AnimIndex;
+
 	UPROPERTY()
 	UBasicMonsterAnimInstance* AnimInst = nullptr;
 
@@ -105,7 +114,7 @@ private:
 	UPROPERTY(EditAnywhere, Category = "Particle", meta = (AllowPrivateAccess = true))
 	UParticleSystem* BloodParticle;
 
-	// Dissolve
+	// Dissolve Effect
 	UPROPERTY()
 	FTimeline DeadTimeLine;
 

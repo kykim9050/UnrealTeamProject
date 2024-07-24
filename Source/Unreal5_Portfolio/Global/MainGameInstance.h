@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "Engine/GameInstance.h"
 #include "DataTable/NetDataRow.h"
-#include "DataTable/InGameUserWidgetDataRow.h"
+#include "DataTable/WidgetDataRow.h"
 #include "MainGameInstance.generated.h"
 
 /**
@@ -60,7 +60,20 @@ public:
 	/// InGameUserWidgetDataTable 포인터를 받아오는 함수
 	/// FName은 생성한 InGameUserWidgetDataTable 행 이름
 	/// </summary>
-	const struct FInGameUserWidgetDataRow* GetInGameUserWidgetDataTable(FName _Name);
+	const struct FWidgetDataRow* GetInGameUserWidgetDataTable(FName _Name);
+
+	/// <summary>
+	/// TitleUserWidgetDataTable 포인터를 받아오는 함수
+	/// FName은 생성한 TitleUserWidgetDataTable 행 이름
+	/// </summary>
+	const struct FWidgetDataRow* GetTitleUserWidgetDataTable(FName _Name);
+
+	/// <summary>
+	/// LobbyUserWidgetDataTable 포인터를 받아오는 함수
+	/// FName은 생성한 LobbyUserWidgetDataTable 행 이름
+	/// </summary>
+	const struct FWidgetDataRow* GetLobbyUserWidgetDataTable(FName _Name);
+
 
 	/// <summary>
 	/// BossDataTable 포인터를 받아오는 함수
@@ -79,11 +92,27 @@ public:
 	const TSubclassOf<UObject> GetGlobalObjectClass(FName _Name);
 
 	/// <summary>
-	/// TestInGameWidgets 를 받아오는 함수
+	/// InGameWidgets 를 받아오는 함수
 	/// </summary>
-	TMap<FString, FInGameUserWidgetDataRow>& GetInGameWidgets()
+	TMap<FString, FWidgetDataRow>& GetInGameWidgets()
 	{
-		return TestInGameWidgets;
+		return InGameWidgets;
+	}
+
+	/// <summary>
+	/// TitleWidgets 를 받아오는 함수
+	/// </summary>
+	TMap<FString, FWidgetDataRow>& GetTitleWidgets()
+	{
+		return TitleWidgets;
+	}
+
+	/// <summary>
+	/// LobbyWidgets 를 받아오는 함수
+	/// </summary>
+	TMap<FString, FWidgetDataRow>& GetLobbyWidgets()
+	{
+		return LobbyWidgets;
 	}
 
 	/// <summary>
@@ -93,6 +122,14 @@ public:
 	/// <param name="_Name"></param>
 	/// <returns></returns>
 	struct FMapObjDataRow* GetMapObjDataTable(FName _Name);
+
+	/// <summary>
+	/// QuestDataTable 포인터를 반환
+	/// FName은 생성된 QuestDataTable 행 이름
+	/// </summary>
+	/// <param name="_Name"></param>
+	/// <returns></returns>
+	const struct FQuestDataRow* GetQuestDataTable(FName _Name);
 
 	FNetDataRow CurNetInfo;
 	FRandomStream Random;
@@ -125,6 +162,12 @@ private:
 	UDataTable* InGameUserWidgetDataTable = nullptr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowprivateAccess = "true"))
+	UDataTable* TitleUserWidgetDataTable = nullptr;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowprivateAccess = "true"))
+	UDataTable* LobbyUserWidgetDataTable = nullptr;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowprivateAccess = "true"))
 	UDataTable* BossDataTable = nullptr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowprivateAccess = "true"))
@@ -133,8 +176,17 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowprivateAccess = "true"))
 	UDataTable* MapObjDataTable = nullptr;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowprivateAccess = "true"))
+	UDataTable* QuestDataTable = nullptr;
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	TMap<FString, FInGameUserWidgetDataRow> TestInGameWidgets;
+	TMap<FString, FWidgetDataRow> InGameWidgets;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	TMap<FString, FWidgetDataRow> TitleWidgets;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	TMap<FString, FWidgetDataRow> LobbyWidgets;
 private:
 	UMainGameInstance();
 

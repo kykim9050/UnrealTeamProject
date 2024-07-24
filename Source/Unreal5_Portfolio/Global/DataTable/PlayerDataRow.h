@@ -46,6 +46,16 @@ public:
 		return Jumping;
 	}
 
+	FORCEINLINE class USkeletalMesh* GetPlayerSkeletalMesh() const
+	{
+		return PlayerSkeletalMesh;
+	}
+
+	FORCEINLINE TSubclassOf<class UAnimInstance> GetPlayerAnimInstance() const
+	{
+		return PlayerAnimInstance;
+	}
+
 	FORCEINLINE TMap<EPlayerPosture, class UAnimMontage*> GetAnimMontages() const
 	{
 		return AnimMontages;
@@ -89,6 +99,18 @@ private:
 	/// </summary>
 	UPROPERTY(Category = "Parameter", EditAnywhere, BlueprintReadWrite, meta = (AllowprivateAccess = "true"))
 	bool Jumping = false;
+
+	/// <summary>
+	/// 선택된 Player가 사용할 Skeletal Mesh
+	/// </summary>
+	UPROPERTY(Category = "PlayerSkeletalMesh", EditAnywhere, BlueprintReadWrite, meta = (AllowprivateAccess = "true"))
+	class USkeletalMesh* PlayerSkeletalMesh = nullptr;
+
+	/// <summary>
+	/// 선택된 Player가 사용할 Anim Instance
+	/// </summary>
+	UPROPERTY(Category = "PlayerAnimInstance", EditAnywhere, BlueprintReadWrite, meta = (AllowprivateAccess = "true"))
+	TSubclassOf<class UAnimInstance> PlayerAnimInstance;
 
 	/// <summary>
 	/// Player 몽타주

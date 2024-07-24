@@ -4,12 +4,14 @@
 #include "MainGameLevel/Monster/Animation/BasicMonsterAttackNotify.h"
 #include "MainGameLevel/Monster/Base/BasicMonsterBase.h"
 
+#include "Components/SphereComponent.h"
+
 void UBasicMonsterAttackNotify::NotifyBegin(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation, float TotalDuration)
 {
 	ABasicMonsterBase* Monster = Cast<ABasicMonsterBase>(MeshComp->GetOwner());
 	if (nullptr != Monster)
 	{
-		Monster->SetAttackCollision(true);
+		Monster->GetAttackComponent()->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 	}
 }
 
@@ -18,6 +20,6 @@ void UBasicMonsterAttackNotify::NotifyEnd(USkeletalMeshComponent* MeshComp, UAni
 	ABasicMonsterBase* Monster = Cast<ABasicMonsterBase>(MeshComp->GetOwner());
 	if (nullptr != Monster)
 	{
-		Monster->SetAttackCollision(false);
+		Monster->GetAttackComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	}
 }

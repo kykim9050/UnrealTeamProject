@@ -36,10 +36,10 @@ void AMinimapCaptureCamera::Tick(float DeltaTime)
 
 	switch (SceneCameraType)
 	{
-	case EInGameUIType::MiniMap:
+	case EUserWidgetType::MiniMap:
 		FollowCharacter();	// 미니맵 씬카메라일 때만 캐릭터 따라다니는 코드  
 		break;
-	case EInGameUIType::WorldMap:
+	case EUserWidgetType::WorldMap:
 		break;
 	default:
 		break;
@@ -60,7 +60,7 @@ void AMinimapCaptureCamera::FollowCharacter()
 	SetActorLocation(CharacterPos);
 }
 
-void AMinimapCaptureCamera::SetSceneCameraType(EInGameUIType _Type)
+void AMinimapCaptureCamera::SetSceneCameraType(EUserWidgetType _Type)
 {
 	SceneCameraType = _Type;
 }
