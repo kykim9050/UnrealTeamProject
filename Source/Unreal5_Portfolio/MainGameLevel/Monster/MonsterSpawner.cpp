@@ -60,7 +60,7 @@ void AMonsterSpawner::SpawnMonster_Implementation()
 	for (int i = 0; i < Size; i++)
 	{
 		int Type = FMath::RandRange(1, 2);
-		FString MonsterType = "MonsterType_" + FString::FromInt(Type);
+		FString MonsterType = "BasicZombie_" + FString::FromInt(Type);
 		const FMonsterDataRow* MonsterData = MainGameInst->GetMonsterData(FName(MonsterType));
 
 		FNavLocation Location(FVector::ZeroVector);
