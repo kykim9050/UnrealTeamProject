@@ -110,7 +110,7 @@ private:
 	/// 선택된 Player가 사용할 Anim Instance
 	/// </summary>
 	UPROPERTY(Category = "PlayerAnimInstance", EditAnywhere, BlueprintReadWrite, meta = (AllowprivateAccess = "true"))
-	class UAnimInstance* PlayerAnimInstance = nullptr;
+	TSubclassOf<class UAnimInstance> PlayerAnimInstance;
 
 	/// <summary>
 	/// Player 몽타주
