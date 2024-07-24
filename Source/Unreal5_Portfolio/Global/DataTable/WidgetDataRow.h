@@ -4,13 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "Engine/DataTable.h"
-#include "InGameUserWidgetDataRow.generated.h"
+#include "WidgetDataRow.generated.h"
 
 /**
  * 
  */
 USTRUCT(BlueprintType)
-struct FInGameUserWidgetDataRow : public FTableRowBase
+struct FWidgetDataRow : public FTableRowBase
 {
 	GENERATED_BODY()
 public:

@@ -4,7 +4,7 @@
 #include "TestLevel/UI/TestPlayHUD.h"
 #include "Global/MainGameBlueprintFunctionLibrary.h"
 #include "Blueprint/UserWidget.h"
-#include "Global/DataTable/InGameUserWidgetDataRow.h"
+#include "Global/DataTable/WidgetDataRow.h"
 
 void ATestPlayHUD::BeginPlay()
 {
@@ -12,12 +12,12 @@ void ATestPlayHUD::BeginPlay()
 
 	UMainGameInstance* Inst = UMainGameBlueprintFunctionLibrary::GetMainGameInstance(GetWorld());
 
-	TMap<FString, FInGameUserWidgetDataRow>& AllUI = Inst->GetInGameWidgets();
+	TMap<FString, FWidgetDataRow>& AllUI = Inst->GetInGameWidgets();
 	UEnum* Enum = StaticEnum<EInGameUIType>();
 
-	for (TPair<FString, FInGameUserWidgetDataRow> Pair : AllUI)
+	for (TPair<FString, FWidgetDataRow> Pair : AllUI)
 	{
-		FInGameUserWidgetDataRow& Data = Pair.Value;
+		FWidgetDataRow& Data = Pair.Value;
 
 		UUserWidget* Widget = CreateWidget<UUserWidget>(GetWorld(), Data.GetWidget());
 		Widget->AddToViewport();
