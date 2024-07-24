@@ -32,7 +32,7 @@ void UMainGameInstance::Init()
 
 	for (size_t i = 0; i < Data.Num(); ++i)
 	{
-		TestInGameWidgets.Add(Names[i].ToString(), *Data[i]);
+		InGameWidgets.Add(Names[i].ToString(), *Data[i]);
 	}
 }
 

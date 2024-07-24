@@ -637,7 +637,7 @@ void ATestCharacter::SendTokenToHpBarWidget()
 	{
 		return;
 	}
-	UTestHpBarUserWidget* MyHpWidget = Cast<UTestHpBarUserWidget>(PlayHUD->GetWidget(EInGameUIType::HpBar));
+	UTestHpBarUserWidget* MyHpWidget = Cast<UTestHpBarUserWidget>(PlayHUD->GetWidget(EUserWidgetType::HpBar));
 	if (nullptr == MyHpWidget)
 	{
 		return;
@@ -679,7 +679,7 @@ void ATestCharacter::UpdatePlayerHp(float _DeltaTime)
 		ATestPlayHUD* PlayHUD = Cast<ATestPlayHUD>(MyController->GetHUD());
 		if (nullptr != PlayHUD && Token != -1)
 		{
-			UTestHpBarUserWidget* MyHpWidget = Cast<UTestHpBarUserWidget>(PlayHUD->GetWidget(EInGameUIType::HpBar));
+			UTestHpBarUserWidget* MyHpWidget = Cast<UTestHpBarUserWidget>(PlayHUD->GetWidget(EUserWidgetType::HpBar));
 			MyHpWidget->NickNameUpdate(Token, FText::FromString(FString("CORORO")));
 			MyHpWidget->HpbarUpdate(Token, CurHp, 100.0f);
 		}

@@ -124,7 +124,7 @@ enum class EBossMonsterAnim : uint8
 };
 
 UENUM(BlueprintType)
-enum class EInGameUIType : uint8
+enum class EUserWidgetType : uint8
 {
 	HpBar,
 	WeaponSlot,
