@@ -123,6 +123,14 @@ public:
 	/// <returns></returns>
 	struct FMapObjDataRow* GetMapObjDataTable(FName _Name);
 
+	/// <summary>
+	/// QuestDataTable 포인터를 반환
+	/// FName은 생성된 QuestDataTable 행 이름
+	/// </summary>
+	/// <param name="_Name"></param>
+	/// <returns></returns>
+	const struct FQuestDataRow* GetQuestDataTable(FName _Name);
+
 	FNetDataRow CurNetInfo;
 	FRandomStream Random;
 
@@ -167,6 +175,9 @@ private:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowprivateAccess = "true"))
 	UDataTable* MapObjDataTable = nullptr;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowprivateAccess = "true"))
+	UDataTable* QuestDataTable = nullptr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	TMap<FString, FWidgetDataRow> InGameWidgets;
