@@ -51,7 +51,7 @@ public:
 		return PlayerSkeletalMesh;
 	}
 
-	FORCEINLINE class UAnimInstance* GetPlayerAnimInstance() const
+	FORCEINLINE TSubclassOf<class UAnimInstance> GetPlayerAnimInstance() const
 	{
 		return PlayerAnimInstance;
 	}
