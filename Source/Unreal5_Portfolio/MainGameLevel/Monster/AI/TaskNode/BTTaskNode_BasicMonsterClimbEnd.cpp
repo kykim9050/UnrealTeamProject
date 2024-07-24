@@ -28,8 +28,8 @@ EBTNodeResult::Type UBTTaskNode_BasicMonsterClimbEnd::ExecuteTask(UBehaviorTreeC
 		return EBTNodeResult::Type::Aborted;
 	}
 
-	MonsterData->ClimbTime = Monster->GetAnimInstance()->GetKeyAnimMontage(static_cast<uint8>(ETestMonsterAnim::ClimbEnd))->GetPlayLength();
-	Monster->ChangeAniType(EBasicMonsterAnim::ClimbEnd);
+	MonsterData->ClimbTime = Monster->GetAnimInstance()->GetKeyAnimMontage(ETestMonsterAnim::ClimbEnd, Monster->GetAnimIndex())->GetPlayLength();
+	Monster->ChangeRandomAnimation(EBasicMonsterAnim::ClimbEnd);
 
 	return EBTNodeResult::InProgress;
 }

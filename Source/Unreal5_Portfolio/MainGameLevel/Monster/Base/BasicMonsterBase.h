@@ -24,15 +24,12 @@ public:
 
 public:
 	template<typename EnumType>
-	void ChangeAniType(EnumType Type)
+	void ChangeRandomAnimation(EnumType Type)
 	{
-		ChangeAniType(static_cast<uint8>(Type));
+		ChangeRandomAnimation(static_cast<uint8>(Type));
 	}
 
-	FORCEINLINE void ChangeAniType(uint8 Type)
-	{
-		AnimType = Type;
-	}
+	void ChangeRandomAnimation(uint8 Type);
 
 public:
 	// Server Only
@@ -58,6 +55,11 @@ public:
 	FORCEINLINE const FMonsterDataRow* GetBaseData() const
 	{
 		return SettingData->BaseData;
+	}
+
+	FORCEINLINE int GetAnimIndex()
+	{
+		return AnimIndex;
 	}
 
 protected:
@@ -98,6 +100,9 @@ private:
 	UPROPERTY(Replicated)
 	uint8 AnimType;
 
+	UPROPERTY(Replicated)
+	int AnimIndex;
+
 	UPROPERTY()
 	UBasicMonsterAnimInstance* AnimInst = nullptr;
 
@@ -109,7 +114,7 @@ private:
 	UPROPERTY(EditAnywhere, Category = "Particle", meta = (AllowPrivateAccess = true))
 	UParticleSystem* BloodParticle;
 
-	// Dissolve
+	// Dissolve Effect
 	UPROPERTY()
 	FTimeline DeadTimeLine;
 
