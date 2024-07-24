@@ -13,5 +13,7 @@ UCLASS()
 class UNREAL5_PORTFOLIO_API AMainLobbyHUD : public AMainParentHUD
 {
 	GENERATED_BODY()
-	
+protected:
+	void BeginPlay() override;
+	void AllUISetting() override;
 };

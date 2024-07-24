@@ -37,6 +37,11 @@ public:
 	{
 		return AllAnimMontages;
 	}
+	
+	ETestMonsterType GetMonsterType() const
+	{
+		return MonsterType;
+	}
 
 private:
 	/// <summary>
@@ -62,6 +67,9 @@ private:
 	/// </summary>
 	UPROPERTY(EditAnywhere, meta = (AllowprivateAccess = "true"))
 	TMap<ETestMonsterAnim, FAnimMontageGroup> AllAnimMontages;
+	
+	UPROPERTY(EditAnywhere, meta = (AllowprivateAccess = "true"))
+	ETestMonsterType MonsterType;
 
 };
 
@@ -98,4 +106,12 @@ public:
 
 	FVector DestLoc = FVector::ZeroVector;
 	float ClimbEndUpTime = 0.0f;
+
+	float AnimationTime = 0.0f;
+	float JumpSpeed = 30.0f;
+	float JumpAttackDamage = 50.0f;
+	float JumpAttackBoundary = 500.0f;
+
+	bool IsChange = false;
+
 };

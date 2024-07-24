@@ -168,6 +168,8 @@ public:
 	void SendTokenToHpBarWidget();
 
 protected:
+	// 메인 플레이어 추가 필요 코드 (태환) 07/24
+	void PostInitializeComponents() override;
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 	// Called every frame
