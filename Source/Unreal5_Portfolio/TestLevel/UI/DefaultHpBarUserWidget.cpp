@@ -6,8 +6,6 @@ void UDefaultHpBarUserWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
 
-	// MainPlayer, P2, P3, P4마다 HpCaseImage가 다름. 
-
 }
 
 void UDefaultHpBarUserWidget::NativeTick(const FGeometry& _MyGeometry, float _InDeltaTime)
