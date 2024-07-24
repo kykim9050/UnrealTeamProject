@@ -28,7 +28,7 @@ protected:
 
 private:
 	/// <summary>
-	/// ¿Œ∞‘¿” UserWidget
+	/// UserWidget
 	/// </summary>
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowprivateAccess = "true"))
 	TSubclassOf<UUserWidget> Widget = TSubclassOf<UUserWidget>();
