@@ -29,7 +29,7 @@ EBTNodeResult::Type UBTTaskNode_BasicMonsterAttack::ExecuteTask(UBehaviorTreeCom
 		return EBTNodeResult::Type::Aborted;
 	}
 
-	Monster->ChangeAniType(EBasicMonsterAnim::Attack);
+	Monster->ChangeRandomAnimation(EBasicMonsterAnim::Attack);
 
 	return EBTNodeResult::Type::InProgress;
 }

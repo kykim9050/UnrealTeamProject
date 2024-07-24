@@ -14,4 +14,7 @@ class UNREAL5_PORTFOLIO_API UMyBTTaskNode_MutantAttack : public UBTTaskNode_Mons
 {
 	GENERATED_BODY()
 	
+public:
+	EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& _OwnerComp, uint8* _NodeMemory) override;
+	void TickTask(UBehaviorTreeComponent& _OwnerComp, uint8* _pNodeMemory, float _DeltaSeconds) override;
 };

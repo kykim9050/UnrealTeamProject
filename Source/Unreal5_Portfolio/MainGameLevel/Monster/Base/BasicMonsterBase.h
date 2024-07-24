@@ -24,15 +24,12 @@ public:
 
 public:
 	template<typename EnumType>
-	void ChangeAniType(EnumType Type)
+	void ChangeRandomAnimation(EnumType Type)
 	{
-		ChangeAniType(static_cast<uint8>(Type));
+		ChangeRandomAnimation(static_cast<uint8>(Type));
 	}
 
-	FORCEINLINE void ChangeAniType(uint8 Type)
-	{
-		AnimType = Type;
-	}
+	void ChangeRandomAnimation(uint8 Type);
 
 public:
 	// Server Only
@@ -60,12 +57,18 @@ public:
 		return SettingData->BaseData;
 	}
 
+	FORCEINLINE int GetAnimIndex()
+	{
+		return AnimIndex;
+	}
+
 protected:
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
 	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
 	// Attack
+	UFUNCTION()
 	void OnAttackOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
 private:
@@ -97,6 +100,9 @@ private:
 	UPROPERTY(Replicated)
 	uint8 AnimType;
 
+	UPROPERTY(Replicated)
+	int AnimIndex;
+
 	UPROPERTY()
 	UBasicMonsterAnimInstance* AnimInst = nullptr;
 
@@ -108,7 +114,7 @@ private:
 	UPROPERTY(EditAnywhere, Category = "Particle", meta = (AllowPrivateAccess = true))
 	UParticleSystem* BloodParticle;
 
-	// Dissolve
+	// Dissolve Effect
 	UPROPERTY()
 	FTimeline DeadTimeLine;
 

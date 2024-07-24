@@ -36,7 +36,19 @@ void UBTTaskNode_MonsterIdle::TickTask(UBehaviorTreeComponent& _OwnerComp, uint8
     bool CanSee = _OwnerComp.GetBlackboardComponent()->GetValueAsBool(TEXT("CanSeePlayer"));
     if (true == CanSee)
     {
-        StateChange(_OwnerComp, ETestMonsterState::Chase);
+        ATestMonsterBase* Monster = GetActor<ATestMonsterBase>(_OwnerComp);
+        ETestMonsterType MonsterType = Monster->GetBaseData()->GetMonsterType();
+        ETestMonsterState NextState;
+        switch (MonsterType)
+        {
+        case ETestMonsterType::Noraml:
+            NextState = ETestMonsterState::Chase;
+            break;
+        case ETestMonsterType::Crawl:
+            NextState = ETestMonsterState::Scream;
+            break;
+        }
+        StateChange(_OwnerComp, NextState);
         return;
     }
 

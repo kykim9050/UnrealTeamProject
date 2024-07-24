@@ -26,7 +26,7 @@ EBTNodeResult::Type UBTTaskNode_BasicMonsterClimb::ExecuteTask(UBehaviorTreeComp
 	Monster->GetCharacterMovement()->MovementMode = EMovementMode::MOVE_Flying;
 	Monster->GetCharacterMovement()->MaxFlySpeed = 200.0f;
 	Monster->GetCapsuleComponent()->SetCapsuleRadius(50.0f);
-	Monster->ChangeAniType(EBasicMonsterAnim::Climb);
+	Monster->ChangeRandomAnimation(EBasicMonsterAnim::Climb);
 
 	return EBTNodeResult::InProgress;
 }

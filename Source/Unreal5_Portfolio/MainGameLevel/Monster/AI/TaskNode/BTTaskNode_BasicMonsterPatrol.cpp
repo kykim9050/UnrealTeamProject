@@ -40,7 +40,7 @@ EBTNodeResult::Type UBTTaskNode_BasicMonsterPatrol::ExecuteTask(UBehaviorTreeCom
 
 	SetValueAsVector(OwnerComp, "Destination", PatrolLocation.Location);
 	Monster->GetCharacterMovement()->MaxWalkSpeed = Monster->GetBaseData()->GetWalkSpeed();
-	Monster->ChangeAniType(EBasicMonsterAnim::Walk);
+	Monster->ChangeRandomAnimation(EBasicMonsterAnim::Walk);
 
 	return EBTNodeResult::Type::InProgress;
 }
