@@ -20,19 +20,42 @@ void UMainGameInstance::Init()
 {
 	Super::Init();
 
-	if (nullptr == InGameUserWidgetDataTable)
+	// DT에서 UI 정보 불러오기
+
+	// Title UI
 	{
-		LOG(UILog, Error, TEXT("InGameUserWidgetDataTable is nullptr"));
+		if (nullptr == TitleUserWidgetDataTable)
+		{
+			LOG(UILog, Error, TEXT("TitleUserWidgetDataTable is nullptr"));
+		}
+
+		TArray<FWidgetDataRow*> Data;
+
+		TArray<FName> Names = TitleUserWidgetDataTable->GetRowNames();
+		TitleUserWidgetDataTable->GetAllRows(TEXT(""), Data);
+
+		for (size_t i = 0; i < Data.Num(); ++i)
+		{
+			TitleWidgets.Add(Names[i].ToString(), *Data[i]);
+		}
 	}
-
-	TArray<FWidgetDataRow*> Data;
-
-	TArray<FName> Names = InGameUserWidgetDataTable->GetRowNames();
-	InGameUserWidgetDataTable->GetAllRows(TEXT(""), Data);
-
-	for (size_t i = 0; i < Data.Num(); ++i)
+	
+	// InGame UI
 	{
-		InGameWidgets.Add(Names[i].ToString(), *Data[i]);
+		if (nullptr == InGameUserWidgetDataTable)
+		{
+			LOG(UILog, Error, TEXT("InGameUserWidgetDataTable is nullptr"));
+		}
+
+		TArray<FWidgetDataRow*> Data;
+
+		TArray<FName> Names = InGameUserWidgetDataTable->GetRowNames();
+		InGameUserWidgetDataTable->GetAllRows(TEXT(""), Data);
+
+		for (size_t i = 0; i < Data.Num(); ++i)
+		{
+			InGameWidgets.Add(Names[i].ToString(), *Data[i]);
+		}
 	}
 }
 
