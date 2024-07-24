@@ -2,9 +2,10 @@
 
 
 #include "MainGameLevel/UI/Title/MainTitleHUD.h"
+
 #include "Blueprint/UserWidget.h"
-//#include "Global/MainGameBlueprintFunctionLibrary.h"
-//#include "Global/DataTable/WidgetDataRow.h"
+#include "Kismet/GameplayStatics.h"
+
 #include "Global/MainGameInstance.h"
 
 void AMainTitleHUD::BeginPlay()
@@ -12,6 +13,11 @@ void AMainTitleHUD::BeginPlay()
 	Super::BeginPlay();
 
 	AllUISetting();
+
+	APlayerController* MyController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+	FInputModeUIOnly InputMode;
+	MyController->SetInputMode(InputMode);
+	MyController->SetShowMouseCursor(true);
 }
 
 void AMainTitleHUD::AllUISetting()

@@ -169,21 +169,18 @@ void ATestCharacter::HandAttackCollision(AActor* _OtherActor, UPrimitiveComponen
 {
 	{
 		ATestMonsterBase* Monster = Cast<ATestMonsterBase>(_OtherActor);
-		if (nullptr == Monster)
+		if (nullptr != Monster)
 		{
-			return;
+			Monster->Damaged(150.0f);
 		}
-
-		Monster->Damaged(150.0f);
 	}
 
 	{
 		ATestBossMonsterBase* BossMonster = Cast<ATestBossMonsterBase>(_OtherActor);
-		if (nullptr == BossMonster)
+		if (nullptr != BossMonster)
 		{
-			return;
+			BossMonster->Damaged(150.0f);
 		}
-		BossMonster->Damaged(150.0f);
 	}
 }
 
@@ -195,6 +192,31 @@ void ATestCharacter::ChangeHandAttackCollisionProfile(FName _Name)
 void ATestCharacter::GetDamage(float _Damage)
 {
 	PlayerHp -= _Damage;
+}
+
+// 메인 플레이어 추가 필요 코드 (태환) 07/24
+void ATestCharacter::PostInitializeComponents()
+{
+	if (GetWorld()->WorldType == EWorldType::Game
+		|| GetWorld()->WorldType == EWorldType::PIE)
+	{
+		UMainGameInstance* MainGameInst = UMainGameBlueprintFunctionLibrary::GetMainGameInstance(GetWorld());
+		if (nullptr == MainGameInst)
+		{
+			return;
+		}
+
+		// 스켈레탈 메쉬 선택
+		USkeletalMesh* PlayerSkeletalMesh = MainGameInst->GetPlayerData(FName("AlienSoldier"))->GetPlayerSkeletalMesh();
+		GetMesh()->SetSkeletalMesh(PlayerSkeletalMesh);
+
+		// ABP 선택
+		UClass* AnimInst = Cast<UClass>(MainGameInst->GetPlayerData(FName("AlienSoldier"))->GetPlayerAnimInstance());
+		GetMesh()->SetAnimInstanceClass(AnimInst);
+	}
+	
+	Super::PostInitializeComponents();
+
 }
 
 // Called when the game starts or when spawned
@@ -413,10 +435,10 @@ void ATestCharacter::ChangePosture_Implementation(EPlayerPosture _Type)	// => 메
 		FPVItemSocketMesh->SetStaticMesh(ItemSlot[CurItemIndex].MeshRes);
 
 		// 아이템 메시 transform 세팅
-		ItemSocketMesh->SetRelativeLocation(ItemSlot[CurItemIndex].RelLoc);		
-		FPVItemSocketMesh->SetRelativeLocation(ItemSlot[CurItemIndex].RelLoc);	
+		ItemSocketMesh->SetRelativeLocation(ItemSlot[CurItemIndex].RelLoc);
+		FPVItemSocketMesh->SetRelativeLocation(ItemSlot[CurItemIndex].RelLoc);
 
-		ItemSocketMesh->SetRelativeRotation(ItemSlot[CurItemIndex].RelRot);		
+		ItemSocketMesh->SetRelativeRotation(ItemSlot[CurItemIndex].RelRot);
 		FPVItemSocketMesh->SetRelativeRotation(ItemSlot[CurItemIndex].RelRot);
 
 		ItemSocketMesh->SetRelativeScale3D(ItemSlot[CurItemIndex].RelScale);
@@ -520,7 +542,7 @@ void ATestCharacter::PickUpItem_Implementation()	// => 메인캐릭터로 이전해야 함 
 	ItemSlot[ItemIndex].Damage = ItemDamage;
 	ItemSlot[ItemIndex].MeshRes = ItemMeshRes;
 	ItemSlot[ItemIndex].RelLoc = ItemRelLoc;
-	ItemSlot[ItemIndex].RelRot= ItemRelRot;
+	ItemSlot[ItemIndex].RelRot = ItemRelRot;
 	ItemSlot[ItemIndex].RelScale = ItemRelScale;
 
 	// Map에 있는 아이템 삭제.
@@ -684,8 +706,8 @@ void ATestCharacter::UpdatePlayerHp(float _DeltaTime)
 	float GetHp = MyTestPlayerState->GetPlayerHp();
 
 	if (CurHp != GetHp || /*test*/MyMaxHp != PlayerHp)
-	{		
-		
+	{
+
 		CurHp = MyTestPlayerState->GetPlayerHp();
 
 		ATestPlayHUD* PlayHUD = Cast<ATestPlayHUD>(MyController->GetHUD());
