@@ -18,6 +18,7 @@
 #include "PartDevLevel/Monster/TestMonsterBase.h"
 #include "PartDevLevel/Character/PlayerAnimInstance.h"
 #include "MainGameLevel/Object/MapObjectBase.h"
+#include "PartDevLevel/Monster/Boss/TestBossMonsterBase.h"
 
 #include "TestLevel/UI/TestPlayHUD.h"
 #include "TestLevel/UI/TestHpBarUserWidget.h"
@@ -166,13 +167,24 @@ void ATestCharacter::CharacterPlayerToDropItem_Implementation()	// => 메인캐릭터
 
 void ATestCharacter::HandAttackCollision(AActor* _OtherActor, UPrimitiveComponent* _Collision)
 {
-	ATestMonsterBase* Monster = Cast<ATestMonsterBase>(_OtherActor);
-	if (nullptr == Monster)
 	{
-		return;
+		ATestMonsterBase* Monster = Cast<ATestMonsterBase>(_OtherActor);
+		if (nullptr == Monster)
+		{
+			return;
+		}
+
+		Monster->Damaged(150.0f);
 	}
 
-	Monster->Damaged(150.0f);
+	{
+		ATestBossMonsterBase* BossMonster = Cast<ATestBossMonsterBase>(_OtherActor);
+		if (nullptr == BossMonster)
+		{
+			return;
+		}
+		BossMonster->Damaged(150.0f);
+	}
 }
 
 void ATestCharacter::ChangeHandAttackCollisionProfile(FName _Name)
