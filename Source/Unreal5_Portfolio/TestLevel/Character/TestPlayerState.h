@@ -26,8 +26,10 @@ public:
 	UFUNCTION()
 	void SetPlayerHp(float _Hp);
 
-	UFUNCTION()
+	UFUNCTION(Reliable, Server)
 	void AddDamage(float _Damage);
+	void AddDamage_Implementation(float _Damage);
+
 public:
 	UFUNCTION()
 	void InitPlayerData();
