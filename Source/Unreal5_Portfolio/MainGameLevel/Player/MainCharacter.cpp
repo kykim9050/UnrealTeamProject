@@ -486,6 +486,10 @@ void AMainCharacter::ChangePOV()
 
 void AMainCharacter::CharacterReload()
 {
+	if (-1 == CurItemIndex)
+	{
+		return;
+	}
 	ItemSlot[CurItemIndex].ReloadLeftNum = ItemSlot[CurItemIndex].ReloadMaxNum;
 }
 

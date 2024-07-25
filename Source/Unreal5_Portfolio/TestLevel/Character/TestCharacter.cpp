@@ -555,7 +555,7 @@ void ATestCharacter::PickUpItem_Implementation()	// => 메인캐릭터로 이전해야 함 
 	ChangePosture(ItemType);
 }
 
-void ATestCharacter::ChangePOV()	// => 메인캐릭터로 이전해야 함 (24.07.22 수정됨)
+void ATestCharacter::ChangePOV()	// => 메인캐릭터로 이전해야 함 (24.07.22 수정됨) // => 매인 적용.
 {
 	if (IsFPV)	// 일인칭 -> 삼인칭
 	{
