@@ -403,6 +403,24 @@ void AMainCharacter::ClientChangeMontage_Implementation()
 	FPVPlayerAnimInst->ChangeAnimation(PostureValue);
 }
 
+void AMainCharacter::CrouchCameraMove()
+{
+	if (IsFPV)
+	{
+		switch (LowerStateValue)
+		{
+		case EPlayerLowerState::Idle:
+			SpringArmComponent->SetRelativeLocation(FVector(0.0f, 0.0f, 10.0f));
+			break;
+		case EPlayerLowerState::Crouch:
+			SpringArmComponent->SetRelativeLocation(FVector(0.0f, 0.0f, 80.0f));
+			break;
+		default:
+			break;
+		}
+	}
+}
+
 void AMainCharacter::MapItemOverlapStart(AActor* _OtherActor, UPrimitiveComponent* _Collision)
 {
 	GetMapItemData = _OtherActor;

@@ -597,7 +597,7 @@ void ATestCharacter::ChangePOV()	// => 메인캐릭터로 이전해야 함 (24.07.22 수정됨
 	}
 }
 
-void ATestCharacter::CharacterReload()
+void ATestCharacter::CharacterReload() // => 매인 적용.
 {
 	if (-1 == CurItemIndex)
 	{
@@ -606,12 +606,12 @@ void ATestCharacter::CharacterReload()
 	ItemSlot[CurItemIndex].ReloadLeftNum = ItemSlot[CurItemIndex].ReloadMaxNum;
 }
 
-void ATestCharacter::MapItemOverlapStart(AActor* _OtherActor, UPrimitiveComponent* _Collision)
+void ATestCharacter::MapItemOverlapStart(AActor* _OtherActor, UPrimitiveComponent* _Collision) // => 매인 적용.
 {
 	GetMapItemData = _OtherActor;
 }
 
-void ATestCharacter::MapItemOverlapEnd()
+void ATestCharacter::MapItemOverlapEnd() // => 매인 적용.
 {
 	if (nullptr != GetMapItemData)
 	{

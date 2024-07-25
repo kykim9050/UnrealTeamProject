@@ -154,6 +154,12 @@ public :
 	void ClientChangeMontage();
 	void ClientChangeMontage_Implementation();
 
+	/// <summary>
+	/// Crouch 에 대한 카메라 이동
+	/// </summary>
+	UFUNCTION()
+	void CrouchCameraMove();
+
 	// == Client ==
 private :	
 	UFUNCTION(BlueprintCallable)

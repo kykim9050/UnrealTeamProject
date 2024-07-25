@@ -175,6 +175,7 @@ void AMainPlayerController::Crouch(const FInputActionValue& Value)
 	default:
 		break;
 	}
+	Ch->CrouchCameraMove();
 }
 
 void AMainPlayerController::IAReload()
