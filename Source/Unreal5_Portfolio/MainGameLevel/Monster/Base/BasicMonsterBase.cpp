@@ -65,8 +65,8 @@ void ABasicMonsterBase::BeginPlay()
 
 	// 애니메이션 세팅
 	AnimInst = Cast<UBasicMonsterAnimInstance>(GetMesh()->GetAnimInstance());
-	TMap<ETestMonsterAnim, FAnimMontageGroup> AllAnimMontages = BaseData->GetAllAnimMontage();
-	for (TPair<ETestMonsterAnim, FAnimMontageGroup> AnimMontageGroup : AllAnimMontages)
+	TMap<EBasicMonsterAnim, FAnimMontageGroup> AllAnimMontages = BaseData->GetAllAnimMontage();
+	for (TPair<EBasicMonsterAnim, FAnimMontageGroup> AnimMontageGroup : AllAnimMontages)
 	{
 		AnimInst->PushAnimation(AnimMontageGroup.Key, AnimMontageGroup.Value);
 	}	
@@ -110,7 +110,7 @@ void ABasicMonsterBase::OnAttackOverlapEnd(UPrimitiveComponent* OverlappedComp, 
 			LOG(MonsterLog, Fatal, "HitPlayerState Is Not Valid");
 		}
 
-		//HitPlayerState->AddDamage(SettingData->AttackDamage);
+		HitPlayerState->AddDamage(SettingData->AttackDamage);
 	}
 }
 

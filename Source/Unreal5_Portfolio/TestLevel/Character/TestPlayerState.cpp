@@ -30,7 +30,7 @@ void ATestPlayerState::SetPlayerHp(float _Hp)
 }
 
 
-void ATestPlayerState::AddDamage(float _Damage)
+void ATestPlayerState::AddDamage_Implementation(float _Damage)
 {
 	PlayerHp -= _Damage;
 }

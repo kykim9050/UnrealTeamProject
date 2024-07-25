@@ -74,7 +74,6 @@ public:
 	/// </summary>
 	const struct FWidgetDataRow* GetLobbyUserWidgetDataTable(FName _Name);
 
-
 	/// <summary>
 	/// BossDataTable 포인터를 받아오는 함수
 	/// FName은 생성한 BossDataTable 행 이름
@@ -138,6 +137,12 @@ public:
 	FORCEINLINE int GetNetToken()
 	{
 		return ++NetToken;
+	}
+
+	UFUNCTION()
+	FORCEINLINE UDataTable* GetNetDataTable()
+	{
+		return NetDataTable;
 	}
 
 protected:

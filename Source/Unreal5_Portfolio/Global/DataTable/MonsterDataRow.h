@@ -33,43 +33,48 @@ public:
 		return RunSpeed;
 	}
 
-	TMap<ETestMonsterAnim, FAnimMontageGroup> GetAllAnimMontage() const
+	TMap<EBasicMonsterAnim, FAnimMontageGroup> GetAllAnimMontage() const
 	{
 		return AllAnimMontages;
 	}
-	
+
+
+	// Test
 	ETestMonsterType GetMonsterType() const
 	{
 		return MonsterType;
 	}
 
+	TMap<ETestMonsterAnim, FAnimMontageGroup> GetTestAnimMontage() const
+	{
+		return TestAnimMontages;
+	}
+
 private:
-	/// <summary>
-	/// 기본 Monster 종류
-	/// </summary>
+	// 몬스터 UClass
 	UPROPERTY(EditAnywhere, meta = (AllowprivateAccess = "true"))
 	TSubclassOf<AActor> MonsterUClass = TSubclassOf<AActor>();
 
-	/// <summary>
-	/// 걷기 속도
-	/// </summary>
+	// 걷기 속도
 	UPROPERTY(EditAnywhere, meta = (AllowprivateAccess = "true"))
 	float WalkSpeed = 300.0f;
 
-	/// <summary>
-	/// 달리기 속도
-	/// </summary>
+	// 달리기 속도
 	UPROPERTY(EditAnywhere, meta = (AllowprivateAccess = "true"))
 	float RunSpeed = 600.0f;
 
-	/// <summary>
-	/// 몽타주
-	/// </summary>
+	// 몽타주
 	UPROPERTY(EditAnywhere, meta = (AllowprivateAccess = "true"))
-	TMap<ETestMonsterAnim, FAnimMontageGroup> AllAnimMontages;
+	TMap<EBasicMonsterAnim, FAnimMontageGroup> AllAnimMontages;
 	
+	// Test
+	// 몬스터 타입
 	UPROPERTY(EditAnywhere, meta = (AllowprivateAccess = "true"))
 	ETestMonsterType MonsterType;
+
+	// 몽타주
+	UPROPERTY(EditAnywhere, meta = (AllowprivateAccess = "true"))
+	TMap<ETestMonsterAnim, FAnimMontageGroup> TestAnimMontages;
 
 };
 
