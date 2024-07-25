@@ -559,11 +559,11 @@ void ATestCharacter::ChangePOV()	// => 메인캐릭터로 이전해야 함 (24.07.22 수정됨
 {
 	if (IsFPV)	// 일인칭 -> 삼인칭
 	{
-		// SpringArm Component
+		// SpringArm Component 위치 수정.
 		SpringArmComponent->TargetArmLength = 300.0f;
 		SpringArmComponent->SetRelativeLocation(FVector(0.0f, 60.0f, 110.0f));
 
-		// Character Mesh
+		// Character Mesh 전환.
 		GetMesh()->SetOwnerNoSee(false);
 		FPVMesh->SetOwnerNoSee(true);
 
@@ -578,11 +578,11 @@ void ATestCharacter::ChangePOV()	// => 메인캐릭터로 이전해야 함 (24.07.22 수정됨
 	}
 	else	// 삼인칭 -> 일인칭
 	{
-		// SpringArm Component
+		// SpringArm Component 위치 수정.
 		SpringArmComponent->TargetArmLength = 0.0f;
 		SpringArmComponent->SetRelativeLocation(FVector(20.0f, 0.0f, 67.0f));
 
-		// Character Mesh
+		// Character Mesh 전환.
 		GetMesh()->SetOwnerNoSee(true);
 		FPVMesh->SetOwnerNoSee(false);
 
