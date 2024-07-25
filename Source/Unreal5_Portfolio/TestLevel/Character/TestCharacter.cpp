@@ -666,7 +666,7 @@ void ATestCharacter::NetCheck() // => 매인 적용.
 	}
 }
 
-void ATestCharacter::SendTokenToHpBarWidget()
+void ATestCharacter::SendTokenToHpBarWidget() // => 매인 적용 진행 중.(HUD, Widget 대기중.)
 {
 	ATestPlayerController* Con = Cast<ATestPlayerController>(GetController());
 	if (nullptr == Con)
@@ -695,7 +695,7 @@ void ATestCharacter::SendTokenToHpBarWidget()
 	}
 }
 
-void ATestCharacter::UpdatePlayerHp(float _DeltaTime)
+void ATestCharacter::UpdatePlayerHp(float _DeltaTime) // => 매인 적용 진행 중.(HUD, Widget 대기중.)
 {
 	ATestPlayerState* MyTestPlayerState = GetPlayerState<ATestPlayerState>();
 	if (nullptr == MyTestPlayerState)

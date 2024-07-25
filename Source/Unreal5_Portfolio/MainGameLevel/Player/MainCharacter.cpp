@@ -449,6 +449,8 @@ void AMainCharacter::UpdatePlayerHp(float _DeltaTime)
 		return;
 	}
 
+	float GetHp = MyMainPlayerState->GetPlayerHp();
+
 	// Get HUD
 	// AMainPlayHUD PlayHUD = Cast<AMainPlayHUD>(MyController->GetHUD());
 	// if(nullptr == )
