@@ -619,7 +619,7 @@ void ATestCharacter::MapItemOverlapEnd() // => 매인 적용.
 	}
 }
 
-void ATestCharacter::CrouchCameraMove()
+void ATestCharacter::CrouchCameraMove() // => 매인 적용.
 {
 	if (IsFPV)
 	{
@@ -637,7 +637,7 @@ void ATestCharacter::CrouchCameraMove()
 	}
 }
 
-void ATestCharacter::NetCheck()
+void ATestCharacter::NetCheck() // => 매인 적용.
 {
 	IsServer = GetWorld()->GetAuthGameMode() != nullptr;
 	IsClient = !IsServer;

@@ -106,8 +106,6 @@ private : // 문제 발생 여지 있음 발생하면 그냥 지워야 함.
 	UPROPERTY()
 	class UPlayerAnimInstance* FPVPlayerAnimInst;
 
-	
-
 	// 근접 공격에 사용
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	class USphereComponent* HandAttackComponent = nullptr;
@@ -201,4 +199,7 @@ public :
 
 	UFUNCTION()
 	void NetCheck();
+
+	UFUNCTION()
+	void SendTokenToHpBarWidget();
 };

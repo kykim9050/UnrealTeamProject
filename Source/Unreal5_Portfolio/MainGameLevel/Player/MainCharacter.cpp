@@ -17,6 +17,7 @@
 #include "PartDevLevel/Monster/Boss/TestBossMonsterBase.h"
 #include "MainGameLevel/Object/MapObjectBase.h"
 #include "MainGameLevel/Object/Bomb.h"
+#include "MainGameLevel/UI/Title/MainTitleHUD.h"
 #include <Kismet/KismetSystemLibrary.h>
 #include <Kismet/GameplayStatics.h>
 
@@ -555,4 +556,28 @@ void AMainCharacter::NetCheck()
 		// 이토큰은 그 인덱스가 아니다.
 		Token = Inst->GetNetToken();
 	}
+}
+
+void AMainCharacter::SendTokenToHpBarWidget()
+{
+	//AMainPlayerController* Con = Cast<AMainPlayerController>(GetController());
+	//if (nullptr == Con)
+	//{
+	//	return;
+	//}
+	//AMainPlayHUD* PlayHUD = Cast<ATestPlayHUD>(Con->GetHUD());
+	//if (nullptr == PlayHUD)
+	//{
+	//	return;
+	//}
+	//UTestHpBarUserWidget* MyHpWidget = Cast<UTestHpBarUserWidget>(PlayHUD->GetWidget(EUserWidgetType::HpBar));
+	//if (nullptr == MyHpWidget)
+	//{
+	//	return;
+	//}
+
+	//if (true == IsCanControlled && -1 != Token)
+	//{
+	//	MyHpWidget->HpbarInit_ForMainPlayer(Token);
+	//}
 }
