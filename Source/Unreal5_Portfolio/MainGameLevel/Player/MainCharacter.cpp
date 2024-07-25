@@ -115,6 +115,29 @@ AMainCharacter::AMainCharacter()
 	HandAttackComponent->SetRelativeLocation({ 0.0f, 80.0f, 120.0f });
 }
 
+void AMainCharacter::PostInitializeComponents() // FName 부분 수정 필요.
+{
+	if (GetWorld()->WorldType == EWorldType::Game
+		|| GetWorld()->WorldType == EWorldType::PIE)
+	{
+		UMainGameInstance* MainGameInst = UMainGameBlueprintFunctionLibrary::GetMainGameInstance(GetWorld());
+		if (nullptr == MainGameInst)
+		{
+			return;
+		}
+
+		// 스켈레탈 메쉬 선택
+		USkeletalMesh* PlayerSkeletalMesh = MainGameInst->GetPlayerData(FName("AlienSoldier"))->GetPlayerSkeletalMesh();
+		GetMesh()->SetSkeletalMesh(PlayerSkeletalMesh);
+
+		// ABP 선택
+		UClass* AnimInst = Cast<UClass>(MainGameInst->GetPlayerData(FName("AlienSoldier"))->GetPlayerAnimInstance());
+		GetMesh()->SetAnimInstanceClass(AnimInst);
+	}
+
+	Super::PostInitializeComponents();
+}
+
 // Called when the game starts or when spawned
 void AMainCharacter::BeginPlay()
 {
