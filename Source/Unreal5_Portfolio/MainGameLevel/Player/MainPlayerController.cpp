@@ -69,24 +69,28 @@ void AMainPlayerController::MoveFront(const FInputActionValue& Value)
 {
 	FVector Forward = GetPawn()->GetActorForwardVector();
 	GetPawn()->AddMovementInput(Forward);
+	ChangePlayerDir(EPlayerMoveDir::Forward);
 }
 
 void AMainPlayerController::MoveBack(const FInputActionValue& Value)
 {
 	FVector Forward = GetPawn()->GetActorForwardVector();
 	GetPawn()->AddMovementInput(-Forward);
+	ChangePlayerDir(EPlayerMoveDir::Back);
 }
 
 void AMainPlayerController::MoveRight(const FInputActionValue& Value)
 {
 	FVector Rightward = GetPawn()->GetActorRightVector();
 	GetPawn()->AddMovementInput(Rightward);
+	ChangePlayerDir(EPlayerMoveDir::Right);
 }
 
 void AMainPlayerController::MoveLeft(const FInputActionValue& Value)
 {
 	FVector Rightward = GetPawn()->GetActorRightVector();
 	GetPawn()->AddMovementInput(-Rightward);
+	ChangePlayerDir(EPlayerMoveDir::Left);
 }
 
 void AMainPlayerController::Jump(const FInputActionValue& Value)
@@ -115,6 +119,13 @@ void AMainPlayerController::JumpEnd(const FInputActionValue& Value)
 
 void AMainPlayerController::FireStart(const FInputActionValue& Value)
 {
+	AMainCharacter* Ch = GetPawn<AMainCharacter>();
+	if (nullptr == Ch)
+	{
+		return;
+	}
+	Ch->FireRayCast(GetWorld()->GetTimeSeconds());
+
 	// πﬂΩŒ Ω≈»£∏¶ HUD∑Œ ≥—±Ë.
 	BullitCountToHUD();
 
@@ -126,6 +137,13 @@ void AMainPlayerController::FireStart(const FInputActionValue& Value)
 
 void AMainPlayerController::FireTick(float _DeltaTime)
 {
+	AMainCharacter* Ch = GetPawn<AMainCharacter>();
+	if (nullptr == Ch)
+	{
+		return;
+	}
+	Ch->FireRayCast(_DeltaTime);
+
 	// πﬂΩŒ Ω≈»£∏¶ HUD∑Œ ≥—±Ë.
 	BullitCountToHUD();
 }
