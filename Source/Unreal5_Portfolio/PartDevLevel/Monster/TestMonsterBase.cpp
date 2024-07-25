@@ -53,7 +53,7 @@ void ATestMonsterBase::BeginPlay()
 		return;
 	}
 
-	TMap<ETestMonsterAnim, FAnimMontageGroup> AllAnimMontages = BaseData->GetAllAnimMontage();
+	TMap<ETestMonsterAnim, FAnimMontageGroup> AllAnimMontages = BaseData->GetTestAnimMontage();
 	for (TPair<ETestMonsterAnim, FAnimMontageGroup> AnimMontageGroup : AllAnimMontages)
 	{
 		AnimInst->PushAnimation(AnimMontageGroup.Key, AnimMontageGroup.Value);
