@@ -38,15 +38,11 @@ AMainCharacter::AMainCharacter()
 	CameraComponent->SetupAttachment(SpringArmComponent);
 	CameraComponent->SetProjectionMode(ECameraProjectionMode::Perspective);
 
-	// Character Mesh
-	GetMesh()->SetOwnerNoSee(true);
-	GetMesh()->bHiddenInSceneCapture = true;
-
 	// MinimapIcon Component
 	//MinimapIconComponent = CreateDefaultSubobject<UTestMinimapIconComponent>(TEXT("MinimapPlayerIcon"));
 	//MinimapIconComponent->SetupAttachment(RootComponent);
 	//MinimapIconComponent->bVisibleInSceneCaptureOnly = true;
-
+	
 	// character Mesh
 	GetMesh()->SetOwnerNoSee(true);
 	GetMesh()->bHiddenInSceneCapture = true;
@@ -95,7 +91,7 @@ AMainCharacter::AMainCharacter()
 	// Map Item 
 	GetMapItemCollisonComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("GetMapItemCollisionComponent"));
 	GetMapItemCollisonComponent->SetupAttachment(RootComponent);
-	GetMapItemCollisonComponent->SetRelativeLocation(FVector(100.0, 0.0, -70.0f));
+	GetMapItemCollisonComponent->SetRelativeLocation(FVector(100.0, 0.0, -20.0f));
 	GetMapItemCollisonComponent->SetCollisionProfileName(FName("MapItemSearch"));
 
 	// Inventory
@@ -264,7 +260,7 @@ void AMainCharacter::PickUpItem_Implementation()
 	{
 		// Map에 아이템 생성.
 		FTransform CreatePos = CreateItemComponent->GetComponentToWorld(); // 체크 필요.
-		CharacterPlayerToDropItem(ItemName, CreatePos);
+		CharacterPlayerToDropItem();
 	}
 
 	// 손에 아이템을 생성한다.
@@ -286,11 +282,36 @@ void AMainCharacter::PickUpItem_Implementation()
 	ChangePosture(ItemType);
 }
 
-void AMainCharacter::CharacterPlayerToDropItem_Implementation(FName _ItemName, FTransform _Transform)
+void AMainCharacter::CharacterPlayerToDropItem_Implementation()
 {
-	UMainGameInstance* MainGameInst = GetWorld()->GetGameInstanceChecked<UMainGameInstance>();
-	const FItemDataRow* ItemBase = MainGameInst->GetItemData(_ItemName);
-	GetWorld()->SpawnActor<AActor>(ItemBase->GetItemUClass(), _Transform);
+	// DropItem 할 수 없는 경우 1: 맨손일 때
+	if (CurItemIndex == -1)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, FString::Printf(TEXT("There's no item to drop. (Current posture is 'Barehand')")));
+		return;
+	}
+
+	// DropItem 할 수 없는 경우 2: (그럴리는 없겠지만) 현재 Posture에 해당하는 무기가 인벤토리에 없을 때
+	if (IsItemIn[CurItemIndex] == false)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, FString::Printf(TEXT("There's no item to drop. (The item slot is empty)")));
+		return;
+	}
+
+	// 떨어트릴 아이템을 Actor로 생성
+	FName ItemName = ItemSlot[CurItemIndex].Name;
+	UMainGameInstance* MainGameInst = UMainGameBlueprintFunctionLibrary::GetMainGameInstance(GetWorld());
+	const FItemDataRow* ItemBase = MainGameInst->GetItemData(ItemName);
+	FTransform BoneTrans = GetMesh()->GetBoneTransform(FName("weapon_r"), ERelativeTransformSpace::RTS_World);
+	GetWorld()->SpawnActor<AActor>(ItemBase->GetItemUClass(), BoneTrans);
+
+	// 손에 들고 있던 아이템을 인벤토리에서 삭제
+	FPlayerItemInformation NewSlot;
+	ItemSlot[CurItemIndex] = NewSlot;
+	IsItemIn[CurItemIndex] = false;
+
+	// 자세를 맨손으로 변경
+	ChangePosture(EPlayerPosture::Barehand);
 }
 
 void AMainCharacter::FireRayCast_Implementation(float _DeltaTime)
