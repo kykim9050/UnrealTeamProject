@@ -152,6 +152,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void HandAttackCollision(AActor* _OtherActor, UPrimitiveComponent* _Collision);
 
+	// Notify에서 호출.
 	void ChangeHandAttackCollisionProfile(FName _Name);
 
 	// HP (for UI, Monster Test)
