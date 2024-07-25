@@ -203,3 +203,7 @@ public :
 	UFUNCTION()
 	void SendTokenToHpBarWidget();
 };
+
+/** BP
+* MovementComponent -> WalkableFloorAngle 의 값을 60.0으로 수정.
+*/
