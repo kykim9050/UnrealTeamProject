@@ -179,6 +179,7 @@ void ATestPlayerController::FireStart(float _DeltaTime)	// => 메인도 수정해야 함
 	}
 
 	Ch->FireRayCast();
+	AttackMontagePlay();
 	GEngine->AddOnScreenDebugMessage(-1, 0.2f, FColor::Red, TEXT("Start"));
 	GetWorld()->GetTimerManager().SetTimer(MyTimeHandle, FTimerDelegate::CreateLambda([&]()
 		{
@@ -191,6 +192,7 @@ void ATestPlayerController::FireTick(float _DeltaTime)	// => 메인도 수정해야 함 
 	ATestCharacter* Ch = GetPawn<ATestCharacter>();
 	Ch->FireRayCast();
 	++Count;
+	AttackMontagePlay();
 	GEngine->AddOnScreenDebugMessage(-1, 0.2f, FColor::Red, FString::Printf(TEXT("Tick Count : %d"), Count));
 }
 
