@@ -26,18 +26,22 @@ private:
 	UPROPERTY(EditAnywhere, meta = (AllowprivateAccess = "true"))
 	TArray<TSubclassOf<AActor>> MonsterUClass;
 
-	// Total Spawn Num
+	// Total Number of Spawn
 	UPROPERTY(EditAnywhere, meta = (AllowprivateAccess = "true"))
-	int SpawnCount = 0;
+	int TotalSpawnCount = 0;
 
-	// Spawn CoolTime
+	// Time interval between Spawn
 	UPROPERTY(EditAnywhere, meta = (AllowprivateAccess = "true"))
-	float SpawnDelayTime = 0;
+	float SpawnDelayTime = 0.0f;
 
-	// Once Spawn Monster Count
+	// Number of creation per time
 	UPROPERTY(EditAnywhere, meta = (AllowprivateAccess = "true"))
 	int SpawnMonsterCount = 0;
 	
+	// Max Spawn Radius
+	UPROPERTY(EditAnywhere, meta = (AllowprivateAccess = "true"))
+	float MaxSpawnRadius = 0.0f;
+
 	UPROPERTY()
 	float TimeCount = 0.0f;
 
