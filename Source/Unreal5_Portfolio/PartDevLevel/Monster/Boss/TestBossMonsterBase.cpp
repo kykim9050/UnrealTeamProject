@@ -22,6 +22,7 @@
 #include "Global/Animation/MainAnimInstance.h"
 
 #include "Components/SphereComponent.h"
+#include "BrainComponent.h"
 
 // Sets default values
 ATestBossMonsterBase::ATestBossMonsterBase()
@@ -161,8 +162,30 @@ void ATestBossMonsterBase::Damaged(float Damage)
 
 	if (0.0f >= SettingBossData->HP)
 	{
-		//OnDead();
+		OnDead();
 	}
+}
+
+void ATestBossMonsterBase::SetOnDead_Implementation()
+{
+	// Effect Setting
+	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), BloodParticle, GetActorTransform());
+
+	// Collision Setting
+	GetCapsuleComponent()->SetCollisionObjectType(ECC_GameTraceChannel5);
+	MeleeAttackComponent->SetCollisionObjectType(ECC_GameTraceChannel5);
+	GetCharacterMovement()->SetActive(false);
+
+	SetLifeSpan(5.0f);
+}
+
+void ATestBossMonsterBase::OnDead()
+{
+	SetOnDead();
+	ChangeAniValue(EBossMonsterAnim::Dead);
+
+	ATestBossMonsterAIControllerBase* AIController = GetController<ATestBossMonsterAIControllerBase>();
+	AIController->GetBrainComponent()->StopLogic("Dead");
 }
 
 void ATestBossMonsterBase::SetAttackCollision(bool Active)
