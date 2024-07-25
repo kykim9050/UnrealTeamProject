@@ -41,7 +41,7 @@ void UServerBtnUserWidget::OnServerButtonClicked()
 	Inst->CurNetInfo.SetIsServer(true);
 	Inst->CurNetInfo.SetPORT(Port);
 
-	UGameplayStatics::OpenLevel(GetWorld(), TEXT("LobbyLevel"));
+	UGameplayStatics::OpenLevel(GetWorld(), TEXT("TestLobbyLevel"));
 }
 
 void UServerBtnUserWidget::OnConnectButtonClicked()

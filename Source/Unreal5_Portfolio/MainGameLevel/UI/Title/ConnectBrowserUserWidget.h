@@ -4,7 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
+
 #include "Components/ComboBoxString.h"
+#include "Components/Button.h"
+
 #include "ConnectBrowserUserWidget.generated.h"
 
 /**

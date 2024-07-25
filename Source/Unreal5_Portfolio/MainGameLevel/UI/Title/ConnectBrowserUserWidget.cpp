@@ -13,6 +13,7 @@ void UConnectBrowserUserWidget::NativeConstruct()
 	Super::NativeConstruct();
 
 	IPCombo->OnSelectionChanged.AddUniqueDynamic(this, &UConnectBrowserUserWidget::IPSelected);
+	ConnectButton->OnClicked.AddUniqueDynamic(this, &UConnectBrowserUserWidget::Connect);
 
 	IPComboDataInit();
 }
