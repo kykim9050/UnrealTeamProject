@@ -411,7 +411,7 @@ void ATestCharacter::ChangeState_Implementation(EPlayerState _Type)
 	StateValue = _Type;
 }
 
-void ATestCharacter::ChangePosture_Implementation(EPlayerPosture _Type)	// => 메인캐릭터로 이전해야 함 (내용 수정됨)
+void ATestCharacter::ChangePosture_Implementation(EPlayerPosture _Type)	// => 메인캐릭터로 이전해야 함 (내용 수정됨) // => 매인 적용.
 {
 	if (_Type == EPlayerPosture::Barehand)
 	{
