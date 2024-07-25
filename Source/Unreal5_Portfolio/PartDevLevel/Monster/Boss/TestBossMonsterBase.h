@@ -63,11 +63,10 @@ public:
 	void SetAttackCollision(bool Active);
 
 private:
-	UFUNCTION()
-	void OnDeadFinish()
-	{
-		Destroy();
-	}
+	UFUNCTION(Reliable, NetMulticast)
+	void SetOnDead();
+	void SetOnDead_Implementation();
+	void OnDead();
 
 protected:
 	UFUNCTION()
