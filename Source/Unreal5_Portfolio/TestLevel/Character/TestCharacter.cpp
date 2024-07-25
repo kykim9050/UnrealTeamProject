@@ -33,7 +33,7 @@ ATestCharacter::ATestCharacter()
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	// SpringArm Component
+	// SpringArm Component => 메인캐릭터 적용.
 	SpringArmComponent = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArmComponent"));
 	SpringArmComponent->SetupAttachment(RootComponent);
 	SpringArmComponent->SetRelativeLocation(FVector(20.0f, 0.0f, 67.0f));
@@ -41,28 +41,28 @@ ATestCharacter::ATestCharacter()
 	SpringArmComponent->bUsePawnControlRotation = true;
 	SpringArmComponent->bDoCollisionTest = true;
 
-	// Camera Component
+	// Camera Component => 메인캐릭터 적용.
 	CameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("CameraComponent"));
 	CameraComponent->SetupAttachment(SpringArmComponent);
 	CameraComponent->SetProjectionMode(ECameraProjectionMode::Perspective);
 
-	// MinimapIcon Component
+	// MinimapIcon Component => 메인캐릭터 적용.
 	MinimapIconComponent = CreateDefaultSubobject<UTestMinimapIconComponent>(TEXT("MinimapPlayerIcon"));
 	MinimapIconComponent->SetupAttachment(RootComponent);
 	MinimapIconComponent->bVisibleInSceneCaptureOnly = true;
 
-	// Character Mesh
+	// Character Mesh => 메인캐릭터 적용.
 	GetMesh()->SetOwnerNoSee(true);
 	GetMesh()->bHiddenInSceneCapture = true;
 
-	// FPV Character Mesh
+	// FPV Character Mesh => 메인캐릭터 적용.
 	FPVMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("FirstPersonMesh"));
 	FPVMesh->SetupAttachment(CameraComponent);
 	FPVMesh->SetOnlyOwnerSee(true);
 	FPVMesh->bCastDynamicShadow = false;
 	FPVMesh->CastShadow = false;
 
-	// Riding Character Mesh => 메인캐릭터로 이전해야 함 (새로 추가됨)
+	// Riding Character Mesh => 메인캐릭터 적용.
 	RidingMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("RidingMesh"));
 	RidingMesh->SetupAttachment(GetMesh());
 	RidingMesh->SetCollisionProfileName(TEXT("NoCollision"));
@@ -70,7 +70,7 @@ ATestCharacter::ATestCharacter()
 	RidingMesh->SetIsReplicated(true);
 	RidingMesh->bHiddenInSceneCapture = true;
 
-	// Item Mesh => 메인캐릭터로 이전해야 함 (새로 추가됨)
+	// Item Mesh => 메인캐릭터 적용.
 	ItemSocketMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ItemSocketMesh"));
 	ItemSocketMesh->SetupAttachment(GetMesh(), FName("ItemSocket"));
 	ItemSocketMesh->SetCollisionProfileName(TEXT("NoCollision"));
@@ -80,7 +80,7 @@ ATestCharacter::ATestCharacter()
 	ItemSocketMesh->SetIsReplicated(true);
 	ItemSocketMesh->bHiddenInSceneCapture = true;
 
-	// FPV Item Mesh => 메인캐릭터로 이전해야 함 (새로 추가됨)
+	// FPV Item Mesh => 메인캐릭터 적용.
 	FPVItemSocketMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("FPVItemSocketMesh"));
 	FPVItemSocketMesh->SetupAttachment(FPVMesh, FName("FPVItemSocket"));
 	FPVItemSocketMesh->SetCollisionProfileName(TEXT("NoCollision"));
@@ -91,13 +91,15 @@ ATestCharacter::ATestCharacter()
 	FPVItemSocketMesh->bCastDynamicShadow = false;
 	FPVItemSocketMesh->CastShadow = false;
 
-	// Map Item 검사
+	// Map Item 검사 => 메인캐릭터 적용.
 	GetMapItemCollisonComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("GetMapItemCollisionComponent"));
 	GetMapItemCollisonComponent->SetupAttachment(RootComponent);
 	GetMapItemCollisonComponent->SetRelativeLocation(FVector(100.0, 0.0, -20.0f));
 	GetMapItemCollisonComponent->SetCollisionProfileName(FName("MapItemSearch"));
 
 	UEnum* Enum = StaticEnum<EPlayerPosture>();
+	
+	// = > 메인캐릭터 적용. [주석 부분 다르니 확인 요청.]
 	for (size_t i = 0; i < static_cast<size_t>(EPlayerPosture::Barehand); i++)
 	{
 		// Inventory (for UI Test)
@@ -109,7 +111,7 @@ ATestCharacter::ATestCharacter()
 		IsItemIn.Push(false);
 	}
 
-	// HandAttack Component
+	// HandAttack Component = > 메인캐릭터 적용.[주석이 없는 3줄 적용. 확인 필요.]
 	//FString Name = "Punch";
 	HandAttackComponent = CreateDefaultSubobject<USphereComponent>(TEXT("Hand Attack Comp"));
 	//HandAttackComponent->SetupAttachment(GetMesh(), *Name);
@@ -118,7 +120,7 @@ ATestCharacter::ATestCharacter()
 	//HandAttackComponent->SetCollisionProfileName(TEXT("NoCollision"));
 }
 
-void ATestCharacter::CharacterPlayerToDropItem_Implementation()	// => 메인캐릭터로 이전해야 함 (24.07.23 수정됨)
+void ATestCharacter::CharacterPlayerToDropItem_Implementation()	// => 메인캐릭터로 이전해야 함 (24.07.23 수정됨) => 메인캐릭터 적용되었지만 내용 확인 필요.
 {
 	// DropItem 할 수 없는 경우 1: 맨손일 때
 	if (CurItemIndex == -1)
@@ -136,6 +138,7 @@ void ATestCharacter::CharacterPlayerToDropItem_Implementation()	// => 메인캐릭터
 
 	// 떨어트릴 아이템을 Actor로 생성
 	FName ItemName = ItemSlot[CurItemIndex].Name;
+	// UMainGameInstance* MainGameInst = UMainGameBlueprintFunctionLibrary::GetMainGameInstance(GetWorld()); << 매인에는 이렇게 적용됨.
 	UMainGameInstance* MainGameInst = GetWorld()->GetGameInstanceChecked<UMainGameInstance>();
 	const FItemDataRow* ItemBase = MainGameInst->GetItemData(ItemName);
 	FTransform BoneTrans = GetMesh()->GetBoneTransform(FName("weapon_r"), ERelativeTransformSpace::RTS_World);
@@ -165,7 +168,7 @@ void ATestCharacter::CharacterPlayerToDropItem_Implementation()	// => 메인캐릭터
 //	}
 //}
 
-void ATestCharacter::HandAttackCollision(AActor* _OtherActor, UPrimitiveComponent* _Collision)
+void ATestCharacter::HandAttackCollision(AActor* _OtherActor, UPrimitiveComponent* _Collision) // => 매인 캐릭터에 적용.
 {
 	{
 		ATestMonsterBase* Monster = Cast<ATestMonsterBase>(_OtherActor);
@@ -194,7 +197,7 @@ void ATestCharacter::GetDamage(float _Damage)
 	PlayerHp -= _Damage;
 }
 
-// 메인 플레이어 추가 필요 코드 (태환) 07/24
+// 메인 플레이어 추가 필요 코드 (태환) 07/24 => 매인 적용.
 void ATestCharacter::PostInitializeComponents()
 {
 	if (GetWorld()->WorldType == EWorldType::Game

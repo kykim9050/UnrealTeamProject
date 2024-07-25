@@ -18,6 +18,9 @@ public:
 	AMainCharacter();
 
 protected:
+
+	void PostInitializeComponents() override;
+
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 	
@@ -134,8 +137,8 @@ public :
 
 	// 아이템 생성 -> 드랍
 	UFUNCTION(Reliable, Server, BlueprintCallable)
-	void CharacterPlayerToDropItem(FName _ItemName, FTransform _Transform);
-	void CharacterPlayerToDropItem_Implementation(FName _ItemName, FTransform _Transform);
+	void CharacterPlayerToDropItem();
+	void CharacterPlayerToDropItem_Implementation();
 
 	// Fire Ray Cast
 	UFUNCTION(Reliable, Server, BlueprintCallable)
