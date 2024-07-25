@@ -35,10 +35,13 @@ void ABasicMonsterSpawner::Tick(float DeltaTime)
 	{
 		SpawnBasicMonster();
 
-		if (0 >= SpawnCount)
+		if (0 >= TotalSpawnCount)
 		{
 			Destroy();
 		}
+
+		TimeCount = SpawnDelayTime;
+		return;
 	}
 
 	TimeCount -= DeltaTime;
@@ -54,9 +57,11 @@ void ABasicMonsterSpawner::SpawnBasicMonster()
 	for (int32 i = 0; i < SpawnMonsterCount; i++)
 	{
 		int TypeIndex = MainInst->Random.RandRange(0, Size);
-		GetWorld()->SpawnActor<AActor>(MonsterUClass[TypeIndex], CurPos, FRotator::ZeroRotator);
+		float SpawnRadius = MainInst->Random.FRandRange(0, MaxSpawnRadius);
+		FVector SpawnLocation = CurPos + MainInst->Random.GetUnitVector().GetSafeNormal2D() * SpawnRadius;
+		GetWorld()->SpawnActor<AActor>(MonsterUClass[TypeIndex], SpawnLocation, FRotator::ZeroRotator);
 	}
 
-	--SpawnCount;
+	--TotalSpawnCount;
 }
 

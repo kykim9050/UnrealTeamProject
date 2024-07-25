@@ -51,6 +51,11 @@ public:
 		return PlayerSkeletalMesh;
 	}
 
+	FORCEINLINE class USkeletalMesh* GetPlayerFPVPlayerSkeletalMesh() const
+	{
+		return FPVPlayerSkeletalMesh;
+	}
+
 	FORCEINLINE TSubclassOf<class UAnimInstance> GetPlayerAnimInstance() const
 	{
 		return PlayerAnimInstance;
@@ -105,6 +110,12 @@ private:
 	/// </summary>
 	UPROPERTY(Category = "PlayerSkeletalMesh", EditAnywhere, BlueprintReadWrite, meta = (AllowprivateAccess = "true"))
 	class USkeletalMesh* PlayerSkeletalMesh = nullptr;
+
+	/// <summary>
+	/// 선택된 Player가 사용할 1인칭 Skeletal Mesh
+	/// </summary>
+	UPROPERTY(Category = "PlayerSkeletalMesh", EditAnywhere, BlueprintReadWrite, meta = (AllowprivateAccess = "true"))
+	class USkeletalMesh* FPVPlayerSkeletalMesh = nullptr;
 
 	/// <summary>
 	/// 선택된 Player가 사용할 Anim Instance

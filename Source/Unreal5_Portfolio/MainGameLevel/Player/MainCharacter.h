@@ -18,6 +18,9 @@ public:
 	AMainCharacter();
 
 protected:
+
+	void PostInitializeComponents() override;
+
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 	
@@ -103,8 +106,6 @@ private : // 문제 발생 여지 있음 발생하면 그냥 지워야 함.
 	UPROPERTY()
 	class UPlayerAnimInstance* FPVPlayerAnimInst;
 
-	
-
 	// 근접 공격에 사용
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	class USphereComponent* HandAttackComponent = nullptr;
@@ -134,8 +135,8 @@ public :
 
 	// 아이템 생성 -> 드랍
 	UFUNCTION(Reliable, Server, BlueprintCallable)
-	void CharacterPlayerToDropItem(FName _ItemName, FTransform _Transform);
-	void CharacterPlayerToDropItem_Implementation(FName _ItemName, FTransform _Transform);
+	void CharacterPlayerToDropItem();
+	void CharacterPlayerToDropItem_Implementation();
 
 	// Fire Ray Cast
 	UFUNCTION(Reliable, Server, BlueprintCallable)
@@ -150,6 +151,12 @@ public :
 	UFUNCTION(Reliable, NetMulticast)
 	void ClientChangeMontage();
 	void ClientChangeMontage_Implementation();
+
+	/// <summary>
+	/// Crouch 에 대한 카메라 이동
+	/// </summary>
+	UFUNCTION()
+	void CrouchCameraMove();
 
 	// == Client ==
 private :	
@@ -192,4 +199,7 @@ public :
 
 	UFUNCTION()
 	void NetCheck();
+
+	UFUNCTION()
+	void SendTokenToHpBarWidget();
 };

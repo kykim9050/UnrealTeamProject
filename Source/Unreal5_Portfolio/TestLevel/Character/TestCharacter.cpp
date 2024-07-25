@@ -33,7 +33,7 @@ ATestCharacter::ATestCharacter()
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	// SpringArm Component
+	// SpringArm Component => 메인캐릭터 적용.
 	SpringArmComponent = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArmComponent"));
 	SpringArmComponent->SetupAttachment(RootComponent);
 	SpringArmComponent->SetRelativeLocation(FVector(20.0f, 0.0f, 67.0f));
@@ -41,28 +41,28 @@ ATestCharacter::ATestCharacter()
 	SpringArmComponent->bUsePawnControlRotation = true;
 	SpringArmComponent->bDoCollisionTest = true;
 
-	// Camera Component
+	// Camera Component => 메인캐릭터 적용.
 	CameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("CameraComponent"));
 	CameraComponent->SetupAttachment(SpringArmComponent);
 	CameraComponent->SetProjectionMode(ECameraProjectionMode::Perspective);
 
-	// MinimapIcon Component
+	// MinimapIcon Component => 메인캐릭터 적용.
 	MinimapIconComponent = CreateDefaultSubobject<UTestMinimapIconComponent>(TEXT("MinimapPlayerIcon"));
 	MinimapIconComponent->SetupAttachment(RootComponent);
 	MinimapIconComponent->bVisibleInSceneCaptureOnly = true;
 
-	// Character Mesh
+	// Character Mesh => 메인캐릭터 적용.
 	GetMesh()->SetOwnerNoSee(true);
 	GetMesh()->bHiddenInSceneCapture = true;
 
-	// FPV Character Mesh
+	// FPV Character Mesh => 메인캐릭터 적용.
 	FPVMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("FirstPersonMesh"));
 	FPVMesh->SetupAttachment(CameraComponent);
 	FPVMesh->SetOnlyOwnerSee(true);
 	FPVMesh->bCastDynamicShadow = false;
 	FPVMesh->CastShadow = false;
 
-	// Riding Character Mesh => 메인캐릭터로 이전해야 함 (새로 추가됨)
+	// Riding Character Mesh => 메인캐릭터 적용.
 	RidingMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("RidingMesh"));
 	RidingMesh->SetupAttachment(GetMesh());
 	RidingMesh->SetCollisionProfileName(TEXT("NoCollision"));
@@ -70,7 +70,7 @@ ATestCharacter::ATestCharacter()
 	RidingMesh->SetIsReplicated(true);
 	RidingMesh->bHiddenInSceneCapture = true;
 
-	// Item Mesh => 메인캐릭터로 이전해야 함 (새로 추가됨)
+	// Item Mesh => 메인캐릭터 적용.
 	ItemSocketMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ItemSocketMesh"));
 	ItemSocketMesh->SetupAttachment(GetMesh(), FName("ItemSocket"));
 	ItemSocketMesh->SetCollisionProfileName(TEXT("NoCollision"));
@@ -80,7 +80,7 @@ ATestCharacter::ATestCharacter()
 	ItemSocketMesh->SetIsReplicated(true);
 	ItemSocketMesh->bHiddenInSceneCapture = true;
 
-	// FPV Item Mesh => 메인캐릭터로 이전해야 함 (새로 추가됨)
+	// FPV Item Mesh => 메인캐릭터 적용.
 	FPVItemSocketMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("FPVItemSocketMesh"));
 	FPVItemSocketMesh->SetupAttachment(FPVMesh, FName("FPVItemSocket"));
 	FPVItemSocketMesh->SetCollisionProfileName(TEXT("NoCollision"));
@@ -91,13 +91,15 @@ ATestCharacter::ATestCharacter()
 	FPVItemSocketMesh->bCastDynamicShadow = false;
 	FPVItemSocketMesh->CastShadow = false;
 
-	// Map Item 검사
+	// Map Item 검사 => 메인캐릭터 적용.
 	GetMapItemCollisonComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("GetMapItemCollisionComponent"));
 	GetMapItemCollisonComponent->SetupAttachment(RootComponent);
 	GetMapItemCollisonComponent->SetRelativeLocation(FVector(100.0, 0.0, -20.0f));
 	GetMapItemCollisonComponent->SetCollisionProfileName(FName("MapItemSearch"));
 
 	UEnum* Enum = StaticEnum<EPlayerPosture>();
+	
+	// = > 메인캐릭터 적용. [주석 부분 다르니 확인 요청.]
 	for (size_t i = 0; i < static_cast<size_t>(EPlayerPosture::Barehand); i++)
 	{
 		// Inventory (for UI Test)
@@ -109,7 +111,7 @@ ATestCharacter::ATestCharacter()
 		IsItemIn.Push(false);
 	}
 
-	// HandAttack Component
+	// HandAttack Component = > 메인캐릭터 적용.[주석이 없는 3줄 적용. 확인 필요.]
 	//FString Name = "Punch";
 	HandAttackComponent = CreateDefaultSubobject<USphereComponent>(TEXT("Hand Attack Comp"));
 	//HandAttackComponent->SetupAttachment(GetMesh(), *Name);
@@ -118,7 +120,7 @@ ATestCharacter::ATestCharacter()
 	//HandAttackComponent->SetCollisionProfileName(TEXT("NoCollision"));
 }
 
-void ATestCharacter::CharacterPlayerToDropItem_Implementation()	// => 메인캐릭터로 이전해야 함 (24.07.23 수정됨)
+void ATestCharacter::CharacterPlayerToDropItem_Implementation()	// => 메인캐릭터로 이전해야 함 (24.07.23 수정됨) => 메인캐릭터 적용되었지만 내용 확인 필요.
 {
 	// DropItem 할 수 없는 경우 1: 맨손일 때
 	if (CurItemIndex == -1)
@@ -136,6 +138,7 @@ void ATestCharacter::CharacterPlayerToDropItem_Implementation()	// => 메인캐릭터
 
 	// 떨어트릴 아이템을 Actor로 생성
 	FName ItemName = ItemSlot[CurItemIndex].Name;
+	// UMainGameInstance* MainGameInst = UMainGameBlueprintFunctionLibrary::GetMainGameInstance(GetWorld()); << 매인에는 이렇게 적용됨.
 	UMainGameInstance* MainGameInst = GetWorld()->GetGameInstanceChecked<UMainGameInstance>();
 	const FItemDataRow* ItemBase = MainGameInst->GetItemData(ItemName);
 	FTransform BoneTrans = GetMesh()->GetBoneTransform(FName("weapon_r"), ERelativeTransformSpace::RTS_World);
@@ -165,7 +168,7 @@ void ATestCharacter::CharacterPlayerToDropItem_Implementation()	// => 메인캐릭터
 //	}
 //}
 
-void ATestCharacter::HandAttackCollision(AActor* _OtherActor, UPrimitiveComponent* _Collision)
+void ATestCharacter::HandAttackCollision(AActor* _OtherActor, UPrimitiveComponent* _Collision) // => 매인 캐릭터에 적용.
 {
 	{
 		ATestMonsterBase* Monster = Cast<ATestMonsterBase>(_OtherActor);
@@ -184,7 +187,7 @@ void ATestCharacter::HandAttackCollision(AActor* _OtherActor, UPrimitiveComponen
 	}
 }
 
-void ATestCharacter::ChangeHandAttackCollisionProfile(FName _Name)
+void ATestCharacter::ChangeHandAttackCollisionProfile(FName _Name) // => 매인 적용.
 {
 	HandAttackComponent->SetCollisionProfileName(_Name);
 }
@@ -194,7 +197,7 @@ void ATestCharacter::GetDamage(float _Damage)
 	PlayerHp -= _Damage;
 }
 
-// 메인 플레이어 추가 필요 코드 (태환) 07/24
+// 메인 플레이어 추가 필요 코드 (태환) 07/24 => 매인 적용.
 void ATestCharacter::PostInitializeComponents()
 {
 	if (GetWorld()->WorldType == EWorldType::Game
@@ -227,7 +230,7 @@ void ATestCharacter::BeginPlay()
 
 	UMainGameBlueprintFunctionLibrary::PushActor(EObjectType::Player, this);
 
-	// 몽타주 변경에 필요한 세팅 추가 필요 (태환)
+	// 몽타주 변경에 필요한 세팅 추가 필요 (태환) // => 매인 적용.
 	PlayerAnimInst = Cast<UPlayerAnimInstance>(GetMesh()->GetAnimInstance());
 	FPVPlayerAnimInst = Cast<UPlayerAnimInstance>(FPVMesh->GetAnimInstance());
 
@@ -240,7 +243,7 @@ void ATestCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	UpdatePlayerHp(DeltaTime);
+	UpdatePlayerHp(DeltaTime); // => 매인 적용.
 
 	//DefaultRayCast(DeltaTime);
 	//TArray<FItemInformation> I = ItemSlot;
@@ -252,17 +255,17 @@ void ATestCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLi
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
 	DOREPLIFETIME(ATestCharacter, StateValue);
-	DOREPLIFETIME(ATestCharacter, PostureValue);
+	DOREPLIFETIME(ATestCharacter, PostureValue); // => 매인 적용.
 	DOREPLIFETIME(ATestCharacter, RayCastToItemName);
 
 	// HP (for UI, Monster test)
 	DOREPLIFETIME(ATestCharacter, PlayerHp);
 
 	// LowerState (태환)
-	DOREPLIFETIME(ATestCharacter, LowerStateValue);
-	DOREPLIFETIME(ATestCharacter, DirValue);
+	DOREPLIFETIME(ATestCharacter, LowerStateValue); // => 매인 적용.
+	DOREPLIFETIME(ATestCharacter, DirValue); // => 매인 적용.
 
-	DOREPLIFETIME(ATestCharacter, Token);
+	DOREPLIFETIME(ATestCharacter, Token); // => 매인 적용.
 }
 
 //void ATestCharacter::TestRayCast(float _DeltaTime, FVector _StartPos, FVector _EndPos, FRotator _CameraRot)
@@ -348,7 +351,7 @@ void ATestCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLi
 //	}
 //}
 
-void ATestCharacter::FireRayCast_Implementation(float _DeltaTime)	// => 메인캐릭터로 이전해야 함 (내용 수정됨)
+void ATestCharacter::FireRayCast_Implementation(float _DeltaTime) // => 메인캐릭터로 이전해야 함 (내용 수정됨) // => 매인 적용.
 {
 	if (CurItemIndex == -1 || ItemSlot[CurItemIndex].ReloadMaxNum == -1)
 	{
@@ -380,7 +383,7 @@ void ATestCharacter::FireRayCast_Implementation(float _DeltaTime)	// => 메인캐릭
 		{
 			FString BoneName = Hit.BoneName.ToString();
 			UE_LOG(LogTemp, Warning, TEXT("Bone Name : %s"), *BoneName);
-			ATestMonsterBase* Monster = Cast<ATestMonsterBase>(Hit.GetActor());
+			ATestMonsterBase* Monster = Cast<ATestMonsterBase>(Hit.GetActor()); // [Main] ABasicMonsterBase
 			if (nullptr != Monster)
 			{
 				Monster->Damaged(ItemSlot[CurItemIndex].Damage);
@@ -390,14 +393,14 @@ void ATestCharacter::FireRayCast_Implementation(float _DeltaTime)	// => 메인캐릭
 	}
 }
 
-void ATestCharacter::ChangeMontage_Implementation()
+void ATestCharacter::ChangeMontage_Implementation() // => 매인 적용.
 {
 	PlayerAnimInst->ChangeAnimation(PostureValue);
 	FPVPlayerAnimInst->ChangeAnimation(PostureValue);
 	ClientChangeMontage();
 }
 
-void ATestCharacter::ClientChangeMontage_Implementation()
+void ATestCharacter::ClientChangeMontage_Implementation() // => 매인 적용.
 {
 	PlayerAnimInst->ChangeAnimation(PostureValue);
 	FPVPlayerAnimInst->ChangeAnimation(PostureValue);
@@ -408,7 +411,7 @@ void ATestCharacter::ChangeState_Implementation(EPlayerState _Type)
 	StateValue = _Type;
 }
 
-void ATestCharacter::ChangePosture_Implementation(EPlayerPosture _Type)	// => 메인캐릭터로 이전해야 함 (내용 수정됨)
+void ATestCharacter::ChangePosture_Implementation(EPlayerPosture _Type)	// => 메인캐릭터로 이전해야 함 (내용 수정됨) // => 매인 적용.
 {
 	if (_Type == EPlayerPosture::Barehand)
 	{
@@ -450,21 +453,21 @@ void ATestCharacter::ChangePosture_Implementation(EPlayerPosture _Type)	// => 메
 	}
 }
 
-void ATestCharacter::ChangeLowerState_Implementation(EPlayerLowerState _LowerState)
+void ATestCharacter::ChangeLowerState_Implementation(EPlayerLowerState _LowerState) // => 매인 적용.
 {
 	LowerStateValue = _LowerState;
 }
 
-void ATestCharacter::ChangePlayerDir_Implementation(EPlayerMoveDir _Dir)
+void ATestCharacter::ChangePlayerDir_Implementation(EPlayerMoveDir _Dir) // => 매인 적용.
 {
 	DirValue = _Dir;
 }
 
-void ATestCharacter::PickUpItem_Implementation()	// => 메인캐릭터로 이전해야 함 (24.07.23 수정됨)
+void ATestCharacter::PickUpItem_Implementation()	// => 메인캐릭터로 이전해야 함 (24.07.23 수정됨) // => 매인 적용.
 {
 	// RayCast를 통해 Tag 이름을 가져온다.
-	FString GetItemName = "";
-	GetItemName = RayCastToItemName;
+	//FString GetItemName = ""; // 사용 안함.
+	//GetItemName = RayCastToItemName; // 사용 안함.
 
 	// 맵에 아이템이 없을 경우.
 	if (nullptr == GetMapItemData)
@@ -505,7 +508,7 @@ void ATestCharacter::PickUpItem_Implementation()	// => 메인캐릭터로 이전해야 함 
 	}
 	FName ItemStringToName = FName(*TagName);			// 아이템 이름
 
-	// Data Table에서 아이템 검색하기.
+	// ItemName에 맞는 아이템 정보를 DT에서 가져온다.
 	UMainGameInstance* Inst = GetGameInstance<UMainGameInstance>();
 	const FItemDataRow* ItemData = Inst->GetItemData(ItemStringToName);
 
@@ -552,15 +555,15 @@ void ATestCharacter::PickUpItem_Implementation()	// => 메인캐릭터로 이전해야 함 
 	ChangePosture(ItemType);
 }
 
-void ATestCharacter::ChangePOV()	// => 메인캐릭터로 이전해야 함 (24.07.22 수정됨)
+void ATestCharacter::ChangePOV()	// => 메인캐릭터로 이전해야 함 (24.07.22 수정됨) // => 매인 적용.
 {
 	if (IsFPV)	// 일인칭 -> 삼인칭
 	{
-		// SpringArm Component
+		// SpringArm Component 위치 수정.
 		SpringArmComponent->TargetArmLength = 300.0f;
 		SpringArmComponent->SetRelativeLocation(FVector(0.0f, 60.0f, 110.0f));
 
-		// Character Mesh
+		// Character Mesh 전환.
 		GetMesh()->SetOwnerNoSee(false);
 		FPVMesh->SetOwnerNoSee(true);
 
@@ -575,11 +578,11 @@ void ATestCharacter::ChangePOV()	// => 메인캐릭터로 이전해야 함 (24.07.22 수정됨
 	}
 	else	// 삼인칭 -> 일인칭
 	{
-		// SpringArm Component
+		// SpringArm Component 위치 수정.
 		SpringArmComponent->TargetArmLength = 0.0f;
 		SpringArmComponent->SetRelativeLocation(FVector(20.0f, 0.0f, 67.0f));
 
-		// Character Mesh
+		// Character Mesh 전환.
 		GetMesh()->SetOwnerNoSee(true);
 		FPVMesh->SetOwnerNoSee(false);
 
@@ -594,7 +597,7 @@ void ATestCharacter::ChangePOV()	// => 메인캐릭터로 이전해야 함 (24.07.22 수정됨
 	}
 }
 
-void ATestCharacter::CharacterReload()
+void ATestCharacter::CharacterReload() // => 매인 적용.
 {
 	if (-1 == CurItemIndex)
 	{
@@ -603,12 +606,12 @@ void ATestCharacter::CharacterReload()
 	ItemSlot[CurItemIndex].ReloadLeftNum = ItemSlot[CurItemIndex].ReloadMaxNum;
 }
 
-void ATestCharacter::MapItemOverlapStart(AActor* _OtherActor, UPrimitiveComponent* _Collision)
+void ATestCharacter::MapItemOverlapStart(AActor* _OtherActor, UPrimitiveComponent* _Collision) // => 매인 적용.
 {
 	GetMapItemData = _OtherActor;
 }
 
-void ATestCharacter::MapItemOverlapEnd()
+void ATestCharacter::MapItemOverlapEnd() // => 매인 적용.
 {
 	if (nullptr != GetMapItemData)
 	{
@@ -616,7 +619,7 @@ void ATestCharacter::MapItemOverlapEnd()
 	}
 }
 
-void ATestCharacter::CrouchCameraMove()
+void ATestCharacter::CrouchCameraMove() // => 매인 적용.
 {
 	if (IsFPV)
 	{
@@ -634,7 +637,7 @@ void ATestCharacter::CrouchCameraMove()
 	}
 }
 
-void ATestCharacter::NetCheck()
+void ATestCharacter::NetCheck() // => 매인 적용.
 {
 	IsServer = GetWorld()->GetAuthGameMode() != nullptr;
 	IsClient = !IsServer;
@@ -663,7 +666,7 @@ void ATestCharacter::NetCheck()
 	}
 }
 
-void ATestCharacter::SendTokenToHpBarWidget()
+void ATestCharacter::SendTokenToHpBarWidget() // => 매인 적용 진행 중.(HUD, Widget 대기중.)
 {
 	ATestPlayerController* Con = Cast<ATestPlayerController>(GetController());
 	if (nullptr == Con)
@@ -692,7 +695,7 @@ void ATestCharacter::SendTokenToHpBarWidget()
 	}
 }
 
-void ATestCharacter::UpdatePlayerHp(float _DeltaTime)
+void ATestCharacter::UpdatePlayerHp(float _DeltaTime) // => 매인 적용 진행 중.(HUD, Widget 대기중.)
 {
 	ATestPlayerState* MyTestPlayerState = GetPlayerState<ATestPlayerState>();
 	if (nullptr == MyTestPlayerState)
