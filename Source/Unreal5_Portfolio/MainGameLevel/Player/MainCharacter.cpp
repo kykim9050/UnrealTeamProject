@@ -210,6 +210,9 @@ void AMainCharacter::ChangePosture_Implementation(EPlayerPosture _Type)
 		ItemSocketMesh->SetRelativeRotation(ItemSlot[CurItemIndex].RelRot);
 		FPVItemSocketMesh->SetRelativeRotation(ItemSlot[CurItemIndex].RelRot);
 
+		ItemSocketMesh->SetRelativeScale3D(ItemSlot[CurItemIndex].RelScale);
+		FPVItemSocketMesh->SetRelativeScale3D(ItemSlot[CurItemIndex].RelScale);
+
 		// 아이템 메시 visibility 켜기
 		ItemSocketMesh->SetVisibility(true);
 		FPVItemSocketMesh->SetVisibility(true);
