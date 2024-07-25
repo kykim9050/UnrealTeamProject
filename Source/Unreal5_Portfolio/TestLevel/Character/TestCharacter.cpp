@@ -141,14 +141,14 @@ void ATestCharacter::CharacterPlayerToDropItem_Implementation()	// => 메인캐릭터
 	// UMainGameInstance* MainGameInst = UMainGameBlueprintFunctionLibrary::GetMainGameInstance(GetWorld()); << 매인에는 이렇게 적용됨.
 	UMainGameInstance* MainGameInst = GetWorld()->GetGameInstanceChecked<UMainGameInstance>();
 	const FItemDataRow* ItemBase = MainGameInst->GetItemData(ItemName);
-	FTransform BoneTrans = GetMesh()->GetBoneTransform(FName("weapon_r"), ERelativeTransformSpace::RTS_World);
+	FTransform BoneTrans = GetMesh()->GetBoneTransform(FName("RightHand"), ERelativeTransformSpace::RTS_World);
 
 	AActor* DropItem = GetWorld()->SpawnActor<AActor>(ItemBase->GetItemUClass(), BoneTrans);
 
 	// 아이템을 앞으로 던지기 (미완)
 	//GetMesh()->SetSimulatePhysics(true);
 	FVector ImpulseVector = GetActorForwardVector() * 1000.0f;
-	GetMesh()->AddImpulse(ImpulseVector, FName("weapon_r"), false);
+	GetMesh()->AddImpulse(ImpulseVector, FName("RightHand"), false);
 
 	// 손에 들고 있던 아이템을 인벤토리에서 삭제
 	FItemInformation NewSlot;
@@ -210,11 +210,11 @@ void ATestCharacter::PostInitializeComponents()
 		}
 
 		// 스켈레탈 메쉬 선택
-		USkeletalMesh* PlayerSkeletalMesh = MainGameInst->GetPlayerData(FName("AlienSoldier"))->GetPlayerSkeletalMesh();
+		USkeletalMesh* PlayerSkeletalMesh = MainGameInst->GetPlayerData(FName("TestPlayer"))->GetPlayerSkeletalMesh();
 		GetMesh()->SetSkeletalMesh(PlayerSkeletalMesh);
 
 		// ABP 선택
-		UClass* AnimInst = Cast<UClass>(MainGameInst->GetPlayerData(FName("AlienSoldier"))->GetPlayerAnimInstance());
+		UClass* AnimInst = Cast<UClass>(MainGameInst->GetPlayerData(FName("TestPlayer"))->GetPlayerAnimInstance());
 		GetMesh()->SetAnimInstanceClass(AnimInst);
 	}
 	
@@ -351,9 +351,9 @@ void ATestCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLi
 //	}
 //}
 
-void ATestCharacter::FireRayCast_Implementation(float _DeltaTime) // => 메인캐릭터로 이전해야 함 (내용 수정됨) // => 매인 적용.
+void ATestCharacter::FireRayCast_Implementation() // => 메인도 수정해야 함 (24.07.25 수정됨)
 {
-	if (CurItemIndex == -1 || ItemSlot[CurItemIndex].ReloadMaxNum == -1)
+	if (CurItemIndex == -1 || CurItemIndex == 2)
 	{
 		return;
 	}
@@ -364,7 +364,7 @@ void ATestCharacter::FireRayCast_Implementation(float _DeltaTime) // => 메인캐릭
 	}
 
 	ATestPlayerController* Con = Cast<ATestPlayerController>(GetController());
-	FVector Start = GetMesh()->GetSocketLocation(FName("weapon_r_muzzle"));
+	FVector Start = GetMesh()->GetSocketLocation(FName("MuzzleSocket"));
 	Start.Z -= 20.0f;
 	FVector End = (Con->GetControlRotation().Vector() * 2000.0f) + Start;
 	FHitResult Hit;
@@ -411,9 +411,13 @@ void ATestCharacter::ChangeState_Implementation(EPlayerState _Type)
 	StateValue = _Type;
 }
 
-void ATestCharacter::ChangePosture_Implementation(EPlayerPosture _Type)	// => 메인캐릭터로 이전해야 함 (내용 수정됨) // => 매인 적용.
+void ATestCharacter::ChangePosture_Implementation(EPlayerPosture _Type)	// => 메인으로 이전해야 함 (24.07.25 수정됨)
 {
-	if (_Type == EPlayerPosture::Barehand)
+	if (_Type == EPlayerPosture::Bomb || _Type == EPlayerPosture::Drink)	// Bomb, Drink => 자세변경할 수 없음
+	{
+		return;
+	}
+	else if (_Type == EPlayerPosture::Barehand)								// Barehand => 맨손 자세로 변경
 	{
 		PostureValue = _Type;
 		CurItemIndex = -1;
@@ -422,7 +426,7 @@ void ATestCharacter::ChangePosture_Implementation(EPlayerPosture _Type)	// => 메
 		ItemSocketMesh->SetVisibility(false);
 		FPVItemSocketMesh->SetVisibility(false);
 	}
-	else
+	else																	// Rifle1, Rifle2, Melee => 무기를 든 자세로 변경
 	{
 		int ItemSlotIndex = static_cast<int>(_Type);
 		if (IsItemIn[ItemSlotIndex] == false)

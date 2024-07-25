@@ -213,9 +213,9 @@ public:
 	//UFUNCTION(BlueprintCallable)
 	//void DefaultRayCast(float _DeltaTime);
 
-	UFUNCTION(Reliable, Server, BlueprintCallable)	// => 메인캐릭터로 이전해야 함
-	void FireRayCast(float _DeltaTime);
-	void FireRayCast_Implementation(float _DeltaTime);
+	UFUNCTION(Reliable, Server, BlueprintCallable)	// => 메인도 수정해야 함 (24.07.25 수정됨)
+	void FireRayCast();
+	void FireRayCast_Implementation();
 
 	// 공격 시 서버 캐릭터 몽타주 변경 함수 (태환)
 	UFUNCTION(Reliable, Server)

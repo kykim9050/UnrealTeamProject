@@ -59,9 +59,9 @@ void ATestPlayerController::SetupInputComponent()
 			EnhancedInputComponent->BindAction(InputData->Actions[7], ETriggerEvent::Triggered, this, &ATestPlayerController::ChangePosture, static_cast<EPlayerPosture>(0));
 			EnhancedInputComponent->BindAction(InputData->Actions[8], ETriggerEvent::Triggered, this, &ATestPlayerController::ChangePosture, static_cast<EPlayerPosture>(1));
 			EnhancedInputComponent->BindAction(InputData->Actions[9], ETriggerEvent::Triggered, this, &ATestPlayerController::ChangePosture, static_cast<EPlayerPosture>(2));
-			EnhancedInputComponent->BindAction(InputData->Actions[10], ETriggerEvent::Triggered, this, &ATestPlayerController::ChangePosture, static_cast<EPlayerPosture>(3));
-			EnhancedInputComponent->BindAction(InputData->Actions[11], ETriggerEvent::Triggered, this, &ATestPlayerController::ChangePosture, static_cast<EPlayerPosture>(4));
-			EnhancedInputComponent->BindAction(InputData->Actions[12], ETriggerEvent::Triggered, this, &ATestPlayerController::ChangePosture, static_cast<EPlayerPosture>(5));
+			//EnhancedInputComponent->BindAction(InputData->Actions[10], ETriggerEvent::Triggered, this, &ATestPlayerController::ChangePosture, static_cast<EPlayerPosture>(3));	// => 메인도 수정해야 함 (24.07.25 삭제됨) (Bomb으로의 자세변경을 막음)
+			//EnhancedInputComponent->BindAction(InputData->Actions[11], ETriggerEvent::Triggered, this, &ATestPlayerController::ChangePosture, static_cast<EPlayerPosture>(4));	// => 메인도 수정해야 함 (24.07.25 삭제됨) (Drink로의 자세변경을 막음)
+			EnhancedInputComponent->BindAction(InputData->Actions[20], ETriggerEvent::Triggered, this, &ATestPlayerController::ChangePosture, static_cast<EPlayerPosture>(5));		// => 메인도 수정해야 함 (24.07.25 수정됨) (Barehand로의 자세변경 키를 '0'에서 'X'로 변경함)
 			EnhancedInputComponent->BindAction(InputData->Actions[13], ETriggerEvent::Triggered, this, &ATestPlayerController::PickUpItem);
 			EnhancedInputComponent->BindAction(InputData->Actions[13], ETriggerEvent::Completed, this, &ATestPlayerController::PickUpItemEnd);
 			EnhancedInputComponent->BindAction(InputData->Actions[14], ETriggerEvent::Triggered, this, &ATestPlayerController::ChangePOVController);
@@ -168,12 +168,17 @@ void ATestPlayerController::Crouch(const FInputActionValue& Value)
 //	ChangeState(EPlayerState::Idle);
 //}
 
-void ATestPlayerController::FireStart(float _DeltaTime)
+void ATestPlayerController::FireStart(float _DeltaTime)	// => 메인도 수정해야 함 (24.07.25 수정됨)
 {
 	ChangeState(EPlayerState::Fire);
 	ATestCharacter* Ch = GetPawn<ATestCharacter>();
-	Ch->FireRayCast(_DeltaTime);
 
+	if (Ch->CurItemIndex == 3 || Ch->CurItemIndex == 4)
+	{
+		return;
+	}
+
+	Ch->FireRayCast();
 	GEngine->AddOnScreenDebugMessage(-1, 0.2f, FColor::Red, TEXT("Start"));
 	GetWorld()->GetTimerManager().SetTimer(MyTimeHandle, FTimerDelegate::CreateLambda([&]()
 		{
@@ -181,10 +186,10 @@ void ATestPlayerController::FireStart(float _DeltaTime)
 		}), 0.2f, true);
 }
 
-void ATestPlayerController::FireTick(float _DeltaTime)
+void ATestPlayerController::FireTick(float _DeltaTime)	// => 메인도 수정해야 함 (24.07.25 수정됨)
 {
 	ATestCharacter* Ch = GetPawn<ATestCharacter>();
-	Ch->FireRayCast(_DeltaTime);
+	Ch->FireRayCast();
 	++Count;
 	GEngine->AddOnScreenDebugMessage(-1, 0.2f, FColor::Red, FString::Printf(TEXT("Tick Count : %d"), Count));
 }
