@@ -38,4 +38,7 @@ public:
 	// 스태틱 메시 컴포넌트 상대적 회전
 	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	FRotator RelRot = FRotator(0.0f, 0.0f, 0.0f);
+	// 스태틱 메시 컴포넌트 상대적 크기
+	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	FVector RelScale = FVector(1.0f, 1.0f, 1.0f);
 };
