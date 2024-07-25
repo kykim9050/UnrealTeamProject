@@ -14,6 +14,7 @@
 #include "Components/SphereComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Net/UnrealNetwork.h"
+#include "BrainComponent.h"
 
 #include "Global/MainGameBlueprintFunctionLibrary.h"
 #include "Global/MainGameInstance.h"
@@ -134,8 +135,7 @@ void ABasicMonsterBase::Damaged(float Damage)
 	{
 		SetDead();
 		ChangeRandomAnimation(EBasicMonsterAnim::Dead);
-		AIController->UnPossess();
-		AIController->Destroy();
+		AIController->GetBrainComponent()->StopLogic("Dead");
 	}
 }
 

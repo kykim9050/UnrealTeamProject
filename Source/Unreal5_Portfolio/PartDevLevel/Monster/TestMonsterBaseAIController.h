@@ -26,7 +26,7 @@ public:
 	void PlayerDetect(AActor* Actor, FAIStimulus const Stimulus);
 
 	ETeamAttitude::Type GetTeamAttitudeTowards(const AActor& Other) const override;
-	
+
 protected:
 	void SetPerception();
 
