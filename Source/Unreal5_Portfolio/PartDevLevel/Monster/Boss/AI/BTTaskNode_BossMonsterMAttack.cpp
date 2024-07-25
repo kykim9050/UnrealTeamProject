@@ -52,6 +52,9 @@ void UBTTaskNode_BossMonsterMAttack::TickTask(UBehaviorTreeComponent& _OwnerComp
 	FVector MonsterLocation = BossMonster->GetActorLocation();
 	FVector TargetLocation = TargetActor->GetActorLocation();
 
+	MonsterLocation.Z = 0.0f;
+	TargetLocation.Z = 0.0f;
+
 	FRotator TurnRot = UKismetMathLibrary::FindLookAtRotation(MonsterLocation, TargetLocation);
 	BossMonster->SetActorRotation(TurnRot);
 
