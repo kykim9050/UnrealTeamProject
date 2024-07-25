@@ -168,6 +168,9 @@ public:
 	UFUNCTION()
 	void SendTokenToHpBarWidget();
 
+	UFUNCTION(BlueprintCallable)
+	void UpdatePlayerHp(float _DeltaTime);
+
 protected:
 	// 메인 플레이어 추가 필요 코드 (태환) 07/24
 	void PostInitializeComponents() override;
@@ -197,11 +200,9 @@ private:
 	UPROPERTY()
 	class UPlayerAnimInstance* FPVPlayerAnimInst;
 		
-	UFUNCTION()
-	void UpdatePlayerHp(float _DeltaTime);
-
-	UPROPERTY()
-	float CurHp = 0.0f;
+	
+	//UPROPERTY()
+	//float CurHp = 0.0f;
 
 	UPROPERTY()
 	float MyMaxHp = 0.0f;
