@@ -393,14 +393,14 @@ void ATestCharacter::FireRayCast_Implementation(float _DeltaTime) // => 메인캐릭
 	}
 }
 
-void ATestCharacter::ChangeMontage_Implementation()
+void ATestCharacter::ChangeMontage_Implementation() // => 매인 적용.
 {
 	PlayerAnimInst->ChangeAnimation(PostureValue);
 	FPVPlayerAnimInst->ChangeAnimation(PostureValue);
 	ClientChangeMontage();
 }
 
-void ATestCharacter::ClientChangeMontage_Implementation()
+void ATestCharacter::ClientChangeMontage_Implementation() // => 매인 적용.
 {
 	PlayerAnimInst->ChangeAnimation(PostureValue);
 	FPVPlayerAnimInst->ChangeAnimation(PostureValue);
