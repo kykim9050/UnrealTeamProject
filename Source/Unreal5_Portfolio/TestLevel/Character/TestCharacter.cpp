@@ -715,18 +715,15 @@ void ATestCharacter::UpdatePlayerHp(float _DeltaTime) // => 매인 적용 진행 중.(H
 
 
 	float GetHp = MyTestPlayerState->GetPlayerHp();
+	
+	//CurHp = MyTestPlayerState->GetPlayerHp();
 
-	if (CurHp != GetHp || /*test*/MyMaxHp != PlayerHp)
+	ATestPlayHUD* PlayHUD = Cast<ATestPlayHUD>(MyController->GetHUD());
+	if (nullptr != PlayHUD && Token != -1)
 	{
-
-		CurHp = MyTestPlayerState->GetPlayerHp();
-
-		ATestPlayHUD* PlayHUD = Cast<ATestPlayHUD>(MyController->GetHUD());
-		if (nullptr != PlayHUD && Token != -1)
-		{
-			UTestHpBarUserWidget* MyHpWidget = Cast<UTestHpBarUserWidget>(PlayHUD->GetWidget(EUserWidgetType::HpBar));
-			MyHpWidget->NickNameUpdate(Token, FText::FromString(FString("CORORO")));
-			MyHpWidget->HpbarUpdate(Token, CurHp, 100.0f);
-		}
+		UTestHpBarUserWidget* MyHpWidget = Cast<UTestHpBarUserWidget>(PlayHUD->GetWidget(EUserWidgetType::HpBar));
+		FString TestName = "CORORO_" + FString::FromInt(Token);
+		MyHpWidget->NickNameUpdate(Token, FText::FromString(TestName));
+		MyHpWidget->HpbarUpdate(Token, GetHp, 100.0f);
 	}
 }
