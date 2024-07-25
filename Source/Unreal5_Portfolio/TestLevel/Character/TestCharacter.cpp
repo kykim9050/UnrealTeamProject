@@ -453,21 +453,21 @@ void ATestCharacter::ChangePosture_Implementation(EPlayerPosture _Type)	// => 메
 	}
 }
 
-void ATestCharacter::ChangeLowerState_Implementation(EPlayerLowerState _LowerState)
+void ATestCharacter::ChangeLowerState_Implementation(EPlayerLowerState _LowerState) // => 매인 적용.
 {
 	LowerStateValue = _LowerState;
 }
 
-void ATestCharacter::ChangePlayerDir_Implementation(EPlayerMoveDir _Dir)
+void ATestCharacter::ChangePlayerDir_Implementation(EPlayerMoveDir _Dir) // => 매인 적용.
 {
 	DirValue = _Dir;
 }
 
-void ATestCharacter::PickUpItem_Implementation()	// => 메인캐릭터로 이전해야 함 (24.07.23 수정됨)
+void ATestCharacter::PickUpItem_Implementation()	// => 메인캐릭터로 이전해야 함 (24.07.23 수정됨) // => 매인 적용.
 {
 	// RayCast를 통해 Tag 이름을 가져온다.
-	FString GetItemName = "";
-	GetItemName = RayCastToItemName;
+	//FString GetItemName = ""; // 사용 안함.
+	//GetItemName = RayCastToItemName; // 사용 안함.
 
 	// 맵에 아이템이 없을 경우.
 	if (nullptr == GetMapItemData)
@@ -508,7 +508,7 @@ void ATestCharacter::PickUpItem_Implementation()	// => 메인캐릭터로 이전해야 함 
 	}
 	FName ItemStringToName = FName(*TagName);			// 아이템 이름
 
-	// Data Table에서 아이템 검색하기.
+	// ItemName에 맞는 아이템 정보를 DT에서 가져온다.
 	UMainGameInstance* Inst = GetGameInstance<UMainGameInstance>();
 	const FItemDataRow* ItemData = Inst->GetItemData(ItemStringToName);
 
