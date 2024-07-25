@@ -138,13 +138,20 @@ enum class EBossMonsterAnim : uint8
 UENUM(BlueprintType)
 enum class EUserWidgetType : uint8
 {
+	// InGame
 	HpBar,
 	WeaponSlot,
 	MiniMap,
 	Leaderboard,
 	Crosshair,
-	TeamHpBar,
 	WorldMap,
+
+	// Title
+	TitleBackground,
+	TitleLogo,
+	ServerBtn,
+	ConnectBrowser,
+
 };
 
 
