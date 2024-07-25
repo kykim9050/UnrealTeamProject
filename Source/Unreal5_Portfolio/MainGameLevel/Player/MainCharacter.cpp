@@ -15,6 +15,9 @@
 #include "MainGameLevel/Player/MainPlayerState.h"
 #include "MainGameLevel/Monster/Base/BasicMonsterBase.h"
 #include "PartDevLevel/Monster/Boss/TestBossMonsterBase.h"
+#include "MainGameLevel/Object/MapObjectBase.h"
+#include "MainGameLevel/Object/Bomb.h"
+#include "MainGameLevel/UI/Title/MainTitleHUD.h"
 #include <Kismet/KismetSystemLibrary.h>
 #include <Kismet/GameplayStatics.h>
 
@@ -166,6 +169,7 @@ void AMainCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	UpdatePlayerHp(DeltaTime);
 }
 
 // Called to bind functionality to input
@@ -235,6 +239,28 @@ void AMainCharacter::PickUpItem_Implementation()
 		return;
 	}
 
+	// 1. 맵오브젝트일 경우
+	AMapObjectBase* GetMapItem = Cast<AMapObjectBase>(GetMapItemData);
+	if (nullptr != GetMapItem)
+	{
+		GetMapItem->InterAction();
+
+		ABomb* GetSampleData = Cast<ABomb>(GetMapItem);
+		if (nullptr != GetSampleData)
+		{
+			for (size_t i = 0; i < GetSampleData->Tags.Num(); i++)
+			{
+				FName GetItemTag = GetSampleData->Tags[i];
+				if ("Sample" == GetItemTag)
+				{
+					GetSampleData->CharacterToDestroy();
+				}
+			}
+		}
+		return;
+	}
+
+	// 2. 주울 수 있는 아이템일 경우
 	// 맵에 아이템이 있다면 해당 아이템의 Tag를 가져온다.
 	FString TagName = "";
 	for (size_t i = 0; i < GetMapItemData->Tags.Num(); i++)
@@ -242,39 +268,48 @@ void AMainCharacter::PickUpItem_Implementation()
 		TagName = GetMapItemData->Tags[i].ToString();
 	}
 
-	FName ItemName = FName(*TagName);
+	FName ItemStringToName = FName(*TagName);
 
 	// ItemName에 맞는 아이템 정보를 DT에서 가져온다.
 	UMainGameInstance* Inst = GetGameInstance<UMainGameInstance>();
-	const FItemDataRow* ItemData = Inst->GetItemData(ItemName);
+	const FItemDataRow* ItemData = Inst->GetItemData(ItemStringToName);
 
 	EPlayerPosture ItemType = ItemData->GetType();		// 아이템 타입
+
+	// 이미 인벤토리에 같은 이름을 가진 아이템이 있을 경우.
+	if (ItemStringToName == ItemSlot[static_cast<int>(ItemType)].Name)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, TEXT("The same item is already in inventory."));
+		return;
+	}
+
+	// 이미 인벤토리에 같은 타입의 아이템이 있을 경우. (추후 수정될 수도 있음)
+	if (true == IsItemIn[static_cast<uint8>(ItemType)])
+	{
+		CharacterPlayerToDropItem();
+	}
+
 	int ItemReloadNum = ItemData->GetReloadNum();		// 무기 장전 단위 (30, 40)	// -1일 경우 총기류 무기가 아님
 	int ItemDamage = ItemData->GetDamage();				// 무기 공격력				// 0일 경우 무기가 아님
 	UStaticMesh* ItemMeshRes = ItemData->GetResMesh();	// 스태틱 메시
 	FVector ItemRelLoc = ItemData->GetRelLoc();			// 스태틱 메시 컴포넌트 상대적 위치
 	FRotator ItemRelRot = ItemData->GetRelRot();		// 스태틱 메시 컴포넌트 상대적 회전
+	FVector ItemRelScale = ItemData->GetRelScale();		// 스태틱 메시 컴포넌트 상대적 크기
 
 	uint8 ItemIndex = static_cast<uint8>(ItemType);		// 아이템을 넣을 인벤토리 인덱스
-	// 손에 아이템이 있어?
-	if (true == IsItemIn[ItemIndex])
-	{
-		// Map에 아이템 생성.
-		FTransform CreatePos = CreateItemComponent->GetComponentToWorld(); // 체크 필요.
-		CharacterPlayerToDropItem();
-	}
 
 	// 손에 아이템을 생성한다.
 	// 인벤토리에 아이템 집어넣기. (스태틱메시로 아이템을 가져가는 방식 채택!!!)
 	IsItemIn[ItemIndex] = true;
 
-	ItemSlot[ItemIndex].Name = ItemName;
+	ItemSlot[ItemIndex].Name = ItemStringToName;
 	ItemSlot[ItemIndex].ReloadMaxNum = ItemReloadNum;
 	ItemSlot[ItemIndex].ReloadLeftNum = ItemReloadNum;
 	ItemSlot[ItemIndex].Damage = ItemDamage;
 	ItemSlot[ItemIndex].MeshRes = ItemMeshRes;
 	ItemSlot[ItemIndex].RelLoc = ItemRelLoc;
 	ItemSlot[ItemIndex].RelRot = ItemRelRot;
+	ItemSlot[ItemIndex].RelScale = ItemRelScale;
 
 	// 주은 무기 삭제.
 	GetMapItemData->Destroy();
@@ -345,7 +380,7 @@ void AMainCharacter::FireRayCast_Implementation(float _DeltaTime)
 		if (true == ActorHit && nullptr != Hit.GetActor())
 		{
 			FString BoneName = Hit.BoneName.ToString();
-			UE_LOG(LogTemp, Warning, TEXT("Bone Name : %s"), *BoneName);
+			//UE_LOG(LogTemp, Warning, TEXT("Bone Name : %s"), *BoneName);
 			ABasicMonsterBase* Monster = Cast<ABasicMonsterBase>(Hit.GetActor());
 			if (nullptr != Monster)
 			{
@@ -367,6 +402,24 @@ void AMainCharacter::ClientChangeMontage_Implementation()
 {
 	PlayerAnimInst->ChangeAnimation(PostureValue);
 	FPVPlayerAnimInst->ChangeAnimation(PostureValue);
+}
+
+void AMainCharacter::CrouchCameraMove()
+{
+	if (IsFPV)
+	{
+		switch (LowerStateValue)
+		{
+		case EPlayerLowerState::Idle:
+			SpringArmComponent->SetRelativeLocation(FVector(0.0f, 0.0f, 10.0f));
+			break;
+		case EPlayerLowerState::Crouch:
+			SpringArmComponent->SetRelativeLocation(FVector(0.0f, 0.0f, 80.0f));
+			break;
+		default:
+			break;
+		}
+	}
 }
 
 void AMainCharacter::MapItemOverlapStart(AActor* _OtherActor, UPrimitiveComponent* _Collision)
@@ -395,6 +448,8 @@ void AMainCharacter::UpdatePlayerHp(float _DeltaTime)
 	{
 		return;
 	}
+
+	float GetHp = MyMainPlayerState->GetPlayerHp();
 
 	// Get HUD
 	// AMainPlayHUD PlayHUD = Cast<AMainPlayHUD>(MyController->GetHUD());
@@ -452,6 +507,10 @@ void AMainCharacter::ChangePOV()
 
 void AMainCharacter::CharacterReload()
 {
+	if (-1 == CurItemIndex)
+	{
+		return;
+	}
 	ItemSlot[CurItemIndex].ReloadLeftNum = ItemSlot[CurItemIndex].ReloadMaxNum;
 }
 
@@ -499,4 +558,28 @@ void AMainCharacter::NetCheck()
 		// 이토큰은 그 인덱스가 아니다.
 		Token = Inst->GetNetToken();
 	}
+}
+
+void AMainCharacter::SendTokenToHpBarWidget()
+{
+	//AMainPlayerController* Con = Cast<AMainPlayerController>(GetController());
+	//if (nullptr == Con)
+	//{
+	//	return;
+	//}
+	//AMainPlayHUD* PlayHUD = Cast<ATestPlayHUD>(Con->GetHUD());
+	//if (nullptr == PlayHUD)
+	//{
+	//	return;
+	//}
+	//UTestHpBarUserWidget* MyHpWidget = Cast<UTestHpBarUserWidget>(PlayHUD->GetWidget(EUserWidgetType::HpBar));
+	//if (nullptr == MyHpWidget)
+	//{
+	//	return;
+	//}
+
+	//if (true == IsCanControlled && -1 != Token)
+	//{
+	//	MyHpWidget->HpbarInit_ForMainPlayer(Token);
+	//}
 }
