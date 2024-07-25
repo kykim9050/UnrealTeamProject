@@ -10,6 +10,7 @@
 #include "GameFrameWork/CharacterMovementComponent.h"
 #include "Blueprint/AIBlueprintHelperLibrary.h"
 #include "BehaviorTree/BlackboardComponent.h"
+#include "BrainComponent.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Kismet/GameplayStatics.h"
@@ -104,11 +105,6 @@ void ATestMonsterBase::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Out
 void ATestMonsterBase::OnAttackOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
 	Attack(OtherActor, OtherComp);
-}
-
-void ATestMonsterBase::OnClimbOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
-{
-	UE_LOG(MonsterLog, Warning, TEXT("CLimb End"));
 }
 
 ATestMonsterBaseAIController* ATestMonsterBase::GetAIController()
@@ -210,8 +206,7 @@ void ATestMonsterBase::OnDead()
 	ChangeRandomAnimation(ETestMonsterAnim::Dead);
 
 	ATestMonsterBaseAIController* AIController = GetController<ATestMonsterBaseAIController>();
-	AIController->UnPossess();
-	AIController->Destroy();
+	AIController->GetBrainComponent()->StopLogic("Dead");
 }
 
 void ATestMonsterBase::OnDeadDissolveInterp(float _Value)
