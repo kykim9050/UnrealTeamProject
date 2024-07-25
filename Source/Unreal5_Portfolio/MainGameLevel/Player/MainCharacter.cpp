@@ -346,7 +346,7 @@ void AMainCharacter::FireRayCast_Implementation(float _DeltaTime)
 		if (true == ActorHit && nullptr != Hit.GetActor())
 		{
 			FString BoneName = Hit.BoneName.ToString();
-			UE_LOG(LogTemp, Warning, TEXT("Bone Name : %s"), *BoneName);
+			//UE_LOG(LogTemp, Warning, TEXT("Bone Name : %s"), *BoneName);
 			ABasicMonsterBase* Monster = Cast<ABasicMonsterBase>(Hit.GetActor());
 			if (nullptr != Monster)
 			{

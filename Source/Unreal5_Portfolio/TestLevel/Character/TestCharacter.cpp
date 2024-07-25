@@ -351,7 +351,7 @@ void ATestCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLi
 //	}
 //}
 
-void ATestCharacter::FireRayCast_Implementation(float _DeltaTime) // => 메인캐릭터로 이전해야 함 (내용 수정됨) 
+void ATestCharacter::FireRayCast_Implementation(float _DeltaTime) // => 메인캐릭터로 이전해야 함 (내용 수정됨) // => 매인 적용.
 {
 	if (CurItemIndex == -1 || ItemSlot[CurItemIndex].ReloadMaxNum == -1)
 	{
@@ -383,7 +383,7 @@ void ATestCharacter::FireRayCast_Implementation(float _DeltaTime) // => 메인캐릭
 		{
 			FString BoneName = Hit.BoneName.ToString();
 			UE_LOG(LogTemp, Warning, TEXT("Bone Name : %s"), *BoneName);
-			ATestMonsterBase* Monster = Cast<ATestMonsterBase>(Hit.GetActor());
+			ATestMonsterBase* Monster = Cast<ATestMonsterBase>(Hit.GetActor()); // [Main] ABasicMonsterBase
 			if (nullptr != Monster)
 			{
 				Monster->Damaged(ItemSlot[CurItemIndex].Damage);
