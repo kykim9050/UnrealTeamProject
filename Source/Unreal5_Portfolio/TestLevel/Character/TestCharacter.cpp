@@ -187,7 +187,7 @@ void ATestCharacter::HandAttackCollision(AActor* _OtherActor, UPrimitiveComponen
 	}
 }
 
-void ATestCharacter::ChangeHandAttackCollisionProfile(FName _Name)
+void ATestCharacter::ChangeHandAttackCollisionProfile(FName _Name) // => 매인 적용.
 {
 	HandAttackComponent->SetCollisionProfileName(_Name);
 }
@@ -230,7 +230,7 @@ void ATestCharacter::BeginPlay()
 
 	UMainGameBlueprintFunctionLibrary::PushActor(EObjectType::Player, this);
 
-	// 몽타주 변경에 필요한 세팅 추가 필요 (태환)
+	// 몽타주 변경에 필요한 세팅 추가 필요 (태환) // => 매인 적용.
 	PlayerAnimInst = Cast<UPlayerAnimInstance>(GetMesh()->GetAnimInstance());
 	FPVPlayerAnimInst = Cast<UPlayerAnimInstance>(FPVMesh->GetAnimInstance());
 
@@ -243,7 +243,7 @@ void ATestCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	UpdatePlayerHp(DeltaTime);
+	UpdatePlayerHp(DeltaTime); // => 매인 적용.
 
 	//DefaultRayCast(DeltaTime);
 	//TArray<FItemInformation> I = ItemSlot;
@@ -255,17 +255,17 @@ void ATestCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLi
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
 	DOREPLIFETIME(ATestCharacter, StateValue);
-	DOREPLIFETIME(ATestCharacter, PostureValue);
+	DOREPLIFETIME(ATestCharacter, PostureValue); // => 매인 적용.
 	DOREPLIFETIME(ATestCharacter, RayCastToItemName);
 
 	// HP (for UI, Monster test)
 	DOREPLIFETIME(ATestCharacter, PlayerHp);
 
 	// LowerState (태환)
-	DOREPLIFETIME(ATestCharacter, LowerStateValue);
-	DOREPLIFETIME(ATestCharacter, DirValue);
+	DOREPLIFETIME(ATestCharacter, LowerStateValue); // => 매인 적용.
+	DOREPLIFETIME(ATestCharacter, DirValue); // => 매인 적용.
 
-	DOREPLIFETIME(ATestCharacter, Token);
+	DOREPLIFETIME(ATestCharacter, Token); // => 매인 적용.
 }
 
 //void ATestCharacter::TestRayCast(float _DeltaTime, FVector _StartPos, FVector _EndPos, FRotator _CameraRot)
@@ -351,7 +351,7 @@ void ATestCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLi
 //	}
 //}
 
-void ATestCharacter::FireRayCast_Implementation(float _DeltaTime)	// => 메인캐릭터로 이전해야 함 (내용 수정됨)
+void ATestCharacter::FireRayCast_Implementation(float _DeltaTime) // => 메인캐릭터로 이전해야 함 (내용 수정됨) 
 {
 	if (CurItemIndex == -1 || ItemSlot[CurItemIndex].ReloadMaxNum == -1)
 	{
