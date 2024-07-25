@@ -168,7 +168,7 @@ void ATestCharacter::CharacterPlayerToDropItem_Implementation()	// => 메인캐릭터
 //	}
 //}
 
-void ATestCharacter::HandAttackCollision(AActor* _OtherActor, UPrimitiveComponent* _Collision)
+void ATestCharacter::HandAttackCollision(AActor* _OtherActor, UPrimitiveComponent* _Collision) // => 매인 캐릭터에 적용.
 {
 	{
 		ATestMonsterBase* Monster = Cast<ATestMonsterBase>(_OtherActor);

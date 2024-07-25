@@ -14,6 +14,7 @@
 #include "Components/SphereComponent.h"
 #include "MainGameLevel/Player/MainPlayerState.h"
 #include "MainGameLevel/Monster/Base/BasicMonsterBase.h"
+#include "PartDevLevel/Monster/Boss/TestBossMonsterBase.h"
 #include <Kismet/KismetSystemLibrary.h>
 #include <Kismet/GameplayStatics.h>
 
@@ -456,13 +457,21 @@ void AMainCharacter::CharacterReload()
 
 void AMainCharacter::HandAttackCollision(AActor* _OtherActor, UPrimitiveComponent* _Collision)
 {
-	ABasicMonsterBase* Monster = Cast<ABasicMonsterBase>(_OtherActor);
-	if (nullptr == Monster)
 	{
-		return;
+		ABasicMonsterBase* Monster = Cast<ABasicMonsterBase>(_OtherActor);
+		if (nullptr != Monster)
+		{
+			Monster->Damaged(150.0f);
+		}
 	}
 
-	Monster->Damaged(150.0f);
+	{
+		ATestBossMonsterBase* BossMonster = Cast<ATestBossMonsterBase>(_OtherActor); // 추후 Main으로 바꿔야 함.
+		if (nullptr != BossMonster)
+		{
+			BossMonster->Damaged(150.0f);
+		}
+	}
 }
 
 void AMainCharacter::ChangeHandAttackCollisionProfile(FName _Name)
