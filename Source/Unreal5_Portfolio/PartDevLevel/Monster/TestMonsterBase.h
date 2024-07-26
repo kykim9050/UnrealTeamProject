@@ -66,6 +66,8 @@ public:
 	void Damaged(float Damage);
 	void SetAttackCollision(bool Active);
 
+	class UMotionWarpingComponent* GetMotionWarpingComponent();
+
 protected:
 	UFUNCTION()
 	void OnAttackOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
@@ -121,4 +123,7 @@ private:
 
 	UPROPERTY(EditAnywhere, Category = "Particle", meta = (AllowPrivateAccess = true))
 	UParticleSystem* BloodParticle;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<class UMotionWarpingComponent> MotionWarpComponent;
 };
