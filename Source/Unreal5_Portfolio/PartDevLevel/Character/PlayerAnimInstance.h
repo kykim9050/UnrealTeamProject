@@ -36,5 +36,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	EPlayerMoveDir PlayerDir = EPlayerMoveDir::Forward;
 
+	// 7/26 Ãß°¡
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	bool PlayerIsFaint = false;
+
 	class UMainGameInstance* MainGameInst;
 };

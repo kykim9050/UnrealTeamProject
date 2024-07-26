@@ -55,6 +55,12 @@ void AMinimapCaptureCamera::SetCharacter(ATestCharacter* _MyCharacter)
 void AMinimapCaptureCamera::FollowCharacter()
 {
 	MyCharacter = Cast<ATestCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+
+	if (nullptr == MyCharacter)
+	{
+		return;
+	}
+
 	FVector CharacterPos = MyCharacter->GetActorLocation();
 	CharacterPos.Z = 4000.f;
 	SetActorLocation(CharacterPos);

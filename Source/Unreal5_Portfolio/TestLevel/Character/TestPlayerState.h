@@ -23,9 +23,6 @@ public:
 		return PlayerHp;
 	}
 
-	UFUNCTION()
-	void SetPlayerHp(float _Hp);
-
 	UFUNCTION(Reliable, Server)
 	void AddDamage(float _Damage);
 	void AddDamage_Implementation(float _Damage);
@@ -37,5 +34,5 @@ public:
 	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const;
 private:
 	UPROPERTY(Replicated)
-	float PlayerHp = 0.f;
+	float PlayerHp = -1.0f;
 };

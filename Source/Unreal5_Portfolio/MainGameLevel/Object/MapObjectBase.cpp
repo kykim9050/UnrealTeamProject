@@ -3,7 +3,9 @@
 
 #include "MainGameLevel/Object/MapObjectBase.h"
 #include "Components/CapsuleComponent.h"
-
+#include "Global/MainGameBlueprintFunctionLibrary.h"
+#include "Global/ContentsLog.h"
+#include "Global/DataTable/MapObjDataRow.h"
 
 // Sets default values
 AMapObjectBase::AMapObjectBase()
@@ -20,6 +22,22 @@ AMapObjectBase::AMapObjectBase()
 
 	MeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MapObjMesh"));
 	MeshComponent->SetupAttachment(RootComponent);
+}
+
+void AMapObjectBase::SetInfo(FName _InfoName)
+{
+	UMainGameInstance* Inst = UMainGameBlueprintFunctionLibrary::GetMainGameInstance(GetWorld());
+
+	if (nullptr == Inst)
+	{
+		UE_LOG(ObjectLog, Fatal, TEXT("%S(%u)> if (nullptr == Inst)"), __FUNCTION__, __LINE__);
+		return;
+	}
+
+	const FMapObjDataRow* TableData = Inst->GetMapObjDataTable(_InfoName);
+	GetMeshComponent()->SetStaticMesh(TableData->GetMesh());
+
+	InteractObjClass = TableData->GetInteractObjClass();
 }
 
 // Called when the game starts or when spawned

@@ -19,6 +19,7 @@
 #include "PartDevLevel/Character/PlayerAnimInstance.h"
 #include "MainGameLevel/Object/MapObjectBase.h"
 #include "PartDevLevel/Monster/Boss/TestBossMonsterBase.h"
+#include "GameFrameWork/CharacterMovementComponent.h"
 
 #include "TestLevel/UI/TestPlayHUD.h"
 #include "TestLevel/UI/TestHpBarUserWidget.h"
@@ -35,7 +36,7 @@ ATestCharacter::ATestCharacter()
 
 	// SpringArm Component => 메인캐릭터 적용.
 	SpringArmComponent = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArmComponent"));
-	SpringArmComponent->SetupAttachment(RootComponent);
+	SpringArmComponent->SetupAttachment(GetMesh(), FName("SpringArmComponent"));
 	SpringArmComponent->SetRelativeLocation(FVector(20.0f, 0.0f, 67.0f));
 	SpringArmComponent->TargetArmLength = 0.0f;
 	SpringArmComponent->bUsePawnControlRotation = true;
@@ -98,7 +99,7 @@ ATestCharacter::ATestCharacter()
 	GetMapItemCollisonComponent->SetCollisionProfileName(FName("MapItemSearch"));
 
 	UEnum* Enum = StaticEnum<EPlayerPosture>();
-	
+
 	// = > 메인캐릭터 적용. [주석 부분 다르니 확인 요청.]
 	for (size_t i = 0; i < static_cast<size_t>(EPlayerPosture::Barehand); i++)
 	{
@@ -217,7 +218,7 @@ void ATestCharacter::PostInitializeComponents()
 		UClass* AnimInst = Cast<UClass>(MainGameInst->GetPlayerData(FName("TestPlayer"))->GetPlayerAnimInstance());
 		GetMesh()->SetAnimInstanceClass(AnimInst);
 	}
-	
+
 	Super::PostInitializeComponents();
 
 }
@@ -236,6 +237,8 @@ void ATestCharacter::BeginPlay()
 
 	HandAttackComponent->SetCollisionProfileName(TEXT("NoCollision"));
 	//UISetting();
+
+	SettingPlayerState();
 }
 
 // Called every frame
@@ -264,6 +267,9 @@ void ATestCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLi
 	// LowerState (태환)
 	DOREPLIFETIME(ATestCharacter, LowerStateValue); // => 매인 적용.
 	DOREPLIFETIME(ATestCharacter, DirValue); // => 매인 적용.
+
+	// 7/26 추가
+	DOREPLIFETIME(ATestCharacter, IsFaint);
 
 	DOREPLIFETIME(ATestCharacter, Token); // => 매인 적용.
 }
@@ -351,7 +357,7 @@ void ATestCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLi
 //	}
 //}
 
-void ATestCharacter::FireRayCast_Implementation() // => 메인도 수정해야 함 (24.07.25 수정됨)
+void ATestCharacter::FireRayCast_Implementation() // => 메인도 수정해야 함 (24.07.25 수정됨) // Main 적용.
 {
 	if (CurItemIndex == -1 || CurItemIndex == 2)
 	{
@@ -411,7 +417,7 @@ void ATestCharacter::ChangeState_Implementation(EPlayerState _Type)
 	StateValue = _Type;
 }
 
-void ATestCharacter::ChangePosture_Implementation(EPlayerPosture _Type)	// => 메인으로 이전해야 함 (24.07.25 수정됨)
+void ATestCharacter::ChangePosture_Implementation(EPlayerPosture _Type)	// => 메인으로 이전해야 함 (24.07.25 수정됨) // Main에 적용.
 {
 	if (_Type == EPlayerPosture::Bomb || _Type == EPlayerPosture::Drink)	// Bomb, Drink => 자세변경할 수 없음
 	{
@@ -465,6 +471,18 @@ void ATestCharacter::ChangeLowerState_Implementation(EPlayerLowerState _LowerSta
 void ATestCharacter::ChangePlayerDir_Implementation(EPlayerMoveDir _Dir) // => 매인 적용.
 {
 	DirValue = _Dir;
+}
+
+void ATestCharacter::ChangeIsFaint_Implementation()
+{
+	if (true == IsFaint)
+	{
+		IsFaint = false;
+	}
+	else
+	{
+		IsFaint = true;
+	}
 }
 
 void ATestCharacter::PickUpItem_Implementation()	// => 메인캐릭터로 이전해야 함 (24.07.23 수정됨) // => 매인 적용.
@@ -564,6 +582,7 @@ void ATestCharacter::ChangePOV()	// => 메인캐릭터로 이전해야 함 (24.07.22 수정됨
 	if (IsFPV)	// 일인칭 -> 삼인칭
 	{
 		// SpringArm Component 위치 수정.
+		SpringArmComponent->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
 		SpringArmComponent->TargetArmLength = 300.0f;
 		SpringArmComponent->SetRelativeLocation(FVector(0.0f, 60.0f, 110.0f));
 
@@ -583,6 +602,7 @@ void ATestCharacter::ChangePOV()	// => 메인캐릭터로 이전해야 함 (24.07.22 수정됨
 	else	// 삼인칭 -> 일인칭
 	{
 		// SpringArm Component 위치 수정.
+		SpringArmComponent->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, FName("SpringArmComponent"));
 		SpringArmComponent->TargetArmLength = 0.0f;
 		SpringArmComponent->SetRelativeLocation(FVector(20.0f, 0.0f, 67.0f));
 
@@ -715,7 +735,7 @@ void ATestCharacter::UpdatePlayerHp(float _DeltaTime) // => 매인 적용 진행 중.(H
 
 
 	float GetHp = MyTestPlayerState->GetPlayerHp();
-	
+
 	//CurHp = MyTestPlayerState->GetPlayerHp();
 
 	ATestPlayHUD* PlayHUD = Cast<ATestPlayHUD>(MyController->GetHUD());
@@ -726,4 +746,23 @@ void ATestCharacter::UpdatePlayerHp(float _DeltaTime) // => 매인 적용 진행 중.(H
 		MyHpWidget->NickNameUpdate(Token, FText::FromString(TestName));
 		MyHpWidget->HpbarUpdate(Token, GetHp, 100.0f);
 	}
+}
+
+void ATestCharacter::SettingPlayerState_Implementation()
+{
+	ATestPlayerController* Con = Cast<ATestPlayerController>(GetController());
+	if (nullptr == Con)
+	{
+		int a = 0;
+		return;
+	}
+
+	ATestPlayerState* ThisPlayerState = Cast<ATestPlayerState>(Con->PlayerState);
+	if (nullptr == ThisPlayerState)
+	{
+		int a = 0;
+		return;
+	}
+
+	ThisPlayerState->InitPlayerData();
 }
