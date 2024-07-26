@@ -3,6 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "MainGameLevel/UI/Common/DefaultButtonUserWidget.h"
+
 #include "Blueprint/UserWidget.h"
 #include "Components/Button.h"
 
@@ -21,10 +23,11 @@ class UNREAL5_PORTFOLIO_API UServerBtnUserWidget : public UUserWidget
 	//DECLARE_EVENT(UServerBtnUserWidget, FOnButtonClickedEvent)
 
 	UPROPERTY(meta = (BindWidget))
-	class UButton* ServerButton;
+	class UDefaultButtonUserWidget* ServerButton;
 
 	UPROPERTY(meta = (BindWidget))
-	class UButton* ConnectButton;
+	class UDefaultButtonUserWidget* ConnectButton;
+
 
 public:
 	void NativeConstruct() override;
@@ -34,6 +37,7 @@ public:
 
 	UFUNCTION()
 	void OnConnectButtonClicked();
+
 
 private:
 	UPROPERTY()

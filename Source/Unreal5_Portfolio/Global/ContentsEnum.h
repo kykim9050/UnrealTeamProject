@@ -151,7 +151,7 @@ enum class EUserWidgetType : uint8
 	TitleLogo,
 	ServerBtn,
 	ConnectBrowser,
-
+	SettingName,
 };
 
 
