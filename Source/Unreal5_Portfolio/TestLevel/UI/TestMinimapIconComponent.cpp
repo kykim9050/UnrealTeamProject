@@ -18,7 +18,7 @@ UTestMinimapIconComponent::UTestMinimapIconComponent()
 	}
 
 	SetRelativeLocation(FVector(0.f, 0.f, 2000.f));
-	SetRelativeScale3D(FVector(4.f, 1.f, 4.f));
+	SetRelativeScale3D(FVector(6.f, 1.f, 6.f));
 
 	FQuat Q;
 	UKismetMathLibrary::Quat_SetFromEuler(Q, FVector(90.f, 0.f, 90.f));

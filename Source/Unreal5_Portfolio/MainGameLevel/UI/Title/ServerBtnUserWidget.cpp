@@ -50,8 +50,7 @@ void UServerBtnUserWidget::OnConnectButtonClicked()
 	{
 		LOG(UILog, Fatal, "Controller is Null");
 	}
-	TitleHUD->UISwitch(EUserWidgetType::TitleLogo);
-	TitleHUD->UISwitch(EUserWidgetType::ServerBtn);
 
+	TitleHUD->UISwitch(EUserWidgetType::ServerBtn);
 	TitleHUD->UISwitch(EUserWidgetType::ConnectBrowser);
 }
