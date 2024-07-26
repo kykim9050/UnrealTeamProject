@@ -220,6 +220,7 @@ void ATestBossMonsterBase::FireProjectile()
 				// 발사 방향 설정
 				FVector LaunchDirection = MuzzleRotation.Vector();
 				Projectile->FireInDirection(LaunchDirection);
+				Projectile->SetProjectileDamage(SettingBossData->Data->GetRangedAttackDamage());
 			}
 		}
 	}
