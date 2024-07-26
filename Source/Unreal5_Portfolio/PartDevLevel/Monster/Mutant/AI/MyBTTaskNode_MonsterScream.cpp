@@ -49,7 +49,9 @@ void UMyBTTaskNode_MonsterScream::TickTask(UBehaviorTreeComponent& _OwnerComp, u
 	}
 
 	FVector CurMonsterPos = Monster->GetActorLocation();
+	CurMonsterPos.Z = 0.0f;
 	FVector TargetPos = GetValueAsObject<AActor>(_OwnerComp, TEXT("TargetActor"))->GetActorLocation();
+	TargetPos.Z = 0.0f;
 	FRotator TurnRot = UKismetMathLibrary::FindLookAtRotation(CurMonsterPos, TargetPos);
 	Monster->SetActorRotation(TurnRot);
 

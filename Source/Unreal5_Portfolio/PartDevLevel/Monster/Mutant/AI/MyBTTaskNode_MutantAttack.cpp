@@ -14,6 +14,8 @@
 #include "TestLevel/Character/TestCharacter.h"
 #include "Components/CapsuleComponent.h"
 
+#include "Kismet/KismetMathLibrary.h"
+
 
 EBTNodeResult::Type UMyBTTaskNode_MutantAttack::ExecuteTask(UBehaviorTreeComponent& _OwnerComp, uint8* _NodeMemory)
 {
@@ -59,9 +61,14 @@ void UMyBTTaskNode_MutantAttack::TickTask(UBehaviorTreeComponent& _OwnerComp, ui
 		return;
 	}
 
+	AActor* TargetActor = GetValueAsObject<AActor>(_OwnerComp, TEXT("TargetActor"));
+	FVector MonsterLocation = Monster->GetActorLocation();
+	FVector TargetLocation = TargetActor->GetActorLocation();
+	FRotator TurnRot = UKismetMathLibrary::FindLookAtRotation(MonsterLocation, TargetLocation);
+	Monster->SetActorRotation(TurnRot);
+
 	if (0.0f >= MonsterData->AnimationTime)
 	{
-		AActor* TargetActor = GetValueAsObject<AActor>(_OwnerComp, TEXT("TargetActor"));
 		ATestCharacter* TargetPlayer = Cast<ATestCharacter>(TargetActor);
 		ATestPlayerState* TargetPlayerState = Cast<ATestPlayerState>(TargetPlayer->GetPlayerState());
 
@@ -74,9 +81,6 @@ void UMyBTTaskNode_MutantAttack::TickTask(UBehaviorTreeComponent& _OwnerComp, ui
 		}
 		else
 		{
-			FVector MonsterLocation = Monster->GetActorLocation();
-			FVector TargetLocation = TargetActor->GetActorLocation();
-
 			FVector LocationDiff = TargetLocation - MonsterLocation;
 			float Dist = LocationDiff.Size();
 			if (MonsterData->AttackBoundary >= Dist)
