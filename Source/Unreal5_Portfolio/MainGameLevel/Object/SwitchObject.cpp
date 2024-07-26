@@ -22,21 +22,7 @@ void ASwitchObject::BeginPlay()
 	//GetCollisionComponent()->AddRelativeLocation(CollisionOffset);
 }
 
-void ASwitchObject::SetInfo(FName _InfoName)
-{
-	UMainGameInstance* Inst = UMainGameBlueprintFunctionLibrary::GetMainGameInstance(GetWorld());
 
-	if (nullptr == Inst)
-	{
-		UE_LOG(ObjectLog, Fatal, TEXT("%S(%u)> if (nullptr == Inst)"), __FUNCTION__, __LINE__);
-		return;
-	}
-
-	const FMapObjDataRow* TableData = Inst->GetMapObjDataTable(_InfoName);
-	GetMeshComponent()->SetStaticMesh(TableData->GetMesh());
-
-	InteractObjClass = TableData->GetInteractObjClass();
-}
 
 void ASwitchObject::Tick(float DeltaTime)
 {
