@@ -351,7 +351,7 @@ void ATestCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLi
 //	}
 //}
 
-void ATestCharacter::FireRayCast_Implementation() // => 메인도 수정해야 함 (24.07.25 수정됨)
+void ATestCharacter::FireRayCast_Implementation() // => 메인도 수정해야 함 (24.07.25 수정됨) // Main 적용.
 {
 	if (CurItemIndex == -1 || CurItemIndex == 2)
 	{
@@ -411,7 +411,7 @@ void ATestCharacter::ChangeState_Implementation(EPlayerState _Type)
 	StateValue = _Type;
 }
 
-void ATestCharacter::ChangePosture_Implementation(EPlayerPosture _Type)	// => 메인으로 이전해야 함 (24.07.25 수정됨)
+void ATestCharacter::ChangePosture_Implementation(EPlayerPosture _Type)	// => 메인으로 이전해야 함 (24.07.25 수정됨) // Main에 적용.
 {
 	if (_Type == EPlayerPosture::Bomb || _Type == EPlayerPosture::Drink)	// Bomb, Drink => 자세변경할 수 없음
 	{
