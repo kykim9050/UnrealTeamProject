@@ -37,8 +37,6 @@ public:
 	void MoveRight(const FInputActionValue& Value);
 	UFUNCTION(BlueprintCallable)
 	void MoveLeft(const FInputActionValue& Value);
-	UFUNCTION(BlueprintCallable)
-	void MoveEnd(const FInputActionValue& Value);
 
 	//UFUNCTION(BlueprintCallable)
 	//void Jump(const FInputActionValue& Value);
@@ -93,6 +91,11 @@ public:
 	// AttackTest (태환)
 	UFUNCTION(BlueprintCallable)
 	void AttackMontagePlay();
+
+	//테스트용
+	UFUNCTION(BlueprintCallable)
+	void SetFaint();
+	//
 
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "TeamId", meta = (AllowPrivateAccess = true))

@@ -47,10 +47,6 @@ void ATestPlayerController::SetupInputComponent()
 			EnhancedInputComponent->BindAction(InputData->Actions[4], ETriggerEvent::Triggered, this, &ATestPlayerController::MoveLeft);
 			EnhancedInputComponent->BindAction(InputData->Actions[1], ETriggerEvent::Triggered, this, &ATestPlayerController::MoveFront);
 			EnhancedInputComponent->BindAction(InputData->Actions[2], ETriggerEvent::Triggered, this, &ATestPlayerController::MoveBack);
-			EnhancedInputComponent->BindAction(InputData->Actions[1], ETriggerEvent::Completed, this, &ATestPlayerController::MoveEnd);
-			EnhancedInputComponent->BindAction(InputData->Actions[2], ETriggerEvent::Completed, this, &ATestPlayerController::MoveEnd);
-			EnhancedInputComponent->BindAction(InputData->Actions[3], ETriggerEvent::Completed, this, &ATestPlayerController::MoveEnd);
-			EnhancedInputComponent->BindAction(InputData->Actions[4], ETriggerEvent::Completed, this, &ATestPlayerController::MoveEnd);
 			//EnhancedInputComponent->BindAction(InputData->Actions[5], ETriggerEvent::Started, this, &ATestPlayerController::Jump);
 			//EnhancedInputComponent->BindAction(InputData->Actions[5], ETriggerEvent::Completed, this, &ATestPlayerController::JumpEnd);
 			//EnhancedInputComponent->BindAction(InputData->Actions[6], ETriggerEvent::Started, this, &ATestPlayerController::FireStart);
@@ -116,11 +112,6 @@ void ATestPlayerController::MoveLeft(const FInputActionValue& Value)
 
 	//
 	ChangePlayerDir(EPlayerMoveDir::Left);
-}
-
-void ATestPlayerController::MoveEnd(const FInputActionValue& Value)
-{
-	ATestCharacter* Ch = GetPawn<ATestCharacter>();
 }
 
 //void ATestPlayerController::Jump(const FInputActionValue& Value)
@@ -265,6 +256,12 @@ void ATestPlayerController::AttackMontagePlay()
 {
 	ATestCharacter* Ch = GetPawn<ATestCharacter>();
 	Ch->ChangeMontage();
+}
+
+void ATestPlayerController::SetFaint()
+{
+	ATestCharacter* Ch = GetPawn<ATestCharacter>();
+	Ch->ChangeIsFaint();
 }
 
 FGenericTeamId ATestPlayerController::GetGenericTeamId() const
