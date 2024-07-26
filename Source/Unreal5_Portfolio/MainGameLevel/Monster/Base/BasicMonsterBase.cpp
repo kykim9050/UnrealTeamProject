@@ -161,8 +161,8 @@ void ABasicMonsterBase::SetDead_Implementation()
 	DeadTimeLine.PlayFromStart();
 
 	// Collision Setting
-	GetCapsuleComponent()->SetCollisionObjectType(ECC_GameTraceChannel5);
-	AttackComponent->SetCollisionObjectType(ECC_GameTraceChannel5);
+	GetCapsuleComponent()->SetCollisionResponseToAllChannels(ECR_Ignore);
+	AttackComponent->SetCollisionResponseToAllChannels(ECR_Ignore);
 	
 	// MoveMoment Setting
 	GetCharacterMovement()->SetActive(false);
