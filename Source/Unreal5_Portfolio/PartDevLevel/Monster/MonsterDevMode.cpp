@@ -17,6 +17,6 @@ void AMonsterDevMode::PostLogin(APlayerController* NewPlayer)
 	Super::PostLogin(NewPlayer);
 
 	// 새로 로그인한 플레이어 처리
-	ATestPlayerState* NewPlayerState = NewPlayer->GetPlayerState<ATestPlayerState>();
-	NewPlayerState->InitPlayerData();
+	//ATestPlayerState* NewPlayerState = NewPlayer->GetPlayerState<ATestPlayerState>();
+	//NewPlayerState->InitPlayerData();
 }

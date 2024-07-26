@@ -180,6 +180,10 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void UpdatePlayerHp(float _DeltaTime);
 
+	UFUNCTION(Reliable, Server)
+	void SettingPlayerState();
+	void SettingPlayerState_Implementation();
+
 protected:
 	// 메인 플레이어 추가 필요 코드 (태환) 07/24
 	void PostInitializeComponents() override;

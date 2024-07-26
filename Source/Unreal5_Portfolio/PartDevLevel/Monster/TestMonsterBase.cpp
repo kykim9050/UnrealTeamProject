@@ -134,7 +134,7 @@ void ATestMonsterBase::Attack(AActor* _OtherActor, UPrimitiveComponent* _Collisi
 
 	ETestMonsterState MonsterState = static_cast<ETestMonsterState>(BlackBoard->GetValueAsEnum(TEXT("State")));
 	ATestCharacter* HitCharacter = Cast<ATestCharacter>(_OtherActor);
-	if (nullptr != HitCharacter && ETestMonsterState::Attack == MonsterState)
+	if (nullptr != HitCharacter && (ETestMonsterState::Attack == MonsterState || ETestMonsterState::JumpAttack == MonsterState))
 	{
 		ATestPlayerState* HitPlayerState = Cast<ATestPlayerState>(HitCharacter->GetPlayerState());
 

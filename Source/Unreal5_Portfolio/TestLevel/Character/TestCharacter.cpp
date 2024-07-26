@@ -239,6 +239,8 @@ void ATestCharacter::BeginPlay()
 
 	HandAttackComponent->SetCollisionProfileName(TEXT("NoCollision"));
 	//UISetting();
+
+	SettingPlayerState();
 }
 
 // Called every frame
@@ -746,4 +748,23 @@ void ATestCharacter::UpdatePlayerHp(float _DeltaTime) // => 매인 적용 진행 중.(H
 		MyHpWidget->NickNameUpdate(Token, FText::FromString(TestName));
 		MyHpWidget->HpbarUpdate(Token, GetHp, 100.0f);
 	}
+}
+
+void ATestCharacter::SettingPlayerState_Implementation()
+{
+	ATestPlayerController* Con = Cast<ATestPlayerController>(GetController());
+	if (nullptr == Con)
+	{
+		int a = 0;
+		return;
+	}
+
+	ATestPlayerState* ThisPlayerState = Cast<ATestPlayerState>(Con->PlayerState);
+	if (nullptr == ThisPlayerState)
+	{
+		int a = 0;
+		return;
+	}
+
+	ThisPlayerState->InitPlayerData();
 }
