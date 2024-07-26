@@ -29,7 +29,7 @@ void UServerBtnUserWidget::NativeConstruct()
 	TitleHUD = Cast<AMainTitleHUD>(MyController->GetHUD());
 	if (nullptr == TitleHUD)
 	{
-		LOG(UILog, Fatal, "Controller is Null");
+		LOG(UILog, Fatal, "HUD is Null");
 	}
 }
 
