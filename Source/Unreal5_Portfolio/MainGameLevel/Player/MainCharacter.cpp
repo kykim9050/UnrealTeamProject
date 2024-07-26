@@ -95,8 +95,9 @@ AMainCharacter::AMainCharacter()
 	// Map Item 
 	GetMapItemCollisonComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("GetMapItemCollisionComponent"));
 	GetMapItemCollisonComponent->SetupAttachment(RootComponent);
-	GetMapItemCollisonComponent->SetRelativeLocation(FVector(100.0, 0.0, -20.0f));
+	GetMapItemCollisonComponent->SetRelativeLocation(FVector(60.0, 0.0, -5.0f));
 	GetMapItemCollisonComponent->SetCollisionProfileName(FName("MapItemSearch"));
+	GetMapItemCollisonComponent->SetBoxExtent(FVector(40.0, 50.0, 80.0));
 
 	// Inventory
 	for (size_t i = 0; i < static_cast<size_t>(EPlayerPosture::Barehand); i++)
@@ -112,7 +113,7 @@ AMainCharacter::AMainCharacter()
 	// Hand Attack Component
 	HandAttackComponent = CreateDefaultSubobject<USphereComponent>(TEXT("Hand Attack Comp"));
 	HandAttackComponent->SetupAttachment(GetMesh());
-	HandAttackComponent->SetRelativeLocation({ 0.0f, 80.0f, 120.0f });
+	HandAttackComponent->SetRelativeLocation({ 0.0f, 100.0f, 110.0f });
 }
 
 void AMainCharacter::PostInitializeComponents() // FName 부분 수정 필요.
@@ -232,38 +233,39 @@ void AMainCharacter::ChangePlayerDir_Implementation(EPlayerMoveDir _Dir)
 
 void AMainCharacter::PickUpItem_Implementation()
 {
-	// 맵에 아이템이 없을 경우.
+	// 맵에 아이템이 없을 경우. -> 콜리전에 충돌이 없는 경우
 	if (nullptr == GetMapItemData)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, TEXT("Not Item"));
 		return;
 	}
 
 	// 1. 맵오브젝트일 경우
-	AMapObjectBase* GetMapItem = Cast<AMapObjectBase>(GetMapItemData);
-	if (nullptr != GetMapItem)
 	{
-		GetMapItem->InterAction();
-
-		ABomb* GetSampleData = Cast<ABomb>(GetMapItem);
-		if (nullptr != GetSampleData)
+		AMapObjectBase* GetMapItem = Cast<AMapObjectBase>(GetMapItemData);
+		if (nullptr != GetMapItem)
 		{
-			for (size_t i = 0; i < GetSampleData->Tags.Num(); i++)
+			GetMapItem->InterAction();
+
+			ABomb* GetSampleData = Cast<ABomb>(GetMapItem);
+			if (nullptr != GetSampleData)
 			{
-				FName GetItemTag = GetSampleData->Tags[i];
-				if ("Sample" == GetItemTag)
+				for (size_t i = 0; i < GetSampleData->Tags.Num(); i++)
 				{
-					GetSampleData->CharacterToDestroy();
+					FName GetItemTag = GetSampleData->Tags[i];
+					if ("Sample" == GetItemTag)
+					{
+						GetSampleData->CharacterToDestroy();
+					}
 				}
 			}
+			return;
 		}
-		return;
 	}
 
 	// 2. 주울 수 있는 아이템일 경우
-	// 맵에 아이템이 있다면 해당 아이템의 Tag를 가져온다.
+	// 맵에 Actor가 있다면 해당 Actor의 Tag를 가져온다.
 	FString TagName = "";
-	for (size_t i = 0; i < GetMapItemData->Tags.Num(); i++)
+	for (size_t i = 0; i < GetMapItemData->Tags.Num(); i++) // 불안한 곳.
 	{
 		TagName = GetMapItemData->Tags[i].ToString();
 	}
@@ -279,7 +281,6 @@ void AMainCharacter::PickUpItem_Implementation()
 	// 이미 인벤토리에 같은 이름을 가진 아이템이 있을 경우.
 	if (ItemStringToName == ItemSlot[static_cast<int>(ItemType)].Name)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, TEXT("The same item is already in inventory."));
 		return;
 	}
 
@@ -354,13 +355,26 @@ void AMainCharacter::FireRayCast_Implementation(float _DeltaTime)
 {
 	if (CurItemIndex == -1 || ItemSlot[CurItemIndex].ReloadMaxNum == -1)
 	{
+		// 무기가 없다면? -> 주먹.
+		if (PostureValue == EPlayerPosture::Barehand)
+		{
+			ChangeMontage();
+		}
 		return;
 	}
 
+	
+
+	// Test를 위한 자동 장전.
 	if (ItemSlot[CurItemIndex].ReloadLeftNum <= 0)
 	{
 		ItemSlot[CurItemIndex].ReloadLeftNum = ItemSlot[CurItemIndex].ReloadMaxNum;
+		// 장전하라는 Widget을 띄워야 함.
+		// 장전 함수는 CharacterReload 이다.
+		// return;
 	}
+
+	
 
 
 	AMainPlayerController* Con = Cast<AMainPlayerController>(GetController());
@@ -371,6 +385,7 @@ void AMainCharacter::FireRayCast_Implementation(float _DeltaTime)
 	FHitResult Hit;
 	if (GetWorld())
 	{
+		// 탄수 깎기.
 		ItemSlot[CurItemIndex].ReloadLeftNum -= 1;
 
 		// Ray Cast

@@ -2,6 +2,7 @@
 
 
 #include "PartDevLevel/Monster/Boss/BossProjectile.h"
+#include "TestLevel/Character/TestPlayerState.h"
 #include "TestLevel/Character/TestCharacter.h"
 
 #include "GameFramework/ProjectileMovementComponent.h"
@@ -10,6 +11,8 @@
 
 #include "Components/StaticMeshComponent.h"
 #include "Kismet/GameplayStatics.h"
+
+#include "Global/ContentsLog.h"
 
 // Sets default values
 ABossProjectile::ABossProjectile()
@@ -45,6 +48,19 @@ void ABossProjectile::BeginPlay()
 	ProjectileColComponent->SetSphereRadius(ProjectileCollisionRadius);
 }
 
+void ABossProjectile::Attack(AActor* _OtherActor, UPrimitiveComponent* _Collision)
+{
+	ATestCharacter* HitCharacter = Cast<ATestCharacter>(_OtherActor);
+	ATestPlayerState* HitPlayerState = Cast<ATestPlayerState>(HitCharacter->GetPlayerState());
+	
+	if (nullptr == HitPlayerState)
+	{
+		LOG(MonsterLog, Fatal, TEXT("HitPlayerState Is Not Valid"));
+	}
+
+	HitPlayerState->AddDamage(ProjectileDamage);
+}
+
 // Called every frame
 void ABossProjectile::Tick(float DeltaTime)
 {
@@ -53,7 +69,7 @@ void ABossProjectile::Tick(float DeltaTime)
 
 void ABossProjectile::FireInDirection(const FVector& ShootDirection)
 {
-	ProjectileMovement->Velocity = ShootDirection * ProjectileMovement->InitialSpeed;
+	ProjectileMovement->Velocity = ShootDirection.GetSafeNormal() * ProjectileMovement->InitialSpeed;
 }
 
 void ABossProjectile::BeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
@@ -61,6 +77,7 @@ void ABossProjectile::BeginOverlap(UPrimitiveComponent* OverlappedComponent, AAc
 	// 총알이 플레이어와 충돌했을 때 파괴
 	if (OtherActor->IsA(ATestCharacter::StaticClass()))
 	{
+		Attack(OtherActor, OtherComp);
 		// 충돌한 액터가 플레이어인지 확인 후 파괴
 		Destroy();
 	}

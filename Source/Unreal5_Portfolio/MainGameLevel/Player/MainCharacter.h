@@ -190,10 +190,10 @@ public :
 	UFUNCTION()
 	void CharacterReload();
 
-	// Notify State에서 호출.
 	UFUNCTION(BlueprintCallable)
 	void HandAttackCollision(AActor* _OtherActor, UPrimitiveComponent* _Collision);
 
+	// Notify State에서 호출.
 	UFUNCTION()
 	void ChangeHandAttackCollisionProfile(FName _Name);
 
