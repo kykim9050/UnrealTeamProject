@@ -78,6 +78,10 @@ public:
 	UPROPERTY(Category = "Contents", Replicated, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	EPlayerMoveDir DirValue = EPlayerMoveDir::Forward;
 
+	// 7/26 추가 기절상태
+	UPROPERTY(Category = "Contents", Replicated, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	bool IsFaint = false;
+
 	UFUNCTION(Reliable, Server)
 	void ChangeState(EPlayerState _Type);
 	void ChangeState_Implementation(EPlayerState _Type);
@@ -94,7 +98,12 @@ public:
 	UFUNCTION(Reliable, Server)
 	void ChangePlayerDir(EPlayerMoveDir _Dir);
 	void ChangePlayerDir_Implementation(EPlayerMoveDir _Dir);
-	
+
+	// 7/26 기절상태로 변경하는 함수 (태환)
+	UFUNCTION(Reliable, Server)
+	void ChangeIsFaint();
+	void ChangeIsFaint_Implementation();
+
 	// POV
 	bool IsFPV = true;
 
@@ -141,7 +150,7 @@ public:
 	}
 
 	UFUNCTION(Reliable, Server, BlueprintCallable)	// => 메인캐릭터로 이전해야 함 (24.07.23 수정됨)
-	void CharacterPlayerToDropItem();
+		void CharacterPlayerToDropItem();
 	void CharacterPlayerToDropItem_Implementation();
 
 	// Collision
@@ -199,8 +208,8 @@ private:
 	class UPlayerAnimInstance* PlayerAnimInst;
 	UPROPERTY()
 	class UPlayerAnimInstance* FPVPlayerAnimInst;
-		
-	
+
+
 	//UPROPERTY()
 	//float CurHp = 0.0f;
 
@@ -215,7 +224,7 @@ public:
 	//void DefaultRayCast(float _DeltaTime);
 
 	UFUNCTION(Reliable, Server, BlueprintCallable)	// => 메인도 수정해야 함 (24.07.25 수정됨)
-	void FireRayCast();
+		void FireRayCast();
 	void FireRayCast_Implementation();
 
 	// 공격 시 서버 캐릭터 몽타주 변경 함수 (태환)
