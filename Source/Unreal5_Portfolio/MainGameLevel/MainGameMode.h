@@ -19,11 +19,4 @@ protected:
 	void Tick(float _DeltaTime) override;
 	//void PostLogin(APlayerController* NewPlayer) override;
 
-public:
-	void CreateMonsterSpawner(FName _DataTableRowName);
-
-private:
-	UPROPERTY(Category = "Data", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-	int MaxMonsterNum = 0;
-
 };

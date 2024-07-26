@@ -14,4 +14,16 @@ class UNREAL5_PORTFOLIO_API UWeaponSlot_UserWidget : public UUserWidget
 {
 	GENERATED_BODY()
 	
+	UFUNCTION(BlueprintCallable)
+	void UpdateReloadComment(int _bullet);
+
+public:
+	void NativeConstruct() override;
+
+private:
+	UPROPERTY()
+	class ATestPlayHUD* CurHUD;
+
+	UPROPERTY()
+	bool IsChanged = false;
 };
