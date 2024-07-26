@@ -363,15 +363,13 @@ void AMainCharacter::FireRayCast_Implementation(float _DeltaTime)
 		return;
 	}
 
-	
-
-	// Test를 위한 자동 장전.
+	// 탄알이 없다면 
 	if (ItemSlot[CurItemIndex].ReloadLeftNum <= 0)
 	{
-		ItemSlot[CurItemIndex].ReloadLeftNum = ItemSlot[CurItemIndex].ReloadMaxNum;
+		//ItemSlot[CurItemIndex].ReloadLeftNum = ItemSlot[CurItemIndex].ReloadMaxNum;
 		// 장전하라는 Widget을 띄워야 함.
 		// 장전 함수는 CharacterReload 이다.
-		// return;
+		return;
 	}
 
 	
@@ -597,4 +595,9 @@ void AMainCharacter::SendTokenToHpBarWidget()
 	//{
 	//	MyHpWidget->HpbarInit_ForMainPlayer(Token);
 	//}
+}
+
+TArray<struct FPlayerItemInformation> AMainCharacter::GetItemSlot()
+{
+	return ItemSlot;
 }
