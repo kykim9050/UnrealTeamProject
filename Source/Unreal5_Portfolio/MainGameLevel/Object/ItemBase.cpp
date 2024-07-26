@@ -17,6 +17,7 @@ AItemBase::AItemBase()
 
 	StaticMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMeshComponent"));
 	StaticMeshComponent->SetupAttachment(RootComponent);
+	StaticMeshComponent->bHiddenInSceneCapture = true;
 }
 
 // Called when the game starts or when spawned

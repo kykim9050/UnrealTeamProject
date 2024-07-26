@@ -105,11 +105,11 @@ public:
 	void ChangeIsFaint_Implementation();
 
 	// POV
+	const FVector CameraRelLoc = FVector(0.0f, 60.0f, 110.0f);
+	const FVector FPVCameraRelLoc = FVector(20.0f, 0.0f, 67.0f);
 	bool IsFPV = true;
-
 	UFUNCTION()
 	void ChangePOV();
-
 	UFUNCTION()
 	void CharacterReload();
 
