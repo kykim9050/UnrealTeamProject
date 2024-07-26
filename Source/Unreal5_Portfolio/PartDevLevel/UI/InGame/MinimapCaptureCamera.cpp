@@ -20,7 +20,7 @@ void AMinimapCaptureCamera::BeginPlay()
 {
 	Super::BeginPlay();
 
-	FVector StartPos = FVector(-7400, 53600, 4000);
+	FVector StartPos = FVector(-7400, 53600, 2000);
 	SetActorLocation(StartPos);
 
 	if(nullptr == MyCharacter)
