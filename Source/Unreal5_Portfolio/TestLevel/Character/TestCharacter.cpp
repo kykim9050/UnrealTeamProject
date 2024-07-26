@@ -19,6 +19,7 @@
 #include "PartDevLevel/Character/PlayerAnimInstance.h"
 #include "MainGameLevel/Object/MapObjectBase.h"
 #include "PartDevLevel/Monster/Boss/TestBossMonsterBase.h"
+#include "GameFrameWork/CharacterMovementComponent.h"
 
 #include "TestLevel/UI/TestPlayHUD.h"
 #include "TestLevel/UI/TestHpBarUserWidget.h"
@@ -98,7 +99,7 @@ ATestCharacter::ATestCharacter()
 	GetMapItemCollisonComponent->SetCollisionProfileName(FName("MapItemSearch"));
 
 	UEnum* Enum = StaticEnum<EPlayerPosture>();
-	
+
 	// = > 메인캐릭터 적용. [주석 부분 다르니 확인 요청.]
 	for (size_t i = 0; i < static_cast<size_t>(EPlayerPosture::Barehand); i++)
 	{
@@ -217,7 +218,7 @@ void ATestCharacter::PostInitializeComponents()
 		UClass* AnimInst = Cast<UClass>(MainGameInst->GetPlayerData(FName("TestPlayer"))->GetPlayerAnimInstance());
 		GetMesh()->SetAnimInstanceClass(AnimInst);
 	}
-	
+
 	Super::PostInitializeComponents();
 
 }
@@ -264,6 +265,9 @@ void ATestCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLi
 	// LowerState (태환)
 	DOREPLIFETIME(ATestCharacter, LowerStateValue); // => 매인 적용.
 	DOREPLIFETIME(ATestCharacter, DirValue); // => 매인 적용.
+
+	// 7/26 추가
+	DOREPLIFETIME(ATestCharacter, IsFaint);
 
 	DOREPLIFETIME(ATestCharacter, Token); // => 매인 적용.
 }
@@ -465,6 +469,18 @@ void ATestCharacter::ChangeLowerState_Implementation(EPlayerLowerState _LowerSta
 void ATestCharacter::ChangePlayerDir_Implementation(EPlayerMoveDir _Dir) // => 매인 적용.
 {
 	DirValue = _Dir;
+}
+
+void ATestCharacter::ChangeIsFaint_Implementation()
+{
+	if (true == IsFaint)
+	{
+		IsFaint = false;
+	}
+	else
+	{
+		IsFaint = true;
+	}
 }
 
 void ATestCharacter::PickUpItem_Implementation()	// => 메인캐릭터로 이전해야 함 (24.07.23 수정됨) // => 매인 적용.
@@ -715,7 +731,7 @@ void ATestCharacter::UpdatePlayerHp(float _DeltaTime) // => 매인 적용 진행 중.(H
 
 
 	float GetHp = MyTestPlayerState->GetPlayerHp();
-	
+
 	//CurHp = MyTestPlayerState->GetPlayerHp();
 
 	ATestPlayHUD* PlayHUD = Cast<ATestPlayHUD>(MyController->GetHUD());
