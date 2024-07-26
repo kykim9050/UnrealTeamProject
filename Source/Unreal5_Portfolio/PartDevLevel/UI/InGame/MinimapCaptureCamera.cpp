@@ -20,7 +20,7 @@ void AMinimapCaptureCamera::BeginPlay()
 {
 	Super::BeginPlay();
 
-	FVector StartPos = FVector(-7400, 53600, 4000);
+	FVector StartPos = FVector(-7400, 53600, 2000);
 	SetActorLocation(StartPos);
 
 	if(nullptr == MyCharacter)
@@ -55,6 +55,12 @@ void AMinimapCaptureCamera::SetCharacter(ATestCharacter* _MyCharacter)
 void AMinimapCaptureCamera::FollowCharacter()
 {
 	MyCharacter = Cast<ATestCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+
+	if (nullptr == MyCharacter)
+	{
+		return;
+	}
+
 	FVector CharacterPos = MyCharacter->GetActorLocation();
 	CharacterPos.Z = 4000.f;
 	SetActorLocation(CharacterPos);

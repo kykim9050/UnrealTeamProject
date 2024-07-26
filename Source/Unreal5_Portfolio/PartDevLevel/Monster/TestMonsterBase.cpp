@@ -21,7 +21,7 @@
 #include "Global/ContentsLog.h"
 
 #include "Components/SphereComponent.h"
-
+#include "MotionWarpingComponent.h"
 
 // Sets default values
 ATestMonsterBase::ATestMonsterBase()
@@ -35,6 +35,7 @@ ATestMonsterBase::ATestMonsterBase()
 	DeadTimelineFinish.BindUFunction(this, "OnDeadFinish");
 	DeadDissolveCallBack.BindUFunction(this, "OnDeadDissolveInterp");
 
+	MotionWarpComponent = CreateDefaultSubobject<UMotionWarpingComponent>(TEXT("MotionWarp"));
 }
 
 // Called when the game starts or when spawned
@@ -173,6 +174,11 @@ void ATestMonsterBase::SetAttackCollision(bool Active)
 	}
 }
 
+UMotionWarpingComponent* ATestMonsterBase::GetMotionWarpingComponent()
+{
+	return MotionWarpComponent;
+}
+
 void ATestMonsterBase::SetOnDead_Implementation()
 {
 	// Effect Setting
@@ -195,8 +201,8 @@ void ATestMonsterBase::SetOnDead_Implementation()
 	DeadTimeLine.PlayFromStart();
 
 	// Collision Setting
-	GetCapsuleComponent()->SetCollisionObjectType(ECC_GameTraceChannel5);
-	AttackComponent->SetCollisionObjectType(ECC_GameTraceChannel5);
+	GetCapsuleComponent()->SetCollisionResponseToAllChannels(ECR_Ignore);
+	AttackComponent->SetCollisionResponseToAllChannels(ECR_Ignore);
 	GetCharacterMovement()->SetActive(false);
 }
 

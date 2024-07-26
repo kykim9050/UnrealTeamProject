@@ -9,13 +9,17 @@
 
 #include "Kismet/GameplayStatics.h"
 
+
 void UServerBtnUserWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
 
-	ServerButton->OnClicked.AddUniqueDynamic(this, &UServerBtnUserWidget::OnServerButtonClicked);
-	ConnectButton->OnClicked.AddUniqueDynamic(this, &UServerBtnUserWidget::OnConnectButtonClicked);
+	ServerButton->DefaultButton->OnClicked.AddUniqueDynamic(this, &UServerBtnUserWidget::OnServerButtonClicked);
+	ConnectButton->DefaultButton->OnClicked.AddUniqueDynamic(this, &UServerBtnUserWidget::OnConnectButtonClicked);
 
+	ServerButton->SetButtonText(FText::FromString(FString("Game Start")));
+	ConnectButton->SetButtonText(FText::FromString(FString("Connect")));
+	
 	APlayerController* MyController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 	if (nullptr == MyController)
 	{
@@ -25,7 +29,7 @@ void UServerBtnUserWidget::NativeConstruct()
 	TitleHUD = Cast<AMainTitleHUD>(MyController->GetHUD());
 	if (nullptr == TitleHUD)
 	{
-		LOG(UILog, Fatal, "Controller is Null");
+		LOG(UILog, Fatal, "HUD is Null");
 	}
 }
 
@@ -50,8 +54,7 @@ void UServerBtnUserWidget::OnConnectButtonClicked()
 	{
 		LOG(UILog, Fatal, "Controller is Null");
 	}
-	TitleHUD->UISwitch(EUserWidgetType::TitleLogo);
-	TitleHUD->UISwitch(EUserWidgetType::ServerBtn);
 
+	TitleHUD->UISwitch(EUserWidgetType::ServerBtn);
 	TitleHUD->UISwitch(EUserWidgetType::ConnectBrowser);
 }

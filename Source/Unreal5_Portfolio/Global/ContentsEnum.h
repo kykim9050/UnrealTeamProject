@@ -145,13 +145,14 @@ enum class EUserWidgetType : uint8
 	Leaderboard,
 	Crosshair,
 	WorldMap,
+	ReloadComment,
 
 	// Title
 	TitleBackground,
 	TitleLogo,
 	ServerBtn,
 	ConnectBrowser,
-
+	SettingName,
 };
 
 

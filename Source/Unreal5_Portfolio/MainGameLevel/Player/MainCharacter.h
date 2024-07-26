@@ -190,10 +190,10 @@ public :
 	UFUNCTION()
 	void CharacterReload();
 
-	// Notify State에서 호출.
 	UFUNCTION(BlueprintCallable)
 	void HandAttackCollision(AActor* _OtherActor, UPrimitiveComponent* _Collision);
 
+	// Notify State에서 호출.
 	UFUNCTION()
 	void ChangeHandAttackCollisionProfile(FName _Name);
 
@@ -202,6 +202,10 @@ public :
 
 	UFUNCTION()
 	void SendTokenToHpBarWidget();
+
+	// 캐릭터 장비(인벤토리) 정보.
+	UFUNCTION(BlueprintCallable)
+	TArray<struct FPlayerItemInformation> GetItemSlot();
 };
 
 /** BP
