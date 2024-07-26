@@ -17,6 +17,11 @@ public:
 
 	virtual void InterAction() { }
 
+	UFUNCTION(BlueprintCallable)
+	void SetInfo(FName _InfoName);
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	TSubclassOf<AActor> InteractObjClass = TSubclassOf<AActor>();
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
