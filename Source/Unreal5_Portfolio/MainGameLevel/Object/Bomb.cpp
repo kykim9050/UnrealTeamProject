@@ -13,6 +13,11 @@ ABomb::ABomb()
 {
 }
 
+void ABomb::CharacterToDestroy()
+{
+	this->Destroy();
+}
+
 void ABomb::SetInfo(FName _InfoName)
 {
 	UMainGameInstance* Inst = UMainGameBlueprintFunctionLibrary::GetMainGameInstance(GetWorld());
@@ -28,11 +33,6 @@ void ABomb::SetInfo(FName _InfoName)
 	InteractObjClass = TableData->GetInteractObjClass();
 }
 
-void ABomb::CharacterToDestroy()
-{
-	this->Destroy();
-}
-
 void ABomb::BeginPlay()
 {
 	Super::BeginPlay();
@@ -41,12 +41,24 @@ void ABomb::BeginPlay()
 void ABomb::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	
+	if (BombState::Install == CurBombState)
+	{
+		TimeFlow(DeltaTime);
+	}
 }
 
 void ABomb::InterAction()
 {
 	Super::InterAction();
 
-	BombStart = true;
-	int a = 0;
+	if (BombState::Idle == CurBombState)
+	{
+		Destroy();
+	}
+}
+
+void ABomb::TimeFlow(float _DeltaTime)
+{
+	BombTime -= _DeltaTime;
 }

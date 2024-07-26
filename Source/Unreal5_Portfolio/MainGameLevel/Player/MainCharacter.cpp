@@ -128,11 +128,11 @@ void AMainCharacter::PostInitializeComponents() // FName 부분 수정 필요.
 		}
 
 		// 스켈레탈 메쉬 선택
-		USkeletalMesh* PlayerSkeletalMesh = MainGameInst->GetPlayerData(FName("AlienSoldier"))->GetPlayerSkeletalMesh();
+		USkeletalMesh* PlayerSkeletalMesh = MainGameInst->GetPlayerData(FName("TestPlayer"))->GetPlayerSkeletalMesh();
 		GetMesh()->SetSkeletalMesh(PlayerSkeletalMesh);
 
 		// ABP 선택
-		UClass* AnimInst = Cast<UClass>(MainGameInst->GetPlayerData(FName("AlienSoldier"))->GetPlayerAnimInstance());
+		UClass* AnimInst = Cast<UClass>(MainGameInst->GetPlayerData(FName("TestPlayer"))->GetPlayerAnimInstance());
 		GetMesh()->SetAnimInstanceClass(AnimInst);
 	}
 
@@ -182,7 +182,12 @@ void AMainCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 
 void AMainCharacter::ChangePosture_Implementation(EPlayerPosture _Type)
 {
-	if (_Type == EPlayerPosture::Barehand)
+	// Bomb, Drink 상태인 경우 자세를 변경할 수 없도록 수정.
+	if (_Type == EPlayerPosture::Bomb || _Type == EPlayerPosture::Drink)
+	{
+		return;
+	}
+	else if (_Type == EPlayerPosture::Barehand) // 맨손 자세로 변경.
 	{
 		PostureValue = _Type;
 		CurItemIndex = -1;
@@ -190,7 +195,7 @@ void AMainCharacter::ChangePosture_Implementation(EPlayerPosture _Type)
 		ItemSocketMesh->SetVisibility(false);
 		FPVItemSocketMesh->SetVisibility(false);
 	}
-	else
+	else // 무기를 든 자세로 변경.
 	{
 		int ItemSlotIndex = static_cast<int>(_Type);
 		if (IsItemIn[ItemSlotIndex] == false)
@@ -353,32 +358,30 @@ void AMainCharacter::CharacterPlayerToDropItem_Implementation()
 
 void AMainCharacter::FireRayCast_Implementation(float _DeltaTime)
 {
-	if (CurItemIndex == -1 || ItemSlot[CurItemIndex].ReloadMaxNum == -1)
+	if (CurItemIndex == -1 || CurItemIndex == 2 || CurItemIndex == 5)
 	{
-		// 무기가 없다면? -> 주먹.
-		if (PostureValue == EPlayerPosture::Barehand)
+		// 주먹, 근거리
+		if (PostureValue == EPlayerPosture::Barehand || PostureValue == EPlayerPosture::Melee)
 		{
 			ChangeMontage();
 		}
 		return;
 	}
 
-	
-
-	// Test를 위한 자동 장전.
+	// 탄알이 없다면 
 	if (ItemSlot[CurItemIndex].ReloadLeftNum <= 0)
 	{
-		ItemSlot[CurItemIndex].ReloadLeftNum = ItemSlot[CurItemIndex].ReloadMaxNum;
+		//ItemSlot[CurItemIndex].ReloadLeftNum = ItemSlot[CurItemIndex].ReloadMaxNum;
 		// 장전하라는 Widget을 띄워야 함.
 		// 장전 함수는 CharacterReload 이다.
-		// return;
+		return;
 	}
 
 	
 
 
 	AMainPlayerController* Con = Cast<AMainPlayerController>(GetController());
-	FVector Start = GetMesh()->GetSocketLocation(FName("weapon_r_muzzle"));
+	FVector Start = GetMesh()->GetSocketLocation(FName("MuzzleSocket"));
 	Start.Z -= 20.0f;
 	FVector End = (Con->GetControlRotation().Vector() * 2000.0f) + Start;
 	
@@ -597,4 +600,9 @@ void AMainCharacter::SendTokenToHpBarWidget()
 	//{
 	//	MyHpWidget->HpbarInit_ForMainPlayer(Token);
 	//}
+}
+
+TArray<struct FPlayerItemInformation> AMainCharacter::GetItemSlot()
+{
+	return ItemSlot;
 }

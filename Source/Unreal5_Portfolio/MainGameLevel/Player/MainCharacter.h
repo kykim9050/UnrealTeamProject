@@ -202,6 +202,10 @@ public :
 
 	UFUNCTION()
 	void SendTokenToHpBarWidget();
+
+	// 캐릭터 장비(인벤토리) 정보.
+	UFUNCTION(BlueprintCallable)
+	TArray<struct FPlayerItemInformation> GetItemSlot();
 };
 
 /** BP

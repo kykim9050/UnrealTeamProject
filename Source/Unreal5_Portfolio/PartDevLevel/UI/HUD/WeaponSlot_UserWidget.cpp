@@ -26,12 +26,12 @@ void UWeaponSlot_UserWidget::NativeConstruct()
 
 void UWeaponSlot_UserWidget::UpdateReloadComment(int _bullet) // MouseLeftCall 이 안타져서 테스트 못해봤음(연두)
 {
-	if (_bullet > 0 && false == IsChanged)
+	if (_bullet > 0 && true == IsChanged)
 	{
 		IsChanged = false;
 		CurHUD->UIOff(EUserWidgetType::ReloadComment);
 	}
-	else if (_bullet <= 0)
+	else if (_bullet == 0)
 	{
 		IsChanged = true;
 		CurHUD->UIOn(EUserWidgetType::ReloadComment);
