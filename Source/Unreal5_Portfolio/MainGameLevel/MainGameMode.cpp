@@ -4,7 +4,6 @@
 #include "MainGameLevel/MainGameMode.h"
 #include "Global/MainGameBlueprintFunctionLibrary.h"
 #include "Global/MainGameInstance.h"
-#include "Global/DataTable/MonsterSpawnerDataRow.h"
 #include "Player/MainPlayerState.h"
 
 void AMainGameMode::BeginPlay()
