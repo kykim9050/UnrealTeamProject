@@ -16,8 +16,7 @@ class UNREAL5_PORTFOLIO_API ASwitchObject : public AMapObjectBase
 	
 public:
 
-	UFUNCTION(BlueprintCallable)
-	void SetInfo(FName _InfoName);
+
 
 protected:
 	ASwitchObject();
@@ -27,9 +26,8 @@ protected:
 	void Tick(float DeltaTime) override;
 	void InterAction() override;
 
+
 private:
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	TSubclassOf<AActor> InteractObjClass = TSubclassOf<AActor>();
 
 	UPROPERTY()
 	FVector CollisionOffset = FVector(0.0f, 60.0f, 0.0f);

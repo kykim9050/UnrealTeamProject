@@ -12,7 +12,7 @@ AMainPlayerController::AMainPlayerController()
 {
 	TeamId = FGenericTeamId(0);
 	{
-		FString RefPathString = TEXT("InputDatas'/Game/Resources/Global/DataAssets/DA_InputDatas.DA_MainInputDatas'");
+		FString RefPathString = TEXT("InputDatas'/Game/Resources/Global/DataAssets/DA_MainInputDatas.DA_MainInputDatas'");
 		ConstructorHelpers::FObjectFinder<UInputDatas> ResPath(*RefPathString);
 
 		if (false == ResPath.Succeeded())
