@@ -50,7 +50,6 @@ void ABossProjectile::BeginPlay()
 
 void ABossProjectile::Attack(AActor* _OtherActor, UPrimitiveComponent* _Collision)
 {
-
 	ATestCharacter* HitCharacter = Cast<ATestCharacter>(_OtherActor);
 	ATestPlayerState* HitPlayerState = Cast<ATestPlayerState>(HitCharacter->GetPlayerState());
 	
@@ -70,7 +69,7 @@ void ABossProjectile::Tick(float DeltaTime)
 
 void ABossProjectile::FireInDirection(const FVector& ShootDirection)
 {
-	ProjectileMovement->Velocity = ShootDirection * ProjectileMovement->InitialSpeed;
+	ProjectileMovement->Velocity = ShootDirection.GetSafeNormal() * ProjectileMovement->InitialSpeed;
 }
 
 void ABossProjectile::BeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)

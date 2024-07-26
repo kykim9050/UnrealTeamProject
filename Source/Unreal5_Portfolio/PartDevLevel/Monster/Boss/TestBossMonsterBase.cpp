@@ -205,7 +205,6 @@ void ATestBossMonsterBase::FireProjectile()
 	if (ProjectileClass)
 	{
 		FVector MuzzleLocation = GetActorLocation() + FTransform(GetControlRotation()).TransformVector(MuzzleOffset);
-		FRotator MuzzleRotation = GetControlRotation();
 
 		UWorld* World = GetWorld();
 		if (World)
@@ -214,11 +213,13 @@ void ATestBossMonsterBase::FireProjectile()
 			SpawnParams.Owner = this;
 			SpawnParams.Instigator = GetInstigator();
 
-			ABossProjectile* Projectile = World->SpawnActor<ABossProjectile>(ProjectileClass, MuzzleLocation, MuzzleRotation, SpawnParams);
+			ABossProjectile* Projectile = World->SpawnActor<ABossProjectile>(ProjectileClass, MuzzleLocation, FRotator::ZeroRotator, SpawnParams);
 			if (Projectile)
 			{
 				// 발사 방향 설정
-				FVector LaunchDirection = MuzzleRotation.Vector();
+				AActor* TargetActor = Cast<AActor>(GetBossAIController()->GetBlackboardComponent()->GetValueAsObject(TEXT("TargetActor")));
+				FVector LaunchDirection = TargetActor->GetActorLocation() - Projectile->GetActorLocation();
+
 				Projectile->FireInDirection(LaunchDirection);
 				Projectile->SetProjectileDamage(SettingBossData->Data->GetRangedAttackDamage());
 			}
