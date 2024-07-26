@@ -358,10 +358,10 @@ void AMainCharacter::CharacterPlayerToDropItem_Implementation()
 
 void AMainCharacter::FireRayCast_Implementation(float _DeltaTime)
 {
-	if (CurItemIndex == -1 || ItemSlot[CurItemIndex].ReloadMaxNum == -1)
+	if (CurItemIndex == -1 || CurItemIndex == 2 || CurItemIndex == 5)
 	{
-		// 무기가 없다면? -> 주먹.
-		if (PostureValue == EPlayerPosture::Barehand)
+		// 주먹, 근거리
+		if (PostureValue == EPlayerPosture::Barehand || PostureValue == EPlayerPosture::Melee)
 		{
 			ChangeMontage();
 		}
