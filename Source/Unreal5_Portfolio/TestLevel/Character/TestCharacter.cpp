@@ -35,7 +35,7 @@ ATestCharacter::ATestCharacter()
 
 	// SpringArm Component => 메인캐릭터 적용.
 	SpringArmComponent = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArmComponent"));
-	SpringArmComponent->SetupAttachment(RootComponent);
+	SpringArmComponent->SetupAttachment(GetMesh(), FName("SpringArmComponent"));
 	SpringArmComponent->SetRelativeLocation(FVector(20.0f, 0.0f, 67.0f));
 	SpringArmComponent->TargetArmLength = 0.0f;
 	SpringArmComponent->bUsePawnControlRotation = true;
@@ -564,6 +564,7 @@ void ATestCharacter::ChangePOV()	// => 메인캐릭터로 이전해야 함 (24.07.22 수정됨
 	if (IsFPV)	// 일인칭 -> 삼인칭
 	{
 		// SpringArm Component 위치 수정.
+		SpringArmComponent->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
 		SpringArmComponent->TargetArmLength = 300.0f;
 		SpringArmComponent->SetRelativeLocation(FVector(0.0f, 60.0f, 110.0f));
 
@@ -583,6 +584,7 @@ void ATestCharacter::ChangePOV()	// => 메인캐릭터로 이전해야 함 (24.07.22 수정됨
 	else	// 삼인칭 -> 일인칭
 	{
 		// SpringArm Component 위치 수정.
+		SpringArmComponent->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, FName("SpringArmComponent"));
 		SpringArmComponent->TargetArmLength = 0.0f;
 		SpringArmComponent->SetRelativeLocation(FVector(20.0f, 0.0f, 67.0f));
 
