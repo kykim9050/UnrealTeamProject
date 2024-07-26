@@ -381,7 +381,7 @@ void AMainCharacter::FireRayCast_Implementation(float _DeltaTime)
 
 
 	AMainPlayerController* Con = Cast<AMainPlayerController>(GetController());
-	FVector Start = GetMesh()->GetSocketLocation(FName("weapon_r_muzzle"));
+	FVector Start = GetMesh()->GetSocketLocation(FName("MuzzleSocket"));
 	Start.Z -= 20.0f;
 	FVector End = (Con->GetControlRotation().Vector() * 2000.0f) + Start;
 	
