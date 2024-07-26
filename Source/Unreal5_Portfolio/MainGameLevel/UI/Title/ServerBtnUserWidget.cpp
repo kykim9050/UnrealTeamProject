@@ -9,13 +9,17 @@
 
 #include "Kismet/GameplayStatics.h"
 
+
 void UServerBtnUserWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
 
-	ServerButton->OnClicked.AddUniqueDynamic(this, &UServerBtnUserWidget::OnServerButtonClicked);
-	ConnectButton->OnClicked.AddUniqueDynamic(this, &UServerBtnUserWidget::OnConnectButtonClicked);
+	ServerButton->DefaultButton->OnClicked.AddUniqueDynamic(this, &UServerBtnUserWidget::OnServerButtonClicked);
+	ConnectButton->DefaultButton->OnClicked.AddUniqueDynamic(this, &UServerBtnUserWidget::OnConnectButtonClicked);
 
+	ServerButton->SetButtonText(FText::FromString(FString("Game Start")));
+	ConnectButton->SetButtonText(FText::FromString(FString("Connect")));
+	
 	APlayerController* MyController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 	if (nullptr == MyController)
 	{

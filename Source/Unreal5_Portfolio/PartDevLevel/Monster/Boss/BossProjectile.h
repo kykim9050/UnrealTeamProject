@@ -19,6 +19,9 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	UFUNCTION(BlueprintCallable)
+	virtual void Attack(AActor* _OtherActor, UPrimitiveComponent* _Collision);
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -27,6 +30,11 @@ public:
 
 	UFUNCTION()
 	void BeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
+	FORCEINLINE void SetProjectileDamage(float _ProjectileDamage)
+	{
+		ProjectileDamage = _ProjectileDamage;
+	}
 
 private:
 	UPROPERTY(VisibleAnywhere, Category = "Components")
@@ -37,6 +45,8 @@ private:
 
 	UPROPERTY(VisibleAnywhere, Category = "Movement")
 	class UProjectileMovementComponent* ProjectileMovement;
+
+	float ProjectileDamage = 0.0f;
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Collision")
