@@ -69,7 +69,8 @@ enum class ETestMonsterState : uint8
 	Attack,
 	Dead,
 	JumpAttack,
-	Scream
+	Scream,
+	Rotate
 };
 
 UENUM(BlueprintType)
@@ -106,6 +107,8 @@ enum class ETestMonsterAnim : uint8
 	ClimbEnd	UMETA(DisplayName = "ClimbEnd"),
 	Scream		UMETA(DisplayName = "Scream"),
 	JumpAttack	UMETA(DisplayName = "JumpAttack"),
+	LRotate		UMETA(DisplayName = "LeftRotate"),
+	RRotate		UMETA(DisplayName = "RightRotate"),
 };
 
 UENUM(BlueprintType)
