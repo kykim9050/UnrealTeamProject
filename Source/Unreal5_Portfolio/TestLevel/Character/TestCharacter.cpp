@@ -660,7 +660,17 @@ void ATestCharacter::ChangePOV()	// => 메인캐릭터로 이전해야 함 (24.07.29 수정 �
 	{
 		// SpringArm Component 위치 수정.
 		//SpringArmComponent->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, FName("SpringArmSocket"));
-		SpringArmComponent->SetRelativeLocation(FPVCameraRelLoc);
+		switch (LowerStateValue)
+		{
+		case EPlayerLowerState::Idle:
+			SpringArmComponent->SetRelativeLocation(FPVCameraRelLoc_Crouch);
+			break;
+		case EPlayerLowerState::Crouch:
+			SpringArmComponent->SetRelativeLocation(FPVCameraRelLoc);
+			break;
+		default:
+			break;
+		}
 		SpringArmComponent->TargetArmLength = 0.0f;
 
 		// Character Mesh 전환.
@@ -700,7 +710,7 @@ void ATestCharacter::MapItemOverlapEnd() // => 매인 적용.
 	}
 }
 
-void ATestCharacter::CrouchCameraMove() // => 매인에 적용 필요 (24.07.29 수정 중)
+void ATestCharacter::CrouchCameraMove() // => 매인에 적용 필요 (24.07.29 수정됨)
 {
 	if (IsFPV)
 	{
@@ -708,11 +718,9 @@ void ATestCharacter::CrouchCameraMove() // => 매인에 적용 필요 (24.07.29 수정 중
 		{
 		case EPlayerLowerState::Idle:
 			SpringArmComponent->SetRelativeLocation(FPVCameraRelLoc_Crouch);
-			//SpringArmComponent->SetRelativeLocation(FVector(0.0f, 0.0f, 10.0f));
 			break;
 		case EPlayerLowerState::Crouch:
 			SpringArmComponent->SetRelativeLocation(FPVCameraRelLoc);
-			//SpringArmComponent->SetRelativeLocation(FVector(0.0f, 0.0f, 80.0f));
 			break;
 		default:
 			break;
