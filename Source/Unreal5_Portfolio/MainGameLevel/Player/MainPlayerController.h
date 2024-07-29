@@ -78,9 +78,13 @@ public :
 	UFUNCTION(BlueprintCallable)
 	void ChangePlayerDir(EPlayerMoveDir _Dir);
 
-	// 공격
+	// 공격 몽타주 실행
 	UFUNCTION(BlueprintCallable)
 	void AttackMontagePlay();
+
+	// 공격 종료 몽타주 실행
+	UFUNCTION(BlueprintCallable)
+	void FireEndMontagePlay();
 
 	// Generic Team Id
 	virtual FGenericTeamId GetGenericTeamId() const override;

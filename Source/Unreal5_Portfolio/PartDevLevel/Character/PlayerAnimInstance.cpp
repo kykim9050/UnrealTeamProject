@@ -14,8 +14,8 @@ void UPlayerAnimInstance::NativeBeginPlay()
 
 	// MainGameInst의 PlayerData에 저장된 Montages를 PlayerUpperMontages로 Add
 	MainGameInst = UMainGameBlueprintFunctionLibrary::GetMainGameInstance(GetWorld());
-	TMap<EPlayerPosture, class UAnimMontage*> PlayerUpperMontages = MainGameInst->GetPlayerData(FName("TestPlayer"))->GetAnimMontages();
-	for (TPair<EPlayerPosture, class UAnimMontage*> Montage : PlayerUpperMontages)
+	TMap<EPlayerUpperState, class UAnimMontage*> PlayerUpperMontages = MainGameInst->GetPlayerData(FName("TestPlayer"))->GetAnimMontages();
+	for (TPair<EPlayerUpperState, class UAnimMontage*> Montage : PlayerUpperMontages)
 	{
 		PushAnimation(Montage.Key, Montage.Value);
 	}
@@ -32,11 +32,12 @@ void UPlayerAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 
 	PlayerPosture = OwnerPlayer->PostureValue;
 	PlayerLowerState = OwnerPlayer->LowerStateValue;
+	PlayerUppperState = OwnerPlayer->UpperStateValue;
 	PlayerDir = OwnerPlayer->DirValue;
 	PlayerIsFaint = OwnerPlayer->IsFaint;
 }
 
-void UPlayerAnimInstance::ChangeAnimation(EPlayerPosture _Posture)
+void UPlayerAnimInstance::ChangeAnimation(EPlayerUpperState _UpperState)
 {
-	Super::ChangeAnimation(_Posture);
+	Super::ChangeAnimation(_UpperState);
 }

@@ -132,7 +132,7 @@ void AMainPlayerController::Jump(const FInputActionValue& Value)
 	ChangeLowerState(EPlayerLowerState::Idle);
 
 	ACharacter* MyPlayerState = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
-	if(nullptr == MyPlayerState)
+	if (nullptr == MyPlayerState)
 	{
 		return;
 	}
@@ -208,7 +208,7 @@ void AMainPlayerController::PickUpItem()
 	{
 		return;
 	}
-	
+
 	Ch->PickUpItem();
 }
 
@@ -311,7 +311,18 @@ void AMainPlayerController::AttackMontagePlay()
 		return;
 	}
 
-	Ch->ChangeMontage();
+	Ch->ChangeMontage(false);
+}
+
+void AMainPlayerController::FireEndMontagePlay()
+{
+	AMainCharacter* Ch = GetPawn<AMainCharacter>();
+	if (nullptr == Ch)
+	{
+		return;
+	}
+
+	Ch->ChangeMontage(true);
 }
 
 FGenericTeamId AMainPlayerController::GetGenericTeamId() const

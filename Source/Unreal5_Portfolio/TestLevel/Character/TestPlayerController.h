@@ -101,9 +101,13 @@ public :
 	UFUNCTION(BlueprintCallable)
 	void ChangePlayerDir(EPlayerMoveDir _Dir);
 
-	// AttackTest (태환)
+	// 공격 몽타주 변경 함수
 	UFUNCTION(BlueprintCallable)
 	void AttackMontagePlay();
+
+	// 공격 종료 몽타주 변경 함수
+	UFUNCTION(BlueprintCallable)
+	void FireEndMontagePlay();
 
 	//테스트용
 	UFUNCTION(BlueprintCallable)

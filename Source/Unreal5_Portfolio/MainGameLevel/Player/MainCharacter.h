@@ -41,6 +41,10 @@ public :
 	// 하체 정보 (Controller 에서 호출함. -> 나중에 수정 필요.)
 	UPROPERTY(Category = "Contents", Replicated, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	EPlayerLowerState LowerStateValue = EPlayerLowerState::Idle;
+
+	// 상체 정보
+	UPROPERTY(Category = "Contents", Replicated, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	EPlayerUpperState UpperStateValue = EPlayerUpperState::Rifle_Idle;
 	
 	// 플레이어 자세 유형
 	UPROPERTY(Category = "Contents", Replicated, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
@@ -154,12 +158,12 @@ public :
 
 	// 공격 몽타주 서버
 	UFUNCTION(Reliable, Server)
-	void ChangeMontage();
-	void ChangeMontage_Implementation();
+	void ChangeMontage(bool _IsFireEnd = false);
+	void ChangeMontage_Implementation(bool _IsFireEnd = false);
 
 	UFUNCTION(Reliable, NetMulticast)
-	void ClientChangeMontage();
-	void ClientChangeMontage_Implementation();
+	void ClientChangeMontage(bool _IsFireEnd = false);
+	void ClientChangeMontage_Implementation(bool _IsFireEnd = false);
 
 	UFUNCTION(Reliable, Server)
 	void SettingPlayerState();

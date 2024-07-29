@@ -215,6 +215,13 @@ void ATestPlayerController::FireEnd()
 	ChangeState(EPlayerState::Idle);
 	ATestCharacter* Ch = GetPawn<ATestCharacter>();
 
+	//
+	if (Ch->PostureValue == EPlayerPosture::Rifle1 || Ch->PostureValue == EPlayerPosture::Rifle2)
+	{
+		FireEndMontagePlay();
+	}
+	//
+
 	GetWorld()->GetTimerManager().ClearTimer(MyTimeHandle);
 	GEngine->AddOnScreenDebugMessage(-1, 0.2f, FColor::Red, TEXT("End"));
 }
@@ -283,7 +290,13 @@ void ATestPlayerController::ChangePlayerDir(EPlayerMoveDir _Dir)
 void ATestPlayerController::AttackMontagePlay()
 {
 	ATestCharacter* Ch = GetPawn<ATestCharacter>();
-	Ch->ChangeMontage();
+	Ch->ChangeMontage(false);
+}
+
+void ATestPlayerController::FireEndMontagePlay()
+{
+	ATestCharacter* Ch = GetPawn<ATestCharacter>();
+	Ch->ChangeMontage(true);
 }
 
 void ATestPlayerController::SetFaint()
