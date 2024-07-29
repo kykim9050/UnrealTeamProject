@@ -150,7 +150,7 @@ public:
 	}
 
 	UFUNCTION(Reliable, Server, BlueprintCallable)	// => 메인캐릭터로 이전해야 함 (24.07.23 수정됨)
-		void CharacterPlayerToDropItem();
+	void CharacterPlayerToDropItem();
 	void CharacterPlayerToDropItem_Implementation();
 
 	// Collision

@@ -60,6 +60,7 @@ void ATestMonsterSpawner::Tick(float DeltaTime)
 	if (0 >= TotalSpawnCount)
 	{
 		Destroy();
+		return;
 	}
 
 	SpawnTestMonster();
