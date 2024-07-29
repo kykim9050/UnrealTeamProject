@@ -437,18 +437,88 @@ void AMainCharacter::FireRayCast_Implementation(float _DeltaTime)
 	}
 }
 
-void AMainCharacter::ChangeMontage_Implementation()
+void AMainCharacter::ChangeMontage_Implementation(bool _IsFireEnd)
 {
-	PlayerAnimInst->ChangeAnimation(PostureValue);
-	FPVPlayerAnimInst->ChangeAnimation(PostureValue);
-
-	ClientChangeMontage();
+	if (_IsFireEnd == false)
+	{
+		switch (PostureValue)
+		{
+		case EPlayerPosture::Rifle1:
+			UpperStateValue = EPlayerUpperState::Rifle_Attack;
+			break;
+		case EPlayerPosture::Rifle2:
+			UpperStateValue = EPlayerUpperState::Rifle_Attack;
+			break;
+		case EPlayerPosture::Melee:
+			UpperStateValue = EPlayerUpperState::Melee;
+			break;
+		case EPlayerPosture::Drink:
+			UpperStateValue = EPlayerUpperState::Drink;
+			break;
+		case EPlayerPosture::Bomb:
+			UpperStateValue = EPlayerUpperState::Bomb;
+			break;
+		case EPlayerPosture::Barehand:
+			UpperStateValue = EPlayerUpperState::Barehand;
+			break;
+		case EPlayerPosture::SlotMax:
+			break;
+		default:
+			break;
+		}
+		PlayerAnimInst->ChangeAnimation(UpperStateValue);
+		FPVPlayerAnimInst->ChangeAnimation(UpperStateValue);
+		
+		ClientChangeMontage(false);
+	}
+	else
+	{
+		UpperStateValue = EPlayerUpperState::Rifle_Idle;
+		PlayerAnimInst->ChangeAnimation(UpperStateValue);
+		FPVPlayerAnimInst->ChangeAnimation(UpperStateValue);
+		
+		ClientChangeMontage(true);
+	}
 }
 
-void AMainCharacter::ClientChangeMontage_Implementation()
+void AMainCharacter::ClientChangeMontage_Implementation(bool _IsFireEnd)
 {
-	PlayerAnimInst->ChangeAnimation(PostureValue);
-	FPVPlayerAnimInst->ChangeAnimation(PostureValue);
+	if (_IsFireEnd == false)
+	{
+		switch (PostureValue)
+		{
+		case EPlayerPosture::Rifle1:
+			UpperStateValue = EPlayerUpperState::Rifle_Attack;
+			break;
+		case EPlayerPosture::Rifle2:
+			UpperStateValue = EPlayerUpperState::Rifle_Attack;
+			break;
+		case EPlayerPosture::Melee:
+			UpperStateValue = EPlayerUpperState::Melee;
+			break;
+		case EPlayerPosture::Drink:
+			UpperStateValue = EPlayerUpperState::Drink;
+			break;
+		case EPlayerPosture::Bomb:
+			UpperStateValue = EPlayerUpperState::Bomb;
+			break;
+		case EPlayerPosture::Barehand:
+			UpperStateValue = EPlayerUpperState::Barehand;
+			break;
+		case EPlayerPosture::SlotMax:
+			break;
+		default:
+			break;
+		}
+		PlayerAnimInst->ChangeAnimation(UpperStateValue);
+		FPVPlayerAnimInst->ChangeAnimation(UpperStateValue);
+	}
+	else // FireEnd
+	{
+		UpperStateValue = EPlayerUpperState::Rifle_Idle;
+		PlayerAnimInst->ChangeAnimation(UpperStateValue);
+		FPVPlayerAnimInst->ChangeAnimation(UpperStateValue);
+	}
 }
 
 void AMainCharacter::SettingPlayerState_Implementation()

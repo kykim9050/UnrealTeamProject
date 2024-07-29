@@ -74,6 +74,10 @@ public:
 	UPROPERTY(Category = "Contents", Replicated, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	EPlayerLowerState LowerStateValue = EPlayerLowerState::Idle;
 
+	// UpperState
+	UPROPERTY(Category = "Contents", Replicated, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	EPlayerUpperState UpperStateValue = EPlayerUpperState::Rifle_Idle;
+
 	// Dir
 	UPROPERTY(Category = "Contents", Replicated, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	EPlayerMoveDir DirValue = EPlayerMoveDir::Forward;
@@ -238,13 +242,13 @@ public:
 
 	// 공격 시 서버 캐릭터 몽타주 변경 함수 (태환)
 	UFUNCTION(Reliable, Server)
-	void ChangeMontage();
-	void ChangeMontage_Implementation();
+	void ChangeMontage(bool _IsFireEnd);
+	void ChangeMontage_Implementation(bool _IsFireEnd);
 
 	// 공격 시 클라이언트 캐릭터 몽타주 변경 함수 (태환)
 	UFUNCTION(Reliable, NetMulticast)
-	void ClientChangeMontage();
-	void ClientChangeMontage_Implementation();
+	void ClientChangeMontage(bool _IsFireEnd);
+	void ClientChangeMontage_Implementation(bool _IsFireEnd);
 
 	// Crouch 카메라 이동
 	UFUNCTION()

@@ -224,7 +224,7 @@ void ATestCharacter::Tick(float DeltaTime)
 	// GameState 변수 출력용 TestCode
 	{
 		AMainGameState* CurGameState = UMainGameBlueprintFunctionLibrary::GetMainGameState(GetWorld());
-		
+
 		if (nullptr == CurGameState)
 		{
 			return;
@@ -269,7 +269,7 @@ void ATestCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLi
 	DOREPLIFETIME(ATestCharacter, DirValue);		// => 매인 적용.
 	DOREPLIFETIME(ATestCharacter, IsFaint);			// 7/26 추가
 	DOREPLIFETIME(ATestCharacter, IsBombSetting);	// => 메인에 추후 이전해야 함 (24.07.29 추가 후 테스팅 중)
-	
+
 	// Item
 	DOREPLIFETIME(ATestCharacter, RayCastToItemName);
 
@@ -342,17 +342,86 @@ void ATestCharacter::BombSetComplete_Implementation()	// => 메인에 추후 이전해야
 
 }
 
-void ATestCharacter::ChangeMontage_Implementation() // => 매인 적용.
+void ATestCharacter::ChangeMontage_Implementation(bool _IsFireEnd) // => 매인 적용.
 {
-	PlayerAnimInst->ChangeAnimation(PostureValue);
-	FPVPlayerAnimInst->ChangeAnimation(PostureValue);
-	ClientChangeMontage();
+	if (_IsFireEnd == false)
+	{
+		switch (PostureValue)
+		{
+		case EPlayerPosture::Rifle1:
+			UpperStateValue = EPlayerUpperState::Rifle_Attack;
+			break;
+		case EPlayerPosture::Rifle2:
+			UpperStateValue = EPlayerUpperState::Rifle_Attack;
+			break;
+		case EPlayerPosture::Melee:
+			UpperStateValue = EPlayerUpperState::Melee;
+			break;
+		case EPlayerPosture::Drink:
+			UpperStateValue = EPlayerUpperState::Drink;
+			break;
+		case EPlayerPosture::Bomb:
+			UpperStateValue = EPlayerUpperState::Bomb;
+			break;
+		case EPlayerPosture::Barehand:
+			UpperStateValue = EPlayerUpperState::Barehand;
+			break;
+		case EPlayerPosture::SlotMax:
+			break;
+		default:
+			break;
+		}
+		PlayerAnimInst->ChangeAnimation(UpperStateValue);
+		FPVPlayerAnimInst->ChangeAnimation(UpperStateValue);
+		ClientChangeMontage(false);
+	}
+	else // FireEnd
+	{
+		UpperStateValue = EPlayerUpperState::Rifle_Idle;
+		PlayerAnimInst->ChangeAnimation(UpperStateValue);
+		FPVPlayerAnimInst->ChangeAnimation(UpperStateValue);
+		ClientChangeMontage(true);
+	}
 }
 
-void ATestCharacter::ClientChangeMontage_Implementation() // => 매인 적용.
+void ATestCharacter::ClientChangeMontage_Implementation(bool _IsFireEnd) // => 매인 적용.
 {
-	PlayerAnimInst->ChangeAnimation(PostureValue);
-	FPVPlayerAnimInst->ChangeAnimation(PostureValue);
+	if (_IsFireEnd == false)
+	{
+		switch (PostureValue)
+		{
+		case EPlayerPosture::Rifle1:
+			UpperStateValue = EPlayerUpperState::Rifle_Attack;
+			break;
+		case EPlayerPosture::Rifle2:
+			UpperStateValue = EPlayerUpperState::Rifle_Attack;
+			break;
+		case EPlayerPosture::Melee:
+			UpperStateValue = EPlayerUpperState::Melee;
+			break;
+		case EPlayerPosture::Drink:
+			UpperStateValue = EPlayerUpperState::Drink;
+			break;
+		case EPlayerPosture::Bomb:
+			UpperStateValue = EPlayerUpperState::Bomb;
+			break;
+		case EPlayerPosture::Barehand:
+			UpperStateValue = EPlayerUpperState::Barehand;
+			break;
+		case EPlayerPosture::SlotMax:
+			break;
+		default:
+			break;
+		}
+		PlayerAnimInst->ChangeAnimation(UpperStateValue);
+		FPVPlayerAnimInst->ChangeAnimation(UpperStateValue);
+	}
+	else // FireEnd
+	{
+		UpperStateValue = EPlayerUpperState::Rifle_Idle;
+		PlayerAnimInst->ChangeAnimation(UpperStateValue);
+		FPVPlayerAnimInst->ChangeAnimation(UpperStateValue);
+	}
 }
 
 void ATestCharacter::ChangeState_Implementation(EPlayerState _Type)

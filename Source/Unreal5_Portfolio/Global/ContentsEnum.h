@@ -190,6 +190,17 @@ enum class EPlayerMoveDir : uint8
 	Right	UMETA(DisplayName = "Right"),
 };
 
+UENUM(BlueprintType)
+enum class EPlayerUpperState : uint8
+{
+	Rifle_Idle,
+	Rifle_Attack,
+	Melee,
+	Drink,
+	Bomb,
+	Barehand,
+};
+
 UCLASS()
 class UNREAL5_PORTFOLIO_API UContentsEnum : public UObject
 {
