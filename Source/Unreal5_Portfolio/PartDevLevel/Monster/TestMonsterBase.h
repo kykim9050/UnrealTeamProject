@@ -65,6 +65,7 @@ public:
 
 	void Damaged(float Damage);
 	void SetAttackCollision(bool Active);
+	void SetChasePlayer();
 
 	class UMotionWarpingComponent* GetMotionWarpingComponent();
 
@@ -97,7 +98,10 @@ private:
 	FName BaseDataName;
 
 	UPROPERTY()
-	class UMonsterAnimInstance* AnimInst;
+	class ATestMonsterBaseAIController* AIController = nullptr;
+
+	UPROPERTY()
+	class UMonsterAnimInstance* AnimInst = nullptr;
 
 	UPROPERTY(Replicated)
 	uint8 AniType;
