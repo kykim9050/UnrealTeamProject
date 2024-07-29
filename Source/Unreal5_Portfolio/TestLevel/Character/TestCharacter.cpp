@@ -229,9 +229,19 @@ void ATestCharacter::Tick(float DeltaTime)
 		{
 			return;
 		}
+
 		int MeleeNum = CurGameState->GetMeleeNum();
-		FString NumString = FString::FromInt(MeleeNum);
-		UMainGameBlueprintFunctionLibrary::DebugTextPrint(GetWorld(), FString(TEXT("CurMeleeNum = ")) + NumString);
+		FString MNumString = FString::FromInt(MeleeNum);
+		UMainGameBlueprintFunctionLibrary::DebugTextPrint(GetWorld(), FString(TEXT("CurMeleeNum = ")) + MNumString);
+
+		int RifleNum = CurGameState->GetRifleNum();
+		FString RNumString = FString::FromInt(RifleNum);
+		UMainGameBlueprintFunctionLibrary::DebugTextPrint(GetWorld(), FString(TEXT("CurRifleNum = ")) + RNumString);
+
+		int BombNum = CurGameState->GetBombNum();
+		FString BNumString = FString::FromInt(BombNum);
+		UMainGameBlueprintFunctionLibrary::DebugTextPrint(GetWorld(), FString(TEXT("CurBombNum = ")) + BNumString);
+
 
 		EGameStage StageNum = CurGameState->GetCurStage();
 		FString StageString = FString();
@@ -503,11 +513,11 @@ void ATestCharacter::PickUpItem_Implementation()	// => 메인캐릭터로 이전해야 함 
 		switch (ItemType)
 		{
 		case EPlayerPosture::Rifle1:
+		case EPlayerPosture::Bomb:
+			CurGameState->AddArmoryWeaponNum(ItemType);
 			break;
 		case EPlayerPosture::Melee:
 			CurGameState->AddMeleeNum();
-			break;
-		case EPlayerPosture::Bomb:
 			break;
 		default:
 			break;
