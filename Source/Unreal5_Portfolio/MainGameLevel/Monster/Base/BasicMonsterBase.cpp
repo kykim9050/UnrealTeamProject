@@ -40,8 +40,8 @@ void ABasicMonsterBase::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Ou
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
-	DOREPLIFETIME(ABasicMonsterBase, AnimType);
 	DOREPLIFETIME(ABasicMonsterBase, AnimIndex);
+	DOREPLIFETIME(ABasicMonsterBase, AnimType);
 }
 
 void ABasicMonsterBase::BeginPlay()
