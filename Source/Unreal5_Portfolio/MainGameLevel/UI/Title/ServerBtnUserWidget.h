@@ -23,14 +23,22 @@ class UNREAL5_PORTFOLIO_API UServerBtnUserWidget : public UUserWidget
 	//DECLARE_EVENT(UServerBtnUserWidget, FOnButtonClickedEvent)
 
 	UPROPERTY(meta = (BindWidget))
+	class UDefaultButtonUserWidget* SetNameButton;
+
+	UPROPERTY(meta = (BindWidget))
 	class UDefaultButtonUserWidget* ServerButton;
 
 	UPROPERTY(meta = (BindWidget))
 	class UDefaultButtonUserWidget* ConnectButton;
 
+	UPROPERTY(meta = (BindWidget))
+	class UTextBlock* MainNickname;
 
 public:
 	void NativeConstruct() override;
+
+	UFUNCTION()
+	void OnSetNameButtonClicked();
 
 	UFUNCTION()
 	void OnServerButtonClicked();
@@ -38,6 +46,8 @@ public:
 	UFUNCTION()
 	void OnConnectButtonClicked();
 
+	UFUNCTION()
+	void SetMainNicknameUI(FText _Myname);
 
 private:
 	UPROPERTY()

@@ -18,6 +18,7 @@
 
 #include "Global/MainGameBlueprintFunctionLibrary.h"
 #include "Global/MainGameInstance.h"
+#include "Global/MainGameState.h"
 #include "Global/ContentsLog.h"
 
 ABasicMonsterBase::ABasicMonsterBase()
@@ -26,7 +27,7 @@ ABasicMonsterBase::ABasicMonsterBase()
 	PrimaryActorTick.bCanEverTick = true;
 
 	// Attack Component
-	AttackComponent = CreateDefaultSubobject<USphereComponent>("Attack Component");
+	AttackComponent = CreateDefaultSubobject<USphereComponent>(TEXT("Attack Component"));
 	AttackComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	AttackComponent->SetupAttachment(RootComponent);
 
@@ -40,8 +41,8 @@ void ABasicMonsterBase::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Ou
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
-	DOREPLIFETIME(ABasicMonsterBase, AnimType);
 	DOREPLIFETIME(ABasicMonsterBase, AnimIndex);
+	DOREPLIFETIME(ABasicMonsterBase, AnimType);
 }
 
 void ABasicMonsterBase::BeginPlay()
@@ -54,7 +55,7 @@ void ABasicMonsterBase::BeginPlay()
 
 	if (nullptr == BaseData)
 	{
-		LOG(MonsterLog, Fatal, "BaseData Is Null");
+		LOG(MonsterLog, Fatal, TEXT("BaseData Is Null"));
 		return;
 	}
 
@@ -79,7 +80,7 @@ void ABasicMonsterBase::BeginPlay()
 
 	// AI 컨트롤러 세팅
 	AIController = GetController<ABasicMonsterAIController>();
-	AIController->GetBlackboardComponent()->SetValueAsObject("MonsterData", SettingData);
+	AIController->GetBlackboardComponent()->SetValueAsObject(TEXT("MonsterData"), SettingData);
 
 	AttackComponent->OnComponentEndOverlap.AddDynamic(this, &ABasicMonsterBase::OnAttackOverlapEnd);
 }
@@ -100,14 +101,14 @@ void ABasicMonsterBase::OnAttackOverlapEnd(UPrimitiveComponent* OverlappedComp, 
 		return;
 	}
 
-	EBasicMonsterState MonsterState = static_cast<EBasicMonsterState>(BlackBoard->GetValueAsEnum("State"));
+	EBasicMonsterState MonsterState = static_cast<EBasicMonsterState>(BlackBoard->GetValueAsEnum(TEXT("State")));
 	AMainCharacter* HitCharacter = Cast<AMainCharacter>(OtherActor);
 	if (nullptr != HitCharacter && EBasicMonsterState::Attack == MonsterState)
 	{
 		AMainPlayerState* HitPlayerState = Cast<AMainPlayerState>(HitCharacter->GetPlayerState());
 		if (nullptr == HitPlayerState)
 		{
-			LOG(MonsterLog, Fatal, "HitPlayerState Is Not Valid");
+			LOG(MonsterLog, Fatal, TEXT("HitPlayerState Is Not Valid"));
 		}
 
 		HitPlayerState->AddDamage(SettingData->AttackDamage);
@@ -135,8 +136,50 @@ void ABasicMonsterBase::Damaged(float Damage)
 	{
 		SetDead();
 		ChangeRandomAnimation(EBasicMonsterAnim::Dead);
-		AIController->GetBrainComponent()->StopLogic("Dead");
+		AIController->GetBrainComponent()->StopLogic(TEXT("Dead"));
 	}
+}
+
+void ABasicMonsterBase::SetChasePlayer()
+{
+	if (false == HasAuthority())
+	{
+		return;
+	}
+
+	AMainGameState* MainGameState = UMainGameBlueprintFunctionLibrary::GetMainGameState(GetWorld());
+	if (nullptr == MainGameState)
+	{
+		LOG(MonsterLog, Fatal, TEXT("MainGameState Is Nullptr"));
+		return;
+	}
+
+	UActorGroup* PlayerGroup = MainGameState->GetActorGroup(EObjectType::Player);
+	if (nullptr == PlayerGroup)
+	{
+		LOG(MonsterLog, Fatal, TEXT("PlayerGroup Is Nullptr"));
+		return;
+	}
+
+	// Find Player
+	int MinIndex = -1;
+	float MinDistance = FLT_MAX;
+	
+	FVector MonsterLocation = GetActorLocation();
+	for (int32 i = 0; i < PlayerGroup->Actors.Num(); i++)
+	{
+		FVector PlayerLocation = PlayerGroup->Actors[i]->GetActorLocation();
+		float Diff = (MonsterLocation - PlayerLocation).Size();
+
+		if (Diff < MinDistance)
+		{
+			MinDistance = Diff;
+			MinIndex = i;
+		}
+	}
+
+	AIController->GetBlackboardComponent()->SetValueAsObject(TEXT("TargetActor"), PlayerGroup->Actors[MinIndex]);
+	AIController->GetBlackboardComponent()->SetValueAsEnum(TEXT("State"), static_cast<uint8>(EBasicMonsterState::Chase));
 }
 
 void ABasicMonsterBase::SetDead_Implementation()

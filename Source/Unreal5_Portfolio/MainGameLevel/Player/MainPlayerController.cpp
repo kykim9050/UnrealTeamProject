@@ -24,6 +24,12 @@ AMainPlayerController::AMainPlayerController()
 	}
 }
 
+void AMainPlayerController::BeginPlay()
+{
+	FCharacterToReload.BindUObject(this, &AMainPlayerController::CallReload);
+	FCharacterToFaint.BindUObject(this, &AMainPlayerController::CallFaint);
+}
+
 void AMainPlayerController::SetupInputComponent()
 {
 	Super::SetupInputComponent();
@@ -67,6 +73,11 @@ void AMainPlayerController::MouseRotation(const FInputActionValue& Value)
 
 void AMainPlayerController::MoveFront(const FInputActionValue& Value)
 {
+	if (CharacterIsFaint == true)
+	{
+		return;
+	}
+
 	FVector Forward = GetPawn()->GetActorForwardVector();
 	GetPawn()->AddMovementInput(Forward);
 	ChangePlayerDir(EPlayerMoveDir::Forward);
@@ -74,6 +85,11 @@ void AMainPlayerController::MoveFront(const FInputActionValue& Value)
 
 void AMainPlayerController::MoveBack(const FInputActionValue& Value)
 {
+	if (CharacterIsFaint == true)
+	{
+		return;
+	}
+
 	FVector Forward = GetPawn()->GetActorForwardVector();
 	GetPawn()->AddMovementInput(-Forward);
 	ChangePlayerDir(EPlayerMoveDir::Back);
@@ -81,6 +97,11 @@ void AMainPlayerController::MoveBack(const FInputActionValue& Value)
 
 void AMainPlayerController::MoveRight(const FInputActionValue& Value)
 {
+	if (CharacterIsFaint == true)
+	{
+		return;
+	}
+
 	FVector Rightward = GetPawn()->GetActorRightVector();
 	GetPawn()->AddMovementInput(Rightward);
 	ChangePlayerDir(EPlayerMoveDir::Right);
@@ -88,6 +109,11 @@ void AMainPlayerController::MoveRight(const FInputActionValue& Value)
 
 void AMainPlayerController::MoveLeft(const FInputActionValue& Value)
 {
+	if (CharacterIsFaint == true)
+	{
+		return;
+	}
+
 	FVector Rightward = GetPawn()->GetActorRightVector();
 	GetPawn()->AddMovementInput(-Rightward);
 	ChangePlayerDir(EPlayerMoveDir::Left);
@@ -95,6 +121,11 @@ void AMainPlayerController::MoveLeft(const FInputActionValue& Value)
 
 void AMainPlayerController::Jump(const FInputActionValue& Value)
 {
+	if (CharacterIsFaint == true)
+	{
+		return;
+	}
+
 	ChangeLowerState(EPlayerLowerState::Idle);
 
 	ACharacter* MyPlayerState = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
@@ -119,12 +150,19 @@ void AMainPlayerController::JumpEnd(const FInputActionValue& Value)
 
 void AMainPlayerController::FireStart(const FInputActionValue& Value)
 {
+	if (CharacterIsFaint == true)
+	{
+		return;
+	}
+
 	AMainCharacter* Ch = GetPawn<AMainCharacter>();
 	if (nullptr == Ch)
 	{
 		return;
 	}
 	Ch->FireRayCast(GetWorld()->GetTimeSeconds());
+
+	AttackMontagePlay();
 
 	// πﬂΩŒ Ω≈»£∏¶ HUD∑Œ ≥—±Ë.
 	BullitCountToHUD();
@@ -144,6 +182,8 @@ void AMainPlayerController::FireTick(float _DeltaTime)
 	}
 	Ch->FireRayCast(_DeltaTime);
 
+	AttackMontagePlay();
+
 	// πﬂΩŒ Ω≈»£∏¶ HUD∑Œ ≥—±Ë.
 	BullitCountToHUD();
 }
@@ -155,6 +195,11 @@ void AMainPlayerController::FireEnd(const FInputActionValue& Value)
 
 void AMainPlayerController::PickUpItem()
 {
+	if (CharacterIsFaint == true)
+	{
+		return;
+	}
+
 	AMainCharacter* Ch = GetPawn<AMainCharacter>();
 	if (nullptr == Ch)
 	{
@@ -176,6 +221,11 @@ void AMainPlayerController::ChangePOVController()
 
 void AMainPlayerController::Crouch(const FInputActionValue& Value)
 {
+	if (CharacterIsFaint == true)
+	{
+		return;
+	}
+
 	AMainCharacter* Ch = GetPawn<AMainCharacter>();
 	if (nullptr == Ch)
 	{
@@ -198,6 +248,11 @@ void AMainPlayerController::Crouch(const FInputActionValue& Value)
 
 void AMainPlayerController::IAReload()
 {
+	if (CharacterIsFaint == true)
+	{
+		return;
+	}
+
 	AMainCharacter* Ch = GetPawn<AMainCharacter>();
 	if (nullptr == Ch)
 	{
@@ -208,6 +263,11 @@ void AMainPlayerController::IAReload()
 
 void AMainPlayerController::ChangePosture(EPlayerPosture _Posture)
 {
+	if (CharacterIsFaint == true)
+	{
+		return;
+	}
+
 	AMainCharacter* Ch = GetPawn<AMainCharacter>();
 	if (nullptr == Ch)
 	{
@@ -253,4 +313,14 @@ void AMainPlayerController::AttackMontagePlay()
 FGenericTeamId AMainPlayerController::GetGenericTeamId() const
 {
 	return TeamId;
+}
+
+void AMainPlayerController::CallReload()
+{
+	BullitCountToHUD();
+}
+
+void AMainPlayerController::CallFaint(bool _Faint)
+{
+	CharacterIsFaint = _Faint;
 }

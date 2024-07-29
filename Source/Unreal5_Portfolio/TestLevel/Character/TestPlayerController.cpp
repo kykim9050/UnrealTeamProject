@@ -67,6 +67,22 @@ void ATestPlayerController::SetupInputComponent()
 	}
 }
 
+void ATestPlayerController::PlayerTick(float DeltaTime)
+{
+	Super::PlayerTick(DeltaTime);
+
+	ATestCharacter* Ch = GetPawn<ATestCharacter>();
+	PlayerIsFaint = Ch->IsFaint;
+	if (PlayerIsFaint == false) // 정상 상태 
+	{
+		Ch->bUseControllerRotationYaw = true;
+	}
+	else // 기절 상태
+	{
+		Ch->bUseControllerRotationYaw = false;
+	}
+}
+
 void ATestPlayerController::MouseRotation(const FInputActionValue& Value)
 {
 	FVector2D MouseXY = Value.Get<FVector2D>();
@@ -76,41 +92,57 @@ void ATestPlayerController::MouseRotation(const FInputActionValue& Value)
 
 void ATestPlayerController::MoveFront(const FInputActionValue& Value)
 {
+	// 기절 상태 이동 불가능
+	if (PlayerIsFaint == true)
+	{
+		return;
+	}
+
 	ChangeState(EPlayerState::Walk);
 	FVector Forward = GetPawn()->GetActorForwardVector();
 	GetPawn()->AddMovementInput(Forward);
-
-	//
 	ChangePlayerDir(EPlayerMoveDir::Forward);
 }
 
 void ATestPlayerController::MoveBack(const FInputActionValue& Value)
 {
+	// 기절 상태 이동 불가능
+	if (PlayerIsFaint == true)
+	{
+		return;
+	}
+
 	ChangeState(EPlayerState::Walk);
 	FVector Forward = GetPawn()->GetActorForwardVector();
 	GetPawn()->AddMovementInput(-Forward);
-
-	//
 	ChangePlayerDir(EPlayerMoveDir::Back);
 }
 
 void ATestPlayerController::MoveRight(const FInputActionValue& Value)
 {
+	// 기절 상태 이동 불가능
+	if (PlayerIsFaint == true)
+	{
+		return;
+	}
+
 	ChangeState(EPlayerState::Walk);
 	FVector Rightward = GetPawn()->GetActorRightVector();
 	GetPawn()->AddMovementInput(Rightward);
-
-	//
 	ChangePlayerDir(EPlayerMoveDir::Right);
 }
 
 void ATestPlayerController::MoveLeft(const FInputActionValue& Value)
 {
+	// 기절 상태 이동 불가능
+	if (PlayerIsFaint == true)
+	{
+		return;
+	}
+
 	ChangeState(EPlayerState::Walk);
 	FVector Rightward = GetPawn()->GetActorRightVector();
 	GetPawn()->AddMovementInput(-Rightward);
-
-	//
 	ChangePlayerDir(EPlayerMoveDir::Left);
 }
 

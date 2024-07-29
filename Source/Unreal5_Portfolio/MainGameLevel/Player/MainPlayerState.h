@@ -26,11 +26,16 @@ public :
 	UFUNCTION()
 	float GetPlayerHp() const;
 
-	UFUNCTION()
+	UFUNCTION(Reliable, Server)
 	void AddDamage(float _Damage);
+	void AddDamage_Implementation(float _Damage);
 
+private :
+	UFUNCTION()
+	void UpdatePlayerHp();
 
 private:
-	UPROPERTY(Replicated)
+	// PlayerHp 값이 변경되면 UpdatePlayerHp 함수 실행.
+	UPROPERTY(ReplicatedUsing=UpdatePlayerHp)
 	float PlayerHp = 0.0f;
 };

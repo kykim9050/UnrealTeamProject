@@ -6,6 +6,8 @@
 #include "GameFramework/Actor.h"
 #include "BasicMonsterSpawner.generated.h"
 
+class UBoxComponent;
+
 UCLASS()
 class UNREAL5_PORTFOLIO_API ABasicMonsterSpawner : public AActor
 {
@@ -41,8 +43,25 @@ private:
 	// Max Spawn Radius
 	UPROPERTY(EditAnywhere, meta = (AllowprivateAccess = "true"))
 	float MaxSpawnRadius = 0.0f;
+	
+	// Chasing Player When Spawn
+	UPROPERTY(EditAnywhere, meta = (AllowprivateAccess = "true"))
+	bool IsChasePlayer = false;
 
 	UPROPERTY()
 	float TimeCount = 0.0f;
+
+private:
+	UFUNCTION()
+	void TriggerBoxBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
+private:
+	// Spawn TriggerBox
+	UPROPERTY(EditAnywhere, meta = (AllowprivateAccess = "true"))
+	UBoxComponent* TriggerBox = nullptr;
+	
+	// TriggerBox is Active
+	UPROPERTY(EditAnywhere, meta = (AllowprivateAccess = "true"))
+	bool TriggerIsActive = false;
 
 };

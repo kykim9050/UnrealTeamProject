@@ -23,17 +23,9 @@ public:
 	ABasicMonsterBase();
 
 public:
-	template<typename EnumType>
-	void ChangeRandomAnimation(EnumType Type)
-	{
-		ChangeRandomAnimation(static_cast<uint8>(Type));
-	}
-
-	void ChangeRandomAnimation(uint8 Type);
-
-public:
 	// Server Only
 	void Damaged(float Damage);
+	void SetChasePlayer();
 
 public:
 	// Get, Set
@@ -72,6 +64,7 @@ protected:
 	void OnAttackOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
 private:
+	// Dead
 	UFUNCTION(Reliable, NetMulticast)
 	void SetDead();
 	void SetDead_Implementation();
@@ -84,36 +77,7 @@ private:
 		Destroy();
 	}
 
-private:	
-	// Data
-	UPROPERTY(EditAnywhere, Category = "Data", meta = (AllowPrivateAccess = "true"))
-	FName BaseDataName;
-
-	UPROPERTY()
-	UMonsterData* SettingData = nullptr;
-
-	UPROPERTY()
-	ABasicMonsterAIController* AIController = nullptr;
-
 private:
-	// 애니메이션
-	UPROPERTY(Replicated)
-	uint8 AnimType;
-
-	UPROPERTY(Replicated)
-	int AnimIndex;
-
-	UPROPERTY()
-	UBasicMonsterAnimInstance* AnimInst = nullptr;
-
-private:
-	// 컴포넌트
-	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = true))
-	USphereComponent* AttackComponent;
-
-	UPROPERTY(EditAnywhere, Category = "Particle", meta = (AllowPrivateAccess = true))
-	UParticleSystem* BloodParticle;
-
 	// Dissolve Effect
 	UPROPERTY()
 	FTimeline DeadTimeLine;
@@ -125,5 +89,44 @@ private:
 	FOnTimelineFloat DeadDissolveCallBack;
 
 	TArray<UMaterialInstanceDynamic*> DynamicMaterials;
+
+private:	
+	// Data
+	UPROPERTY(EditAnywhere, Category = "Data", meta = (AllowPrivateAccess = "true"))
+	FName BaseDataName;
+
+	UPROPERTY()
+	UMonsterData* SettingData = nullptr;
+
+	UPROPERTY()
+	ABasicMonsterAIController* AIController = nullptr;
+
+public:
+	// 애니메이션
+	template<typename EnumType>
+	void ChangeRandomAnimation(EnumType Type)
+	{
+		ChangeRandomAnimation(static_cast<uint8>(Type));
+	}
+
+	void ChangeRandomAnimation(uint8 Type);
+
+private:
+	UPROPERTY(Replicated)
+	uint8 AnimType = 0;
+
+	UPROPERTY(Replicated)
+	int AnimIndex = 0;
+
+	UPROPERTY()
+	UBasicMonsterAnimInstance* AnimInst = nullptr;
+
+private:
+	// 컴포넌트
+	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = true))
+	USphereComponent* AttackComponent = nullptr;
+
+	UPROPERTY(EditAnywhere, Category = "Particle", meta = (AllowPrivateAccess = true))
+	UParticleSystem* BloodParticle = nullptr;
 
 };

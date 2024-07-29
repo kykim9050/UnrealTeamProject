@@ -8,15 +8,20 @@
 #include "Global/MainGameInstance.h"
 
 #include "Kismet/GameplayStatics.h"
+#include "Components/TextBlock.h"
 
 
 void UServerBtnUserWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
 
+	// 버튼 클릭 시 실행 함수 묶어줌
+	SetNameButton->DefaultButton->OnClicked.AddUniqueDynamic(this, &UServerBtnUserWidget::OnSetNameButtonClicked);
 	ServerButton->DefaultButton->OnClicked.AddUniqueDynamic(this, &UServerBtnUserWidget::OnServerButtonClicked);
 	ConnectButton->DefaultButton->OnClicked.AddUniqueDynamic(this, &UServerBtnUserWidget::OnConnectButtonClicked);
 
+	// 버튼 텍스트 설정
+	SetNameButton->SetButtonText(FText::FromString(FString("Setting")));
 	ServerButton->SetButtonText(FText::FromString(FString("Game Start")));
 	ConnectButton->SetButtonText(FText::FromString(FString("Connect")));
 	
@@ -31,6 +36,12 @@ void UServerBtnUserWidget::NativeConstruct()
 	{
 		LOG(UILog, Fatal, "HUD is Null");
 	}
+}
+
+void UServerBtnUserWidget::OnSetNameButtonClicked()
+{
+	TitleHUD->UIOff(EUserWidgetType::ServerBtn);
+	TitleHUD->UIOn(EUserWidgetType::SettingBrowser);
 }
 
 void UServerBtnUserWidget::OnServerButtonClicked()
@@ -57,4 +68,9 @@ void UServerBtnUserWidget::OnConnectButtonClicked()
 
 	TitleHUD->UISwitch(EUserWidgetType::ServerBtn);
 	TitleHUD->UISwitch(EUserWidgetType::ConnectBrowser);
+}
+
+void UServerBtnUserWidget::SetMainNicknameUI(FText _Myname)
+{
+	MainNickname->SetText(_Myname);
 }

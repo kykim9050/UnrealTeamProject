@@ -17,14 +17,14 @@ EBTNodeResult::Type UBTTaskNode_BasicMonsterClimbEnd::ExecuteTask(UBehaviorTreeC
 	ABasicMonsterBase* Monster = GetSelfActor<ABasicMonsterBase>(OwnerComp);
 	if (false == Monster->IsValidLowLevel())
 	{
-		LOG(MonsterLog, Fatal, "Monster Is Not Valid");
+		LOG(MonsterLog, Fatal, TEXT("Monster Is Not Valid"));
 		return EBTNodeResult::Type::Aborted;
 	}
 
-	UMonsterData* MonsterData = GetValueAsObject<UMonsterData>(OwnerComp, "MonsterData");
+	UMonsterData* MonsterData = GetValueAsObject<UMonsterData>(OwnerComp, TEXT("MonsterData"));
 	if (false == MonsterData->IsValidLowLevel())
 	{
-		LOG(MonsterLog, Fatal, "MonsterData Is Not Valid");
+		LOG(MonsterLog, Fatal, TEXT("MonsterData Is Not Valid"));
 		return EBTNodeResult::Type::Aborted;
 	}
 
@@ -39,11 +39,11 @@ void UBTTaskNode_BasicMonsterClimbEnd::TickTask(UBehaviorTreeComponent& OwnerCom
 	Super::TickTask(OwnerComp, pNodeMemory, DeltaSeconds);
 
 	ABasicMonsterBase* Monster = GetSelfActor<ABasicMonsterBase>(OwnerComp);
-	UMonsterData* MonsterData = GetValueAsObject<UMonsterData>(OwnerComp, "MonsterData");
+	UMonsterData* MonsterData = GetValueAsObject<UMonsterData>(OwnerComp, TEXT("MonsterData"));
 
 	if (0.0f >= MonsterData->ClimbTime)
 	{
-		FVector Destination = GetValueAsVector(OwnerComp, "Destination");
+		FVector Destination = GetValueAsVector(OwnerComp, TEXT("Destination"));
 		FVector MonsterLocation = Monster->GetActorLocation();
 
 		FVector DiffLocation = MonsterLocation - Destination;

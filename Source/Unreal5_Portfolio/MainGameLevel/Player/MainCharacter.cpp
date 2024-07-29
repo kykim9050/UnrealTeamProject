@@ -18,6 +18,7 @@
 #include "MainGameLevel/Object/MapObjectBase.h"
 #include "MainGameLevel/Object/Bomb.h"
 #include "MainGameLevel/UI/Title/MainTitleHUD.h"
+#include "PartDevLevel/UI/GetItem/GetItem_UserWidget.h"
 #include <Kismet/KismetSystemLibrary.h>
 #include <Kismet/GameplayStatics.h>
 
@@ -127,16 +128,30 @@ void AMainCharacter::PostInitializeComponents() // FName 부분 수정 필요.
 			return;
 		}
 
+		GetSetSelectCharacter(MainGameInst);
+		if (UIToSelectCharacter == "")
+		{
+			UIToSelectCharacter = "TestPlayer"; // test
+		}
+
 		// 스켈레탈 메쉬 선택
-		USkeletalMesh* PlayerSkeletalMesh = MainGameInst->GetPlayerData(FName("TestPlayer"))->GetPlayerSkeletalMesh();
+		//USkeletalMesh* PlayerSkeletalMesh = MainGameInst->GetPlayerData(FName("TestPlayer"))->GetPlayerSkeletalMesh();
+		USkeletalMesh* PlayerSkeletalMesh = MainGameInst->GetPlayerData(UIToSelectCharacter)->GetPlayerSkeletalMesh();
 		GetMesh()->SetSkeletalMesh(PlayerSkeletalMesh);
 
 		// ABP 선택
-		UClass* AnimInst = Cast<UClass>(MainGameInst->GetPlayerData(FName("TestPlayer"))->GetPlayerAnimInstance());
+		//UClass* AnimInst = Cast<UClass>(MainGameInst->GetPlayerData(FName("TestPlayer"))->GetPlayerAnimInstance());
+		UClass* AnimInst = Cast<UClass>(MainGameInst->GetPlayerData(UIToSelectCharacter)->GetPlayerAnimInstance());
 		GetMesh()->SetAnimInstanceClass(AnimInst);
 	}
 
 	Super::PostInitializeComponents();
+
+	if (nullptr != Reload_Widget)
+	{
+		Reload_Widget->AddToViewport();
+		Reload_Widget->SetVisibility(ESlateVisibility::Hidden);
+	}
 }
 
 // Called when the game starts or when spawned
@@ -150,6 +165,8 @@ void AMainCharacter::BeginPlay()
 	FPVPlayerAnimInst = Cast<UPlayerAnimInstance>(FPVMesh->GetAnimInstance());
 
 	HandAttackComponent->SetCollisionProfileName(TEXT("NoCollision"));
+
+	SettingPlayerState();
 }
 
 void AMainCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -163,6 +180,9 @@ void AMainCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLi
 	DOREPLIFETIME(AMainCharacter, DirValue);
 
 	DOREPLIFETIME(AMainCharacter, Token);
+	DOREPLIFETIME(AMainCharacter, IsFaint);
+
+	DOREPLIFETIME(AMainCharacter, UIToSelectCharacter);
 }
 
 // Called every frame
@@ -241,6 +261,7 @@ void AMainCharacter::PickUpItem_Implementation()
 	// 맵에 아이템이 없을 경우. -> 콜리전에 충돌이 없는 경우
 	if (nullptr == GetMapItemData)
 	{
+		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, TEXT("There is no item."));
 		return;
 	}
 
@@ -270,7 +291,7 @@ void AMainCharacter::PickUpItem_Implementation()
 	// 2. 주울 수 있는 아이템일 경우
 	// 맵에 Actor가 있다면 해당 Actor의 Tag를 가져온다.
 	FString TagName = "";
-	for (size_t i = 0; i < GetMapItemData->Tags.Num(); i++) // 불안한 곳.
+	for (size_t i = 0; i < GetMapItemData->Tags.Num(); i++) // 불안한 곳.(약속 깨지면 터짐)
 	{
 		TagName = GetMapItemData->Tags[i].ToString();
 	}
@@ -344,7 +365,7 @@ void AMainCharacter::CharacterPlayerToDropItem_Implementation()
 	FName ItemName = ItemSlot[CurItemIndex].Name;
 	UMainGameInstance* MainGameInst = UMainGameBlueprintFunctionLibrary::GetMainGameInstance(GetWorld());
 	const FItemDataRow* ItemBase = MainGameInst->GetItemData(ItemName);
-	FTransform BoneTrans = GetMesh()->GetBoneTransform(FName("weapon_r"), ERelativeTransformSpace::RTS_World);
+	FTransform BoneTrans = GetMesh()->GetBoneTransform(FName("RightHand"), ERelativeTransformSpace::RTS_World);
 	GetWorld()->SpawnActor<AActor>(ItemBase->GetItemUClass(), BoneTrans);
 
 	// 손에 들고 있던 아이템을 인벤토리에서 삭제
@@ -374,6 +395,7 @@ void AMainCharacter::FireRayCast_Implementation(float _DeltaTime)
 		//ItemSlot[CurItemIndex].ReloadLeftNum = ItemSlot[CurItemIndex].ReloadMaxNum;
 		// 장전하라는 Widget을 띄워야 함.
 		// 장전 함수는 CharacterReload 이다.
+		Reload_Widget->SetVisibility(ESlateVisibility::Visible);
 		return;
 	}
 
@@ -420,6 +442,25 @@ void AMainCharacter::ClientChangeMontage_Implementation()
 {
 	PlayerAnimInst->ChangeAnimation(PostureValue);
 	FPVPlayerAnimInst->ChangeAnimation(PostureValue);
+}
+
+void AMainCharacter::SettingPlayerState_Implementation()
+{
+	AMainPlayerController* Con = Cast<AMainPlayerController>(GetController());
+	if (nullptr == Con)
+	{
+		int a = 0;
+		return;
+	}
+
+	AMainPlayerState* ThisPlayerState = Cast<AMainPlayerState>(Con->PlayerState);
+	if (nullptr == ThisPlayerState)
+	{
+		int a = 0;
+		return;
+	}
+
+	ThisPlayerState->InitPlayerData();
 }
 
 void AMainCharacter::CrouchCameraMove()
@@ -479,6 +520,33 @@ void AMainCharacter::UpdatePlayerHp(float _DeltaTime)
 	// {
 }
 
+void AMainCharacter::ChangeIsFaint_Implementation()
+{
+	AMainPlayerController* Con = Cast<AMainPlayerController>(GetController());
+	
+	if (true == IsFaint)
+	{
+		IsFaint = false;
+		if (nullptr != Con)
+		{
+			Con->FCharacterToFaint.Execute(IsFaint); // Execute -> Delegate 실행.
+		}
+	}
+	else
+	{
+		IsFaint = true;
+		if (nullptr != Con)
+		{
+			Con->FCharacterToFaint.Execute(IsFaint); // Execute -> Delegate 실행.
+		}
+	}
+}
+
+void AMainCharacter::GetSetSelectCharacter_Implementation(UMainGameInstance* _MainGameInstance)
+{
+	UIToSelectCharacter = _MainGameInstance->GetUIToSelectCharacter();
+}
+
 void AMainCharacter::ChangePOV()
 {
 	if (IsFPV)
@@ -529,7 +597,19 @@ void AMainCharacter::CharacterReload()
 	{
 		return;
 	}
+
+	// Widget 숨기기
+	Reload_Widget->SetVisibility(ESlateVisibility::Hidden);
+
+	// 총알 데이터 설정.
 	ItemSlot[CurItemIndex].ReloadLeftNum = ItemSlot[CurItemIndex].ReloadMaxNum;
+
+	// 변경된 총알 데이터 호출.
+	AMainPlayerController* Con = Cast<AMainPlayerController>(GetController());
+	if (nullptr != Con)
+	{
+		Con->FCharacterToReload.Execute(); // Execute -> Delegate 실행.
+	}
 }
 
 void AMainCharacter::HandAttackCollision(AActor* _OtherActor, UPrimitiveComponent* _Collision)
@@ -538,7 +618,7 @@ void AMainCharacter::HandAttackCollision(AActor* _OtherActor, UPrimitiveComponen
 		ABasicMonsterBase* Monster = Cast<ABasicMonsterBase>(_OtherActor);
 		if (nullptr != Monster)
 		{
-			Monster->Damaged(150.0f);
+			Monster->Damaged(50.0f);
 		}
 	}
 
@@ -546,7 +626,7 @@ void AMainCharacter::HandAttackCollision(AActor* _OtherActor, UPrimitiveComponen
 		ATestBossMonsterBase* BossMonster = Cast<ATestBossMonsterBase>(_OtherActor); // 추후 Main으로 바꿔야 함.
 		if (nullptr != BossMonster)
 		{
-			BossMonster->Damaged(150.0f);
+			BossMonster->Damaged(50.0f);
 		}
 	}
 }

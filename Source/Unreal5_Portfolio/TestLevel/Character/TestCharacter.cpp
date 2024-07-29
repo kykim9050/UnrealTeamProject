@@ -28,6 +28,7 @@
 
 #include "Kismet/GameplayStatics.h"
 
+
 // Sets default values
 ATestCharacter::ATestCharacter()
 {
@@ -112,7 +113,7 @@ ATestCharacter::ATestCharacter()
 	MinimapIconComponent->SetupAttachment(RootComponent);
 	MinimapIconComponent->bVisibleInSceneCaptureOnly = true;
 
-	// Riding Character Mesh => 메인캐릭터 적용.
+	// Riding Character Mesh => 메인캐릭터 적용.(주석)
 	RidingMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("RidingMesh"));
 	RidingMesh->SetupAttachment(GetMesh());
 	RidingMesh->SetCollisionProfileName(TEXT("NoCollision"));
@@ -142,7 +143,7 @@ void ATestCharacter::CharacterPlayerToDropItem_Implementation()	// => 메인캐릭터
 	// UMainGameInstance* MainGameInst = UMainGameBlueprintFunctionLibrary::GetMainGameInstance(GetWorld()); << 매인에는 이렇게 적용됨.
 	UMainGameInstance* MainGameInst = GetWorld()->GetGameInstanceChecked<UMainGameInstance>();
 	const FItemDataRow* ItemBase = MainGameInst->GetItemData(ItemName);
-	FTransform BoneTrans = GetMesh()->GetBoneTransform(FName("RightHand"), ERelativeTransformSpace::RTS_World);
+	FTransform BoneTrans = GetMesh()->GetBoneTransform(FName("RightHand"), ERelativeTransformSpace::RTS_World); // 메인 적용.(07/29)
 
 	AActor* DropItem = GetWorld()->SpawnActor<AActor>(ItemBase->GetItemUClass(), BoneTrans);
 
@@ -247,6 +248,30 @@ void ATestCharacter::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 	UpdatePlayerHp(DeltaTime); // => 매인 적용.
+
+#if WITH_EDITOR
+	// GameState 변수 출력용 TestCode
+	{
+		AMainGameState* CurGameState = UMainGameBlueprintFunctionLibrary::GetMainGameState(GetWorld());
+		
+		if (nullptr == CurGameState)
+		{
+			return;
+		}
+		int MeleeNum = CurGameState->GetMeleeNum();
+		FString NumString = FString::FromInt(MeleeNum);
+		UMainGameBlueprintFunctionLibrary::DebugTextPrint(GetWorld(), FString(TEXT("CurMeleeNum = ")) + NumString);
+
+		EGameStage StageNum = CurGameState->GetCurStage();
+		FString StageString = FString();
+		const UEnum* StateEnum = FindObject<UEnum>(ANY_PACKAGE, TEXT("EGameStage"), true);
+		if (StateEnum)
+		{
+			StageString = StateEnum->GetNameStringByValue((int64)StageNum);
+		}
+		UMainGameBlueprintFunctionLibrary::DebugTextPrint(GetWorld(), FString(TEXT("CurStage = ")) + StageString);
+	}
+#endif
 
 	//DefaultRayCast(DeltaTime);
 	//TArray<FItemInformation> I = ItemSlot;
@@ -569,6 +594,27 @@ void ATestCharacter::PickUpItem_Implementation()	// => 메인캐릭터로 이전해야 함 
 	ItemSlot[ItemIndex].RelLoc = ItemRelLoc;
 	ItemSlot[ItemIndex].RelRot = ItemRelRot;
 	ItemSlot[ItemIndex].RelScale = ItemRelScale;
+
+	// 게임 플레이 진행 단계 업데이트
+	if (EPlayerPosture::Rifle1 == ItemType
+		|| EPlayerPosture::Melee == ItemType
+		|| EPlayerPosture::Bomb == ItemType)
+	{
+		AMainGameState* CurGameState = UMainGameBlueprintFunctionLibrary::GetMainGameState(GetWorld());
+
+		switch (ItemType)
+		{
+		case EPlayerPosture::Rifle1:
+			break;
+		case EPlayerPosture::Melee:
+			CurGameState->AddMeleeNum();
+			break;
+		case EPlayerPosture::Bomb:
+			break;
+		default:
+			break;
+		}
+	}
 
 	// Map에 있는 아이템 삭제.
 	GetMapItemData->Destroy();
