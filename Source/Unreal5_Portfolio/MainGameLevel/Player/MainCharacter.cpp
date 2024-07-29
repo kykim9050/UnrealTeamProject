@@ -522,13 +522,23 @@ void AMainCharacter::UpdatePlayerHp(float _DeltaTime)
 
 void AMainCharacter::ChangeIsFaint_Implementation()
 {
+	AMainPlayerController* Con = Cast<AMainPlayerController>(GetController());
+	
 	if (true == IsFaint)
 	{
 		IsFaint = false;
+		if (nullptr != Con)
+		{
+			Con->FCharacterToFaint.Execute(IsFaint); // Execute -> Delegate 실행.
+		}
 	}
 	else
 	{
 		IsFaint = true;
+		if (nullptr != Con)
+		{
+			Con->FCharacterToFaint.Execute(IsFaint); // Execute -> Delegate 실행.
+		}
 	}
 }
 
