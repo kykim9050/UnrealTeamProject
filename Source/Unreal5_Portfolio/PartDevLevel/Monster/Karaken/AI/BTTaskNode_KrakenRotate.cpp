@@ -53,6 +53,7 @@ EBTNodeResult::Type UBTTaskNode_KrakenRotate::ExecuteTask(UBehaviorTreeComponent
 
 	MonsterData->DestLoc = Target->GetActorLocation();
 	MonsterData->DestRotate = Rotate;
+	MonsterData->MyRotate = Monster->GetActorRotation();
 	MonsterData->AnimationTime = 0.0f;
 	Monster->ChangeRandomAnimation(NextAnim);
 
@@ -77,9 +78,10 @@ void UBTTaskNode_KrakenRotate::TickTask(UBehaviorTreeComponent& _OwnerComp, uint
 		return;
 	}
 	
-	FQuat Rot = FQuat(MonsterData->DestRotate);
-	FRotator CurRotator = Monster->GetActorRotation();
-	Monster->SetActorRotation(CurRotator + MonsterData->DestRotate * _DeltaSeconds);
+	float Alpha = FMath::Clamp(MonsterData->AnimationTime, 0.0f, 2.0f);
+	FRotator TurnRotate = FMath::Lerp(MonsterData->MyRotate, MonsterData->DestRotate, Alpha * 0.5f);
+
+	Monster->SetActorRotation(TurnRotate);
 
 	if (2.0f < MonsterData->AnimationTime)
 	{
