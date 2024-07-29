@@ -20,6 +20,7 @@
 #include "MainGameLevel/Object/MapObjectBase.h"
 #include "PartDevLevel/Monster/Boss/TestBossMonsterBase.h"
 #include "GameFrameWork/CharacterMovementComponent.h"
+#include "Global/ContentsLog.h"
 
 #include "TestLevel/UI/TestPlayHUD.h"
 #include "TestLevel/UI/TestHpBarUserWidget.h"
@@ -35,7 +36,7 @@ ATestCharacter::ATestCharacter()
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	// Character Mesh => 메인캐릭터 이전 필요 (24.07.29 수정됨)
+	// Character Mesh => 메인캐릭터 이전 필요 (24.07.29 수정됨) => 메인 적용.
 	GetMesh()->SetOwnerNoSee(true);
 	GetMesh()->SetRelativeLocation(FVector(0.0f, 0.0f, -88.0f));
 	GetMesh()->bHiddenInSceneCapture = true;
@@ -244,7 +245,6 @@ void ATestCharacter::Tick(float DeltaTime)
 		UMainGameBlueprintFunctionLibrary::DebugTextPrint(GetWorld(), FString(TEXT("CurStage = ")) + StageString);
 	}
 #endif
-
 	//DefaultRayCast(DeltaTime);
 	//TArray<FItemInformation> I = ItemSlot;
 	//AGameModeBase* Ptr = GetWorld()->GetAuthGameMode();
@@ -496,6 +496,12 @@ void ATestCharacter::PickUpItem_Implementation()	// => 메인캐릭터로 이전해야 함 
 	{
 		AMainGameState* CurGameState = UMainGameBlueprintFunctionLibrary::GetMainGameState(GetWorld());
 
+		if (nullptr == CurGameState)
+		{
+			UE_LOG(PlayerLog, Fatal, TEXT("GameState Is Nullptr"));
+			return;
+		}
+
 		switch (ItemType)
 		{
 		case EPlayerPosture::Rifle1:
@@ -637,7 +643,7 @@ void ATestCharacter::MapItemOverlapEnd() // => 매인 적용.
 	}
 }
 
-void ATestCharacter::CrouchCameraMove() // => 매인에 적용 필요 (24.07.29 수정됨)
+void ATestCharacter::CrouchCameraMove() // => 매인에 적용 필요 (24.07.29 수정됨) => 메인 적용.
 {
 	if (IsFPV)
 	{

@@ -2,6 +2,20 @@
 
 
 #include "Global/MainGameState.h"
+#include "Net/UnrealNetwork.h"
+
+AMainGameState::AMainGameState()
+{
+
+}
+
+void AMainGameState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(AMainGameState, CurStage);
+	DOREPLIFETIME(AMainGameState, MeleeNum);
+}
 
 void AMainGameState::PushActor(uint8 _Index, AActor* _Actor)
 {
@@ -22,3 +36,22 @@ UActorGroup* AMainGameState::GetActorGroup(uint8 _Index)
 
 	return AllActor[_Index];
 }
+
+void AMainGameState::AddMeleeNum()
+{
+	AGameModeBase* CurGameMode = GetWorld()->GetAuthGameMode();
+
+	if (MaxMeleeNum <= MeleeNum)
+	{
+		return;
+	}
+
+	++MeleeNum;
+
+	if (MaxMeleeNum == MeleeNum)
+	{
+		CurStage = EGameStage::VisitArmory;
+		return;
+	}
+}
+

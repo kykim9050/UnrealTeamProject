@@ -58,31 +58,22 @@ public:
 	/// Melee 확보시 호출되는 함수
 	/// </summary>
 	UFUNCTION()
-	void AddMeleeNum()
-	{
-		if (MaxMeleeNum <= MeleeNum)
-		{
-			return;
-		}
-
-		++MeleeNum;
-
-		if (MaxMeleeNum == MeleeNum)
-		{
-			CurStage = EGameStage::VisitArmory;
-			return;
-		}
-	}
+	void AddMeleeNum();
 
 	/// <summary>
 	/// 확보된 Melee 수를 반환
 	/// </summary>
 	/// <returns></returns>
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable)
 	FORCEINLINE int GetMeleeNum() const
 	{
 		return MeleeNum;
 	}
+
+protected:
+	AMainGameState();
+
+	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
@@ -91,14 +82,13 @@ private:
 	/// <summary>
 	/// 현재 게임 Stage 상태(단계)
 	/// </summary>
-	UPROPERTY()
+	UPROPERTY(Replicated)
 	EGameStage CurStage = EGameStage::Init;
-
 
 	/// <summary>
 	/// 현재 확보한 Melee 수
 	/// </summary>
-	UPROPERTY()
+	UPROPERTY(Replicated)
 	int MeleeNum = 0;
 
 	/// <summary>
