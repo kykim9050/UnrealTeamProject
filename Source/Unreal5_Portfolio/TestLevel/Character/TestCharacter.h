@@ -139,7 +139,6 @@ public:
 	UFUNCTION(Reliable, Server)
 	void PickUpItem();
 	void PickUpItem_Implementation();
-
 	UFUNCTION(Reliable, Server, BlueprintCallable)
 	void DropItem();	// => 메인캐릭터로 이전해야 함 (24.07.29 수정됨)
 	void DropItem_Implementation();

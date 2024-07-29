@@ -232,24 +232,6 @@ void ATestPlayerController::CheckItem()	// => 메인으로 이전 필요 (24.07.29 추가�
 	Ch->CheckItem();
 }
 
-//void ATestPlayerController::PickUpItem()
-//{
-//	ATestCharacter* Ch = GetPawn<ATestCharacter>();
-//
-//	//AGameModeBase* Test = GetWorld()->GetAuthGameMode(); // Is Server? Is Client?
-//	if (nullptr == Ch)
-//	{
-//		return;
-//	}
-//
-//	Ch->PickUpItem();
-//}
-//
-//void ATestPlayerController::PickUpItemEnd()
-//{
-//	ATestCharacter* Ch = GetPawn<ATestCharacter>();
-//}
-
 void ATestPlayerController::ChangeState(EPlayerState _State)
 {
 	ATestCharacter* Ch = GetPawn<ATestCharacter>();
