@@ -213,15 +213,28 @@ private:
 	float MyMaxHp = 0.0f;
 
 public:
-	//UFUNCTION(BlueprintCallable)
-	//void TestRayCast(float _DeltaTime, FVector _StartPos, FVector _EndPos, FRotator _CameraRot);
-
-	//UFUNCTION(BlueprintCallable)
-	//void DefaultRayCast(float _DeltaTime);
-
+	// Fire
 	UFUNCTION(Reliable, Server, BlueprintCallable)	// => 메인도 수정해야 함 (24.07.25 수정됨)
 	void FireRayCast();
 	void FireRayCast_Implementation();
+
+	// Drink
+	UFUNCTION(Reliable, Server, BlueprintCallable)
+	void Drink();	// => 메인에 추후 이전해야 함 (24.07.29 추가 후 테스팅 중)
+	void Drink_Implementation();
+
+	// Bomb Setting
+	UPROPERTY(Replicated ,BlueprintReadWrite)
+	bool IsBombSetting = false;	// => 메인에 추후 이전해야 함 (24.07.29 추가 후 테스팅 중)
+	UFUNCTION(Reliable, Server, BlueprintCallable)
+	void BombSetStart();	// => 메인에 추후 이전해야 함 (24.07.29 추가 후 테스팅 중)
+	void BombSetStart_Implementation();
+	UFUNCTION(Reliable, Server, BlueprintCallable)
+	void BombSetCancel();	// => 메인에 추후 이전해야 함 (24.07.29 추가 후 테스팅 중)
+	void BombSetCancel_Implementation();
+	UFUNCTION(Reliable, Server, BlueprintCallable)
+	void BombSetComplete();	// => 메인에 추후 이전해야 함 (24.07.29 추가 후 테스팅 중)
+	void BombSetComplete_Implementation();
 
 	// 공격 시 서버 캐릭터 몽타주 변경 함수 (태환)
 	UFUNCTION(Reliable, Server)

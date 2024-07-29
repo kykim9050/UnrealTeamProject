@@ -252,20 +252,21 @@ void ATestCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLi
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
+	// State, Posture, Action
 	DOREPLIFETIME(ATestCharacter, StateValue);
-	DOREPLIFETIME(ATestCharacter, PostureValue); // => 매인 적용.
+	DOREPLIFETIME(ATestCharacter, PostureValue);	// => 매인 적용.
+	DOREPLIFETIME(ATestCharacter, LowerStateValue); // => 매인 적용.
+	DOREPLIFETIME(ATestCharacter, DirValue);		// => 매인 적용.
+	DOREPLIFETIME(ATestCharacter, IsFaint);			// 7/26 추가
+	DOREPLIFETIME(ATestCharacter, IsBombSetting);	// => 메인에 추후 이전해야 함 (24.07.29 추가 후 테스팅 중)
+	
+	// Item
 	DOREPLIFETIME(ATestCharacter, RayCastToItemName);
 
 	// HP (for UI, Monster test)
 	DOREPLIFETIME(ATestCharacter, PlayerHp);
 
-	// LowerState (태환)
-	DOREPLIFETIME(ATestCharacter, LowerStateValue); // => 매인 적용.
-	DOREPLIFETIME(ATestCharacter, DirValue); // => 매인 적용.
-
-	// 7/26 추가
-	DOREPLIFETIME(ATestCharacter, IsFaint);
-
+	// Server?
 	DOREPLIFETIME(ATestCharacter, Token); // => 매인 적용.
 }
 
@@ -309,6 +310,26 @@ void ATestCharacter::FireRayCast_Implementation() // => 메인도 수정해야 함 (24.0
 			}
 		}
 	}
+}
+
+void ATestCharacter::Drink_Implementation()	// => 메인에 추후 이전해야 함 (24.07.29 추가 후 테스팅 중)
+{
+
+}
+
+void ATestCharacter::BombSetStart_Implementation()	// => 메인에 추후 이전해야 함 (24.07.29 추가 후 테스팅 중)
+{
+
+}
+
+void ATestCharacter::BombSetCancel_Implementation()	// => 메인에 추후 이전해야 함 (24.07.29 추가 후 테스팅 중)
+{
+
+}
+
+void ATestCharacter::BombSetComplete_Implementation()	// => 메인에 추후 이전해야 함 (24.07.29 추가 후 테스팅 중)
+{
+
 }
 
 void ATestCharacter::ChangeMontage_Implementation() // => 매인 적용.

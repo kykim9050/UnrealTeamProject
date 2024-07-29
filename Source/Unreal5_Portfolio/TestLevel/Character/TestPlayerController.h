@@ -57,13 +57,19 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void FireEnd();
 
+	// Drink
+	UFUNCTION(BlueprintCallable)
+	void Drink_Controller();	// => 메인에 추후 이전해야 함 (24.07.29 추가 후 테스팅 중)
+
+	// Bomb Setting
+	UFUNCTION(BlueprintCallable)
+	void BombSetStart_Controller();	// => 메인에 추후 이전해야 함 (24.07.29 추가 후 테스팅 중)
+	UFUNCTION(BlueprintCallable)
+	void BombSetCancel_Controller();	// => 메인에 추후 이전해야 함 (24.07.29 추가 후 테스팅 중)
+
 	// Item
 	UFUNCTION(BlueprintCallable)
-	void CheckItem();	// => 메인으로 이전 필요 (24.07.29 추가됨) (아래의 함수들은 삭제)
-	//UFUNCTION(BlueprintCallable)
-	//void PickUpItem();
-	//UFUNCTION(BlueprintCallable)
-	//void PickUpItemEnd();
+	void CheckItem();	// => 메인으로 이전 필요 (24.07.29 추가됨) (PickUpItem 함수 대체)
 
 	// State, Posture
 	UFUNCTION(BlueprintCallable)
