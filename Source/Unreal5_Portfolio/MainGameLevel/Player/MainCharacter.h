@@ -19,6 +19,9 @@ public:
 
 protected:
 
+	/// <summary>
+	/// Component 초기화 이후 호출.
+	/// </summary>
 	void PostInitializeComponents() override;
 
 	// Called when the game starts or when spawned
@@ -110,6 +113,8 @@ private : // 문제 발생 여지 있음 발생하면 그냥 지워야 함.
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	class USphereComponent* HandAttackComponent = nullptr;
 
+	UPROPERTY(Replicated)
+	FName UIToSelectCharacter = "";
 
 	// == Server ==
 public :
@@ -192,6 +197,10 @@ private :
 	UPROPERTY(Category = "Contents", Replicated, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	bool IsFaint = false;
 
+	UFUNCTION(Reliable, Server, BlueprintCallable)
+	void GetSetSelectCharacter(class UMainGameInstance* _MainGameInstance);
+	void GetSetSelectCharacter_Implementation(class UMainGameInstance* _MainGameInstance);
+
 public :
 	// == 인칭 변경 함수 ==
 	UFUNCTION()
@@ -217,6 +226,10 @@ public :
 	// 캐릭터 장비(인벤토리) 정보.
 	UFUNCTION(BlueprintCallable)
 	TArray<struct FPlayerItemInformation> GetItemSlot();
+
+protected :
+	UPROPERTY(Category = "Widget", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	class UGetItem_UserWidget* Reload_Widget = nullptr;
 };
 
 /** BP

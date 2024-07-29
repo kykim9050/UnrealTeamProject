@@ -18,6 +18,7 @@
 #include "MainGameLevel/Object/MapObjectBase.h"
 #include "MainGameLevel/Object/Bomb.h"
 #include "MainGameLevel/UI/Title/MainTitleHUD.h"
+#include "PartDevLevel/UI/GetItem/GetItem_UserWidget.h"
 #include <Kismet/KismetSystemLibrary.h>
 #include <Kismet/GameplayStatics.h>
 
@@ -127,18 +128,30 @@ void AMainCharacter::PostInitializeComponents() // FName 부분 수정 필요.
 			return;
 		}
 
+		GetSetSelectCharacter(MainGameInst);
+		if (UIToSelectCharacter == "")
+		{
+			UIToSelectCharacter = "TestPlayer"; // test
+		}
+
 		// 스켈레탈 메쉬 선택
 		//USkeletalMesh* PlayerSkeletalMesh = MainGameInst->GetPlayerData(FName("TestPlayer"))->GetPlayerSkeletalMesh();
-		USkeletalMesh* PlayerSkeletalMesh = MainGameInst->GetPlayerData(MainGameInst->GetUIToSelectCharacter())->GetPlayerSkeletalMesh();
+		USkeletalMesh* PlayerSkeletalMesh = MainGameInst->GetPlayerData(UIToSelectCharacter)->GetPlayerSkeletalMesh();
 		GetMesh()->SetSkeletalMesh(PlayerSkeletalMesh);
 
 		// ABP 선택
 		//UClass* AnimInst = Cast<UClass>(MainGameInst->GetPlayerData(FName("TestPlayer"))->GetPlayerAnimInstance());
-		UClass* AnimInst = Cast<UClass>(MainGameInst->GetPlayerData(MainGameInst->GetUIToSelectCharacter())->GetPlayerAnimInstance());
+		UClass* AnimInst = Cast<UClass>(MainGameInst->GetPlayerData(UIToSelectCharacter)->GetPlayerAnimInstance());
 		GetMesh()->SetAnimInstanceClass(AnimInst);
 	}
 
 	Super::PostInitializeComponents();
+
+	if (nullptr != Reload_Widget)
+	{
+		Reload_Widget->AddToViewport();
+		Reload_Widget->SetVisibility(ESlateVisibility::Hidden);
+	}
 }
 
 // Called when the game starts or when spawned
@@ -168,6 +181,8 @@ void AMainCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLi
 
 	DOREPLIFETIME(AMainCharacter, Token);
 	DOREPLIFETIME(AMainCharacter, IsFaint);
+
+	DOREPLIFETIME(AMainCharacter, UIToSelectCharacter);
 }
 
 // Called every frame
@@ -380,6 +395,7 @@ void AMainCharacter::FireRayCast_Implementation(float _DeltaTime)
 		//ItemSlot[CurItemIndex].ReloadLeftNum = ItemSlot[CurItemIndex].ReloadMaxNum;
 		// 장전하라는 Widget을 띄워야 함.
 		// 장전 함수는 CharacterReload 이다.
+		Reload_Widget->SetVisibility(ESlateVisibility::Visible);
 		return;
 	}
 
@@ -516,6 +532,11 @@ void AMainCharacter::ChangeIsFaint_Implementation()
 	}
 }
 
+void AMainCharacter::GetSetSelectCharacter_Implementation(UMainGameInstance* _MainGameInstance)
+{
+	UIToSelectCharacter = _MainGameInstance->GetUIToSelectCharacter();
+}
+
 void AMainCharacter::ChangePOV()
 {
 	if (IsFPV)
@@ -566,7 +587,19 @@ void AMainCharacter::CharacterReload()
 	{
 		return;
 	}
+
+	// Widget 숨기기
+	Reload_Widget->SetVisibility(ESlateVisibility::Hidden);
+
+	// 총알 데이터 설정.
 	ItemSlot[CurItemIndex].ReloadLeftNum = ItemSlot[CurItemIndex].ReloadMaxNum;
+
+	// 변경된 총알 데이터 호출.
+	AMainPlayerController* Con = Cast<AMainPlayerController>(GetController());
+	if (nullptr != Con)
+	{
+		Con->FCharacterToReload.Execute(); // Execute -> Delegate 실행.
+	}
 }
 
 void AMainCharacter::HandAttackCollision(AActor* _OtherActor, UPrimitiveComponent* _Collision)

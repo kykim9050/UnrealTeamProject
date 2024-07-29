@@ -24,6 +24,11 @@ AMainPlayerController::AMainPlayerController()
 	}
 }
 
+void AMainPlayerController::BeginPlay()
+{
+	FCharacterToReload.BindUObject(this, &AMainPlayerController::CallReload);
+}
+
 void AMainPlayerController::SetupInputComponent()
 {
 	Super::SetupInputComponent();
@@ -253,4 +258,9 @@ void AMainPlayerController::AttackMontagePlay()
 FGenericTeamId AMainPlayerController::GetGenericTeamId() const
 {
 	return TeamId;
+}
+
+void AMainPlayerController::CallReload()
+{
+	BullitCountToHUD();
 }
