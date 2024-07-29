@@ -137,6 +137,18 @@ public:
 		return NetDataTable;
 	}
 
+	UFUNCTION()
+	FORCEINLINE FName GetUIToSelectCharacter() const
+	{
+		return UIToSelectCharacter;
+	}
+
+	UFUNCTION()
+	FORCEINLINE void SetUIToSelectCharacter(FName _Name)
+	{
+		UIToSelectCharacter = _Name;
+	}
+
 protected:
 
 private:
@@ -186,4 +198,7 @@ private:
 
 	UPROPERTY()
 	int NetToken = -1;
+
+	UPROPERTY()
+	FName UIToSelectCharacter = "";
 };
