@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameState.h"
+#include "Global/ContentsEnum.h"
 #include "MainGameState.generated.h"
 
 UCLASS()
@@ -41,8 +42,23 @@ public:
 
 	UActorGroup* GetActorGroup(uint8 _Index);
 
+	UFUNCTION(BlueprintCallable)
+	FORCEINLINE EGameStage GetCurStage() const
+	{
+		return CurStage;
+	}
+
+	UFUNCTION()
+	FORCEINLINE void SetCurStage(EGameStage _Stage)
+	{
+		CurStage = _Stage;
+	}
+
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	TMap<uint8, UActorGroup*> AllActor;
 	
+	UPROPERTY()
+	EGameStage CurStage = EGameStage::Init;
+
 };

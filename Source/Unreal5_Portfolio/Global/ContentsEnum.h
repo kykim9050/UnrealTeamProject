@@ -27,6 +27,21 @@ enum class EPlayerState : uint8
 	Fire	UMETA(DisplayName = "Fire"),
 };
 
+UENUM(BlueprintType)
+enum class EGameStage : uint8
+{
+	Init					UMETA(DisplayName = "게임 플레이 시작 초기"),
+	VisitArmory				UMETA(DisplayName = "무기고 방문"),
+	ObtainFirstSample		UMETA(DisplayName = "샘플1 아이템 확보"),
+	ObtainSecondSample		UMETA(DisplayName = "샘플2 아이템 확보"),
+	ObtainThirdSample		UMETA(DisplayName = "샘플3 아이템 확보"),
+	PlantingBomb			UMETA(DisplayName = "폭탄 설치"),
+	MoveToGatheringPoint	UMETA(DisplayName = "집결지로 이동"),
+	Defensing				UMETA(DisplayName = "거점 방어"),
+	MissionClear			UMETA(DisplayName = "미션 성공")
+};
+
+
 /// <summary>
 /// 1, 2, 3, 4 번에 대한 플레이어 자세.
 /// </summary>
