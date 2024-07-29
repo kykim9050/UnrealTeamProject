@@ -62,6 +62,13 @@ void UBTTaskNode_BossMonsterChase::TickTask(UBehaviorTreeComponent& _OwnerComp, 
 	// 원거리 공격 범위 내에 플레이어가 있는지 확인
 	if (DiffLength <= BossData->Data->GetRangedAttackBoundary())
 	{
+		if (DiffLength <= BossData->Data->GetMeleeAttackBoundary())
+		{
+			_OwnerComp.GetBlackboardComponent()->SetValueAsBool(TEXT("MeleeChase"), false);
+			StateChange(_OwnerComp, EBossMonsterState::MeleeAttack);
+			return;
+		}
+
 		if (false == bMeleeChase)
 		{
 			int32 RandomValue = FMath::RandRange(0, 99);
@@ -77,12 +84,6 @@ void UBTTaskNode_BossMonsterChase::TickTask(UBehaviorTreeComponent& _OwnerComp, 
 				BossMonster->ChangeAniValue(EBossMonsterAnim::Run);
 
 			}
-		}
-		else if (DiffLength <= BossData->Data->GetMeleeAttackBoundary())
-		{
-			_OwnerComp.GetBlackboardComponent()->SetValueAsBool(TEXT("MeleeChase"), false);
-			StateChange(_OwnerComp, EBossMonsterState::MeleeAttack);
-			return;
 		}
 	}
 }
