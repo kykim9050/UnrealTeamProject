@@ -20,11 +20,11 @@ void UPickUpComponent::OnSphereBeginOverlap(UPrimitiveComponent* OverlappedCompo
 	// Checking if it is a First Person Character overlapping
 	if (ATestCharacter* Character = Cast<ATestCharacter>(OtherActor))
 	{
-		bool test = Character->GetPickUp();
+		/*bool test = Character->GetPickUp();
 		if (true == Character->GetPickUp())
 		{
 			TriggerPickUpEvent(Character);
-		}
+		}*/
 	}
 }
 
