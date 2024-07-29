@@ -34,7 +34,7 @@ float AMainPlayerState::GetPlayerHp() const
 	return PlayerHp;
 }
 
-void AMainPlayerState::AddDamage(float _Damage)
+void AMainPlayerState::AddDamage_Implementation(float _Damage)
 {
 	PlayerHp -= _Damage;
 }
