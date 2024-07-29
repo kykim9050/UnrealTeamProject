@@ -128,11 +128,13 @@ void AMainCharacter::PostInitializeComponents() // FName 부분 수정 필요.
 		}
 
 		// 스켈레탈 메쉬 선택
-		USkeletalMesh* PlayerSkeletalMesh = MainGameInst->GetPlayerData(FName("TestPlayer"))->GetPlayerSkeletalMesh();
+		//USkeletalMesh* PlayerSkeletalMesh = MainGameInst->GetPlayerData(FName("TestPlayer"))->GetPlayerSkeletalMesh();
+		USkeletalMesh* PlayerSkeletalMesh = MainGameInst->GetPlayerData(MainGameInst->GetUIToSelectCharacter())->GetPlayerSkeletalMesh();
 		GetMesh()->SetSkeletalMesh(PlayerSkeletalMesh);
 
 		// ABP 선택
-		UClass* AnimInst = Cast<UClass>(MainGameInst->GetPlayerData(FName("TestPlayer"))->GetPlayerAnimInstance());
+		//UClass* AnimInst = Cast<UClass>(MainGameInst->GetPlayerData(FName("TestPlayer"))->GetPlayerAnimInstance());
+		UClass* AnimInst = Cast<UClass>(MainGameInst->GetPlayerData(MainGameInst->GetUIToSelectCharacter())->GetPlayerAnimInstance());
 		GetMesh()->SetAnimInstanceClass(AnimInst);
 	}
 
@@ -150,6 +152,8 @@ void AMainCharacter::BeginPlay()
 	FPVPlayerAnimInst = Cast<UPlayerAnimInstance>(FPVMesh->GetAnimInstance());
 
 	HandAttackComponent->SetCollisionProfileName(TEXT("NoCollision"));
+
+	SettingPlayerState();
 }
 
 void AMainCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -163,6 +167,7 @@ void AMainCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLi
 	DOREPLIFETIME(AMainCharacter, DirValue);
 
 	DOREPLIFETIME(AMainCharacter, Token);
+	DOREPLIFETIME(AMainCharacter, IsFaint);
 }
 
 // Called every frame
@@ -241,6 +246,7 @@ void AMainCharacter::PickUpItem_Implementation()
 	// 맵에 아이템이 없을 경우. -> 콜리전에 충돌이 없는 경우
 	if (nullptr == GetMapItemData)
 	{
+		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, TEXT("There is no item."));
 		return;
 	}
 
@@ -270,7 +276,7 @@ void AMainCharacter::PickUpItem_Implementation()
 	// 2. 주울 수 있는 아이템일 경우
 	// 맵에 Actor가 있다면 해당 Actor의 Tag를 가져온다.
 	FString TagName = "";
-	for (size_t i = 0; i < GetMapItemData->Tags.Num(); i++) // 불안한 곳.
+	for (size_t i = 0; i < GetMapItemData->Tags.Num(); i++) // 불안한 곳.(약속 깨지면 터짐)
 	{
 		TagName = GetMapItemData->Tags[i].ToString();
 	}
@@ -344,7 +350,7 @@ void AMainCharacter::CharacterPlayerToDropItem_Implementation()
 	FName ItemName = ItemSlot[CurItemIndex].Name;
 	UMainGameInstance* MainGameInst = UMainGameBlueprintFunctionLibrary::GetMainGameInstance(GetWorld());
 	const FItemDataRow* ItemBase = MainGameInst->GetItemData(ItemName);
-	FTransform BoneTrans = GetMesh()->GetBoneTransform(FName("weapon_r"), ERelativeTransformSpace::RTS_World);
+	FTransform BoneTrans = GetMesh()->GetBoneTransform(FName("RightHand"), ERelativeTransformSpace::RTS_World);
 	GetWorld()->SpawnActor<AActor>(ItemBase->GetItemUClass(), BoneTrans);
 
 	// 손에 들고 있던 아이템을 인벤토리에서 삭제
@@ -422,6 +428,25 @@ void AMainCharacter::ClientChangeMontage_Implementation()
 	FPVPlayerAnimInst->ChangeAnimation(PostureValue);
 }
 
+void AMainCharacter::SettingPlayerState_Implementation()
+{
+	AMainPlayerController* Con = Cast<AMainPlayerController>(GetController());
+	if (nullptr == Con)
+	{
+		int a = 0;
+		return;
+	}
+
+	AMainPlayerState* ThisPlayerState = Cast<AMainPlayerState>(Con->PlayerState);
+	if (nullptr == ThisPlayerState)
+	{
+		int a = 0;
+		return;
+	}
+
+	ThisPlayerState->InitPlayerData();
+}
+
 void AMainCharacter::CrouchCameraMove()
 {
 	if (IsFPV)
@@ -477,6 +502,18 @@ void AMainCharacter::UpdatePlayerHp(float _DeltaTime)
 	//     MyHpWidget->NickNameUpdate(Token, FText::FromString(FString("")));
 	//     MyHpWidget->HpbarUpdate(Token, CurHp, 100.0f);
 	// {
+}
+
+void AMainCharacter::ChangeIsFaint_Implementation()
+{
+	if (true == IsFaint)
+	{
+		IsFaint = false;
+	}
+	else
+	{
+		IsFaint = true;
+	}
 }
 
 void AMainCharacter::ChangePOV()
@@ -538,7 +575,7 @@ void AMainCharacter::HandAttackCollision(AActor* _OtherActor, UPrimitiveComponen
 		ABasicMonsterBase* Monster = Cast<ABasicMonsterBase>(_OtherActor);
 		if (nullptr != Monster)
 		{
-			Monster->Damaged(150.0f);
+			Monster->Damaged(50.0f);
 		}
 	}
 
@@ -546,7 +583,7 @@ void AMainCharacter::HandAttackCollision(AActor* _OtherActor, UPrimitiveComponen
 		ATestBossMonsterBase* BossMonster = Cast<ATestBossMonsterBase>(_OtherActor); // 추후 Main으로 바꿔야 함.
 		if (nullptr != BossMonster)
 		{
-			BossMonster->Damaged(150.0f);
+			BossMonster->Damaged(50.0f);
 		}
 	}
 }

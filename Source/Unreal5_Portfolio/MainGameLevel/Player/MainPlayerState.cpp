@@ -4,6 +4,8 @@
 #include "MainGameLevel/Player/MainPlayerState.h"
 #include "Global/MainGameBlueprintFunctionLibrary.h"
 #include "Global/DataTable/PlayerDataRow.h"
+#include "MainGameLevel/Player/MainPlayerController.h"
+#include "MainGameLevel/Player/MainCharacter.h"
 #include <Net/UnrealNetwork.h>
 
 AMainPlayerState::AMainPlayerState()
@@ -21,7 +23,10 @@ void AMainPlayerState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Out
 void AMainPlayerState::InitPlayerData()
 {
 	UMainGameInstance* MainGameInst = UMainGameBlueprintFunctionLibrary::GetMainGameInstance(GetWorld());
-	PlayerHp = MainGameInst->GetPlayerData(FName("TestPlayer"))->GetHp();
+	if (nullptr != MainGameInst)
+	{
+		PlayerHp = MainGameInst->GetPlayerData(FName("TestPlayer"))->GetHp();
+	}
 }
 
 float AMainPlayerState::GetPlayerHp() const
@@ -32,4 +37,23 @@ float AMainPlayerState::GetPlayerHp() const
 void AMainPlayerState::AddDamage(float _Damage)
 {
 	PlayerHp -= _Damage;
+	if (0 >= PlayerHp)
+	{
+		AMainPlayerController* MainPlayerController = Cast<AMainPlayerController>(GetOwner());
+		if (nullptr == MainPlayerController)
+		{
+			MainPlayerController = Cast<AMainPlayerController>(GetPawn());
+			
+			if (nullptr == MainPlayerController)
+			{
+				return;
+			}
+		}
+
+		AMainCharacter* MyMainCharacter = Cast<AMainCharacter>(MainPlayerController->GetCharacter());
+		if (nullptr != MyMainCharacter)
+		{
+			MyMainCharacter->ChangeIsFaint();
+		}
+	}
 }
