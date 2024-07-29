@@ -104,9 +104,10 @@ public:
 	void ChangeIsFaint();
 	void ChangeIsFaint_Implementation();
 
-	// POV
+	// POV	// => const 값들 메인캐릭터 이전 필요 (24.07.29 추가됨)
 	const FVector CameraRelLoc = FVector(0.0f, 60.0f, 110.0f);
-	const FVector FPVCameraRelLoc = FVector(20.0f, 0.0f, 67.0f);
+	const FVector FPVCameraRelLoc = FVector(0.0f, 0.0f, 72.0f);
+	const FVector FPVCameraRelLoc_Crouch = FVector(10.0f, 0.0f, 10.0f);
 	bool IsFPV = true;
 	UFUNCTION()
 	void ChangePOV();
