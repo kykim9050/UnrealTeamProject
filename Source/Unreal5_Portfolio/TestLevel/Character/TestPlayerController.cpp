@@ -260,6 +260,7 @@ void ATestPlayerController::ChangePosture(EPlayerPosture _Posture)
 {
 	ATestCharacter* Ch = GetPawn<ATestCharacter>();
 	Ch->ChangePosture(_Posture);
+	ChangePostureToWidget(_Posture);
 }
 
 void ATestPlayerController::ChangePOVController()

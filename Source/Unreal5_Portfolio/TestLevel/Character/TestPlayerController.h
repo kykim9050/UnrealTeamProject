@@ -105,4 +105,9 @@ private:
 
 	UPROPERTY()
 	bool PlayerIsFaint = false;
+
+	// HUD / Widget
+protected:
+	UFUNCTION(BlueprintImplementableEvent, meta = (CallInEditor = true))
+	void ChangePostureToWidget(EPlayerPosture _Posture);
 };
