@@ -39,15 +39,6 @@ ATestCharacter::ATestCharacter()
 	GetMesh()->SetOwnerNoSee(true);
 	GetMesh()->bHiddenInSceneCapture = true;
 
-	// FPV Character Mesh => 메인과 다름
-	FPVMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("FirstPersonMesh"));
-	FPVMesh->SetupAttachment(GetMesh());
-	FPVMesh->SetRelativeLocation(FVector(20.0f, 0.0f, 0.0f));
-	FPVMesh->SetOwnerNoSee(false);
-	FPVMesh->SetOnlyOwnerSee(true);
-	FPVMesh->bCastDynamicShadow = false;
-	FPVMesh->CastShadow = false;
-
 	// Item Mesh => 메인캐릭터 적용.
 	ItemSocketMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ItemSocketMesh"));
 	ItemSocketMesh->SetupAttachment(GetMesh(), FName("ItemSocket"));
@@ -57,6 +48,28 @@ ATestCharacter::ATestCharacter()
 	ItemSocketMesh->SetVisibility(false);
 	ItemSocketMesh->SetIsReplicated(true);
 	ItemSocketMesh->bHiddenInSceneCapture = true;
+
+	// SpringArm Component => 메인캐릭터 이전 필요 (24.07.29 수정됨)
+	SpringArmComponent = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArmComponent"));
+	SpringArmComponent->SetupAttachment(RootComponent);
+	SpringArmComponent->SetRelativeLocation(FVector(20.0f, 0.0f, 72.0f));
+	SpringArmComponent->TargetArmLength = 0.0f;
+	SpringArmComponent->bUsePawnControlRotation = true;
+	SpringArmComponent->bDoCollisionTest = true;
+
+	// Camera Component => 메인캐릭터 이전 필요 (24.07.29 수정됨)
+	CameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("CameraComponent"));
+	CameraComponent->SetupAttachment(SpringArmComponent);
+	CameraComponent->SetProjectionMode(ECameraProjectionMode::Perspective);
+
+	// FPV Character Mesh => 메인캐릭터 이전 필요 (24.07.29 수정됨)
+	FPVMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("FirstPersonMesh"));
+	FPVMesh->SetupAttachment(CameraComponent);
+	FPVMesh->SetRelativeLocation(FVector(-20.0f, 0.0f, -160.0f));
+	FPVMesh->SetOwnerNoSee(false);
+	FPVMesh->SetOnlyOwnerSee(true);
+	FPVMesh->bCastDynamicShadow = false;
+	FPVMesh->CastShadow = false;
 
 	// FPV Item Mesh => 메인캐릭터 적용.
 	FPVItemSocketMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("FPVItemSocketMesh"));
@@ -69,20 +82,7 @@ ATestCharacter::ATestCharacter()
 	FPVItemSocketMesh->bCastDynamicShadow = false;
 	FPVItemSocketMesh->CastShadow = false;
 
-	// SpringArm Component => 메인과 다름
-	SpringArmComponent = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArmComponent"));
-	SpringArmComponent->SetupAttachment(GetMesh(), FName("ItemSocket"));
-	SpringArmComponent->SetRelativeLocation(FVector(0.0f, 0.0f, 0.0f));
-	SpringArmComponent->TargetArmLength = 0.0f;
-	SpringArmComponent->bUsePawnControlRotation = true;
-	SpringArmComponent->bDoCollisionTest = true;
-
-	// Camera Component => 메인캐릭터 적용.
-	CameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("CameraComponent"));
-	CameraComponent->SetupAttachment(SpringArmComponent);
-	CameraComponent->SetProjectionMode(ECameraProjectionMode::Perspective);
-
-	// Map Item 검사 => 메인과 다름
+	// Map Item 검사 => 메인캐릭터 적용.
 	GetMapItemCollisonComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("GetMapItemCollisionComponent"));
 	GetMapItemCollisonComponent->SetupAttachment(RootComponent);
 	GetMapItemCollisonComponent->SetRelativeLocation(FVector(100.0, 0.0, -20.0f));
@@ -105,10 +105,8 @@ ATestCharacter::ATestCharacter()
 	// HandAttack Component = > 메인캐릭터 적용.[주석이 없는 3줄 적용. 확인 필요.]
 	//FString Name = "Punch";
 	HandAttackComponent = CreateDefaultSubobject<USphereComponent>(TEXT("Hand Attack Comp"));
-	//HandAttackComponent->SetupAttachment(GetMesh(), *Name);
 	HandAttackComponent->SetupAttachment(GetMesh());
 	HandAttackComponent->SetRelativeLocation({ 0.0f, 80.0f, 120.0f });
-	//HandAttackComponent->SetCollisionProfileName(TEXT("NoCollision"));
 
 	// MinimapIcon Component => 메인캐릭터 적용.
 	MinimapIconComponent = CreateDefaultSubobject<UTestMinimapIconComponent>(TEXT("MinimapPlayerIcon"));
@@ -250,6 +248,16 @@ void ATestCharacter::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 	UpdatePlayerHp(DeltaTime); // => 매인 적용.
+
+	// 7/29 기절 상태일 때 캐릭터 회전 금지 코드
+	if (IsFaint == false) // 정상 상태 
+	{
+		bUseControllerRotationYaw = true;
+	}
+	else // 기절 상태
+	{
+		bUseControllerRotationYaw = false;
+	}
 
 #if WITH_EDITOR
 	// GameState 변수 출력용 TestCode
@@ -398,7 +406,7 @@ void ATestCharacter::FireRayCast_Implementation() // => 메인도 수정해야 함 (24.0
 
 	ATestPlayerController* Con = Cast<ATestPlayerController>(GetController());
 	FVector Start = GetMesh()->GetSocketLocation(FName("MuzzleSocket"));
-	Start.Z -= 20.0f;
+	//Start.Z -= 20.0f;
 	FVector End = (Con->GetControlRotation().Vector() * 2000.0f) + Start;
 	FHitResult Hit;
 
@@ -625,14 +633,14 @@ void ATestCharacter::PickUpItem_Implementation()	// => 메인캐릭터로 이전해야 함 
 	ChangePosture(ItemType);
 }
 
-void ATestCharacter::ChangePOV()	// => 메인캐릭터로 이전해야 함 (24.07.22 수정됨) // => 매인 적용.
+void ATestCharacter::ChangePOV()	// => 메인캐릭터로 이전해야 함 (24.07.29 수정 중)
 {
 	if (IsFPV)	// 일인칭 -> 삼인칭
 	{
 		// SpringArm Component 위치 수정.
 		//SpringArmComponent->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
+		SpringArmComponent->SetRelativeLocation(FVector(0.0f, 60.0f, 110.0f));
 		SpringArmComponent->TargetArmLength = 300.0f;
-		//SpringArmComponent->SetRelativeLocation(FVector(0.0f, 0.0f, 0.0f)); // 메인 : 왜 주석?
 
 		// Character Mesh 전환.
 		GetMesh()->SetOwnerNoSee(false);
@@ -651,8 +659,8 @@ void ATestCharacter::ChangePOV()	// => 메인캐릭터로 이전해야 함 (24.07.22 수정됨
 	{
 		// SpringArm Component 위치 수정.
 		//SpringArmComponent->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, FName("SpringArmSocket"));
+		SpringArmComponent->SetRelativeLocation(FVector(20.0f, 0.0f, 72.0f));
 		SpringArmComponent->TargetArmLength = 0.0f;
-		//SpringArmComponent->SetRelativeLocation(FVector(0.0f, 0.0f, 0.0f));
 
 		// Character Mesh 전환.
 		GetMesh()->SetOwnerNoSee(true);
@@ -691,23 +699,24 @@ void ATestCharacter::MapItemOverlapEnd() // => 매인 적용.
 	}
 }
 
-void ATestCharacter::CrouchCameraMove() // => 매인 적용.
+void ATestCharacter::CrouchCameraMove() // => 매인에 적용 필요 (24.07.29 수정 중)
 {
-	// 메인 : 왜 주석?
-	/*if (IsFPV)
+	if (IsFPV)
 	{
 		switch (LowerStateValue)
 		{
 		case EPlayerLowerState::Idle:
-			SpringArmComponent->SetRelativeLocation(FVector(0.0f, 0.0f, 10.0f));
+			SpringArmComponent->SetRelativeLocation(FVector(20.0f, 0.0f, 10.0f));
+			//SpringArmComponent->SetRelativeLocation(FVector(0.0f, 0.0f, 10.0f));
 			break;
 		case EPlayerLowerState::Crouch:
-			SpringArmComponent->SetRelativeLocation(FVector(0.0f, 0.0f, 80.0f));
+			SpringArmComponent->SetRelativeLocation(FVector(20.0f, 0.0f, 72.0f));
+			//SpringArmComponent->SetRelativeLocation(FVector(0.0f, 0.0f, 80.0f));
 			break;
 		default:
 			break;
 		}
-	}*/
+	}
 }
 
 void ATestCharacter::NetCheck() // => 매인 적용.
