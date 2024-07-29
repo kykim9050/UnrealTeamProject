@@ -22,7 +22,6 @@ public:
 	// Input
 	UPROPERTY()
 	class UInputDatas* InputData;
-
 	UFUNCTION(BlueprintCallable)
 	void SetupInputComponent() override;
 
@@ -46,17 +45,11 @@ public:
 	//UFUNCTION(BlueprintCallable)
 	//void JumpEnd(const FInputActionValue& Value);
 
-
 	// 사용 중 (태환)
 	UFUNCTION(BlueprintCallable)
 	void Crouch(const FInputActionValue& Value);
 
-	//UFUNCTION(BlueprintCallable)
-	//void FireStart(const FInputActionValue& Value);
-	//UFUNCTION(BlueprintCallable)
-	//void FireTick(const FInputActionValue& Value);
-	//UFUNCTION(BlueprintCallable)
-	//void FireEnd(const FInputActionValue& Value);
+	// Fire
 	UFUNCTION(BlueprintCallable)
 	void FireStart(float _DeltaTime);
 	UFUNCTION(BlueprintCallable)
@@ -64,10 +57,13 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void FireEnd();
 
+	// Item
 	UFUNCTION(BlueprintCallable)
-	void PickUpItem();
-	UFUNCTION(BlueprintCallable)
-	void PickUpItemEnd();
+	void CheckItem();	// => 메인으로 이전 필요 (24.07.29 추가됨) (아래의 함수들은 삭제)
+	//UFUNCTION(BlueprintCallable)
+	//void PickUpItem();
+	//UFUNCTION(BlueprintCallable)
+	//void PickUpItemEnd();
 
 	// State, Posture
 	UFUNCTION(BlueprintCallable)
@@ -98,7 +94,6 @@ public:
 	//테스트용
 	UFUNCTION(BlueprintCallable)
 	void SetFaint();
-	//
 
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "TeamId", meta = (AllowPrivateAccess = true))
@@ -110,4 +105,9 @@ private:
 
 	UPROPERTY()
 	bool PlayerIsFaint = false;
+
+	// HUD / Widget
+protected:
+	UFUNCTION(BlueprintImplementableEvent, meta = (CallInEditor = true))
+	void ChangePostureToWidget(EPlayerPosture _Posture);
 };

@@ -104,9 +104,10 @@ public:
 	void ChangeIsFaint();
 	void ChangeIsFaint_Implementation();
 
-	// POV
+	// POV	// => const 값들 메인캐릭터 이전 필요 (24.07.29 추가됨) => 메인 적용.
 	const FVector CameraRelLoc = FVector(0.0f, 60.0f, 110.0f);
-	const FVector FPVCameraRelLoc = FVector(20.0f, 0.0f, 67.0f);
+	const FVector FPVCameraRelLoc = FVector(0.0f, 0.0f, 72.0f);
+	const FVector FPVCameraRelLoc_Crouch = FVector(10.0f, 0.0f, 10.0f);
 	bool IsFPV = true;
 	UFUNCTION()
 	void ChangePOV();
@@ -122,36 +123,27 @@ public:
 	int CurItemIndex = -1;
 
 	// Item
-	// 맵에 있는 무기 Data
 	UPROPERTY(Category = "Contents", VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	AActor* GetMapItemData = nullptr;
+	AActor* GetMapItemData = nullptr;	// 맵에 있는 무기 Data
+	UPROPERTY(Category = "Contents", Replicated, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	FString RayCastToItemName = "";
 	UFUNCTION(BlueprintCallable)
 	void MapItemOverlapStart(AActor* _OtherActor, UPrimitiveComponent* _Collision);
 	UFUNCTION(BlueprintCallable)
 	void MapItemOverlapEnd();
-
-	/*UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	AActor* GetMapItem = nullptr;*/
-	UPROPERTY(Category = "Contents", Replicated, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	FString RayCastToItemName = "";
+	UFUNCTION(BlueprintCallable)
+	void CheckItem();	// => 메인캐릭터로 이전해야 함 (24.07.29 추가됨)
+	UFUNCTION(Reliable, Server)
+	void InteractObject(AMapObjectBase* _MapObject);	// => 메인캐릭터로 이전해야 함 (24.07.29 추가됨)
+	void InteractObject_Implementation(AMapObjectBase* _MapObject);
 	UFUNCTION(Reliable, Server)
 	void PickUpItem();
-	void PickUpItem_Implementation(); // 박성우 : Bomb 내용 수정
-
+	void PickUpItem_Implementation();
+	UFUNCTION(Reliable, Server, BlueprintCallable)
+	void DropItem();	// => 메인캐릭터로 이전해야 함 (24.07.29 수정됨)
+	void DropItem_Implementation();
 	UFUNCTION(BlueprintCallable)
-	FORCEINLINE bool GetPickUp()
-	{
-		return PickUp;
-	}
-	UFUNCTION(BlueprintCallable)
-	FORCEINLINE void SetPickUp(bool _PickUp)
-	{
-		PickUp = _PickUp;
-	}
-
-	UFUNCTION(Reliable, Server, BlueprintCallable)	// => 메인캐릭터로 이전해야 함 (24.07.23 수정됨)
-	void CharacterPlayerToDropItem();
-	void CharacterPlayerToDropItem_Implementation();
+	void DeleteItem(int _Index);	// => 메인캐릭터로 이전해야 함 (24.07.29 추가됨)
 
 	// Collision
 	//UFUNCTION(BlueprintCallable)
@@ -228,7 +220,7 @@ public:
 	//void DefaultRayCast(float _DeltaTime);
 
 	UFUNCTION(Reliable, Server, BlueprintCallable)	// => 메인도 수정해야 함 (24.07.25 수정됨)
-		void FireRayCast();
+	void FireRayCast();
 	void FireRayCast_Implementation();
 
 	// 공격 시 서버 캐릭터 몽타주 변경 함수 (태환)

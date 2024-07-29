@@ -30,12 +30,8 @@ public :
 	void AddDamage(float _Damage);
 	void AddDamage_Implementation(float _Damage);
 
-private :
-	UFUNCTION()
-	void UpdatePlayerHp();
-
 private:
 	// PlayerHp 값이 변경되면 UpdatePlayerHp 함수 실행.
-	UPROPERTY(ReplicatedUsing=UpdatePlayerHp)
+	UPROPERTY(Replicated)
 	float PlayerHp = 0.0f;
 };

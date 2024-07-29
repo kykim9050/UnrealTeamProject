@@ -144,9 +144,21 @@ public:
 	}
 
 	UFUNCTION()
+	FORCEINLINE FString GetMainNickName() const
+	{
+		return MainNickname;
+	}
+
+	UFUNCTION()
 	FORCEINLINE void SetUIToSelectCharacter(FName _Name)
 	{
 		UIToSelectCharacter = _Name;
+	}
+
+	UFUNCTION()
+	FORCEINLINE void SetMainNickName(FString _Nickname)
+	{
+		MainNickname = _Nickname;
 	}
 
 protected:
@@ -201,4 +213,7 @@ private:
 
 	UPROPERTY()
 	FName UIToSelectCharacter = "";
+
+	UPROPERTY()
+	FString MainNickname = "MyNickName";
 };

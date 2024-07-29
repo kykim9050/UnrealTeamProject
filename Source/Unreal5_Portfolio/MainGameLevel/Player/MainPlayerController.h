@@ -95,6 +95,7 @@ private :
 	UPROPERTY()
 	FTimerHandle MyTimeHandle;
 
+	// 기절 상태.
 	UPROPERTY()
 	bool CharacterIsFaint = false;
 
@@ -108,4 +109,7 @@ protected :
 	// Bullet Count To HUD [BP]
 	UFUNCTION(BlueprintImplementableEvent, meta = (CallInEditor = true))
 	void BullitCountToHUD();
+
+	UFUNCTION(BlueprintImplementableEvent, meta = (CallInEditor = true))
+	void ChangePostureToWidget(EPlayerPosture _Posture);
 };

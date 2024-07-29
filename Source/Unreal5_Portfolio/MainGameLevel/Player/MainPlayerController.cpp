@@ -275,6 +275,7 @@ void AMainPlayerController::ChangePosture(EPlayerPosture _Posture)
 	}
 
 	Ch->ChangePosture(_Posture);
+	ChangePostureToWidget(_Posture);
 }
 
 void AMainPlayerController::ChangeLowerState(EPlayerLowerState _State)
