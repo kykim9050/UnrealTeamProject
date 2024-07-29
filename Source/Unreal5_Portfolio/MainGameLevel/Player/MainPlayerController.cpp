@@ -26,8 +26,11 @@ AMainPlayerController::AMainPlayerController()
 
 void AMainPlayerController::BeginPlay()
 {
+	Super::BeginPlay();
+
 	FCharacterToReload.BindUObject(this, &AMainPlayerController::CallReload);
 	FCharacterToFaint.BindUObject(this, &AMainPlayerController::CallFaint);
+	FGetItemToWidget.BindUObject(this, &AMainPlayerController::CallGetItem);
 }
 
 void AMainPlayerController::SetupInputComponent()
@@ -324,4 +327,9 @@ void AMainPlayerController::CallReload()
 void AMainPlayerController::CallFaint(bool _Faint)
 {
 	CharacterIsFaint = _Faint;
+}
+
+void AMainPlayerController::CallGetItem()
+{
+	CallGetItemToWidget();
 }

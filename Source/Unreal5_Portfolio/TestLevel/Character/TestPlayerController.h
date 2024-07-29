@@ -8,6 +8,8 @@
 #include "GenericTeamAgentInterface.h"
 #include "TestPlayerController.generated.h"
 
+DECLARE_DELEGATE(FDelegate_GetItem_Test);
+
 /**
  *
  */
@@ -19,6 +21,12 @@ class UNREAL5_PORTFOLIO_API ATestPlayerController : public APlayerController, pu
 public:
 	ATestPlayerController();
 
+	FDelegate_GetItem_Test FGetItemToWidget_Test;
+
+protected :
+	void BeginPlay() override;
+
+public :
 	// Input
 	UPROPERTY()
 	class UInputDatas* InputData;
@@ -107,7 +115,16 @@ private:
 	bool PlayerIsFaint = false;
 
 	// HUD / Widget
+	UFUNCTION()
+	void CallGetItem();
+
 protected:
 	UFUNCTION(BlueprintImplementableEvent, meta = (CallInEditor = true))
 	void ChangePostureToWidget(EPlayerPosture _Posture);
+
+	UFUNCTION(BlueprintImplementableEvent, meta = (CallInEditor = true))
+	void GetItemToWidget();
+
+	UFUNCTION(BlueprintImplementableEvent, meta = (CallInEditor = true))
+	void CallGetItemToWidget();
 };

@@ -15,6 +15,8 @@ void AMainGameState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLi
 
 	DOREPLIFETIME(AMainGameState, CurStage);
 	DOREPLIFETIME(AMainGameState, MeleeNum);
+	DOREPLIFETIME(AMainGameState, RifleNum);
+	DOREPLIFETIME(AMainGameState, BombNum);
 }
 
 void AMainGameState::PushActor(uint8 _Index, AActor* _Actor)
@@ -39,8 +41,6 @@ UActorGroup* AMainGameState::GetActorGroup(uint8 _Index)
 
 void AMainGameState::AddMeleeNum()
 {
-	AGameModeBase* CurGameMode = GetWorld()->GetAuthGameMode();
-
 	if (MaxMeleeNum <= MeleeNum)
 	{
 		return;
@@ -55,3 +55,32 @@ void AMainGameState::AddMeleeNum()
 	}
 }
 
+void AMainGameState::AddArmoryWeaponNum(EPlayerPosture _ItemType)
+{
+	if (MaxBombNum <= BombNum
+		&& MaxRifleNum <= RifleNum)
+	{
+		return;
+	}
+
+	EPlayerPosture ItemType = _ItemType;
+
+	switch (ItemType)
+	{
+	case EPlayerPosture::Rifle1:
+		++RifleNum;
+		break;
+	case EPlayerPosture::Bomb:
+		++BombNum;
+		break;
+	default:
+		return;
+	}
+
+	if (MaxBombNum == BombNum
+		&& MaxRifleNum == RifleNum)
+	{
+		CurStage = EGameStage::ObtainFirstSample;
+		return;
+	}
+}
