@@ -9,6 +9,7 @@
 #include "MainPlayerController.generated.h"
 
 DECLARE_DELEGATE(FDelegate_Reload);
+DECLARE_DELEGATE(FDelegate_GetItem);
 DECLARE_DELEGATE_OneParam(FDelegate_Faint, const bool);
 
 /**
@@ -27,6 +28,8 @@ protected :
 public :
 	FDelegate_Reload FCharacterToReload;
 	FDelegate_Faint FCharacterToFaint;
+	FDelegate_GetItem FGetItemToWidget;
+
 
 	UFUNCTION(BlueprintCallable)
 	void SetupInputComponent() override;
@@ -105,8 +108,17 @@ private :
 	UFUNCTION()
 	void CallFaint(bool _Faint);
 
+	UFUNCTION()
+	void CallGetItem();
+
 protected :
 	// Bullet Count To HUD [BP]
 	UFUNCTION(BlueprintImplementableEvent, meta = (CallInEditor = true))
 	void BullitCountToHUD();
+
+	UFUNCTION(BlueprintImplementableEvent, meta = (CallInEditor = true))
+	void ChangePostureToWidget(EPlayerPosture _Posture);
+
+	UFUNCTION(BlueprintImplementableEvent, meta = (CallInEditor = true))
+	void CallGetItemToWidget();
 };

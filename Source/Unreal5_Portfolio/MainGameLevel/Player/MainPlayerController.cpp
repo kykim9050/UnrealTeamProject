@@ -26,8 +26,11 @@ AMainPlayerController::AMainPlayerController()
 
 void AMainPlayerController::BeginPlay()
 {
+	Super::BeginPlay();
+
 	FCharacterToReload.BindUObject(this, &AMainPlayerController::CallReload);
 	FCharacterToFaint.BindUObject(this, &AMainPlayerController::CallFaint);
+	FGetItemToWidget.BindUObject(this, &AMainPlayerController::CallGetItem);
 }
 
 void AMainPlayerController::SetupInputComponent()
@@ -275,6 +278,7 @@ void AMainPlayerController::ChangePosture(EPlayerPosture _Posture)
 	}
 
 	Ch->ChangePosture(_Posture);
+	ChangePostureToWidget(_Posture);
 }
 
 void AMainPlayerController::ChangeLowerState(EPlayerLowerState _State)
@@ -323,4 +327,9 @@ void AMainPlayerController::CallReload()
 void AMainPlayerController::CallFaint(bool _Faint)
 {
 	CharacterIsFaint = _Faint;
+}
+
+void AMainPlayerController::CallGetItem()
+{
+	CallGetItemToWidget();
 }

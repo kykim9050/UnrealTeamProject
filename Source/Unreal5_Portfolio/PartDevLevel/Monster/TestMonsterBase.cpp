@@ -46,6 +46,13 @@ void ATestMonsterBase::BeginPlay()
 	UMainGameInstance* MainGameInst = UMainGameBlueprintFunctionLibrary::GetMainGameInstance(GetWorld());
 
 	AnimInst = Cast<UMonsterAnimInstance>(GetMesh()->GetAnimInstance());
+
+	if (nullptr == AnimInst)
+	{
+		LOG(MonsterLog, Fatal, TEXT("AnimInst Setting Wrong"));
+		return;
+	}
+
 	const FMonsterDataRow* BaseData = MainGameInst->GetMonsterData(BaseDataName);
 
 	if (nullptr == BaseData)

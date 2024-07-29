@@ -119,4 +119,6 @@ public:
 
 	bool IsChange = false;
 
+	FRotator DestRotate = FRotator::ZeroRotator;
+	FRotator MyRotate = FRotator::ZeroRotator;
 };

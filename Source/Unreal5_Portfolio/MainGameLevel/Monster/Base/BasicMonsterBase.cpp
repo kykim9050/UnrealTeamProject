@@ -34,7 +34,6 @@ ABasicMonsterBase::ABasicMonsterBase()
 	// Dissolve
 	DeadTimelineFinish.BindUFunction(this, "DeadFinish");
 	DeadDissolveCallBack.BindUFunction(this, "DeadDissolveInterp");
-
 }
 
 void ABasicMonsterBase::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -51,8 +50,13 @@ void ABasicMonsterBase::BeginPlay()
 	
 	// 데이터 세팅
 	UMainGameInstance* MainGameInst = UMainGameBlueprintFunctionLibrary::GetMainGameInstance(GetWorld());
-	const FMonsterDataRow* BaseData = MainGameInst->GetMonsterData(BaseDataName);
+	if (nullptr == MainGameInst)
+	{
+		LOG(MonsterLog, Fatal, TEXT("MainGameInstance Is Null"));
+		return;
+	}
 
+	const FMonsterDataRow* BaseData = MainGameInst->GetMonsterData(BaseDataName);
 	if (nullptr == BaseData)
 	{
 		LOG(MonsterLog, Fatal, TEXT("BaseData Is Null"));
@@ -66,6 +70,12 @@ void ABasicMonsterBase::BeginPlay()
 
 	// 애니메이션 세팅
 	AnimInst = Cast<UBasicMonsterAnimInstance>(GetMesh()->GetAnimInstance());
+	if (nullptr == AnimInst)
+	{
+		LOG(MonsterLog, Fatal, TEXT("AnimInst Is Null"));
+		return;
+	}
+
 	TMap<EBasicMonsterAnim, FAnimMontageGroup> AllAnimMontages = BaseData->GetAllAnimMontage();
 	for (TPair<EBasicMonsterAnim, FAnimMontageGroup> AnimMontageGroup : AllAnimMontages)
 	{
@@ -80,8 +90,15 @@ void ABasicMonsterBase::BeginPlay()
 
 	// AI 컨트롤러 세팅
 	AIController = GetController<ABasicMonsterAIController>();
-	AIController->GetBlackboardComponent()->SetValueAsObject(TEXT("MonsterData"), SettingData);
+	if (nullptr == AIController)
+	{
+		LOG(MonsterLog, Fatal, TEXT("AIController Is Null"));
+		return;
+	}
 
+	AIController->GetBlackboardComponent()->SetValueAsObject(TEXT("MonsterData"), SettingData);
+	
+	// Binding
 	AttackComponent->OnComponentEndOverlap.AddDynamic(this, &ABasicMonsterBase::OnAttackOverlapEnd);
 }
 

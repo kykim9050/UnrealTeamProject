@@ -26,6 +26,13 @@ ATestPlayerController::ATestPlayerController()
 	}
 }
 
+void ATestPlayerController::BeginPlay()
+{
+	Super::BeginPlay();
+
+	FGetItemToWidget_Test.BindUObject(this, &ATestPlayerController::CallGetItem);
+}
+
 void ATestPlayerController::SetupInputComponent()
 {
 	Super::SetupInputComponent();
@@ -288,4 +295,9 @@ void ATestPlayerController::SetFaint()
 FGenericTeamId ATestPlayerController::GetGenericTeamId() const
 {
 	return TeamId;
+}
+
+void ATestPlayerController::CallGetItem()
+{
+	CallGetItemToWidget();
 }
