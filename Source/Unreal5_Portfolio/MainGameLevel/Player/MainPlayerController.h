@@ -9,6 +9,7 @@
 #include "MainPlayerController.generated.h"
 
 DECLARE_DELEGATE(FDelegate_Reload);
+DECLARE_DELEGATE_OneParam(FDelegate_Faint, const bool);
 
 /**
  * 
@@ -25,6 +26,7 @@ protected :
 
 public :
 	FDelegate_Reload FCharacterToReload;
+	FDelegate_Faint FCharacterToFaint;
 
 	UFUNCTION(BlueprintCallable)
 	void SetupInputComponent() override;
@@ -93,8 +95,14 @@ private :
 	UPROPERTY()
 	FTimerHandle MyTimeHandle;
 
+	UPROPERTY()
+	bool CharacterIsFaint = false;
+
 	UFUNCTION()
 	void CallReload();
+
+	UFUNCTION()
+	void CallFaint(bool _Faint);
 
 protected :
 	// Bullet Count To HUD [BP]
