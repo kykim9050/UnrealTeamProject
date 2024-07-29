@@ -146,6 +146,7 @@ enum class EUserWidgetType : uint8
 	Crosshair,
 	WorldMap,
 	ReloadComment,
+	BossHpbar,
 
 	// Title
 	TitleBackground,
