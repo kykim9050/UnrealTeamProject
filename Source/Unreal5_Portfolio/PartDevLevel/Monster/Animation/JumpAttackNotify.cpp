@@ -10,11 +10,18 @@
 
 void UJumpAttackNotify::Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation)
 {
+
 	ATestMonsterBase* Monster = Cast<ATestMonsterBase>(MeshComp->GetOwner());
 	if (nullptr == Monster)
 	{
 		return;
 	}
+
+	if (false == Monster->HasAuthority())
+	{
+		return;
+	}
+
 
 	UMotionWarpingComponent* MotionWarpComp = Monster->GetMotionWarpingComponent();
 	if (nullptr == MotionWarpComp)
@@ -22,7 +29,7 @@ void UJumpAttackNotify::Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceBa
 		return;
 	}
 
-	AAIController* AIController = Cast< AAIController>(Monster->GetController());
+	AAIController* AIController = Cast<AAIController>(Monster->GetController());
 	AActor* TargetActor = Cast<AActor>(AIController->GetBlackboardComponent()->GetValueAsObject(TEXT("TargetActor")));
 
 	FMotionWarpingTarget Target = {};
