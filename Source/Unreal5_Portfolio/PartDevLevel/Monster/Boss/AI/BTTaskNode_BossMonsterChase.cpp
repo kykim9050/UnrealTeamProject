@@ -65,7 +65,7 @@ void UBTTaskNode_BossMonsterChase::TickTask(UBehaviorTreeComponent& _OwnerComp, 
 		if (false == bMeleeChase)
 		{
 			int32 RandomValue = FMath::RandRange(0, 99);
-			if (20 < RandomValue)
+			if (40 < RandomValue)
 			{
 				StateChange(_OwnerComp, EBossMonsterState::RangedAttack);
 				return;
