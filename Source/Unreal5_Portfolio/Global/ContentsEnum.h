@@ -12,7 +12,6 @@ UENUM(BlueprintType)
 enum class EObjectType : uint8
 {
 	Player,
-	Monster,
 	Max
 };
 
@@ -26,6 +25,21 @@ enum class EPlayerState : uint8
 	Crouch	UMETA(DisplayName = "Crouch"),
 	Fire	UMETA(DisplayName = "Fire"),
 };
+
+UENUM(BlueprintType)
+enum class EGameStage : uint8
+{
+	Init					UMETA(DisplayName = "게임 플레이 시작 초기"),
+	VisitArmory				UMETA(DisplayName = "무기고 방문"),
+	ObtainFirstSample		UMETA(DisplayName = "샘플1 아이템 확보"),
+	ObtainSecondSample		UMETA(DisplayName = "샘플2 아이템 확보"),
+	ObtainThirdSample		UMETA(DisplayName = "샘플3 아이템 확보"),
+	PlantingBomb			UMETA(DisplayName = "폭탄 설치"),
+	MoveToGatheringPoint	UMETA(DisplayName = "집결지로 이동"),
+	Defensing				UMETA(DisplayName = "거점 방어"),
+	MissionClear			UMETA(DisplayName = "미션 성공")
+};
+
 
 /// <summary>
 /// 1, 2, 3, 4 번에 대한 플레이어 자세.
@@ -162,18 +176,6 @@ enum class EPlayerLowerState : uint8
 {
 	Idle	UMETA(DisplayName = "Idle"),
 	Crouch	UMETA(DisplayName = "CrouchIdle"),
-};
-
-UENUM(BlueprintType)
-enum class EPlayerUpperState : uint8
-{
-	Barehand_Attack	UMETA(DisplayName = "Barehand_Attack"),		// 맨손 공격
-	Rifle_Attack		UMETA(DisplayName = "Rifle_Attack"),	// 주무기 공격
-	//Pistol		UMETA(DisplayName = "PistolAttack"),		// 보조무기
-	//Melee		UMETA(DisplayName = "MeleeAttack"),				// 근거리무기
-	//Throwing	UMETA(DisplayName = "ThrowingAttack"),			// 투척무기
-	//Supply		UMETA(DisplayName = "Supplies"),			// 그 외 소모품 아이템
-	//SlotMax
 };
 
 UENUM(BlueprintType)

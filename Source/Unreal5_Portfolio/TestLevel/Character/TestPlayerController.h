@@ -9,13 +9,13 @@
 #include "TestPlayerController.generated.h"
 
 /**
- * 
+ *
  */
 UCLASS()
 class UNREAL5_PORTFOLIO_API ATestPlayerController : public APlayerController, public IGenericTeamAgentInterface
 {
 	GENERATED_BODY()
-	
+
 public:
 	ATestPlayerController();
 
@@ -25,6 +25,9 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void SetupInputComponent() override;
+
+	UFUNCTION()
+	void PlayerTick(float DeltaTime) override;
 
 	// Actions
 	UFUNCTION(BlueprintCallable)
@@ -47,7 +50,7 @@ public:
 	// 사용 중 (태환)
 	UFUNCTION(BlueprintCallable)
 	void Crouch(const FInputActionValue& Value);
-	
+
 	//UFUNCTION(BlueprintCallable)
 	//void FireStart(const FInputActionValue& Value);
 	//UFUNCTION(BlueprintCallable)
@@ -104,4 +107,7 @@ private:
 
 	FTimerHandle MyTimeHandle;
 	int Count = 0;
+
+	UPROPERTY()
+	bool PlayerIsFaint = false;
 };
