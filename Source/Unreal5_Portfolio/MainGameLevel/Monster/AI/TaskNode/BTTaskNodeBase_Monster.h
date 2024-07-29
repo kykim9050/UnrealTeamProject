@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "BehaviorTree/BTTaskNode.h"
-#include "BTTaskNodeBase_BasicMonster.generated.h"
+#include "BTTaskNodeBase_Monster.generated.h"
 
 /**
  * 

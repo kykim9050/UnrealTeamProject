@@ -55,14 +55,14 @@ void UBTTaskNode_BossMonsterMAttack::TickTask(UBehaviorTreeComponent& _OwnerComp
 	MonsterLocation.Z = 0.0f;
 	TargetLocation.Z = 0.0f;
 
-	FRotator TurnRot = UKismetMathLibrary::FindLookAtRotation(MonsterLocation, TargetLocation);
-	BossMonster->SetActorRotation(TurnRot);
+	if (EBossMonsterState::MeleeAttack != static_cast<EBossMonsterState>(GetCurState(_OwnerComp)))
+	{
+		FRotator TurnRot = UKismetMathLibrary::FindLookAtRotation(MonsterLocation, TargetLocation);
+		BossMonster->SetActorRotation(TurnRot);
+	}
 
 	ATestCharacter* TargetPlayer = Cast<ATestCharacter>(TargetActor);
 	ATestPlayerState* TargetPlayerState = Cast<ATestPlayerState>(TargetPlayer->GetPlayerState());
-
-	FVector LocationDiff = TargetLocation - MonsterLocation;
-	float Dist = LocationDiff.Size();
 
 	if (0.0f >= TargetPlayerState->GetPlayerHp())
 	{

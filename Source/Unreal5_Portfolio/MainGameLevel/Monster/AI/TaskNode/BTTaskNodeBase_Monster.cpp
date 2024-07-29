@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "MainGameLevel/Monster/AI/TaskNode/BTTaskNodeBase_BasicMonster.h"
+#include "MainGameLevel/Monster/AI/TaskNode/BTTaskNodeBase_Monster.h"
 #include "BehaviorTree/BlackboardComponent.h"
 
 UBTTaskNodeBase_BasicMonster::UBTTaskNodeBase_BasicMonster()

@@ -50,6 +50,10 @@ public :
 	UPROPERTY(Category = "Contents", Replicated, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	EPlayerMoveDir DirValue = EPlayerMoveDir::Forward;
 
+	// 캐릭터 기절 여부.
+	UPROPERTY(Category = "Contents", Replicated, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	bool IsFaint = false;
+
 private : // 문제 발생 여지 있음 발생하면 그냥 지워야 함.
 	// == Components ==
 	
@@ -105,9 +109,9 @@ private : // 문제 발생 여지 있음 발생하면 그냥 지워야 함.
 
 	// 상체 정보
 	UPROPERTY()
-	class UPlayerAnimInstance* PlayerAnimInst;
+	class UPlayerAnimInstance* PlayerAnimInst = nullptr;
 	UPROPERTY()
-	class UPlayerAnimInstance* FPVPlayerAnimInst;
+	class UPlayerAnimInstance* FPVPlayerAnimInst = nullptr;
 
 	// 근접 공격에 사용
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
@@ -172,7 +176,11 @@ public :
 	void CrouchCameraMove();
 
 	// == Client ==
-private :	
+private :
+	const FVector CameraRelLoc = FVector(0.0f, 60.0f, 110.0f);
+	const FVector FPVCameraRelLoc = FVector(0.0f, 0.0f, 72.0f);
+	const FVector FPVCameraRelLoc_Crouch = FVector(10.0f, 0.0f, 10.0f);
+
 	UFUNCTION(BlueprintCallable)
 	void MapItemOverlapStart(AActor* _OtherActor, UPrimitiveComponent* _Collision);
 	
@@ -193,9 +201,6 @@ private :
 
 	UPROPERTY(Category = "PlayerNet", Replicated, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	int Token = -1;
-
-	UPROPERTY(Category = "Contents", Replicated, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	bool IsFaint = false;
 
 	UFUNCTION(Reliable, Server, BlueprintCallable)
 	void GetSetSelectCharacter(class UMainGameInstance* _MainGameInstance);
@@ -234,4 +239,5 @@ protected :
 
 /** BP
 * MovementComponent -> WalkableFloorAngle 의 값을 60.0으로 수정.
+* 캡슐 콜리전 Player로 변경.
 */

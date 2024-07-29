@@ -36,8 +36,9 @@ ATestCharacter::ATestCharacter()
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	// Character Mesh => 메인캐릭터 적용.
+	// Character Mesh => 메인캐릭터 이전 필요 (24.07.29 수정됨) => 메인 적용.
 	GetMesh()->SetOwnerNoSee(true);
+	GetMesh()->SetRelativeLocation(FVector(0.0f, 0.0f, -88.0f));
 	GetMesh()->bHiddenInSceneCapture = true;
 
 	// Item Mesh => 메인캐릭터 적용.
@@ -53,7 +54,7 @@ ATestCharacter::ATestCharacter()
 	// SpringArm Component => 메인캐릭터 이전 필요 (24.07.29 수정됨)
 	SpringArmComponent = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArmComponent"));
 	SpringArmComponent->SetupAttachment(RootComponent);
-	SpringArmComponent->SetRelativeLocation(FVector(20.0f, 0.0f, 72.0f));
+	SpringArmComponent->SetRelativeLocation(FPVCameraRelLoc);
 	SpringArmComponent->TargetArmLength = 0.0f;
 	SpringArmComponent->bUsePawnControlRotation = true;
 	SpringArmComponent->bDoCollisionTest = true;
@@ -66,7 +67,7 @@ ATestCharacter::ATestCharacter()
 	// FPV Character Mesh => 메인캐릭터 이전 필요 (24.07.29 수정됨)
 	FPVMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("FirstPersonMesh"));
 	FPVMesh->SetupAttachment(CameraComponent);
-	FPVMesh->SetRelativeLocation(FVector(-20.0f, 0.0f, -160.0f));
+	FPVMesh->SetRelativeLocation(FVector(0.0f, 0.0f, -160.0f));
 	FPVMesh->SetOwnerNoSee(false);
 	FPVMesh->SetOnlyOwnerSee(true);
 	FPVMesh->bCastDynamicShadow = false;
@@ -250,6 +251,17 @@ void ATestCharacter::Tick(float DeltaTime)
 
 	UpdatePlayerHp(DeltaTime); // => 매인 적용.
 
+	// 7/29 기절 상태일 때 캐릭터 회전 금지 코드
+	if (IsFaint == false) // 정상 상태 
+	{
+		bUseControllerRotationYaw = true;
+	}
+	else // 기절 상태
+	{
+		bUseControllerRotationYaw = false;
+	}
+
+#if WITH_EDITOR
 	// GameState 변수 출력용 TestCode
 	{
 		AMainGameState* CurGameState = UMainGameBlueprintFunctionLibrary::GetMainGameState(GetWorld());
@@ -634,7 +646,7 @@ void ATestCharacter::ChangePOV()	// => 메인캐릭터로 이전해야 함 (24.07.29 수정 �
 	{
 		// SpringArm Component 위치 수정.
 		//SpringArmComponent->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
-		SpringArmComponent->SetRelativeLocation(FVector(0.0f, 60.0f, 110.0f));
+		SpringArmComponent->SetRelativeLocation(CameraRelLoc);
 		SpringArmComponent->TargetArmLength = 300.0f;
 
 		// Character Mesh 전환.
@@ -654,7 +666,17 @@ void ATestCharacter::ChangePOV()	// => 메인캐릭터로 이전해야 함 (24.07.29 수정 �
 	{
 		// SpringArm Component 위치 수정.
 		//SpringArmComponent->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, FName("SpringArmSocket"));
-		SpringArmComponent->SetRelativeLocation(FVector(20.0f, 0.0f, 72.0f));
+		switch (LowerStateValue)
+		{
+		case EPlayerLowerState::Idle:
+			SpringArmComponent->SetRelativeLocation(FPVCameraRelLoc_Crouch);
+			break;
+		case EPlayerLowerState::Crouch:
+			SpringArmComponent->SetRelativeLocation(FPVCameraRelLoc);
+			break;
+		default:
+			break;
+		}
 		SpringArmComponent->TargetArmLength = 0.0f;
 
 		// Character Mesh 전환.
@@ -694,19 +716,17 @@ void ATestCharacter::MapItemOverlapEnd() // => 매인 적용.
 	}
 }
 
-void ATestCharacter::CrouchCameraMove() // => 매인에 적용 필요 (24.07.29 수정 중)
+void ATestCharacter::CrouchCameraMove() // => 매인에 적용 필요 (24.07.29 수정됨) => 메인 적용.
 {
 	if (IsFPV)
 	{
 		switch (LowerStateValue)
 		{
 		case EPlayerLowerState::Idle:
-			SpringArmComponent->SetRelativeLocation(FVector(20.0f, 0.0f, 10.0f));
-			//SpringArmComponent->SetRelativeLocation(FVector(0.0f, 0.0f, 10.0f));
+			SpringArmComponent->SetRelativeLocation(FPVCameraRelLoc_Crouch);
 			break;
 		case EPlayerLowerState::Crouch:
-			SpringArmComponent->SetRelativeLocation(FVector(20.0f, 0.0f, 72.0f));
-			//SpringArmComponent->SetRelativeLocation(FVector(0.0f, 0.0f, 80.0f));
+			SpringArmComponent->SetRelativeLocation(FPVCameraRelLoc);
 			break;
 		default:
 			break;

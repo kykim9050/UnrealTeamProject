@@ -95,6 +95,7 @@ private :
 	UPROPERTY()
 	FTimerHandle MyTimeHandle;
 
+	// 기절 상태.
 	UPROPERTY()
 	bool CharacterIsFaint = false;
 
