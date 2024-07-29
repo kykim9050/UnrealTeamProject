@@ -78,6 +78,7 @@ public:
 	/// 확보된 Melee 수를 반환
 	/// </summary>
 	/// <returns></returns>
+	UFUNCTION()
 	FORCEINLINE int GetMeleeNum() const
 	{
 		return MeleeNum;
