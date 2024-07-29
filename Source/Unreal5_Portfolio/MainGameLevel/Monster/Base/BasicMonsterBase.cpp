@@ -18,6 +18,7 @@
 
 #include "Global/MainGameBlueprintFunctionLibrary.h"
 #include "Global/MainGameInstance.h"
+#include "Global/MainGameState.h"
 #include "Global/ContentsLog.h"
 
 ABasicMonsterBase::ABasicMonsterBase()
@@ -137,6 +138,32 @@ void ABasicMonsterBase::Damaged(float Damage)
 		ChangeRandomAnimation(EBasicMonsterAnim::Dead);
 		AIController->GetBrainComponent()->StopLogic(TEXT("Dead"));
 	}
+}
+
+void ABasicMonsterBase::SetChasePlayer()
+{
+	if (false == HasAuthority())
+	{
+		return;
+	}
+
+	AMainGameState* MainGameState = UMainGameBlueprintFunctionLibrary::GetMainGameState(GetWorld());
+	if (nullptr == MainGameState)
+	{
+		LOG(MonsterLog, Fatal, TEXT("MainGameState Is Nullptr"));
+		return;
+	}
+
+	UActorGroup* PlayerGroup = MainGameState->GetActorGroup(EObjectType::Player);
+	if (nullptr == PlayerGroup)
+	{
+		LOG(MonsterLog, Fatal, TEXT("PlayerGroup Is Nullptr"));
+		return;
+	}
+
+	int GroupSize = PlayerGroup->Actors.Num();
+
+
 }
 
 void ABasicMonsterBase::SetDead_Implementation()

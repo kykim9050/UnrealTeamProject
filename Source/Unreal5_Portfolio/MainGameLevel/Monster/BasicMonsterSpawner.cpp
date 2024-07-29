@@ -2,6 +2,8 @@
 
 
 #include "MainGameLevel/Monster/BasicMonsterSpawner.h"
+#include "MainGameLevel/Monster/Base/BasicMonsterBase.h"
+
 #include "Global/MainGameBlueprintFunctionLibrary.h"
 #include "Global/MainGameInstance.h"
 
@@ -77,7 +79,12 @@ void ABasicMonsterSpawner::SpawnBasicMonster()
 		int TypeIndex = MainInst->Random.RandRange(0, Size);
 		float SpawnRadius = MainInst->Random.FRandRange(0, MaxSpawnRadius);
 		FVector SpawnLocation = CurPos + MainInst->Random.GetUnitVector().GetSafeNormal2D() * SpawnRadius;
-		GetWorld()->SpawnActor<AActor>(MonsterUClass[TypeIndex], SpawnLocation, FRotator::ZeroRotator);
+		ABasicMonsterBase* NewMonster =  GetWorld()->SpawnActor<ABasicMonsterBase>(MonsterUClass[TypeIndex], SpawnLocation, FRotator::ZeroRotator);
+
+		if (true == IsChasePlayer)
+		{
+			NewMonster->SetChasePlayer();
+		}
 	}
 
 	--TotalSpawnCount;

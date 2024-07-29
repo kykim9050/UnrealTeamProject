@@ -43,6 +43,10 @@ private:
 	// Max Spawn Radius
 	UPROPERTY(EditAnywhere, meta = (AllowprivateAccess = "true"))
 	float MaxSpawnRadius = 0.0f;
+	
+	// Chasing Player When Spawn
+	UPROPERTY(EditAnywhere, meta = (AllowprivateAccess = "true"))
+	bool IsChasePlayer = false;
 
 	UPROPERTY()
 	float TimeCount = 0.0f;
