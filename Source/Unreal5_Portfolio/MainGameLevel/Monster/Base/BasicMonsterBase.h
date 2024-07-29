@@ -114,10 +114,10 @@ public:
 
 private:
 	UPROPERTY(Replicated)
-	uint8 AnimType;
+	uint8 AnimType = 0;
 
 	UPROPERTY(Replicated)
-	int AnimIndex;
+	int AnimIndex = 0;
 
 	UPROPERTY()
 	UBasicMonsterAnimInstance* AnimInst = nullptr;
@@ -125,9 +125,9 @@ private:
 private:
 	// ÄÄÆ÷³ÍÆ®
 	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = true))
-	USphereComponent* AttackComponent;
+	USphereComponent* AttackComponent = nullptr;
 
 	UPROPERTY(EditAnywhere, Category = "Particle", meta = (AllowPrivateAccess = true))
-	UParticleSystem* BloodParticle;
+	UParticleSystem* BloodParticle = nullptr;
 
 };
