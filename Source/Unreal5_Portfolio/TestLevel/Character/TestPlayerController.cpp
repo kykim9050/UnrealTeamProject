@@ -72,21 +72,12 @@ void ATestPlayerController::PlayerTick(float DeltaTime)
 	Super::PlayerTick(DeltaTime);
 
 	ATestCharacter* Ch = GetPawn<ATestCharacter>();
-
 	if (nullptr == Ch)
 	{
 		return;
 	}
 
 	PlayerIsFaint = Ch->IsFaint;
-	if (PlayerIsFaint == false) // 정상 상태 
-	{
-		Ch->bUseControllerRotationYaw = true;
-	}
-	else // 기절 상태
-	{
-		Ch->bUseControllerRotationYaw = false;
-	}
 }
 
 void ATestPlayerController::MouseRotation(const FInputActionValue& Value)

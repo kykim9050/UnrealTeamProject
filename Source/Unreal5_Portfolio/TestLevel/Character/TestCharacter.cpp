@@ -249,6 +249,16 @@ void ATestCharacter::Tick(float DeltaTime)
 
 	UpdatePlayerHp(DeltaTime); // => 매인 적용.
 
+	// 7/29 기절 상태일 때 캐릭터 회전 금지 코드
+	if (IsFaint == false) // 정상 상태 
+	{
+		bUseControllerRotationYaw = true;
+	}
+	else // 기절 상태
+	{
+		bUseControllerRotationYaw = false;
+	}
+
 #if WITH_EDITOR
 	// GameState 변수 출력용 TestCode
 	{
