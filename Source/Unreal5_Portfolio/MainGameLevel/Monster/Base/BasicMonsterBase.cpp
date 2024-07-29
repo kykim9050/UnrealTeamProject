@@ -26,7 +26,7 @@ ABasicMonsterBase::ABasicMonsterBase()
 	PrimaryActorTick.bCanEverTick = true;
 
 	// Attack Component
-	AttackComponent = CreateDefaultSubobject<USphereComponent>("Attack Component");
+	AttackComponent = CreateDefaultSubobject<USphereComponent>(TEXT("Attack Component"));
 	AttackComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	AttackComponent->SetupAttachment(RootComponent);
 
@@ -54,7 +54,7 @@ void ABasicMonsterBase::BeginPlay()
 
 	if (nullptr == BaseData)
 	{
-		LOG(MonsterLog, Fatal, "BaseData Is Null");
+		LOG(MonsterLog, Fatal, TEXT("BaseData Is Null"));
 		return;
 	}
 
@@ -79,7 +79,7 @@ void ABasicMonsterBase::BeginPlay()
 
 	// AI 컨트롤러 세팅
 	AIController = GetController<ABasicMonsterAIController>();
-	AIController->GetBlackboardComponent()->SetValueAsObject("MonsterData", SettingData);
+	AIController->GetBlackboardComponent()->SetValueAsObject(TEXT("MonsterData"), SettingData);
 
 	AttackComponent->OnComponentEndOverlap.AddDynamic(this, &ABasicMonsterBase::OnAttackOverlapEnd);
 }
@@ -100,14 +100,14 @@ void ABasicMonsterBase::OnAttackOverlapEnd(UPrimitiveComponent* OverlappedComp, 
 		return;
 	}
 
-	EBasicMonsterState MonsterState = static_cast<EBasicMonsterState>(BlackBoard->GetValueAsEnum("State"));
+	EBasicMonsterState MonsterState = static_cast<EBasicMonsterState>(BlackBoard->GetValueAsEnum(TEXT("State")));
 	AMainCharacter* HitCharacter = Cast<AMainCharacter>(OtherActor);
 	if (nullptr != HitCharacter && EBasicMonsterState::Attack == MonsterState)
 	{
 		AMainPlayerState* HitPlayerState = Cast<AMainPlayerState>(HitCharacter->GetPlayerState());
 		if (nullptr == HitPlayerState)
 		{
-			LOG(MonsterLog, Fatal, "HitPlayerState Is Not Valid");
+			LOG(MonsterLog, Fatal, TEXT("HitPlayerState Is Not Valid"));
 		}
 
 		HitPlayerState->AddDamage(SettingData->AttackDamage);
@@ -135,7 +135,7 @@ void ABasicMonsterBase::Damaged(float Damage)
 	{
 		SetDead();
 		ChangeRandomAnimation(EBasicMonsterAnim::Dead);
-		AIController->GetBrainComponent()->StopLogic("Dead");
+		AIController->GetBrainComponent()->StopLogic(TEXT("Dead"));
 	}
 }
 

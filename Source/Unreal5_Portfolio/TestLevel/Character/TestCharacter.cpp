@@ -38,7 +38,7 @@ ATestCharacter::ATestCharacter()
 	GetMesh()->SetOwnerNoSee(true);
 	GetMesh()->bHiddenInSceneCapture = true;
 
-	// FPV Character Mesh => 메인캐릭터 적용.
+	// FPV Character Mesh => 메인과 다름
 	FPVMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("FirstPersonMesh"));
 	FPVMesh->SetupAttachment(GetMesh());
 	FPVMesh->SetRelativeLocation(FVector(20.0f, 0.0f, 0.0f));
@@ -68,7 +68,7 @@ ATestCharacter::ATestCharacter()
 	FPVItemSocketMesh->bCastDynamicShadow = false;
 	FPVItemSocketMesh->CastShadow = false;
 
-	// SpringArm Component => 메인캐릭터 적용.
+	// SpringArm Component => 메인과 다름
 	SpringArmComponent = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArmComponent"));
 	SpringArmComponent->SetupAttachment(GetMesh(), FName("ItemSocket"));
 	SpringArmComponent->SetRelativeLocation(FVector(0.0f, 0.0f, 0.0f));
@@ -81,7 +81,7 @@ ATestCharacter::ATestCharacter()
 	CameraComponent->SetupAttachment(SpringArmComponent);
 	CameraComponent->SetProjectionMode(ECameraProjectionMode::Perspective);
 
-	// Map Item 검사 => 메인캐릭터 적용.
+	// Map Item 검사 => 메인과 다름
 	GetMapItemCollisonComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("GetMapItemCollisionComponent"));
 	GetMapItemCollisonComponent->SetupAttachment(RootComponent);
 	GetMapItemCollisonComponent->SetRelativeLocation(FVector(100.0, 0.0, -20.0f));
@@ -114,7 +114,7 @@ ATestCharacter::ATestCharacter()
 	MinimapIconComponent->SetupAttachment(RootComponent);
 	MinimapIconComponent->bVisibleInSceneCaptureOnly = true;
 
-	// Riding Character Mesh => 메인캐릭터 적용.
+	// Riding Character Mesh => 메인캐릭터 적용.(주석)
 	RidingMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("RidingMesh"));
 	RidingMesh->SetupAttachment(GetMesh());
 	RidingMesh->SetCollisionProfileName(TEXT("NoCollision"));
@@ -144,7 +144,7 @@ void ATestCharacter::CharacterPlayerToDropItem_Implementation()	// => 메인캐릭터
 	// UMainGameInstance* MainGameInst = UMainGameBlueprintFunctionLibrary::GetMainGameInstance(GetWorld()); << 매인에는 이렇게 적용됨.
 	UMainGameInstance* MainGameInst = GetWorld()->GetGameInstanceChecked<UMainGameInstance>();
 	const FItemDataRow* ItemBase = MainGameInst->GetItemData(ItemName);
-	FTransform BoneTrans = GetMesh()->GetBoneTransform(FName("RightHand"), ERelativeTransformSpace::RTS_World);
+	FTransform BoneTrans = GetMesh()->GetBoneTransform(FName("RightHand"), ERelativeTransformSpace::RTS_World); // 메인 적용.(07/29)
 
 	AActor* DropItem = GetWorld()->SpawnActor<AActor>(ItemBase->GetItemUClass(), BoneTrans);
 
@@ -586,7 +586,7 @@ void ATestCharacter::ChangePOV()	// => 메인캐릭터로 이전해야 함 (24.07.22 수정됨
 		// SpringArm Component 위치 수정.
 		//SpringArmComponent->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
 		SpringArmComponent->TargetArmLength = 300.0f;
-		//SpringArmComponent->SetRelativeLocation(FVector(0.0f, 0.0f, 0.0f));
+		//SpringArmComponent->SetRelativeLocation(FVector(0.0f, 0.0f, 0.0f)); // 메인 : 왜 주석?
 
 		// Character Mesh 전환.
 		GetMesh()->SetOwnerNoSee(false);
@@ -647,6 +647,7 @@ void ATestCharacter::MapItemOverlapEnd() // => 매인 적용.
 
 void ATestCharacter::CrouchCameraMove() // => 매인 적용.
 {
+	// 메인 : 왜 주석?
 	/*if (IsFPV)
 	{
 		switch (LowerStateValue)
