@@ -60,6 +60,7 @@ void ABasicMonsterSpawner::Tick(float DeltaTime)
 	if (0 >= TotalSpawnCount)
 	{
 		Destroy();
+		return;
 	}
 
 	SpawnBasicMonster();
