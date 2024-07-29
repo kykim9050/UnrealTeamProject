@@ -519,6 +519,9 @@ void ATestCharacter::PickUpItem_Implementation()	// => 메인캐릭터로 이전해야 함 
 
 	// 무기 Type에 따른 애니메이션 변화 함수 호출.
 	ChangePosture(ItemType);
+
+	ATestPlayerController* Con = Cast<ATestPlayerController>(GetController());
+	Con->FGetItemToWidget_Test.Execute();
 }
 
 void ATestCharacter::DropItem_Implementation()	// => 메인캐릭터로 이전해야 함 (24.07.29 수정됨)
