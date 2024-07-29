@@ -32,12 +32,13 @@ AMainCharacter::AMainCharacter()
 
 	// character Mesh
 	GetMesh()->SetOwnerNoSee(true);
+	GetMesh()->SetRelativeLocation(FVector(0.0f, 0.0f, -88.0f));
 	GetMesh()->bHiddenInSceneCapture = true;
 
 	// SpringArm Component
 	SpringArmComponent = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArmComponent"));
 	SpringArmComponent->SetupAttachment(RootComponent);
-	SpringArmComponent->SetRelativeLocation(FVector(20.0f, 0.0f, 67.0f));
+	SpringArmComponent->SetRelativeLocation(FPVCameraRelLoc);
 	SpringArmComponent->TargetArmLength = 0.0f;
 	SpringArmComponent->bUsePawnControlRotation = true;
 	SpringArmComponent->bDoCollisionTest = true;
@@ -116,7 +117,7 @@ AMainCharacter::AMainCharacter()
 	// Hand Attack Component
 	HandAttackComponent = CreateDefaultSubobject<USphereComponent>(TEXT("Hand Attack Comp"));
 	HandAttackComponent->SetupAttachment(GetMesh());
-	HandAttackComponent->SetRelativeLocation({ 0.0f, 100.0f, 110.0f });
+	HandAttackComponent->SetRelativeLocation({ 0.0f, 80.0f, 120.0f });
 }
 
 void AMainCharacter::PostInitializeComponents() // FName 부분 수정 필요.
@@ -401,9 +402,6 @@ void AMainCharacter::FireRayCast_Implementation(float _DeltaTime)
 		return;
 	}
 
-	
-
-
 	AMainPlayerController* Con = Cast<AMainPlayerController>(GetController());
 	FVector Start = GetMesh()->GetSocketLocation(FName("MuzzleSocket"));
 	Start.Z -= 20.0f;
@@ -472,10 +470,10 @@ void AMainCharacter::CrouchCameraMove()
 		switch (LowerStateValue)
 		{
 		case EPlayerLowerState::Idle:
-			SpringArmComponent->SetRelativeLocation(FVector(0.0f, 0.0f, 10.0f));
+			SpringArmComponent->SetRelativeLocation(FPVCameraRelLoc_Crouch);
 			break;
 		case EPlayerLowerState::Crouch:
-			SpringArmComponent->SetRelativeLocation(FVector(0.0f, 0.0f, 80.0f));
+			SpringArmComponent->SetRelativeLocation(FPVCameraRelLoc);
 			break;
 		default:
 			break;
@@ -657,6 +655,10 @@ void AMainCharacter::NetCheck()
 	if (true == IsServer)
 	{
 		UMainGameInstance* Inst = GetGameInstance<UMainGameInstance>();
+		if (nullptr == Inst)
+		{
+			return;
+		}
 		// 이토큰은 그 인덱스가 아니다.
 		Token = Inst->GetNetToken();
 	}

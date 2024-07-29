@@ -176,7 +176,11 @@ public :
 	void CrouchCameraMove();
 
 	// == Client ==
-private :	
+private :
+	const FVector CameraRelLoc = FVector(0.0f, 60.0f, 110.0f);
+	const FVector FPVCameraRelLoc = FVector(0.0f, 0.0f, 72.0f);
+	const FVector FPVCameraRelLoc_Crouch = FVector(10.0f, 0.0f, 10.0f);
+
 	UFUNCTION(BlueprintCallable)
 	void MapItemOverlapStart(AActor* _OtherActor, UPrimitiveComponent* _Collision);
 	

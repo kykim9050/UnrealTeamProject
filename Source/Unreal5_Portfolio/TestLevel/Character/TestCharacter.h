@@ -104,7 +104,7 @@ public:
 	void ChangeIsFaint();
 	void ChangeIsFaint_Implementation();
 
-	// POV	// => const 값들 메인캐릭터 이전 필요 (24.07.29 추가됨)
+	// POV	// => const 값들 메인캐릭터 이전 필요 (24.07.29 추가됨) => 메인 적용.
 	const FVector CameraRelLoc = FVector(0.0f, 60.0f, 110.0f);
 	const FVector FPVCameraRelLoc = FVector(0.0f, 0.0f, 72.0f);
 	const FVector FPVCameraRelLoc_Crouch = FVector(10.0f, 0.0f, 10.0f);
@@ -229,7 +229,7 @@ public:
 	//void DefaultRayCast(float _DeltaTime);
 
 	UFUNCTION(Reliable, Server, BlueprintCallable)	// => 메인도 수정해야 함 (24.07.25 수정됨)
-		void FireRayCast();
+	void FireRayCast();
 	void FireRayCast_Implementation();
 
 	// 공격 시 서버 캐릭터 몽타주 변경 함수 (태환)

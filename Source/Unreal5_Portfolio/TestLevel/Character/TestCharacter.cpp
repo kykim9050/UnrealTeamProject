@@ -35,7 +35,7 @@ ATestCharacter::ATestCharacter()
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	// Character Mesh => 메인캐릭터 이전 필요 (24.07.29 수정됨)
+	// Character Mesh => 메인캐릭터 이전 필요 (24.07.29 수정됨) => 메인 적용.
 	GetMesh()->SetOwnerNoSee(true);
 	GetMesh()->SetRelativeLocation(FVector(0.0f, 0.0f, -88.0f));
 	GetMesh()->bHiddenInSceneCapture = true;
@@ -710,7 +710,7 @@ void ATestCharacter::MapItemOverlapEnd() // => 매인 적용.
 	}
 }
 
-void ATestCharacter::CrouchCameraMove() // => 매인에 적용 필요 (24.07.29 수정됨)
+void ATestCharacter::CrouchCameraMove() // => 매인에 적용 필요 (24.07.29 수정됨) => 메인 적용.
 {
 	if (IsFPV)
 	{
