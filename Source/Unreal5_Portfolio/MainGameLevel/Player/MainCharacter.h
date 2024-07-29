@@ -152,6 +152,14 @@ public :
 	void ClientChangeMontage();
 	void ClientChangeMontage_Implementation();
 
+	UFUNCTION(Reliable, Server)
+	void SettingPlayerState();
+	void SettingPlayerState_Implementation();
+
+	UFUNCTION(Reliable, Server)
+	void ChangeIsFaint();
+	void ChangeIsFaint_Implementation();
+
 	/// <summary>
 	/// Crouch 에 대한 카메라 이동
 	/// </summary>
@@ -168,7 +176,7 @@ private :
 
 	UFUNCTION()
 	void UpdatePlayerHp(float _DeltaTime);
-	
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	bool IsServer = false;
 
@@ -180,6 +188,9 @@ private :
 
 	UPROPERTY(Category = "PlayerNet", Replicated, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	int Token = -1;
+
+	UPROPERTY(Category = "Contents", Replicated, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	bool IsFaint = false;
 
 public :
 	// == 인칭 변경 함수 ==
