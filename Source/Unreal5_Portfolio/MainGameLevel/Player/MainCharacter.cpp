@@ -28,7 +28,11 @@ AMainCharacter::AMainCharacter()
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	// Init
+	// == Init ==
+
+	// character Mesh
+	GetMesh()->SetOwnerNoSee(true);
+	GetMesh()->bHiddenInSceneCapture = true;
 
 	// SpringArm Component
 	SpringArmComponent = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArmComponent"));
@@ -48,9 +52,7 @@ AMainCharacter::AMainCharacter()
 	//MinimapIconComponent->SetupAttachment(RootComponent);
 	//MinimapIconComponent->bVisibleInSceneCaptureOnly = true;
 	
-	// character Mesh
-	GetMesh()->SetOwnerNoSee(true);
-	GetMesh()->bHiddenInSceneCapture = true;
+
 
 	// FPV Character Mesh
 	FPVMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("FirstPersonMesh"));
@@ -530,6 +532,7 @@ void AMainCharacter::ChangeIsFaint_Implementation()
 		if (nullptr != Con)
 		{
 			Con->FCharacterToFaint.Execute(IsFaint); // Execute -> Delegate 실행.
+			this->bUseControllerRotationYaw = true;
 		}
 	}
 	else
@@ -538,6 +541,7 @@ void AMainCharacter::ChangeIsFaint_Implementation()
 		if (nullptr != Con)
 		{
 			Con->FCharacterToFaint.Execute(IsFaint); // Execute -> Delegate 실행.
+			this->bUseControllerRotationYaw = false;
 		}
 	}
 }
