@@ -54,11 +54,56 @@ public:
 		CurStage = _Stage;
 	}
 
+	/// <summary>
+	/// Melee 확보시 호출되는 함수
+	/// </summary>
+	UFUNCTION()
+	void AddMeleeNum()
+	{
+		if (MaxMeleeNum <= MeleeNum)
+		{
+			return;
+		}
+
+		++MeleeNum;
+
+		if (MaxMeleeNum == MeleeNum)
+		{
+			CurStage = EGameStage::VisitArmory;
+			return;
+		}
+	}
+
+	/// <summary>
+	/// 확보된 Melee 수를 반환
+	/// </summary>
+	/// <returns></returns>
+	FORCEINLINE int GetMeleeNum() const
+	{
+		return MeleeNum;
+	}
+
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	TMap<uint8, UActorGroup*> AllActor;
 	
+	/// <summary>
+	/// 현재 게임 Stage 상태(단계)
+	/// </summary>
 	UPROPERTY()
 	EGameStage CurStage = EGameStage::Init;
+
+
+	/// <summary>
+	/// 현재 확보한 Melee 수
+	/// </summary>
+	UPROPERTY()
+	int MeleeNum = 0;
+
+	/// <summary>
+	/// 확보 가능한 최대 Melee 수
+	/// </summary>
+	UPROPERTY()
+	int MaxMeleeNum = 4;
 
 };
