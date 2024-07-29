@@ -15,12 +15,12 @@ EBTNodeResult::Type UBTTaskNode_BasicMonsterJump::ExecuteTask(UBehaviorTreeCompo
 	ABasicMonsterBase* Monster = GetSelfActor<ABasicMonsterBase>(OwnerComp);
 	if (false == Monster->IsValidLowLevel())
 	{
-		LOG(MonsterLog, Fatal, "Monster Is Not Valid");
+		LOG(MonsterLog, Fatal, TEXT("Monster Is Not Valid"));
 		return EBTNodeResult::Type::Aborted;
 	}
 
 	FVector MonsterLocation = Monster->GetActorLocation();
-	FVector LandingLocation = GetValueAsVector(OwnerComp, "Destination");
+	FVector LandingLocation = GetValueAsVector(OwnerComp, TEXT("Destination"));
 	LandingLocation.Z -= Monster->GetMesh()->GetRelativeLocation().Z;
 	FVector Velocity = FVector::ZeroVector;
 
@@ -36,7 +36,7 @@ void UBTTaskNode_BasicMonsterJump::TickTask(UBehaviorTreeComponent& OwnerComp, u
 
 	ABasicMonsterBase* Monster = GetSelfActor<ABasicMonsterBase>(OwnerComp);
 	FVector MonsterLocation = Monster->GetActorLocation();
-	FVector LandingLocation = GetValueAsVector(OwnerComp, "Destination");
+	FVector LandingLocation = GetValueAsVector(OwnerComp, TEXT("Destination"));
 
 	MonsterLocation.Z = 0;
 	LandingLocation.Z = 0;

@@ -18,7 +18,7 @@ EBTNodeResult::Type UBTTaskNode_BasicMonsterClimb::ExecuteTask(UBehaviorTreeComp
 	ABasicMonsterBase* Monster = GetSelfActor<ABasicMonsterBase>(OwnerComp);
 	if (false == Monster->IsValidLowLevel())
 	{
-		LOG(MonsterLog, Fatal, "Monster Is Not Valid");
+		LOG(MonsterLog, Fatal, TEXT("Monster Is Not Valid"));
 		return EBTNodeResult::Type::Aborted;
 	}
 
@@ -38,7 +38,7 @@ void UBTTaskNode_BasicMonsterClimb::TickTask(UBehaviorTreeComponent& OwnerComp, 
 	ABasicMonsterBase* Monster = GetSelfActor<ABasicMonsterBase>(OwnerComp);
 
 	ABasicMonsterAIController* AIController = Monster->GetAIController();
-	FVector Destination = AIController->GetBlackboardComponent()->GetValueAsVector("Destination");
+	FVector Destination = AIController->GetBlackboardComponent()->GetValueAsVector(TEXT("Destination"));
 	FVector MonsterLocation = Monster->GetActorLocation();
 	FVector ForwardVector = Monster->GetActorForwardVector();
 

@@ -18,14 +18,14 @@ EBTNodeResult::Type UBTTaskNode_BasicMonsterAttack::ExecuteTask(UBehaviorTreeCom
 	ABasicMonsterBase* Monster = GetSelfActor<ABasicMonsterBase>(OwnerComp);
 	if (false == Monster->IsValidLowLevel())
 	{
-		LOG(MonsterLog, Fatal, "Monster Is Not Valid");
+		LOG(MonsterLog, Fatal, TEXT("Monster Is Not Valid"));
 		return EBTNodeResult::Type::Aborted;
 	}
 
-	UMonsterData* MonsterData = GetValueAsObject<UMonsterData>(OwnerComp, "MonsterData");
+	UMonsterData* MonsterData = GetValueAsObject<UMonsterData>(OwnerComp, TEXT("MonsterData"));
 	if (false == MonsterData->IsValidLowLevel())
 	{
-		LOG(MonsterLog, Fatal, "MonsterData Is Not Valid");
+		LOG(MonsterLog, Fatal, TEXT("MonsterData Is Not Valid"));
 		return EBTNodeResult::Type::Aborted;
 	}
 
@@ -39,7 +39,7 @@ void UBTTaskNode_BasicMonsterAttack::TickTask(UBehaviorTreeComponent& OwnerComp,
 	Super::TickTask(OwnerComp, pNodeMemory, DeltaSeconds);
 
 	// 플레이어 체크
-	AMainCharacter* TargetPlayer = GetValueAsObject<AMainCharacter>(OwnerComp, "TargetActor");
+	AMainCharacter* TargetPlayer = GetValueAsObject<AMainCharacter>(OwnerComp, TEXT("TargetActor"));
 	if (nullptr == TargetPlayer)
 	{
 		StateChange(OwnerComp, EBasicMonsterState::Idle);
@@ -50,13 +50,13 @@ void UBTTaskNode_BasicMonsterAttack::TickTask(UBehaviorTreeComponent& OwnerComp,
 	AMainPlayerState* TargetPlayerState = Cast<AMainPlayerState>(TargetPlayer->GetPlayerState());
 	if (0.0f >= TargetPlayerState->GetPlayerHp())
 	{
-		OwnerComp.GetBlackboardComponent()->SetValueAsObject("TargetActor", nullptr);
+		OwnerComp.GetBlackboardComponent()->SetValueAsObject(TEXT("TargetActor"), nullptr);
 		StateChange(OwnerComp, EBasicMonsterState::Idle);
 		return;
 	}
 
 	ABasicMonsterBase* Monster = GetSelfActor<ABasicMonsterBase>(OwnerComp);
-	UMonsterData* MonsterData = GetValueAsObject<UMonsterData>(OwnerComp, "MonsterData");
+	UMonsterData* MonsterData = GetValueAsObject<UMonsterData>(OwnerComp, TEXT("MonsterData"));
 
 	FVector MonsterLocation = Monster->GetActorLocation();
 	FVector TargetPlayerLocation = TargetPlayer->GetActorLocation();

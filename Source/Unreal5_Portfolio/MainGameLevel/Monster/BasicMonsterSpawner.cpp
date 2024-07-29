@@ -5,11 +5,18 @@
 #include "Global/MainGameBlueprintFunctionLibrary.h"
 #include "Global/MainGameInstance.h"
 
+#include "Components/BoxComponent.h"
+
 // Sets default values
 ABasicMonsterSpawner::ABasicMonsterSpawner()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+
+	// Create TriggerBox
+	TriggerBox = CreateDefaultSubobject<UBoxComponent>(TEXT("TriggerBox"));
+	TriggerBox->SetBoxExtent(FVector(50.f, 50.f, 50.f));
+	//TriggerBox->OnComponentBeginOverlap.AddDynamic(this, &AYourCustomActor::OnTriggerBox1Overlap);
 
 }
 

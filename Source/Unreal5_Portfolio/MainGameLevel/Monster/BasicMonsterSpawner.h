@@ -6,6 +6,8 @@
 #include "GameFramework/Actor.h"
 #include "BasicMonsterSpawner.generated.h"
 
+class UBoxComponent;
+
 UCLASS()
 class UNREAL5_PORTFOLIO_API ABasicMonsterSpawner : public AActor
 {
@@ -44,5 +46,10 @@ private:
 
 	UPROPERTY()
 	float TimeCount = 0.0f;
+
+private:
+	// Spawn TriggerBox
+	UPROPERTY(EditAnywhere, meta = (AllowprivateAccess = "true"))
+	UBoxComponent* TriggerBox = nullptr;
 
 };

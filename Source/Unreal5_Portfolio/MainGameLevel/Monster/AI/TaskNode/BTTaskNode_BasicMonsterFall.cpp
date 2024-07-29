@@ -16,12 +16,12 @@ EBTNodeResult::Type UBTTaskNode_BasicMonsterFall::ExecuteTask(UBehaviorTreeCompo
 	ABasicMonsterBase* Monster = GetSelfActor<ABasicMonsterBase>(OwnerComp);
 	if (false == Monster->IsValidLowLevel())
 	{
-		LOG(MonsterLog, Fatal, "Monster Is Not Valid");
+		LOG(MonsterLog, Fatal, TEXT("Monster Is Not Valid"));
 		return EBTNodeResult::Type::Aborted;
 	}
 
 	FVector MonsterLocation = Monster->GetActorLocation();
-	FVector LandingLocation = GetValueAsVector(OwnerComp, "Destination");
+	FVector LandingLocation = GetValueAsVector(OwnerComp, TEXT("Destination"));
 	FVector Velocity = FVector::ZeroVector;
 
 	UGameplayStatics::SuggestProjectileVelocity_CustomArc(GetWorld(), Velocity, MonsterLocation, LandingLocation, 0.0f, 0.5f);
@@ -36,7 +36,7 @@ void UBTTaskNode_BasicMonsterFall::TickTask(UBehaviorTreeComponent& OwnerComp, u
 
 	ABasicMonsterBase* Monster = GetSelfActor<ABasicMonsterBase>(OwnerComp);
 	FVector MonsterLocation = Monster->GetActorLocation();
-	FVector LandingLocation = GetValueAsVector(OwnerComp, "Destination");
+	FVector LandingLocation = GetValueAsVector(OwnerComp, TEXT("Destination"));
 
 	MonsterLocation.Z = 0;
 	LandingLocation.Z = 0;
