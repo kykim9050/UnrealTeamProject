@@ -37,10 +37,7 @@ float AMainPlayerState::GetPlayerHp() const
 void AMainPlayerState::AddDamage_Implementation(float _Damage)
 {
 	PlayerHp -= _Damage;
-}
 
-void AMainPlayerState::UpdatePlayerHp()
-{
 	if (0 >= PlayerHp)
 	{
 		AMainPlayerController* MainPlayerController = Cast<AMainPlayerController>(GetOwner());
