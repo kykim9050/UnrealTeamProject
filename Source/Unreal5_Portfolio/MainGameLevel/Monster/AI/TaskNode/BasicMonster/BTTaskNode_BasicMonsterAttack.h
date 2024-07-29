@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "MainGameLevel/Monster/AI/TaskNode/BTTaskNodeBase_BasicMonster.h"
+#include "MainGameLevel/Monster/AI/TaskNode/BTTaskNodeBase_Monster.h"
 #include "BTTaskNode_BasicMonsterAttack.generated.h"
 
 /**
