@@ -70,7 +70,7 @@ private:
 	// Test
 	// 몬스터 타입
 	UPROPERTY(EditAnywhere, meta = (AllowprivateAccess = "true"))
-	ETestMonsterType MonsterType;
+	ETestMonsterType MonsterType = ETestMonsterType::Noraml;
 
 	// 몽타주
 	UPROPERTY(EditAnywhere, meta = (AllowprivateAccess = "true"))
