@@ -123,45 +123,6 @@ ATestCharacter::ATestCharacter()
 	RidingMesh->bHiddenInSceneCapture = true;
 }
 
-void ATestCharacter::CharacterPlayerToDropItem_Implementation()	// => 메인캐릭터로 이전해야 함 (24.07.23 수정됨) => 메인캐릭터 적용되었지만 내용 확인 필요.
-{
-	// DropItem 할 수 없는 경우 1: 맨손일 때
-	if (CurItemIndex == -1)
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, FString::Printf(TEXT("There's no item to drop. (Current posture is 'Barehand')")));
-		return;
-	}
-
-	// DropItem 할 수 없는 경우 2: (그럴리는 없겠지만) 현재 Posture에 해당하는 무기가 인벤토리에 없을 때
-	if (IsItemIn[CurItemIndex] == false)
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, FString::Printf(TEXT("There's no item to drop. (The item slot is empty)")));
-		return;
-	}
-
-	// 떨어트릴 아이템을 Actor로 생성
-	FName ItemName = ItemSlot[CurItemIndex].Name;
-	// UMainGameInstance* MainGameInst = UMainGameBlueprintFunctionLibrary::GetMainGameInstance(GetWorld()); << 매인에는 이렇게 적용됨.
-	UMainGameInstance* MainGameInst = GetWorld()->GetGameInstanceChecked<UMainGameInstance>();
-	const FItemDataRow* ItemBase = MainGameInst->GetItemData(ItemName);
-	FTransform BoneTrans = GetMesh()->GetBoneTransform(FName("RightHand"), ERelativeTransformSpace::RTS_World); // 메인 적용.(07/29)
-
-	AActor* DropItem = GetWorld()->SpawnActor<AActor>(ItemBase->GetItemUClass(), BoneTrans);
-
-	// 아이템을 앞으로 던지기 (미완)
-	//GetMesh()->SetSimulatePhysics(true);
-	FVector ImpulseVector = GetActorForwardVector() * 1000.0f;
-	GetMesh()->AddImpulse(ImpulseVector, FName("RightHand"), false);
-
-	// 손에 들고 있던 아이템을 인벤토리에서 삭제
-	FItemInformation NewSlot;
-	ItemSlot[CurItemIndex] = NewSlot;
-	IsItemIn[CurItemIndex] = false;
-
-	// 자세를 맨손으로 변경
-	ChangePosture(EPlayerPosture::Barehand);
-}
-
 //void ATestCharacter::Collision(AActor* _OtherActor, UPrimitiveComponent* _Collision)
 //{
 //	ATestMonsterBase* Monster = Cast<ATestMonsterBase>(_OtherActor);
@@ -310,89 +271,6 @@ void ATestCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLi
 	DOREPLIFETIME(ATestCharacter, Token); // => 매인 적용.
 }
 
-//void ATestCharacter::TestRayCast(float _DeltaTime, FVector _StartPos, FVector _EndPos, FRotator _CameraRot)
-//{
-//	FVector Start = GetActorLocation();
-//	Start.X += _StartPos.X;
-//	Start.Y += _StartPos.Y;
-//	Start.Z += _StartPos.Z;
-//
-//	CameraComponent->AddLocalRotation(_CameraRot);
-//	FVector ForwardVector = CameraComponent->GetForwardVector();
-//
-//	Start = FVector(Start.X + (ForwardVector.X * 100), Start.Y + (ForwardVector.Y * 100), Start.Z + (ForwardVector.Z * 100));
-//
-//	FVector End = Start + (ForwardVector * 1000);
-//
-//	FHitResult Hit;
-//	if (GetWorld())
-//	{
-//		bool ActorHit = GetWorld()->LineTraceSingleByChannel(Hit, Start, End, ECC_GameTraceChannel3, FCollisionQueryParams(), FCollisionResponseParams());
-//		//DrawDebugLine(GetWorld(), Start, End, FColor::Red, false, 1.0f, 0.0f, 0.0f);
-//		DrawDebugLine(GetWorld(), Start, End, FColor::Red, false, _DeltaTime, 0.0f, 0.0f);
-//
-//		if (true == ActorHit && Hit.GetActor())
-//		{
-//			//GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, Hit.GetActor()->GetFName().ToString());
-//			//Hit.GetActor()->ActorHasTag(TEXT(""));
-//			//AActor* GetActorTest = Hit.GetActor();
-//			GetMapItem = Hit.GetActor();
-//			int TagCount = Hit.GetActor()->Tags.Num();
-//			if (0 != TagCount)
-//			{
-//				for (size_t i = 0; i < Hit.GetActor()->Tags.Num(); i++)
-//				{
-//					FString TagName = Hit.GetActor()->Tags[i].ToString();
-//					RayCastToItemName = TagName;
-//					GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, TagName);
-//				}
-//			}
-//		}
-//		else
-//		{
-//			GetMapItem = nullptr;
-//			RayCastToItemName = "";
-//		}
-//	}
-//}
-//
-//void ATestCharacter::DefaultRayCast(float _DeltaTime)
-//{
-//	FVector Start = GetActorLocation();
-//	FVector ForwardVector = CameraComponent->GetForwardVector();
-//	Start = FVector(Start.X + (ForwardVector.X * 100), Start.Y + (ForwardVector.Y * 100), Start.Z + (ForwardVector.Z * 100));
-//	FVector End = Start + (ForwardVector * 1000);
-//
-//	// 아이템 줍기.
-//	FHitResult Hit;
-//	if (GetWorld())
-//	{
-//		// 아이템 콜리전 충돌.
-//		bool ActorHit = GetWorld()->LineTraceSingleByChannel(Hit, Start, End, ECC_GameTraceChannel3, FCollisionQueryParams(), FCollisionResponseParams());
-//		DrawDebugLine(GetWorld(), Start, End, FColor::Green, false, _DeltaTime, 0.0f, 0.0f);
-//
-//		if (true == ActorHit && Hit.GetActor())
-//		{
-//			GetMapItem = Hit.GetActor();
-//			int TagCount = Hit.GetActor()->Tags.Num();
-//			if (0 != TagCount)
-//			{
-//				for (size_t i = 0; i < Hit.GetActor()->Tags.Num(); i++)
-//				{
-//					FString TagName = Hit.GetActor()->Tags[i].ToString();
-//					RayCastToItemName = TagName;
-//					GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, TagName);
-//				}
-//			}
-//		}
-//		else
-//		{
-//			GetMapItem = nullptr;
-//			RayCastToItemName = "";
-//		}
-//	}
-//}
-
 void ATestCharacter::FireRayCast_Implementation() // => 메인도 수정해야 함 (24.07.25 수정됨) // Main 적용.
 {
 	if (CurItemIndex == -1 || CurItemIndex == 2)
@@ -521,43 +399,48 @@ void ATestCharacter::ChangeIsFaint_Implementation()
 	}
 }
 
-void ATestCharacter::PickUpItem_Implementation()	// => 메인캐릭터로 이전해야 함 (24.07.23 수정됨) // => 매인 적용.
+void ATestCharacter::CheckItem()	// => 메인캐릭터로 이전해야 함 (24.07.29 추가됨)
 {
-	// RayCast를 통해 Tag 이름을 가져온다.
-	//FString GetItemName = ""; // 사용 안함.
-	//GetItemName = RayCastToItemName; // 사용 안함.
-
 	// 맵에 아이템이 없을 경우.
 	if (nullptr == GetMapItemData)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, TEXT("There is no item."));
+		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, TEXT("There is no item to check."));
 		return;
 	}
 
-	// 1. 맵오브젝트일 경우
 	AMapObjectBase* GetMapItem = Cast<AMapObjectBase>(GetMapItemData);
 	if (nullptr != GetMapItem)
 	{
-		GetMapItem->InterAction();
+		// 1. 맵오브젝트일 경우
+		InteractObject(GetMapItem);
+	}
+	else
+	{
+		// 2. 주울 수 있는 아이템일 경우
+		PickUpItem();
+	}
+}
 
-		ABomb* GetSampleData = Cast<ABomb>(GetMapItem);
-		if (nullptr != GetSampleData)
+void ATestCharacter::InteractObject_Implementation(AMapObjectBase* _MapObject)	// => 메인캐릭터로 이전해야 함 (24.07.29 추가됨)
+{
+	_MapObject->InterAction();
+
+	ABomb* GetSampleData = Cast<ABomb>(_MapObject);
+	if (nullptr != GetSampleData)
+	{
+		for (size_t i = 0; i < GetSampleData->Tags.Num(); i++)
 		{
-			for (size_t i = 0; i < GetSampleData->Tags.Num(); i++)
+			FName GetItemTag = GetSampleData->Tags[i];
+			if ("Sample" == GetItemTag)
 			{
-				FName GetItemTag = GetSampleData->Tags[i];
-				if ("Sample" == GetItemTag)
-				{
-					GetSampleData->CharacterToDestroy();
-				}
+				GetSampleData->CharacterToDestroy();
 			}
 		}
-
-		return;
 	}
+}
 
-	// 2. 주울 수 있는 아이템일 경우
-
+void ATestCharacter::PickUpItem_Implementation()	// => 메인캐릭터로 이전해야 함 (24.07.29 수정됨)
+{
 	// 아이템의 Tag 이름을 통해 FName을 가져온다.
 	FString TagName = "";
 	for (size_t i = 0; i < GetMapItemData->Tags.Num(); i++)
@@ -582,7 +465,7 @@ void ATestCharacter::PickUpItem_Implementation()	// => 메인캐릭터로 이전해야 함 
 	// 이미 인벤토리에 같은 타입의 아이템이 있을 경우. (추후 수정될 수도 있음)
 	if (true == IsItemIn[static_cast<uint8>(ItemType)])
 	{
-		CharacterPlayerToDropItem();
+		DropItem();
 	}
 
 	// Data Table에 있는 아이템 정보 가져오기.
@@ -632,6 +515,50 @@ void ATestCharacter::PickUpItem_Implementation()	// => 메인캐릭터로 이전해야 함 
 
 	// 무기 Type에 따른 애니메이션 변화 함수 호출.
 	ChangePosture(ItemType);
+}
+
+void ATestCharacter::DropItem_Implementation()	// => 메인캐릭터로 이전해야 함 (24.07.29 수정됨)
+{
+	// DropItem 할 수 없는 경우 1: 맨손일 때
+	if (CurItemIndex == -1)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, FString::Printf(TEXT("There's no item to drop. (Current posture is 'Barehand')")));
+		return;
+	}
+
+	// DropItem 할 수 없는 경우 2: (그럴리는 없겠지만) 현재 Posture에 해당하는 무기가 인벤토리에 없을 때
+	if (IsItemIn[CurItemIndex] == false)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, FString::Printf(TEXT("There's no item to drop. (The item slot is empty)")));
+		return;
+	}
+
+	// 떨어트릴 아이템을 Actor로 생성
+	FName ItemName = ItemSlot[CurItemIndex].Name;
+	// UMainGameInstance* MainGameInst = UMainGameBlueprintFunctionLibrary::GetMainGameInstance(GetWorld()); << 매인에는 이렇게 적용됨.
+	UMainGameInstance* MainGameInst = GetWorld()->GetGameInstanceChecked<UMainGameInstance>();
+	const FItemDataRow* ItemBase = MainGameInst->GetItemData(ItemName);
+	FTransform BoneTrans = GetMesh()->GetBoneTransform(FName("RightHand"), ERelativeTransformSpace::RTS_World); // 메인 적용.(07/29)
+
+	AActor* DropItem = GetWorld()->SpawnActor<AActor>(ItemBase->GetItemUClass(), BoneTrans);
+
+	// 아이템을 앞으로 던지기 (미완)
+	//GetMesh()->SetSimulatePhysics(true);
+	FVector ImpulseVector = GetActorForwardVector() * 1000.0f;
+	GetMesh()->AddImpulse(ImpulseVector, FName("RightHand"), false);
+
+	// 손에 들고 있던 아이템을 인벤토리에서 삭제
+	DeleteItem(CurItemIndex);
+
+	// 자세를 맨손으로 변경
+	ChangePosture(EPlayerPosture::Barehand);
+}
+
+void ATestCharacter::DeleteItem(int _Index)
+{
+	FItemInformation NewSlot;
+	ItemSlot[_Index] = NewSlot;
+	IsItemIn[_Index] = false;
 }
 
 void ATestCharacter::ChangePOV()	// => 메인캐릭터로 이전해야 함 (24.07.29 수정 중)

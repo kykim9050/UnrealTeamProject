@@ -58,8 +58,9 @@ void ATestPlayerController::SetupInputComponent()
 			//EnhancedInputComponent->BindAction(InputData->Actions[10], ETriggerEvent::Triggered, this, &ATestPlayerController::ChangePosture, static_cast<EPlayerPosture>(3));	// => 메인도 수정해야 함 (24.07.25 삭제됨) (Bomb으로의 자세변경을 막음)
 			//EnhancedInputComponent->BindAction(InputData->Actions[11], ETriggerEvent::Triggered, this, &ATestPlayerController::ChangePosture, static_cast<EPlayerPosture>(4));	// => 메인도 수정해야 함 (24.07.25 삭제됨) (Drink로의 자세변경을 막음)
 			EnhancedInputComponent->BindAction(InputData->Actions[20], ETriggerEvent::Triggered, this, &ATestPlayerController::ChangePosture, static_cast<EPlayerPosture>(5));		// => 메인도 수정해야 함 (24.07.25 수정됨) (Barehand로의 자세변경 키를 '0'에서 'X'로 변경함)
-			EnhancedInputComponent->BindAction(InputData->Actions[13], ETriggerEvent::Triggered, this, &ATestPlayerController::PickUpItem);
-			EnhancedInputComponent->BindAction(InputData->Actions[13], ETriggerEvent::Completed, this, &ATestPlayerController::PickUpItemEnd);
+			EnhancedInputComponent->BindAction(InputData->Actions[13], ETriggerEvent::Triggered, this, &ATestPlayerController::CheckItem);	// => 메인에 이전 필요 (24.07.29 추가됨) (E키를 눌렀을 때 PickUpItem 대신 CheckItem 함수 실행하도록 변경)
+			//EnhancedInputComponent->BindAction(InputData->Actions[13], ETriggerEvent::Triggered, this, &ATestPlayerController::PickUpItem);
+			//EnhancedInputComponent->BindAction(InputData->Actions[13], ETriggerEvent::Completed, this, &ATestPlayerController::PickUpItemEnd);
 			EnhancedInputComponent->BindAction(InputData->Actions[14], ETriggerEvent::Triggered, this, &ATestPlayerController::ChangePOVController);
 			EnhancedInputComponent->BindAction(InputData->Actions[15], ETriggerEvent::Started, this, &ATestPlayerController::Crouch);
 			EnhancedInputComponent->BindAction(InputData->Actions[16], ETriggerEvent::Started, this, &ATestPlayerController::IAReload);
@@ -225,25 +226,29 @@ void ATestPlayerController::FireEnd()
 	GEngine->AddOnScreenDebugMessage(-1, 0.2f, FColor::Red, TEXT("End"));
 }
 
-void ATestPlayerController::PickUpItem()
+void ATestPlayerController::CheckItem()	// => 메인으로 이전 필요 (24.07.29 추가됨)
 {
 	ATestCharacter* Ch = GetPawn<ATestCharacter>();
-
-	//AGameModeBase* Test = GetWorld()->GetAuthGameMode(); // Is Server? Is Client?
-	if (nullptr == Ch)
-	{
-		return;
-	}
-
-	Ch->PickUpItem();
-	Ch->SetPickUp(true);
+	Ch->CheckItem();
 }
 
-void ATestPlayerController::PickUpItemEnd()
-{
-	ATestCharacter* Ch = GetPawn<ATestCharacter>();
-	//Ch->SetPickUp(false);
-}
+//void ATestPlayerController::PickUpItem()
+//{
+//	ATestCharacter* Ch = GetPawn<ATestCharacter>();
+//
+//	//AGameModeBase* Test = GetWorld()->GetAuthGameMode(); // Is Server? Is Client?
+//	if (nullptr == Ch)
+//	{
+//		return;
+//	}
+//
+//	Ch->PickUpItem();
+//}
+//
+//void ATestPlayerController::PickUpItemEnd()
+//{
+//	ATestCharacter* Ch = GetPawn<ATestCharacter>();
+//}
 
 void ATestPlayerController::ChangeState(EPlayerState _State)
 {
