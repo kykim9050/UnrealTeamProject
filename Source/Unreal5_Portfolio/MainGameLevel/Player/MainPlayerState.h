@@ -26,8 +26,9 @@ public :
 	UFUNCTION()
 	float GetPlayerHp() const;
 
-	UFUNCTION()
+	UFUNCTION(Reliable, Server)
 	void AddDamage(float _Damage);
+	void AddDamage_Implementation(float _Damage);
 
 private :
 	UFUNCTION()
