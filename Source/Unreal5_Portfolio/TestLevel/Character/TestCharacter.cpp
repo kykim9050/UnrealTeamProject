@@ -20,6 +20,7 @@
 #include "MainGameLevel/Object/MapObjectBase.h"
 #include "PartDevLevel/Monster/Boss/TestBossMonsterBase.h"
 #include "GameFrameWork/CharacterMovementComponent.h"
+#include "Global/ContentsLog.h"
 
 #include "TestLevel/UI/TestPlayHUD.h"
 #include "TestLevel/UI/TestHpBarUserWidget.h"
@@ -249,7 +250,6 @@ void ATestCharacter::Tick(float DeltaTime)
 
 	UpdatePlayerHp(DeltaTime); // => 매인 적용.
 
-#if WITH_EDITOR
 	// GameState 변수 출력용 TestCode
 	{
 		AMainGameState* CurGameState = UMainGameBlueprintFunctionLibrary::GetMainGameState(GetWorld());
@@ -271,7 +271,6 @@ void ATestCharacter::Tick(float DeltaTime)
 		}
 		UMainGameBlueprintFunctionLibrary::DebugTextPrint(GetWorld(), FString(TEXT("CurStage = ")) + StageString);
 	}
-#endif
 
 	//DefaultRayCast(DeltaTime);
 	//TArray<FItemInformation> I = ItemSlot;
@@ -601,6 +600,12 @@ void ATestCharacter::PickUpItem_Implementation()	// => 메인캐릭터로 이전해야 함 
 		|| EPlayerPosture::Bomb == ItemType)
 	{
 		AMainGameState* CurGameState = UMainGameBlueprintFunctionLibrary::GetMainGameState(GetWorld());
+
+		if (nullptr == CurGameState)
+		{
+			UE_LOG(PlayerLog, Fatal, TEXT("GameState Is Nullptr"));
+			return;
+		}
 
 		switch (ItemType)
 		{
