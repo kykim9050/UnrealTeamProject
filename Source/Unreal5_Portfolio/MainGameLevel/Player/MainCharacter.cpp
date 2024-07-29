@@ -346,6 +346,9 @@ void AMainCharacter::PickUpItem_Implementation()
 
 	// 무기 Type에 따른 애니메이션 변화 함수 호출.
 	ChangePosture(ItemType);
+
+	AMainPlayerController* Con = Cast<AMainPlayerController>(GetController());
+	Con->FGetItemToWidget.Execute();
 }
 
 void AMainCharacter::CharacterPlayerToDropItem_Implementation()
