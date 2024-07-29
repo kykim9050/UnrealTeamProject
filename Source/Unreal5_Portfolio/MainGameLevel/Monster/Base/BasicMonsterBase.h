@@ -25,7 +25,6 @@ public:
 public:
 	// Server Only
 	void Damaged(float Damage);
-
 	void SetChasePlayer();
 
 public:
