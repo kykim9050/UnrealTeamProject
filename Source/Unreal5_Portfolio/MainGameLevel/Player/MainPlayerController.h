@@ -8,6 +8,8 @@
 #include "GenericTeamAgentInterface.h"
 #include "MainPlayerController.generated.h"
 
+DECLARE_DELEGATE(FDelegate_Reload);
+
 /**
  * 
  */
@@ -18,6 +20,11 @@ class UNREAL5_PORTFOLIO_API AMainPlayerController : public APlayerController, pu
 	
 public :
 	AMainPlayerController();
+protected :
+	void BeginPlay() override;
+
+public :
+	FDelegate_Reload FCharacterToReload;
 
 	UFUNCTION(BlueprintCallable)
 	void SetupInputComponent() override;
@@ -85,6 +92,9 @@ private :
 	// Fire Tick 함수를 위한 Timer 변수.
 	UPROPERTY()
 	FTimerHandle MyTimeHandle;
+
+	UFUNCTION()
+	void CallReload();
 
 protected :
 	// Bullet Count To HUD [BP]

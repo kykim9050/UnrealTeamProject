@@ -8,6 +8,7 @@
 #include "Global/MainGameInstance.h"
 
 #include "Kismet/GameplayStatics.h"
+#include "Components/TextBlock.h"
 
 
 void UServerBtnUserWidget::NativeConstruct()
@@ -67,4 +68,9 @@ void UServerBtnUserWidget::OnConnectButtonClicked()
 
 	TitleHUD->UISwitch(EUserWidgetType::ServerBtn);
 	TitleHUD->UISwitch(EUserWidgetType::ConnectBrowser);
+}
+
+void UServerBtnUserWidget::SetMainNicknameUI(FText _Myname)
+{
+	MainNickname->SetText(_Myname);
 }

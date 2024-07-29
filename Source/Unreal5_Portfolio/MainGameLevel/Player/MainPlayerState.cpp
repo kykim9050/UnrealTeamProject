@@ -34,16 +34,20 @@ float AMainPlayerState::GetPlayerHp() const
 	return PlayerHp;
 }
 
-void AMainPlayerState::AddDamage(float _Damage)
+void AMainPlayerState::AddDamage_Implementation(float _Damage)
 {
 	PlayerHp -= _Damage;
+}
+
+void AMainPlayerState::UpdatePlayerHp()
+{
 	if (0 >= PlayerHp)
 	{
 		AMainPlayerController* MainPlayerController = Cast<AMainPlayerController>(GetOwner());
 		if (nullptr == MainPlayerController)
 		{
 			MainPlayerController = Cast<AMainPlayerController>(GetPawn());
-			
+
 			if (nullptr == MainPlayerController)
 			{
 				return;

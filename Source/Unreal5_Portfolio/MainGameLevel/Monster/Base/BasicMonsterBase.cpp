@@ -18,6 +18,7 @@
 
 #include "Global/MainGameBlueprintFunctionLibrary.h"
 #include "Global/MainGameInstance.h"
+#include "Global/MainGameState.h"
 #include "Global/ContentsLog.h"
 
 ABasicMonsterBase::ABasicMonsterBase()
@@ -137,6 +138,48 @@ void ABasicMonsterBase::Damaged(float Damage)
 		ChangeRandomAnimation(EBasicMonsterAnim::Dead);
 		AIController->GetBrainComponent()->StopLogic(TEXT("Dead"));
 	}
+}
+
+void ABasicMonsterBase::SetChasePlayer()
+{
+	if (false == HasAuthority())
+	{
+		return;
+	}
+
+	AMainGameState* MainGameState = UMainGameBlueprintFunctionLibrary::GetMainGameState(GetWorld());
+	if (nullptr == MainGameState)
+	{
+		LOG(MonsterLog, Fatal, TEXT("MainGameState Is Nullptr"));
+		return;
+	}
+
+	UActorGroup* PlayerGroup = MainGameState->GetActorGroup(EObjectType::Player);
+	if (nullptr == PlayerGroup)
+	{
+		LOG(MonsterLog, Fatal, TEXT("PlayerGroup Is Nullptr"));
+		return;
+	}
+
+	// Find Player
+	int MinIndex = -1;
+	float MinDistance = FLT_MAX;
+	
+	FVector MonsterLocation = GetActorLocation();
+	for (int32 i = 0; i < PlayerGroup->Actors.Num(); i++)
+	{
+		FVector PlayerLocation = PlayerGroup->Actors[i]->GetActorLocation();
+		float Diff = (MonsterLocation - PlayerLocation).Size();
+
+		if (Diff < MinDistance)
+		{
+			MinDistance = Diff;
+			MinIndex = i;
+		}
+	}
+
+	AIController->GetBlackboardComponent()->SetValueAsObject(TEXT("TargetActor"), PlayerGroup->Actors[MinIndex]);
+	AIController->GetBlackboardComponent()->SetValueAsEnum(TEXT("State"), static_cast<uint8>(EBasicMonsterState::Chase));
 }
 
 void ABasicMonsterBase::SetDead_Implementation()

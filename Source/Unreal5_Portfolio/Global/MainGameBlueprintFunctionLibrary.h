@@ -18,7 +18,6 @@ class UNREAL5_PORTFOLIO_API UMainGameBlueprintFunctionLibrary : public UBlueprin
 
 public:
 	static UMainGameInstance* GetMainGameInstance(const UWorld* WorldContextObject);
-
 	static AMainGameState* GetMainGameState(const UObject* WorldContextObject);
 
 	template<typename EnumType>

@@ -31,6 +31,8 @@ class UNREAL5_PORTFOLIO_API UServerBtnUserWidget : public UUserWidget
 	UPROPERTY(meta = (BindWidget))
 	class UDefaultButtonUserWidget* ConnectButton;
 
+	UPROPERTY(meta = (BindWidget))
+	class UTextBlock* MainNickname;
 
 public:
 	void NativeConstruct() override;
@@ -44,6 +46,8 @@ public:
 	UFUNCTION()
 	void OnConnectButtonClicked();
 
+	UFUNCTION()
+	void SetMainNicknameUI(FText _Myname);
 
 private:
 	UPROPERTY()
