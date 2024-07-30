@@ -67,27 +67,27 @@ public :
 
 	// Drink
 	UFUNCTION(BlueprintCallable)
-	void Drink_Controller();	// => 메인에 추후 이전해야 함 (24.07.29 추가 후 테스팅 중)
+	void Drink_Con();	// => 메인에 추후 이전해야 함 (24.07.30 함수 이름 수정, 테스팅 중)
 
 	// Bomb Setting
 	UFUNCTION(BlueprintCallable)
-	void BombSetStart_Controller();	// => 메인에 추후 이전해야 함 (24.07.29 추가 후 테스팅 중)
+	void BombSetStart_Con();	// => 메인에 추후 이전해야 함 (24.07.30 함수 이름 수정, 테스팅 중)
 	UFUNCTION(BlueprintCallable)
-	void BombSetCancel_Controller();	// => 메인에 추후 이전해야 함 (24.07.29 추가 후 테스팅 중)
+	void BombSetCancel_Con();	// => 메인에 추후 이전해야 함 (24.07.30 함수 이름 수정, 테스팅 중)
 
 	// Item
 	UFUNCTION(BlueprintCallable)
-	void CheckItem();	// => 메인으로 이전 필요 (24.07.29 추가됨) (PickUpItem 함수 대체)
+	void CheckItem_Con();	// => 메인 수정 필요 (24.07.30 플레이어 함수와의 혼동을 방지하지 위해 이름 수정됨) (PickUpItem 함수 대체)
 
 	// State, Posture
 	UFUNCTION(BlueprintCallable)
-	void ChangeState(EPlayerState _State);
+	void ChangeState_Con(EPlayerState _State);	// => 메인 수정 필요 (24.07.30 플레이어 함수와의 혼동을 방지하지 위해 이름 수정됨)
 	UFUNCTION(BlueprintCallable)
-	void ChangePosture(EPlayerPosture _Posture);
+	void ChangePosture_Con(EPlayerPosture _Posture);	// => 메인 수정 필요 (24.07.30 플레이어 함수와의 혼동을 방지하지 위해 이름 수정됨)
 
 	// POV
 	UFUNCTION(BlueprintCallable)
-	void ChangePOVController();
+	void ChangePOV_Con();	// => 메인 수정 필요 (24.07.30 플레이어 함수와의 혼동을 방지하지 위해 이름 수정됨)
 
 	// Reload (k)
 	UFUNCTION(BlueprintCallable)
