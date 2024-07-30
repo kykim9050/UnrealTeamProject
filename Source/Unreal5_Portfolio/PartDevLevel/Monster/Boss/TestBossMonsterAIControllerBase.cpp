@@ -2,14 +2,14 @@
 
 
 #include "PartDevLevel/Monster/Boss/TestBossMonsterAIControllerBase.h"
+#include "TestLevel/Character/TestPlayerState.h"
+#include "TestLevel/Character/TestCharacter.h"
 
 #include "Perception/AISenseConfig_Sight.h"
 #include "Perception/AIPerceptionComponent.h"
 
 #include "BehaviorTree/BlackboardComponent.h"
 #include "GenericTeamAgentInterface.h"
-
-#include "TestLevel/Character/TestCharacter.h"
 
 #include "Global/MainGameBlueprintFunctionLibrary.h"
 #include "Global/ContentsEnum.h"
@@ -30,7 +30,13 @@ void ATestBossMonsterAIControllerBase::BeginPlay()
 void ATestBossMonsterAIControllerBase::PlayerDetect(AActor* _Actor, FAIStimulus const _Stimulus)
 {
 	ATestCharacter* Player = Cast<ATestCharacter>(_Actor);
-	if (nullptr != Player && 0 < Player->GetPlayerHp())
+	if (nullptr == Player)
+	{
+		return;
+	}
+
+	ATestPlayerState* TargetPlayerState = Cast<ATestPlayerState>(Player->GetPlayerState());
+	if (0 < TargetPlayerState->GetPlayerHp())
 	{
 		GetBlackboardComponent()->SetValueAsBool(TEXT("CanSeePlayer"), _Stimulus.WasSuccessfullySensed());
 		if (true == GetBlackboardComponent()->GetValueAsBool(TEXT("CanSeePlayer")))

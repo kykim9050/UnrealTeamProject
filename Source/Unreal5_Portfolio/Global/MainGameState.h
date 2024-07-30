@@ -103,6 +103,38 @@ public:
 	/// </summary>
 	void SetClearBoss2Stage();
 
+	/// <summary>
+	/// 현재 게임 진행 관련 체크 함수
+	/// </summary>
+	UFUNCTION(Reliable, NetMulticast)
+	void GameStateCheck();
+	void GameStateCheck_Implementation();
+
+	UFUNCTION()
+	FORCEINLINE int GetPlayerCount() const
+	{
+		return PlayerCount;
+	}
+
+	UFUNCTION()
+	FORCEINLINE void AddPlayerCount()
+	{
+		++PlayerCount;
+	}
+
+	UFUNCTION()
+	FORCEINLINE void SubPlayerCount()
+	{
+		if (0 >= PlayerCount)
+		{
+			PlayerCount = 0;
+			return;
+		}
+
+		--PlayerCount;
+	}
+
+
 protected:
 	AMainGameState();
 
@@ -165,5 +197,17 @@ private:
 	/// </summary>
 	UPROPERTY(Replicated)
 	bool ClearBoss2Stage = false;
+
+	/// <summary>
+	/// 플레이어 수
+	/// </summary>
+	UPROPERTY(Replicated)
+	int PlayerCount = 0;
+
+	/// <summary>
+	/// 플레이어 최대 수
+	/// </summary>
+	UPROPERTY()
+	int MaxPlayerCount = 2;
 
 };
