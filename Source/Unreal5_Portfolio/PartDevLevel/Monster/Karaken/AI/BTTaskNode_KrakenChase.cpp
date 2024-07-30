@@ -34,7 +34,7 @@ EBTNodeResult::Type UBTTaskNode_KrakenChase::ExecuteTask(UBehaviorTreeComponent&
 		return EBTNodeResult::Type::Succeeded;
 	}
 
-	UMonsterData* MonsterData = GetValueAsObject<UMonsterData>(OwnerComp, TEXT("MonsterData"));
+	UTestMonsterData* MonsterData = GetValueAsObject<UTestMonsterData>(OwnerComp, TEXT("MonsterData"));
 	MonsterData->DestLoc = Target->GetActorLocation();
 
 	Monster->ChangeRandomAnimation(ETestMonsterAnim::Run);
@@ -46,7 +46,7 @@ void UBTTaskNode_KrakenChase::TickTask(UBehaviorTreeComponent& OwnerComp, uint8*
 	Super::TickTask(OwnerComp, pNodeMemory, DeltaSeconds);
 
 	ATestMonsterBase* Monster = GetActor<ATestMonsterBase>(OwnerComp);
-	UMonsterData* MonsterData = GetValueAsObject<UMonsterData>(OwnerComp, TEXT("MonsterData"));
+	UTestMonsterData* MonsterData = GetValueAsObject<UTestMonsterData>(OwnerComp, TEXT("MonsterData"));
 
 	EPathFollowingRequestResult::Type IsMove = Monster->GetAIController()->MoveToLocation(MonsterData->DestLoc);
 
