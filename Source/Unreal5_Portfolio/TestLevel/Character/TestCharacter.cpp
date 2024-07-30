@@ -560,6 +560,9 @@ void ATestCharacter::InteractObject_Implementation(AMapObjectBase* _MapObject)	/
 	_MapObject->InterAction();
 
 	// (이건 뭐하는 코드인가요?)
+	// 특정 아이템 획득시 해당 아이템이 맵에서 지워지도록 하는 코드 입니다.
+	// 테스트 코드라 지우는 여부는 확인이 필요합니다.
+
 	ABomb* GetSampleData = Cast<ABomb>(_MapObject);
 	if (nullptr != GetSampleData)
 	{
