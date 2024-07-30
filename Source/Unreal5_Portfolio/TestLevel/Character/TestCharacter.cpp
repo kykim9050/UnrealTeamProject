@@ -182,6 +182,10 @@ void ATestCharacter::PostInitializeComponents()
 		USkeletalMesh* PlayerSkeletalMesh = MainGameInst->GetPlayerData(FName("TestPlayer"))->GetPlayerSkeletalMesh();
 		GetMesh()->SetSkeletalMesh(PlayerSkeletalMesh);
 
+		// 팔 메쉬 선택 (메인 추가 필요)
+		USkeletalMesh* FPVSkeletalMesh = MainGameInst->GetPlayerData(FName("TestPlayer"))->GetPlayerFPVPlayerSkeletalMesh();
+		FPVMesh->SetSkeletalMesh(FPVSkeletalMesh);
+
 		// ABP 선택
 		UClass* AnimInst = Cast<UClass>(MainGameInst->GetPlayerData(FName("TestPlayer"))->GetPlayerAnimInstance());
 		GetMesh()->SetAnimInstanceClass(AnimInst);
@@ -582,7 +586,7 @@ void ATestCharacter::PickUpItem_Implementation()	// => 메인캐릭터로 이전해야 함 
 
 	{
 		// 버리기 키가 없을 때를 가정.
-		if(false == IsItemIn[static_cast<int>(EPlayerPosture::Rifle1)])
+		if (false == IsItemIn[static_cast<int>(EPlayerPosture::Rifle1)])
 		{
 			// 1번 슬롯이 비어있는 경우.
 			ItemSetting(ItemStringToName, false);
