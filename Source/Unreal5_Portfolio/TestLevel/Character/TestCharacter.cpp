@@ -110,7 +110,7 @@ ATestCharacter::ATestCharacter()
 	HandAttackComponent->SetRelativeLocation({ 0.0f, 80.0f, 120.0f });
 
 	// MinimapIcon Component => 메인캐릭터 적용.
-	MinimapIconComponent = CreateDefaultSubobject<UTestMinimapIconComponent>(TEXT("MinimapPlayerIconComponent"));
+	MinimapIconComponent = CreateDefaultSubobject<UTestMinimapIconComponent>(TEXT("MinimapPlayerIcon"));
 	MinimapIconComponent->SetupAttachment(RootComponent);
 	MinimapIconComponent->bVisibleInSceneCaptureOnly = true;
 
@@ -343,6 +343,7 @@ void ATestCharacter::Drink_Implementation()	// => 메인에 추후 이전해야 함 (24.07
 void ATestCharacter::BombSetStart_Implementation()	// => 메인에 추후 이전해야 함 (24.07.29 추가 후 테스팅 중)
 {
 	// 폭탄 아이템이 없다면 return
+
 
 }
 
