@@ -67,45 +67,45 @@ public :
 
 	// Drink
 	UFUNCTION(BlueprintCallable)
-	void Drink_Con();	// => 메인에 추후 이전해야 함 (24.07.30 함수 이름 수정, 테스팅 중)
+	void Drink_Con();	// => 메인에 추후 이전해야 함 (24.07.30 함수 이름 수정, 테스팅 중) => 메인 적용(주석)
 
 	// Bomb Setting
 	UFUNCTION(BlueprintCallable)
-	void BombSetStart_Con();	// => 메인에 추후 이전해야 함 (24.07.30 함수 이름 수정, 테스팅 중)
+	void BombSetStart_Con();	// => 메인에 추후 이전해야 함 (24.07.30 함수 이름 수정, 테스팅 중) => 메인 적용(주석)
 	UFUNCTION(BlueprintCallable)
-	void BombSetCancel_Con();	// => 메인에 추후 이전해야 함 (24.07.30 함수 이름 수정, 테스팅 중)
+	void BombSetCancel_Con();	// => 메인에 추후 이전해야 함 (24.07.30 함수 이름 수정, 테스팅 중) => 메인 적용(주석)
 
 	// Item
 	UFUNCTION(BlueprintCallable)
-	void CheckItem_Con();	// => 메인 수정 필요 (24.07.30 플레이어 함수와의 혼동을 방지하지 위해 이름 수정됨) (PickUpItem 함수 대체)
+	void CheckItem_Con();	// => 메인 수정 필요 (24.07.30 플레이어 함수와의 혼동을 방지하지 위해 이름 수정됨) (PickUpItem 함수 대체) => 메인 적용
 
 	// State, Posture
 	UFUNCTION(BlueprintCallable)
-	void ChangeState_Con(EPlayerState _State);	// => 메인 수정 필요 (24.07.30 플레이어 함수와의 혼동을 방지하지 위해 이름 수정됨)
+	void ChangeState_Con(EPlayerState _State);	// => 메인 수정 필요 (24.07.30 플레이어 함수와의 혼동을 방지하지 위해 이름 수정됨) => 사용 안함.
 	UFUNCTION(BlueprintCallable)
-	void ChangePosture_Con(EPlayerPosture _Posture);	// => 메인 수정 필요 (24.07.30 플레이어 함수와의 혼동을 방지하지 위해 이름 수정됨)
+	void ChangePosture_Con(EPlayerPosture _Posture);	// => 메인 수정 필요 (24.07.30 플레이어 함수와의 혼동을 방지하지 위해 이름 수정됨) => 메인 적용
 
 	// POV
 	UFUNCTION(BlueprintCallable)
-	void ChangePOV_Con();	// => 메인 수정 필요 (24.07.30 플레이어 함수와의 혼동을 방지하지 위해 이름 수정됨)
+	void ChangePOV_Con();	// => 메인 수정 필요 (24.07.30 플레이어 함수와의 혼동을 방지하지 위해 이름 수정됨) => 메인 적용
 
 	// Reload (k)
 	UFUNCTION(BlueprintCallable)
 	void IAReload();
 
-	// LowerStateChange 함수 (태환)
+	// LowerStateChange 함수 (태환) => 메인 적용
 	UFUNCTION(BlueprintCallable)
 	void ChangeLowerState(EPlayerLowerState _State);
 
-	// PlayerDirChange 함수 (태환)
+	// PlayerDirChange 함수 (태환) => 메인 적용
 	UFUNCTION(BlueprintCallable)
 	void ChangePlayerDir(EPlayerMoveDir _Dir);
 
-	// 공격 몽타주 변경 함수
+	// 공격 몽타주 변경 함수  => 메인 적용
 	UFUNCTION(BlueprintCallable)
 	void AttackMontagePlay();
 
-	// 공격 종료 몽타주 변경 함수
+	// 공격 종료 몽타주 변경 함수  => 메인 적용
 	UFUNCTION(BlueprintCallable)
 	void FireEndMontagePlay();
 
@@ -115,20 +115,20 @@ public :
 
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "TeamId", meta = (AllowPrivateAccess = true))
-	FGenericTeamId TeamId;
-	virtual FGenericTeamId GetGenericTeamId() const override;
+	FGenericTeamId TeamId; // => 메인 적용
+	virtual FGenericTeamId GetGenericTeamId() const override; // => 메인 적용
 
-	FTimerHandle MyTimeHandle;
+	FTimerHandle MyTimeHandle; // => 메인 적용
 	int Count = 0;
 
 	UPROPERTY()
-	bool PlayerIsFaint = false;
+	bool PlayerIsFaint = false; // => 메인 적용(Delegate)
 
 	// HUD / Widget
 	UFUNCTION()
-	void CallGetItem();
+	void CallGetItem(); // => 메인 적용(Delegate)
 
-protected:
+protected: // => 메인 적용(Delegate)
 	UFUNCTION(BlueprintImplementableEvent, meta = (CallInEditor = true))
 	void ChangePostureToWidget(EPlayerPosture _Posture);
 
