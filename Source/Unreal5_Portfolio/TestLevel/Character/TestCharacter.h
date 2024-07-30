@@ -146,11 +146,11 @@ public:
 	void PickUpItem();
 	void PickUpItem_Implementation();
 	UFUNCTION(Reliable, Server, BlueprintCallable)
-	void DropItem();	// => 메인캐릭터로 이전해야 함 (24.07.29 수정됨)
-	void DropItem_Implementation();
+	void DropItem(int _SlotIndex);	// => 메인캐릭터로 이전해야 함 (24.07.30 수정됨)
+	void DropItem_Implementation(int _SlotIndex);
 
 	UFUNCTION(BlueprintCallable)
-	void ItemSetting(FName _TagName, bool _InNextSlotToItem);
+	void ItemSetting(FName _TagName, int _SlotIndex);	// => 메인캐릭터로 이전해야 함 (24.07.30 추가됨)
 
 	UFUNCTION(BlueprintCallable)
 	void DeleteItem(int _Index);	// => 메인캐릭터로 이전해야 함 (24.07.29 추가됨)

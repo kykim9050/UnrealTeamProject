@@ -41,8 +41,13 @@ UActorGroup* AMainGameState::GetActorGroup(uint8 _Index)
 	return AllActor[_Index];
 }
 
-void AMainGameState::AddMeleeNum()
+void AMainGameState::AddMeleeNum_Implementation()
 {
+	if (false == HasAuthority())
+	{
+		return;
+	}
+
 	if (MaxMeleeNum <= MeleeNum)
 	{
 		return;
