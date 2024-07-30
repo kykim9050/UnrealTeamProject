@@ -2,8 +2,8 @@
 
 
 #include "PartDevLevel/Monster/Animation/ClimbEndNotify.h"
-#include "PartDevLevel/Monster/TestMonsterBaseAIController.h"
-#include "PartDevLevel/Monster/TestMonsterBase.h"
+#include "PartDevLevel/Monster/NonBoss/TestMonsterBaseAIController.h"
+#include "PartDevLevel/Monster/Base/TestMonsterBase.h"
 
 #include "GameFramework/CharacterMovementComponent.h"
 #include "BehaviorTree/BlackboardComponent.h"

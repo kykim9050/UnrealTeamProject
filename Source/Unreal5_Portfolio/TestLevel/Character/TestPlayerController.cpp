@@ -50,10 +50,10 @@ void ATestPlayerController::SetupInputComponent()
 		if (nullptr != InputData->InputMapping)
 		{
 			EnhancedInputComponent->BindAction(InputData->Actions[0], ETriggerEvent::Triggered, this, &ATestPlayerController::MouseRotation);
-			EnhancedInputComponent->BindAction(InputData->Actions[3], ETriggerEvent::Triggered, this, &ATestPlayerController::MoveRight);
-			EnhancedInputComponent->BindAction(InputData->Actions[4], ETriggerEvent::Triggered, this, &ATestPlayerController::MoveLeft);
 			EnhancedInputComponent->BindAction(InputData->Actions[1], ETriggerEvent::Triggered, this, &ATestPlayerController::MoveFront);
 			EnhancedInputComponent->BindAction(InputData->Actions[2], ETriggerEvent::Triggered, this, &ATestPlayerController::MoveBack);
+			EnhancedInputComponent->BindAction(InputData->Actions[3], ETriggerEvent::Triggered, this, &ATestPlayerController::MoveRight);
+			EnhancedInputComponent->BindAction(InputData->Actions[4], ETriggerEvent::Triggered, this, &ATestPlayerController::MoveLeft);
 			//EnhancedInputComponent->BindAction(InputData->Actions[5], ETriggerEvent::Started, this, &ATestPlayerController::Jump);
 			//EnhancedInputComponent->BindAction(InputData->Actions[5], ETriggerEvent::Completed, this, &ATestPlayerController::JumpEnd);
 			//EnhancedInputComponent->BindAction(InputData->Actions[6], ETriggerEvent::Started, this, &ATestPlayerController::FireStart);
@@ -182,7 +182,7 @@ void ATestPlayerController::Crouch(const FInputActionValue& Value)
 	}
 }
 
-void ATestPlayerController::FireStart(float _DeltaTime)	// => 메인도 수정해야 함 (24.07.25 수정됨)
+void ATestPlayerController::FireStart(float _DeltaTime)	// => 메인도 수정해야 함 (24.07.25 수정됨) => 메인 적용
 {
 	ChangeState_Con(EPlayerState::Fire);
 	ATestCharacter* Ch = GetPawn<ATestCharacter>();
@@ -201,7 +201,7 @@ void ATestPlayerController::FireStart(float _DeltaTime)	// => 메인도 수정해야 함
 		}), 0.2f, true);
 }
 
-void ATestPlayerController::FireTick(float _DeltaTime)	// => 메인도 수정해야 함 (24.07.25 수정됨)
+void ATestPlayerController::FireTick(float _DeltaTime)	// => 메인도 수정해야 함 (24.07.25 수정됨) => 메인 적용
 {
 	ATestCharacter* Ch = GetPawn<ATestCharacter>();
 	Ch->FireRayCast();
@@ -226,25 +226,25 @@ void ATestPlayerController::FireEnd()
 	GEngine->AddOnScreenDebugMessage(-1, 0.2f, FColor::Red, TEXT("End"));
 }
 
-void ATestPlayerController::Drink_Con()	// => 메인에 추후 이전해야 함 (24.07.29 추가 후 테스팅 중)
+void ATestPlayerController::Drink_Con()	// => 메인에 추후 이전해야 함 (24.07.29 추가 후 테스팅 중) => 메인 적용(주석)
 {
 	ATestCharacter* Ch = GetPawn<ATestCharacter>();
 	Ch->Drink();
 }
 
-void ATestPlayerController::BombSetStart_Con()	// => 메인에 추후 이전해야 함 (24.07.29 추가 후 테스팅 중)
+void ATestPlayerController::BombSetStart_Con()	// => 메인에 추후 이전해야 함 (24.07.29 추가 후 테스팅 중) => 메인 적용(주석)
 {
 	ATestCharacter* Ch = GetPawn<ATestCharacter>();
 	Ch->BombSetStart();
 }
 
-void ATestPlayerController::BombSetCancel_Con()	// => 메인에 추후 이전해야 함 (24.07.29 추가 후 테스팅 중)
+void ATestPlayerController::BombSetCancel_Con()	// => 메인에 추후 이전해야 함 (24.07.29 추가 후 테스팅 중) => 메인 적용(주석)
 {
 	ATestCharacter* Ch = GetPawn<ATestCharacter>();
 	Ch->BombSetCancel();
 }
 
-void ATestPlayerController::CheckItem_Con()	// => 메인으로 이전 필요 (24.07.29 추가됨)
+void ATestPlayerController::CheckItem_Con()	// => 메인으로 이전 필요 (24.07.29 추가됨) => 메인 적용
 {
 	ATestCharacter* Ch = GetPawn<ATestCharacter>();
 	Ch->CheckItem();

@@ -46,24 +46,26 @@ void AMainPlayerController::SetupInputComponent()
 	if (nullptr != InputData->InputMapping)
 	{
 		EnhancedInputComponent->BindAction(InputData->Actions[0], ETriggerEvent::Triggered, this, &AMainPlayerController::MouseRotation);
-		EnhancedInputComponent->BindAction(InputData->Actions[1], ETriggerEvent::Triggered, this, &AMainPlayerController::MoveFront);
-		EnhancedInputComponent->BindAction(InputData->Actions[2], ETriggerEvent::Triggered, this, &AMainPlayerController::MoveBack);
-		EnhancedInputComponent->BindAction(InputData->Actions[3], ETriggerEvent::Triggered, this, &AMainPlayerController::MoveRight);
-		EnhancedInputComponent->BindAction(InputData->Actions[4], ETriggerEvent::Triggered, this, &AMainPlayerController::MoveLeft);
-		EnhancedInputComponent->BindAction(InputData->Actions[5], ETriggerEvent::Triggered, this, &AMainPlayerController::Jump);
-		EnhancedInputComponent->BindAction(InputData->Actions[5], ETriggerEvent::Completed, this, &AMainPlayerController::JumpEnd);
-		EnhancedInputComponent->BindAction(InputData->Actions[6], ETriggerEvent::Started, this, &AMainPlayerController::FireStart);
-		EnhancedInputComponent->BindAction(InputData->Actions[6], ETriggerEvent::Completed, this, &AMainPlayerController::FireEnd);
-		EnhancedInputComponent->BindAction(InputData->Actions[7], ETriggerEvent::Triggered, this, &AMainPlayerController::ChangePosture, static_cast<EPlayerPosture>(0));
-		EnhancedInputComponent->BindAction(InputData->Actions[8], ETriggerEvent::Triggered, this, &AMainPlayerController::ChangePosture, static_cast<EPlayerPosture>(1));
-		EnhancedInputComponent->BindAction(InputData->Actions[9], ETriggerEvent::Triggered, this, &AMainPlayerController::ChangePosture, static_cast<EPlayerPosture>(2));
-		EnhancedInputComponent->BindAction(InputData->Actions[10], ETriggerEvent::Triggered, this, &AMainPlayerController::ChangePosture, static_cast<EPlayerPosture>(3));
-		EnhancedInputComponent->BindAction(InputData->Actions[11], ETriggerEvent::Triggered, this, &AMainPlayerController::ChangePosture, static_cast<EPlayerPosture>(4));
-		EnhancedInputComponent->BindAction(InputData->Actions[12], ETriggerEvent::Triggered, this, &AMainPlayerController::ChangePosture, static_cast<EPlayerPosture>(5));
-		EnhancedInputComponent->BindAction(InputData->Actions[13], ETriggerEvent::Started, this, &AMainPlayerController::PickUpItem);
-		EnhancedInputComponent->BindAction(InputData->Actions[14], ETriggerEvent::Started, this, &AMainPlayerController::ChangePOVController);
-		EnhancedInputComponent->BindAction(InputData->Actions[15], ETriggerEvent::Started, this, &AMainPlayerController::Crouch);
-		EnhancedInputComponent->BindAction(InputData->Actions[16], ETriggerEvent::Started, this, &AMainPlayerController::IAReload);
+		EnhancedInputComponent->BindAction(InputData->Actions[1], ETriggerEvent::Triggered, this, &AMainPlayerController::W_MoveFront);
+		EnhancedInputComponent->BindAction(InputData->Actions[2], ETriggerEvent::Triggered, this, &AMainPlayerController::S_MoveBack);
+		EnhancedInputComponent->BindAction(InputData->Actions[3], ETriggerEvent::Triggered, this, &AMainPlayerController::D_MoveRight);
+		EnhancedInputComponent->BindAction(InputData->Actions[4], ETriggerEvent::Triggered, this, &AMainPlayerController::A_MoveLeft);
+		EnhancedInputComponent->BindAction(InputData->Actions[5], ETriggerEvent::Triggered, this, &AMainPlayerController::Spase_Jump);
+		EnhancedInputComponent->BindAction(InputData->Actions[5], ETriggerEvent::Completed, this, &AMainPlayerController::Spase_JumpEnd);
+		EnhancedInputComponent->BindAction(InputData->Actions[6], ETriggerEvent::Started, this, &AMainPlayerController::MouseLeft_FireStart);
+		EnhancedInputComponent->BindAction(InputData->Actions[6], ETriggerEvent::Completed, this, &AMainPlayerController::MouseLeft_FireEnd);
+		EnhancedInputComponent->BindAction(InputData->Actions[7], ETriggerEvent::Started, this, &AMainPlayerController::Num_ChangePosture, static_cast<EPlayerPosture>(0));
+		EnhancedInputComponent->BindAction(InputData->Actions[8], ETriggerEvent::Started, this, &AMainPlayerController::Num_ChangePosture, static_cast<EPlayerPosture>(1));
+		EnhancedInputComponent->BindAction(InputData->Actions[9], ETriggerEvent::Started, this, &AMainPlayerController::Num_ChangePosture, static_cast<EPlayerPosture>(2));
+		EnhancedInputComponent->BindAction(InputData->Actions[10], ETriggerEvent::Triggered, this, &AMainPlayerController::Num_Drink_Con);
+		EnhancedInputComponent->BindAction(InputData->Actions[11], ETriggerEvent::Triggered, this, &AMainPlayerController::Num_BombSetStart);
+		EnhancedInputComponent->BindAction(InputData->Actions[11], ETriggerEvent::Completed, this, &AMainPlayerController::Num_BombSetEnd);
+		EnhancedInputComponent->BindAction(InputData->Actions[12], ETriggerEvent::Triggered, this, &AMainPlayerController::Num_ChangePosture, static_cast<EPlayerPosture>(5));
+		EnhancedInputComponent->BindAction(InputData->Actions[13], ETriggerEvent::Started, this, &AMainPlayerController::E_CheckItem);
+		EnhancedInputComponent->BindAction(InputData->Actions[14], ETriggerEvent::Started, this, &AMainPlayerController::P_ChangePOVController);
+		EnhancedInputComponent->BindAction(InputData->Actions[15], ETriggerEvent::Started, this, &AMainPlayerController::LCtrl_Crouch);
+		EnhancedInputComponent->BindAction(InputData->Actions[16], ETriggerEvent::Started, this, &AMainPlayerController::R_Reload);
+		// 17 - G
 	}
 }
 
@@ -74,7 +76,7 @@ void AMainPlayerController::MouseRotation(const FInputActionValue& Value)
 	AddPitchInput(-MouseXY.Y);
 }
 
-void AMainPlayerController::MoveFront(const FInputActionValue& Value)
+void AMainPlayerController::W_MoveFront(const FInputActionValue& Value)
 {
 	if (CharacterIsFaint == true)
 	{
@@ -86,7 +88,7 @@ void AMainPlayerController::MoveFront(const FInputActionValue& Value)
 	ChangePlayerDir(EPlayerMoveDir::Forward);
 }
 
-void AMainPlayerController::MoveBack(const FInputActionValue& Value)
+void AMainPlayerController::S_MoveBack(const FInputActionValue& Value)
 {
 	if (CharacterIsFaint == true)
 	{
@@ -98,7 +100,7 @@ void AMainPlayerController::MoveBack(const FInputActionValue& Value)
 	ChangePlayerDir(EPlayerMoveDir::Back);
 }
 
-void AMainPlayerController::MoveRight(const FInputActionValue& Value)
+void AMainPlayerController::D_MoveRight(const FInputActionValue& Value)
 {
 	if (CharacterIsFaint == true)
 	{
@@ -110,7 +112,7 @@ void AMainPlayerController::MoveRight(const FInputActionValue& Value)
 	ChangePlayerDir(EPlayerMoveDir::Right);
 }
 
-void AMainPlayerController::MoveLeft(const FInputActionValue& Value)
+void AMainPlayerController::A_MoveLeft(const FInputActionValue& Value)
 {
 	if (CharacterIsFaint == true)
 	{
@@ -122,7 +124,7 @@ void AMainPlayerController::MoveLeft(const FInputActionValue& Value)
 	ChangePlayerDir(EPlayerMoveDir::Left);
 }
 
-void AMainPlayerController::Jump(const FInputActionValue& Value)
+void AMainPlayerController::Spase_Jump(const FInputActionValue& Value)
 {
 	if (CharacterIsFaint == true)
 	{
@@ -140,7 +142,7 @@ void AMainPlayerController::Jump(const FInputActionValue& Value)
 	MyPlayerState->Jump();
 }
 
-void AMainPlayerController::JumpEnd(const FInputActionValue& Value)
+void AMainPlayerController::Spase_JumpEnd(const FInputActionValue& Value)
 {
 	ACharacter* MyPlayerState = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
 	if (nullptr == MyPlayerState)
@@ -151,7 +153,7 @@ void AMainPlayerController::JumpEnd(const FInputActionValue& Value)
 	MyPlayerState->StopJumping();
 }
 
-void AMainPlayerController::FireStart(const FInputActionValue& Value)
+void AMainPlayerController::MouseLeft_FireStart(const FInputActionValue& Value)
 {
 	if (CharacterIsFaint == true)
 	{
@@ -172,11 +174,11 @@ void AMainPlayerController::FireStart(const FInputActionValue& Value)
 
 	GetWorld()->GetTimerManager().SetTimer(MyTimeHandle, FTimerDelegate::CreateLambda([&]()
 		{
-			FireTick(GetWorld()->GetTimeSeconds());
+			MouseLeft_FireTick(GetWorld()->GetTimeSeconds());
 		}), 0.2f, true);
 }
 
-void AMainPlayerController::FireTick(float _DeltaTime)
+void AMainPlayerController::MouseLeft_FireTick(float _DeltaTime)
 {
 	AMainCharacter* Ch = GetPawn<AMainCharacter>();
 	if (nullptr == Ch)
@@ -191,12 +193,12 @@ void AMainPlayerController::FireTick(float _DeltaTime)
 	BullitCountToHUD();
 }
 
-void AMainPlayerController::FireEnd(const FInputActionValue& Value)
+void AMainPlayerController::MouseLeft_FireEnd(const FInputActionValue& Value)
 {
 	GetWorld()->GetTimerManager().ClearTimer(MyTimeHandle);
 }
 
-void AMainPlayerController::PickUpItem()
+void AMainPlayerController::E_CheckItem()
 {
 	if (CharacterIsFaint == true)
 	{
@@ -209,10 +211,10 @@ void AMainPlayerController::PickUpItem()
 		return;
 	}
 
-	Ch->PickUpItem();
+	Ch->CheckItem();
 }
 
-void AMainPlayerController::ChangePOVController()
+void AMainPlayerController::P_ChangePOVController()
 {
 	AMainCharacter* Ch = GetPawn<AMainCharacter>();
 	if (nullptr == Ch)
@@ -222,7 +224,7 @@ void AMainPlayerController::ChangePOVController()
 	Ch->ChangePOV();
 }
 
-void AMainPlayerController::Crouch(const FInputActionValue& Value)
+void AMainPlayerController::LCtrl_Crouch(const FInputActionValue& Value)
 {
 	if (CharacterIsFaint == true)
 	{
@@ -249,7 +251,7 @@ void AMainPlayerController::Crouch(const FInputActionValue& Value)
 	Ch->CrouchCameraMove();
 }
 
-void AMainPlayerController::IAReload()
+void AMainPlayerController::R_Reload()
 {
 	if (CharacterIsFaint == true)
 	{
@@ -264,7 +266,7 @@ void AMainPlayerController::IAReload()
 	Ch->CharacterReload();
 }
 
-void AMainPlayerController::ChangePosture(EPlayerPosture _Posture)
+void AMainPlayerController::Num_ChangePosture(EPlayerPosture _Posture)
 {
 	if (CharacterIsFaint == true)
 	{
@@ -279,6 +281,39 @@ void AMainPlayerController::ChangePosture(EPlayerPosture _Posture)
 
 	Ch->ChangePosture(_Posture);
 	ChangePostureToWidget(_Posture);
+}
+
+void AMainPlayerController::Num_Drink_Con()
+{
+	AMainCharacter* Ch = GetPawn<AMainCharacter>();
+	if (nullptr == Ch)
+	{
+		return;
+	}
+
+	//Ch->Drink();
+}
+
+void AMainPlayerController::Num_BombSetStart()
+{
+	AMainCharacter* Ch = GetPawn<AMainCharacter>();
+	if (nullptr == Ch)
+	{
+		return;
+	}
+
+	//Ch->BombSetStart();
+}
+
+void AMainPlayerController::Num_BombSetEnd()
+{
+	AMainCharacter* Ch = GetPawn<AMainCharacter>();
+	if (nullptr == Ch)
+	{
+		return;
+	}
+
+	//Ch->BombSetEnd();
 }
 
 void AMainPlayerController::ChangeLowerState(EPlayerLowerState _State)

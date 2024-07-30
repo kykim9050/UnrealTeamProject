@@ -2,8 +2,8 @@
 
 
 #include "PartDevLevel/Monster/Animation/MonsterAttackNotify.h"
-#include "PartDevLevel/Monster/TestMonsterBase.h"
 #include "PartDevLevel/Monster/Boss/TestBossMonsterBase.h"
+#include "PartDevLevel/Monster/Base/TestMonsterBase.h"
 
 void UMonsterAttackNotify::NotifyBegin(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation, float TotalDuration)
 {
