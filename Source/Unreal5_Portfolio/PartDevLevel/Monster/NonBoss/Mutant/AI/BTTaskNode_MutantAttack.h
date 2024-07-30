@@ -4,13 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "PartDevLevel/Monster/NonBoss/AI/BTTaskNode_Monster.h"
-#include "MyBTTaskNode_MutantAttack.generated.h"
+#include "BTTaskNode_MutantAttack.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class UNREAL5_PORTFOLIO_API UMyBTTaskNode_MutantAttack : public UBTTaskNode_Monster
+class UNREAL5_PORTFOLIO_API UBTTaskNode_MutantAttack : public UBTTaskNode_Monster
 {
 	GENERATED_BODY()
 	

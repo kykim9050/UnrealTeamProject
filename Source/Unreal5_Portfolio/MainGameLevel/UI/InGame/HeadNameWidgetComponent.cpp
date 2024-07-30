@@ -42,6 +42,6 @@ void UHeadNameWidgetComponent::BilboardRotate(FVector _WorldLocation)
 	FVector Z = FVector::ZeroVector;
 	UKismetMathLibrary::GetAxes(Rot, X, Y, Z);
 	FRotator Res = UKismetMathLibrary::Conv_VectorToRotator(X);
-
+	Res = FRotator(0.0f, Res.Yaw, 0.0f);
 	SetWorldRotation(Res);
 }

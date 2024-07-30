@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "MyBTTaskNode_MutantJumpAttack.h"
+#include "BTTaskNode_MutantJumpAttack.h"
 #include "PartDevLevel/Monster/Animation/MonsterAnimInstance.h"
 #include "PartDevLevel/Monster/NonBoss/TestMonsterBaseAIController.h"
 #include "PartDevLevel/Monster/Base/TestMonsterBase.h"
@@ -14,7 +14,7 @@
 
 #include "Global/ContentsLog.h"
 
-EBTNodeResult::Type UMyBTTaskNode_MutantJumpAttack::ExecuteTask(UBehaviorTreeComponent& _OwnerComp, uint8* _NodeMemory)
+EBTNodeResult::Type UBTTaskNode_MutantJumpAttack::ExecuteTask(UBehaviorTreeComponent& _OwnerComp, uint8* _NodeMemory)
 {
 	EBTNodeResult::Type Result = Super::ExecuteTask(_OwnerComp, _NodeMemory);
 
@@ -25,7 +25,7 @@ EBTNodeResult::Type UMyBTTaskNode_MutantJumpAttack::ExecuteTask(UBehaviorTreeCom
 		return EBTNodeResult::Aborted;
 	}
 
-	UTestMonsterBaseData* MonsterData = GetValueAsObject<UTestMonsterBaseData>(_OwnerComp, TEXT("MonsterData"));
+	UTestMonsterDataBase* MonsterData = GetValueAsObject<UTestMonsterDataBase>(_OwnerComp, TEXT("MonsterData"));
 	MonsterData->AnimationTime = Monster->GetAnimInstance()->GetKeyAnimMontage(ETestMonsterAnim::JumpAttack, Monster->GetAniIndex())->GetPlayLength();
 
 	AActor* Target = Cast<AActor>(_OwnerComp.GetBlackboardComponent()->GetValueAsObject(TEXT("TargetActor")));
@@ -41,12 +41,12 @@ EBTNodeResult::Type UMyBTTaskNode_MutantJumpAttack::ExecuteTask(UBehaviorTreeCom
 	return EBTNodeResult::InProgress;
 }
 
-void UMyBTTaskNode_MutantJumpAttack::TickTask(UBehaviorTreeComponent& _OwnerComp, uint8* _pNodeMemory, float _DeltaSeconds)
+void UBTTaskNode_MutantJumpAttack::TickTask(UBehaviorTreeComponent& _OwnerComp, uint8* _pNodeMemory, float _DeltaSeconds)
 {
 	Super::TickTask(_OwnerComp, _pNodeMemory, _DeltaSeconds);
 
 	ATestMonsterBase* Monster = GetActor<ATestMonsterBase>(_OwnerComp);
-	UTestMonsterBaseData* MonsterData = GetValueAsObject<UTestMonsterBaseData>(_OwnerComp, TEXT("MonsterData"));
+	UTestMonsterDataBase* MonsterData = GetValueAsObject<UTestMonsterDataBase>(_OwnerComp, TEXT("MonsterData"));
 
 	if (nullptr == Monster)
 	{

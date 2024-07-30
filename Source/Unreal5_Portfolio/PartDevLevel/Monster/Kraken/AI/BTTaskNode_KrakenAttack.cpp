@@ -31,7 +31,7 @@ EBTNodeResult::Type UBTTaskNode_KrakenAttack::ExecuteTask(UBehaviorTreeComponent
 		return EBTNodeResult::Type::Aborted;
 	}
 
-	UTestMonsterBaseData* MonsterData = GetValueAsObject<UTestMonsterBaseData>(OwnerComp, TEXT("MonsterData"));
+	UTestMonsterDataBase* MonsterData = GetValueAsObject<UTestMonsterDataBase>(OwnerComp, TEXT("MonsterData"));
 	AActor* Target = Cast<AActor>(OwnerComp.GetBlackboardComponent()->GetValueAsObject(TEXT("TargetActor")));
 	ETestMonsterAnim NextAnim;
 
@@ -68,7 +68,7 @@ void UBTTaskNode_KrakenAttack::TickTask(UBehaviorTreeComponent& OwnerComp, uint8
 	Super::TickTask(OwnerComp, pNodeMemory, DeltaSeconds);
 
 
-	UTestMonsterBaseData* MonsterData = GetValueAsObject<UTestMonsterBaseData>(OwnerComp, TEXT("MonsterData"));
+	UTestMonsterDataBase* MonsterData = GetValueAsObject<UTestMonsterDataBase>(OwnerComp, TEXT("MonsterData"));
 	ATestMonsterBase* Monster = GetActor<ATestMonsterBase>(OwnerComp);
 
 	float Time = MonsterData->AnimationTime;

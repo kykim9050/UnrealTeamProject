@@ -57,8 +57,9 @@ public:
 	/// <summary>
 	/// Melee 확보시 호출되는 함수
 	/// </summary>
-	UFUNCTION()
+	UFUNCTION(Reliable, NetMulticast)
 	void AddMeleeNum();
+	void AddMeleeNum_Implementation();
 
 	/// <summary>
 	/// 확보된 Melee 수를 반환
