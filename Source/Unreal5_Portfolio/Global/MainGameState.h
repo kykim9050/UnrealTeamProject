@@ -91,6 +91,11 @@ public:
 	{
 		return BombNum;
 	}
+
+	/// <summary>
+	/// 보스룸 스테이지 클리어
+	/// </summary>
+	void SetClearBoss1Stage();
 	
 protected:
 	AMainGameState();
@@ -142,4 +147,9 @@ private:
 	/// </summary>
 	UPROPERTY()
 	int MaxBombNum = 1;
+
+	/// <summary>
+	/// Boss1Stage 클리어 유무
+	/// </summary>
+	bool ClearBoss1Stage = false;
 };

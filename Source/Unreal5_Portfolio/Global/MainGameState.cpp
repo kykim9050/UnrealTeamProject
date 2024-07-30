@@ -84,3 +84,15 @@ void AMainGameState::AddArmoryWeaponNum(EPlayerPosture _ItemType)
 		return;
 	}
 }
+
+void AMainGameState::SetClearBoss1Stage()
+{
+	if (true == ClearBoss1Stage)
+	{
+		return;
+	}
+
+	ClearBoss1Stage = true;
+
+	CurStage = EGameStage::ObtainSecondSample;
+}
