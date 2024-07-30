@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "PartDevLevel/Monster/Karaken/AI/BTTaskNode_KrakenRotate.h"
+#include "PartDevLevel/Monster/Kraken/AI/BTTaskNode_KrakenRotate.h"
 #include "PartDevLevel/Monster/TestMonsterBase.h"
 
 #include "BehaviorTree/BlackboardComponent.h"
