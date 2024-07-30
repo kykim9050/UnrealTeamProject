@@ -674,8 +674,8 @@ void ATestCharacter::ChangePOV()	// => 메인캐릭터로 이전해야 함 (24.07.29 수정 �
 	{
 		// SpringArm Component 위치 수정.
 		//SpringArmComponent->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
-		SpringArmComponent->SetRelativeLocation(CameraRelLoc);
 		SpringArmComponent->TargetArmLength = 300.0f;
+		SpringArmComponent->SetRelativeLocation(CameraRelLoc);
 
 		// Character Mesh 전환.
 		GetMesh()->SetOwnerNoSee(false);
@@ -694,18 +694,18 @@ void ATestCharacter::ChangePOV()	// => 메인캐릭터로 이전해야 함 (24.07.29 수정 �
 	{
 		// SpringArm Component 위치 수정.
 		//SpringArmComponent->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, FName("SpringArmSocket"));
+		SpringArmComponent->TargetArmLength = 0.0f;
 		switch (LowerStateValue)
 		{
 		case EPlayerLowerState::Idle:
-			SpringArmComponent->SetRelativeLocation(FPVCameraRelLoc_Crouch);
+			SpringArmComponent->SetRelativeLocation(FPVCameraRelLoc);
 			break;
 		case EPlayerLowerState::Crouch:
-			SpringArmComponent->SetRelativeLocation(FPVCameraRelLoc);
+			SpringArmComponent->SetRelativeLocation(FPVCameraRelLoc_Crouch);
 			break;
 		default:
 			break;
 		}
-		SpringArmComponent->TargetArmLength = 0.0f;
 
 		// Character Mesh 전환.
 		GetMesh()->SetOwnerNoSee(true);
