@@ -11,39 +11,39 @@
 
 #include "Global/ContentsLog.h"
 
-EBTNodeResult::Type UBTTaskNode_MonsterChase::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
+EBTNodeResult::Type UBTTaskNode_MonsterChase::ExecuteTask(UBehaviorTreeComponent& _OwnerComp, uint8* _NodeMemory)
 {
-	Super::ExecuteTask(OwnerComp, NodeMemory);
+	Super::ExecuteTask(_OwnerComp, _NodeMemory);
 
-	ATestMonsterBase* Monster = GetActor<ATestMonsterBase>(OwnerComp);
+	ATestMonsterBase* Monster = GetActor<ATestMonsterBase>(_OwnerComp);
 	if (false == Monster->IsValidLowLevel())
 	{
 		LOG(MonsterLog, Fatal, TEXT("%S(%u)> Monster Is Not Valid"));
 		return EBTNodeResult::Type::Aborted;
 	}
 
-	UMonsterData* MonsterData = GetValueAsObject<UMonsterData>(OwnerComp, TEXT("MonsterData"));
+	UTestMonsterData* MonsterData = GetValueAsObject<UTestMonsterData>(_OwnerComp, TEXT("MonsterData"));
 	Monster->GetCharacterMovement()->MaxWalkSpeed = Monster->GetBaseData()->GetRunSpeed();
 	Monster->ChangeRandomAnimation(ETestMonsterAnim::Run);
 
 	return EBTNodeResult::Type::InProgress;
 }
 
-void UBTTaskNode_MonsterChase::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* pNodeMemory, float DeltaSeconds)
+void UBTTaskNode_MonsterChase::TickTask(UBehaviorTreeComponent& _OwnerComp, uint8* _pNodeMemory, float _DeltaSeconds)
 {
-	Super::TickTask(OwnerComp, pNodeMemory, DeltaSeconds);
+	Super::TickTask(_OwnerComp, _pNodeMemory, _DeltaSeconds);
 
-	if (ETestMonsterState::Chase != static_cast<ETestMonsterState>(GetCurState(OwnerComp)))
+	if (ETestMonsterState::Chase != static_cast<ETestMonsterState>(GetCurState(_OwnerComp)))
 	{
-		FinishLatentTask(OwnerComp, EBTNodeResult::Failed);
+		FinishLatentTask(_OwnerComp, EBTNodeResult::Failed);
 		return;
 	}
 
-	UMonsterData* MonsterData = GetValueAsObject<UMonsterData>(OwnerComp, TEXT("MonsterData"));
-	ATestMonsterBase* Monster = GetActor<ATestMonsterBase>(OwnerComp);
+	UTestMonsterData* MonsterData = GetValueAsObject<UTestMonsterData>(_OwnerComp, TEXT("MonsterData"));
+	ATestMonsterBase* Monster = GetActor<ATestMonsterBase>(_OwnerComp);
 	FVector MonsterLocation = Monster->GetActorLocation();
 	
-	AActor* TargetActor = GetValueAsObject<AActor>(OwnerComp, TEXT("TargetActor"));
+	AActor* TargetActor = GetValueAsObject<AActor>(_OwnerComp, TEXT("TargetActor"));
 	FVector TargetLocation = TargetActor->GetActorLocation();
 
 	EPathFollowingRequestResult::Type IsMove = Monster->GetAIController()->MoveToLocation(TargetLocation);
@@ -53,7 +53,7 @@ void UBTTaskNode_MonsterChase::TickTask(UBehaviorTreeComponent& OwnerComp, uint8
 	double DiffLength = LocationDiff.Size();
 	if (DiffLength <= MonsterData->AttackBoundary)
 	{
-		StateChange(OwnerComp, ETestMonsterState::Attack);
+		StateChange(_OwnerComp, ETestMonsterState::Attack);
 		return;
 	}
 }

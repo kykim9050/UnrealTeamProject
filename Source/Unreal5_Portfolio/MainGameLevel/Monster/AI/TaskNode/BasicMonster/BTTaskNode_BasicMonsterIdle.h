@@ -17,5 +17,8 @@ class UNREAL5_PORTFOLIO_API UBTTaskNode_BasicMonsterIdle : public UBTTaskNodeBas
 public:
 	EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) override;
 	void TickTask(UBehaviorTreeComponent& OwnerComp, uint8* pNodeMemory, float DeltaSeconds) override;
-	
+
+private:
+	const float IdleTime = 2.0f;
+
 };

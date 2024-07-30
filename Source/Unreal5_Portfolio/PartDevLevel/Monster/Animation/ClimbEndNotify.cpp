@@ -2,11 +2,12 @@
 
 
 #include "PartDevLevel/Monster/Animation/ClimbEndNotify.h"
-#include "PartDevLevel/Monster/TestMonsterBase.h"
-#include "GameFramework/CharacterMovementComponent.h"
-#include "Components/CapsuleComponent.h"
-#include "BehaviorTree/BlackboardComponent.h"
 #include "PartDevLevel/Monster/TestMonsterBaseAIController.h"
+#include "PartDevLevel/Monster/TestMonsterBase.h"
+
+#include "GameFramework/CharacterMovementComponent.h"
+#include "BehaviorTree/BlackboardComponent.h"
+#include "Components/CapsuleComponent.h"
 
 void UClimbEndNotify::NotifyBegin(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation, float TotalDuration)
 {
@@ -16,7 +17,7 @@ void UClimbEndNotify::NotifyBegin(USkeletalMeshComponent* MeshComp, UAnimSequenc
 		ATestMonsterBaseAIController* Controller = Cast<ATestMonsterBaseAIController>(Monster->GetController());
 		if (nullptr != Controller)
 		{
-			UMonsterData* MonsterData = Cast<UMonsterData>(Controller->GetBlackboardComponent()->GetValueAsObject(TEXT("MonsterData")));
+			UTestMonsterData* MonsterData = Cast<UTestMonsterData>(Controller->GetBlackboardComponent()->GetValueAsObject(TEXT("MonsterData")));
 			FVector ClimbDestLoc = Controller->GetBlackboardComponent()->GetValueAsVector("DestinationLocation");
 			FVector CurLoc = MonsterData->LerpPos;
 			CurLoc.Z = ClimbDestLoc.Z;

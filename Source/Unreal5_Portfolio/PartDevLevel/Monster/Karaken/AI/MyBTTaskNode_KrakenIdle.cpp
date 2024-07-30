@@ -3,45 +3,45 @@
 
 #include "PartDevLevel/Monster/Karaken/AI/MyBTTaskNode_KrakenIdle.h"
 #include "PartDevLevel/Monster/TestMonsterBase.h"
-#include "Global/DataTable/MonsterDataRow.h"
-#include "Global/ContentsLog.h"
+
 #include "BehaviorTree/BlackboardComponent.h"
-#include "Global/MainGameState.h"
+
 #include "Global/MainGameBlueprintFunctionLibrary.h"
+#include "Global/DataTable/MonsterDataRow.h"
+#include "Global/MainGameState.h"
+#include "Global/ContentsLog.h"
 
-
-EBTNodeResult::Type UMyBTTaskNode_KrakenIdle::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
+EBTNodeResult::Type UMyBTTaskNode_KrakenIdle::ExecuteTask(UBehaviorTreeComponent& _OwnerComp, uint8* _NodeMemory)
 {
-	EBTNodeResult::Type Result = Super::ExecuteTask(OwnerComp, NodeMemory);
+	EBTNodeResult::Type Result = Super::ExecuteTask(_OwnerComp, _NodeMemory);
 
-	ATestMonsterBase* Monster = GetActor<ATestMonsterBase>(OwnerComp);
+	ATestMonsterBase* Monster = GetActor<ATestMonsterBase>(_OwnerComp);
 	if (false == Monster->IsValidLowLevel())
 	{
 		LOG(MonsterLog, Fatal, TEXT("Monster Is Not Valid"));
 		return EBTNodeResult::Type::Aborted;
 	}
 
-	ETestMonsterState CurState = static_cast<ETestMonsterState>(GetCurState(OwnerComp));
+	ETestMonsterState CurState = static_cast<ETestMonsterState>(GetCurState(_OwnerComp));
 	if (ETestMonsterState::Idle != CurState)
 	{
 		LOG(MonsterLog, Fatal, TEXT("Monster State Is Not Idle"));
 		return EBTNodeResult::Type::Aborted;
 	}
 
-
-	UMonsterData* MonsterData = GetValueAsObject<UMonsterData>(OwnerComp, TEXT("MonsterData"));
+	UTestMonsterData* MonsterData = GetValueAsObject<UTestMonsterData>(_OwnerComp, TEXT("MonsterData"));
 	MonsterData->IdleTime = 0.0f;
 	Monster->ChangeRandomAnimation(ETestMonsterAnim::Idle);
 
 	return EBTNodeResult::Type::InProgress;
 }
 
-void UMyBTTaskNode_KrakenIdle::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* pNodeMemory, float DeltaSeconds)
+void UMyBTTaskNode_KrakenIdle::TickTask(UBehaviorTreeComponent& _OwnerComp, uint8* _pNodeMemory, float _DeltaSeconds)
 {
-	Super::TickTask(OwnerComp, pNodeMemory, DeltaSeconds);
+	Super::TickTask(_OwnerComp, _pNodeMemory, _DeltaSeconds);
 
-	UMonsterData* MonsterData = GetValueAsObject<UMonsterData>(OwnerComp, TEXT("MonsterData"));
-	ATestMonsterBase* Monster = GetActor<ATestMonsterBase>(OwnerComp);
+	UTestMonsterData* MonsterData = GetValueAsObject<UTestMonsterData>(_OwnerComp, TEXT("MonsterData"));
+	ATestMonsterBase* Monster = GetActor<ATestMonsterBase>(_OwnerComp);
 
 	AMainGameState* CurGameState = UMainGameBlueprintFunctionLibrary::GetMainGameState(GetWorld());
 	if (nullptr == CurGameState)
@@ -78,10 +78,10 @@ void UMyBTTaskNode_KrakenIdle::TickTask(UBehaviorTreeComponent& OwnerComp, uint8
 			}
 		}
 
-		OwnerComp.GetBlackboardComponent()->SetValueAsObject(TEXT("TargetActor"), TargetPlayer);
-		StateChange(OwnerComp, ETestMonsterState::Rotate);
+		_OwnerComp.GetBlackboardComponent()->SetValueAsObject(TEXT("TargetActor"), TargetPlayer);
+		StateChange(_OwnerComp, ETestMonsterState::Rotate);
 		return;
 	}
 
-	MonsterData->IdleTime += DeltaSeconds;
+	MonsterData->IdleTime += _DeltaSeconds;
 }

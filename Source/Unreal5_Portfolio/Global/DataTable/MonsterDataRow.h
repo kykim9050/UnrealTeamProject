@@ -33,6 +33,11 @@ public:
 		return RunSpeed;
 	}
 
+	float GetAttackRange() const
+	{
+		return AttackRange;
+	}
+
 	TMap<EBasicMonsterAnim, FAnimMontageGroup> GetAllAnimMontage() const
 	{
 		return AllAnimMontages;
@@ -63,6 +68,10 @@ private:
 	UPROPERTY(EditAnywhere, meta = (AllowprivateAccess = "true"))
 	float RunSpeed = 600.0f;
 
+	// 공격 범위
+	UPROPERTY(EditAnywhere, meta = (AllowprivateAccess = "true"))
+	float AttackRange = 200.0f;
+
 	// 몽타주
 	UPROPERTY(EditAnywhere, meta = (AllowprivateAccess = "true"))
 	TMap<EBasicMonsterAnim, FAnimMontageGroup> AllAnimMontages;
@@ -79,7 +88,7 @@ private:
 };
 
 UCLASS()
-class UMonsterData : public UObject
+class UTestMonsterData : public UObject
 {
 	GENERATED_BODY()
 
@@ -91,21 +100,29 @@ public:
 	const FMonsterDataRow* BaseData;
 
 	// 개별 Data
-	FVector OriginPos = FVector::ZeroVector;
 
-	FVector LerpPos = FVector::ZeroVector;
-
+	// Basic
 	UPROPERTY(Replicated)
 	float Hp = 100.0f;
+	
+	float AttackDamage = 0.0f;
+	float AttackBoundary = 200.0f;
+
+
+
+	/// <summary>
+	/// /////
+	/// </summary>
+	FVector OriginPos = FVector::ZeroVector;
+
+
+	FVector LerpPos = FVector::ZeroVector;
 
 	float IdleTime = 0.0f;
 	
 	float Max_PatrolRange = 800.0f;
 	
 	float AttackTime = 0.0f;
-	float AttackDamage = 0.0f;
-	//float AttackBoundary = 200.0f;
-	float AttackBoundary = 1200.0f;
 
 	float ClimbTime = 0.0f;
 	float ClimbTotal = 0.0f;
