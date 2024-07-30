@@ -572,7 +572,7 @@ void ATestCharacter::InteractObject_Implementation(AMapObjectBase* _MapObject)	/
 
 void ATestCharacter::PickUpItem_Implementation()	// => 메인캐릭터로 이전해야 함 (24.07.29 수정됨)
 {
-	// 아이템의 Tag 이름을 통해 FName을 가져온다.
+	// Overlap된 아이템의 Tag 이름을 통해 FName을 가져온다.
 	FString TagName = "";
 	for (size_t i = 0; i < GetMapItemData->Tags.Num(); i++)
 	{
@@ -580,81 +580,119 @@ void ATestCharacter::PickUpItem_Implementation()	// => 메인캐릭터로 이전해야 함 
 	}
 	FName ItemStringToName = FName(*TagName);			// 아이템 이름
 
-	// ItemName에 맞는 아이템 정보를 DT에서 가져온다.
-	UMainGameInstance* Inst = GetGameInstance<UMainGameInstance>();
-	const FItemDataRow* ItemData = Inst->GetItemData(ItemStringToName);
-
-	EPlayerPosture ItemType = ItemData->GetType();		// 아이템 타입
-
-	// 이미 인벤토리에 같은 이름을 가진 아이템이 있을 경우.
-	if (ItemStringToName == ItemSlot[static_cast<int>(ItemType)].Name)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, TEXT("The same item is already in inventory."));
-		return;
-	}
-
-	// 이미 인벤토리에 같은 타입의 아이템이 있을 경우. (추후 수정될 수도 있음)
-	if (true == IsItemIn[static_cast<uint8>(ItemType)])
-	{
-		DropItem();
-	}
-
-	// Data Table에 있는 아이템 정보 가져오기.
-	int ItemReloadNum = ItemData->GetReloadNum();		// 무기 장전 단위 (30, 40)	// -1일 경우 총기류 무기가 아님
-	int ItemDamage = ItemData->GetDamage();				// 무기 공격력				// 0일 경우 무기가 아님
-	UStaticMesh* ItemMeshRes = ItemData->GetResMesh();	// 스태틱 메시 리소스
-	FVector ItemRelLoc = ItemData->GetRelLoc();			// 스태틱 메시 컴포넌트 상대적 위치
-	FRotator ItemRelRot = ItemData->GetRelRot();		// 스태틱 메시 컴포넌트 상대적 회전
-	FVector ItemRelScale = ItemData->GetRelScale();		// 스태틱 메시 컴포넌트 상대적 크기
-
-	// 인벤토리에 아이템 집어넣기. (스태틱메시로 아이템을 가져가는 방식 채택!!!)
-	uint8 ItemIndex = static_cast<uint8>(ItemType);		// 아이템을 넣을 인벤토리 인덱스
-	IsItemIn[ItemIndex] = true;
-
-	ItemSlot[ItemIndex].Name = ItemStringToName;
-	ItemSlot[ItemIndex].ReloadMaxNum = ItemReloadNum;
-	ItemSlot[ItemIndex].ReloadLeftNum = ItemReloadNum;
-	ItemSlot[ItemIndex].Damage = ItemDamage;
-	ItemSlot[ItemIndex].MeshRes = ItemMeshRes;
-	ItemSlot[ItemIndex].RelLoc = ItemRelLoc;
-	ItemSlot[ItemIndex].RelRot = ItemRelRot;
-	ItemSlot[ItemIndex].RelScale = ItemRelScale;
-
-	// 게임 플레이 진행 단계 업데이트
-	if (EPlayerPosture::Rifle1 == ItemType
-		|| EPlayerPosture::Melee == ItemType
-		|| EPlayerPosture::Bomb == ItemType)
-	{
-		AMainGameState* CurGameState = UMainGameBlueprintFunctionLibrary::GetMainGameState(GetWorld());
-
-		if (nullptr == CurGameState)
+		// 버리기 키가 없을 때를 가정.
+		if(false == IsItemIn[static_cast<int>(EPlayerPosture::Rifle1)])
 		{
-			UE_LOG(PlayerLog, Fatal, TEXT("GameState Is Nullptr"));
+			// 1번 슬롯이 비어있는 경우.
+			ItemSetting(ItemStringToName, false);
+		}
+		else if (true == IsItemIn[static_cast<int>(EPlayerPosture::Rifle1)] && false == IsItemIn[static_cast<int>(EPlayerPosture::Rifle2)])
+		{
+			// 1번 슬롯이 있고 2번 슬롯이 비어있는 경우.
+			ItemSetting(ItemStringToName, true);
+		}
+		else
+		{
+			// 1, 2번 슬롯이 비어있지 않는 경우.
+			if (PostureValue == EPlayerPosture::Rifle1)
+			{
+				DropItem();
+				DeleteItem(static_cast<int>(EPlayerPosture::Rifle1));
+				ItemSetting(ItemStringToName, false);
+			}
+			else if (PostureValue == EPlayerPosture::Rifle2)
+			{
+				DropItem();
+				DeleteItem(static_cast<int>(EPlayerPosture::Rifle2));
+				ItemSetting(ItemStringToName, true);
+			}
+		}
+	}
+
+	/*
+	{
+		// ItemName에 맞는 아이템 정보를 DT에서 가져온다.
+		UMainGameInstance* Inst = GetGameInstance<UMainGameInstance>();
+		const FItemDataRow* ItemData = Inst->GetItemData(ItemStringToName);
+
+		EPlayerPosture ItemType = ItemData->GetType();		// 아이템 타입
+
+		// 이미 인벤토리에 같은 이름을 가진 아이템이 있을 경우.
+		if (ItemStringToName == ItemSlot[static_cast<int>(ItemType)].Name)
+		{
+			GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, TEXT("The same item is already in inventory."));
 			return;
 		}
 
-		switch (ItemType)
+		// 이미 인벤토리에 같은 타입의 아이템이 있을 경우. (추후 수정될 수도 있음)
+		if (true == IsItemIn[static_cast<uint8>(ItemType)])
 		{
-		case EPlayerPosture::Rifle1:
-		case EPlayerPosture::Bomb:
-			CurGameState->AddArmoryWeaponNum(ItemType);
-			break;
-		case EPlayerPosture::Melee:
-			CurGameState->AddMeleeNum();
-			break;
-		default:
-			break;
+			DropItem();
 		}
-	}
 
-	// 무기 Type에 따른 애니메이션 변화 함수 호출.
-	ChangePosture(ItemType);
+		// Data Table에 있는 아이템 정보 가져오기.
+		int ItemReloadNum = ItemData->GetReloadNum();		// 무기 장전 단위 (30, 40)	// -1일 경우 총기류 무기가 아님
+		int ItemDamage = ItemData->GetDamage();				// 무기 공격력				// 0일 경우 무기가 아님
+		UStaticMesh* ItemMeshRes = ItemData->GetResMesh();	// 스태틱 메시 리소스
+		FVector ItemRelLoc = ItemData->GetRelLoc();			// 스태틱 메시 컴포넌트 상대적 위치
+		FRotator ItemRelRot = ItemData->GetRelRot();		// 스태틱 메시 컴포넌트 상대적 회전
+		FVector ItemRelScale = ItemData->GetRelScale();		// 스태틱 메시 컴포넌트 상대적 크기
+
+		// 인벤토리에 아이템 집어넣기. (스태틱메시로 아이템을 가져가는 방식 채택!!!)
+		uint8 ItemIndex = static_cast<uint8>(ItemType);		// 아이템을 넣을 인벤토리 인덱스
+		IsItemIn[ItemIndex] = true;
+
+		ItemSlot[ItemIndex].Name = ItemStringToName;
+		ItemSlot[ItemIndex].ReloadMaxNum = ItemReloadNum;
+		ItemSlot[ItemIndex].ReloadLeftNum = ItemReloadNum;
+		ItemSlot[ItemIndex].Damage = ItemDamage;
+		ItemSlot[ItemIndex].MeshRes = ItemMeshRes;
+		ItemSlot[ItemIndex].RelLoc = ItemRelLoc;
+		ItemSlot[ItemIndex].RelRot = ItemRelRot;
+		ItemSlot[ItemIndex].RelScale = ItemRelScale;
+
+		// 게임 플레이 진행 단계 업데이트
+		if (EPlayerPosture::Rifle1 == ItemType
+			|| EPlayerPosture::Melee == ItemType
+			|| EPlayerPosture::Bomb == ItemType)
+		{
+			AMainGameState* CurGameState = UMainGameBlueprintFunctionLibrary::GetMainGameState(GetWorld());
+
+			if (nullptr == CurGameState)
+			{
+				UE_LOG(PlayerLog, Fatal, TEXT("GameState Is Nullptr"));
+				return;
+			}
+
+			switch (ItemType)
+			{
+			case EPlayerPosture::Rifle1:
+			case EPlayerPosture::Bomb:
+				CurGameState->AddArmoryWeaponNum(ItemType);
+				break;
+			case EPlayerPosture::Melee:
+				CurGameState->AddMeleeNum();
+				break;
+			default:
+				break;
+			}
+		}
+
+		// 무기 Type에 따른 애니메이션 변화 함수 호출.
+		ChangePosture(ItemType);
+	}
+	*/
 
 	// Map에 있는 아이템 삭제.
 	GetMapItemData->Destroy();
 
+	// Widget CallBack
 	ATestPlayerController* Con = Cast<ATestPlayerController>(GetController());
-	Con->FGetItemToWidget_Test.Execute();
+	if (nullptr != Con)
+	{
+		Con->FGetItemToWidget_Test.Execute();
+	}
 }
 
 void ATestCharacter::DropItem_Implementation()	// => 메인캐릭터로 이전해야 함 (24.07.29 수정됨)
@@ -680,6 +718,7 @@ void ATestCharacter::DropItem_Implementation()	// => 메인캐릭터로 이전해야 함 (2
 	const FItemDataRow* ItemBase = MainGameInst->GetItemData(ItemName);
 	FTransform BoneTrans = GetMesh()->GetBoneTransform(FName("RightHand"), ERelativeTransformSpace::RTS_World); // 메인 적용.(07/29)
 
+	// Spawn
 	AActor* DropItem = GetWorld()->SpawnActor<AActor>(ItemBase->GetItemUClass(), BoneTrans);
 
 	// 아이템을 앞으로 던지기 (미완)
@@ -692,6 +731,48 @@ void ATestCharacter::DropItem_Implementation()	// => 메인캐릭터로 이전해야 함 (2
 
 	// 자세를 맨손으로 변경
 	ChangePosture(EPlayerPosture::Barehand);
+}
+
+void ATestCharacter::ItemSetting(FName _TagName, bool _InNextSlotToItem)
+{
+	// ItemName에 맞는 아이템 정보를 DT에서 가져온다.
+	UMainGameInstance* Inst = GetGameInstance<UMainGameInstance>();
+	const FItemDataRow* ItemData = Inst->GetItemData(_TagName);
+	EPlayerPosture ItemType = ItemData->GetType();
+
+	// Data Table에 있는 아이템 정보 가져오기.
+	int ItemReloadNum = ItemData->GetReloadNum();		// 무기 장전 단위 (30, 40)	// -1일 경우 총기류 무기가 아님
+	int ItemDamage = ItemData->GetDamage();				// 무기 공격력				// 0일 경우 무기가 아님
+	UStaticMesh* ItemMeshRes = ItemData->GetResMesh();	// 스태틱 메시 리소스
+	FVector ItemRelLoc = ItemData->GetRelLoc();			// 스태틱 메시 컴포넌트 상대적 위치
+	FRotator ItemRelRot = ItemData->GetRelRot();		// 스태틱 메시 컴포넌트 상대적 회
+	FVector ItemRelScale = ItemData->GetRelScale();		// 스태틱 메시 컴포넌트 상대적 크기
+
+	uint8 ItemIndex = static_cast<uint8>(ItemType);		// 아이템을 넣을 인벤토리 인덱스
+	if (true == _InNextSlotToItem)
+	{
+		ItemIndex += 1;
+	}
+	IsItemIn[ItemIndex] = true;
+
+	ItemSlot[ItemIndex].Name = _TagName;
+	ItemSlot[ItemIndex].ReloadMaxNum = ItemReloadNum;
+	ItemSlot[ItemIndex].ReloadLeftNum = ItemReloadNum;
+	ItemSlot[ItemIndex].Damage = ItemDamage;
+	ItemSlot[ItemIndex].MeshRes = ItemMeshRes;
+	ItemSlot[ItemIndex].RelLoc = ItemRelLoc;
+	ItemSlot[ItemIndex].RelRot = ItemRelRot;
+	ItemSlot[ItemIndex].RelScale = ItemRelScale;
+
+	// 무기 Type에 따른 애니메이션 변화 함수 호출.
+	if (true == _InNextSlotToItem)
+	{
+		ChangePosture(EPlayerPosture::Rifle2);
+	}
+	else
+	{
+		ChangePosture(EPlayerPosture::Rifle1);
+	}
 }
 
 void ATestCharacter::DeleteItem(int _Index)
