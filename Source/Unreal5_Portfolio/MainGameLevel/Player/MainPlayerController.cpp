@@ -211,7 +211,7 @@ void AMainPlayerController::E_CheckItem()
 		return;
 	}
 
-	Ch->PickUpItem();
+	Ch->CheckItem();
 }
 
 void AMainPlayerController::P_ChangePOVController()

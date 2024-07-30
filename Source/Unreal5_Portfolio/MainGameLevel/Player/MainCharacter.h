@@ -146,10 +146,13 @@ public :
 	void PickUpItem();
 	void PickUpItem_Implementation();
 
+	UFUNCTION(BlueprintCallable)
+	void ItemSetting(FName _TagName, bool _InNextSlotToItem);
+
 	// 아이템 생성 -> 드랍
 	UFUNCTION(Reliable, Server, BlueprintCallable)
-	void CharacterPlayerToDropItem();
-	void CharacterPlayerToDropItem_Implementation();
+	void DropItem();
+	void DropItem_Implementation();
 
 	// Fire Ray Cast
 	UFUNCTION(Reliable, Server, BlueprintCallable)
@@ -173,6 +176,10 @@ public :
 	void ChangeIsFaint();
 	void ChangeIsFaint_Implementation();
 
+	UFUNCTION(Reliable, Server)
+	void InteractObject(AMapObjectBase* _MapObject);
+	void InteractObject_Implementation(AMapObjectBase* _MapObject);
+
 	/// <summary>
 	/// Crouch 에 대한 카메라 이동
 	/// </summary>
@@ -191,8 +198,15 @@ private :
 	UFUNCTION(BlueprintCallable)
 	void MapItemOverlapEnd();
 
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable)
 	void UpdatePlayerHp(float _DeltaTime);
+
+	UFUNCTION(BlueprintCallable)
+	void DeleteItem(int _Index);
+
+	UFUNCTION(Reliable, Server, BlueprintCallable)
+	void GetSetSelectCharacter(class UMainGameInstance* _MainGameInstance);
+	void GetSetSelectCharacter_Implementation(class UMainGameInstance* _MainGameInstance);
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	bool IsServer = false;
@@ -206,9 +220,11 @@ private :
 	UPROPERTY(Category = "PlayerNet", Replicated, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	int Token = -1;
 
-	UFUNCTION(Reliable, Server, BlueprintCallable)
-	void GetSetSelectCharacter(class UMainGameInstance* _MainGameInstance);
-	void GetSetSelectCharacter_Implementation(class UMainGameInstance* _MainGameInstance);
+	// == Client ==
+public :
+	UFUNCTION(BlueprintCallable)
+	void CheckItem();
+
 
 public :
 	// == 인칭 변경 함수 ==
