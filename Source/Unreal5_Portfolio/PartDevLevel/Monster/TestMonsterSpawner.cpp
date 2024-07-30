@@ -81,7 +81,7 @@ void ATestMonsterSpawner::SpawnTestMonster()
 		FVector SpawnLocation = CurPos + MainInst->Random.GetUnitVector().GetSafeNormal2D() * SpawnRadius;
 		ATestMonsterBase* NewMonster = GetWorld()->SpawnActor<ATestMonsterBase>(MonsterUClass[TypeIndex], SpawnLocation, FRotator::ZeroRotator);
 
-		if (true == IsChasePlayer)
+		if (nullptr != NewMonster && true == IsChasePlayer)
 		{
 			NewMonster->SetChasePlayer();
 		}

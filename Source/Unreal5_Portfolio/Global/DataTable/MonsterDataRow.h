@@ -33,6 +33,11 @@ public:
 		return RunSpeed;
 	}
 
+	float GetAttackRange() const
+	{
+		return AttackRange;
+	}
+
 	TMap<EBasicMonsterAnim, FAnimMontageGroup> GetAllAnimMontage() const
 	{
 		return AllAnimMontages;
@@ -62,6 +67,10 @@ private:
 	// 달리기 속도
 	UPROPERTY(EditAnywhere, meta = (AllowprivateAccess = "true"))
 	float RunSpeed = 600.0f;
+
+	// 공격 범위
+	UPROPERTY(EditAnywhere, meta = (AllowprivateAccess = "true"))
+	float AttackRange = 200.0f;
 
 	// 몽타주
 	UPROPERTY(EditAnywhere, meta = (AllowprivateAccess = "true"))
