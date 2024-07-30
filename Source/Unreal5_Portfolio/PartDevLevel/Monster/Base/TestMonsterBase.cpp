@@ -1,11 +1,11 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "PartDevLevel/Monster/TestMonsterBase.h"
+#include "PartDevLevel/Monster/Base/TestMonsterBase.h"
 #include "PartDevLevel/Monster/Animation/MonsterAnimInstance.h"
+#include "PartDevLevel/Monster/TestMonsterBaseAIController.h"
 #include "TestLevel/Character/TestPlayerState.h"
 #include "TestLevel/Character/TestCharacter.h"
-#include "TestMonsterBaseAIController.h"
 
 #include "GameFrameWork/CharacterMovementComponent.h"
 #include "Blueprint/AIBlueprintHelperLibrary.h"

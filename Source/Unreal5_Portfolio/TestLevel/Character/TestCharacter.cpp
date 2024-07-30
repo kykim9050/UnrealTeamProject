@@ -21,7 +21,7 @@
 #include "TestLevel/Item/WeaponComponent.h"
 #include "TestLevel/Item/WeaponBase.h"
 #include "PartDevLevel/Character/PlayerAnimInstance.h"
-#include "PartDevLevel/Monster/TestMonsterBase.h"
+#include "PartDevLevel/Monster/Base/TestMonsterBase.h"
 #include "PartDevLevel/Monster/Boss/TestBossMonsterBase.h"
 #include "MainGameLevel/Object/MapObjectBase.h"
 #include "MainGameLevel/Object/Bomb.h"

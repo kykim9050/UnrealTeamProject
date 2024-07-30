@@ -4,7 +4,7 @@
 #include "PartDevLevel/Monster/Mutant/AI/MyBTTaskNode_MutantAttack.h"
 #include "PartDevLevel/Monster/Animation/MonsterAnimInstance.h"
 #include "PartDevLevel/Monster/TestMonsterBaseAIController.h"
-#include "PartDevLevel/Monster/TestMonsterBase.h"
+#include "PartDevLevel/Monster/Base/TestMonsterBase.h"
 
 #include "TestLevel/Character/TestPlayerState.h"
 #include "TestLevel/Character/TestCharacter.h"

@@ -2,7 +2,7 @@
 
 
 #include "PartDevLevel/Monster/Kraken/AI/MyBTTaskNode_KrakenIdle.h"
-#include "PartDevLevel/Monster/TestMonsterBase.h"
+#include "PartDevLevel/Monster/Base/TestMonsterBase.h"
 
 #include "BehaviorTree/BlackboardComponent.h"
 

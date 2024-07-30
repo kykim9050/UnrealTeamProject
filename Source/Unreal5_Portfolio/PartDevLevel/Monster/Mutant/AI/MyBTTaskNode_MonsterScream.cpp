@@ -4,7 +4,7 @@
 #include "PartDevLevel/Monster/Mutant/AI/MyBTTaskNode_MonsterScream.h"
 #include "PartDevLevel/Monster/Animation/MonsterAnimInstance.h"
 #include "PartDevLevel/Monster/TestMonsterBaseAIController.h"
-#include "PartDevLevel/Monster/TestMonsterBase.h"
+#include "PartDevLevel/Monster/Base/TestMonsterBase.h"
 
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/KismetMathLibrary.h"

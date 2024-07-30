@@ -2,7 +2,7 @@
 
 
 #include "PartDevLevel/Monster/Kraken/AI/BTTaskNode_KrakenRotate.h"
-#include "PartDevLevel/Monster/TestMonsterBase.h"
+#include "PartDevLevel/Monster/Base/TestMonsterBase.h"
 
 #include "BehaviorTree/BlackboardComponent.h"
 #include "Kismet/KismetMathLibrary.h"

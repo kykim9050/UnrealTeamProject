@@ -9,7 +9,7 @@
 #include "TimerManager.h"
 #include "Global/MainGameBlueprintFunctionLibrary.h"
 #include "Global/DataTable/ItemDataRow.h"
-#include "PartDevLevel/Monster/TestMonsterBase.h"
+#include "PartDevLevel/Monster/Base/TestMonsterBase.h"
 #include "PartDevLevel/Character/TestFPVPlayerController.h"
 
 // Sets default values

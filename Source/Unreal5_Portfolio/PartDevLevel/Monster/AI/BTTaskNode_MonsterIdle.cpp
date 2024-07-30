@@ -2,7 +2,7 @@
 
 
 #include "PartDevLevel/Monster/AI/BTTaskNode_MonsterIdle.h"
-#include "PartDevLevel/Monster/TestMonsterBase.h"
+#include "PartDevLevel/Monster/Base/TestMonsterBase.h"
 
 #include "BehaviorTree/BlackboardComponent.h"
 

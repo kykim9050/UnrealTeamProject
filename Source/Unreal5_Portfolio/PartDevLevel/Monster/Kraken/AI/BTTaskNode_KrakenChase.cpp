@@ -3,11 +3,13 @@
 
 #include "PartDevLevel/Monster/Kraken/AI/BTTaskNode_KrakenChase.h"
 #include "PartDevLevel/Monster/TestMonsterBaseAIController.h"
-#include "PartDevLevel/Monster/TestMonsterBase.h"
+#include "PartDevLevel/Monster/Base/TestMonsterBase.h"
+
+#include "Navigation/PathFollowingComponent.h"
+#include "BehaviorTree/BlackboardComponent.h"
+
 #include "Global/DataTable/MonsterDataRow.h"
 #include "Global/ContentsLog.h"
-#include "BehaviorTree/BlackboardComponent.h"
-#include "Navigation/PathFollowingComponent.h"
 
 EBTNodeResult::Type UBTTaskNode_KrakenChase::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
 {

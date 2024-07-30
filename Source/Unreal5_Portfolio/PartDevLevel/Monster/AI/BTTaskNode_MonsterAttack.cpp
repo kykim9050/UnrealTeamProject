@@ -3,7 +3,7 @@
 
 #include "PartDevLevel/Monster/AI/BTTaskNode_MonsterAttack.h"
 #include "PartDevLevel/Monster/Animation/MonsterAnimInstance.h"
-#include "PartDevLevel/Monster/TestMonsterBase.h"
+#include "PartDevLevel/Monster/Base/TestMonsterBase.h"
 
 #include "TestLevel/Character/TestPlayerState.h"
 #include "TestLevel/Character/TestCharacter.h"
