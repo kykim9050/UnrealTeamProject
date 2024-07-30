@@ -789,7 +789,7 @@ void ATestCharacter::DeleteItem(int _Index)
 	IsItemIn[_Index] = false;
 }
 
-void ATestCharacter::ChangePOV()	// => 메인캐릭터로 이전해야 함 (24.07.29 수정 중)
+void ATestCharacter::ChangePOV()	// => 메인캐릭터로 이전해야 함 (24.07.29 수정 중) => 메인 적용.
 {
 	if (IsFPV)	// 일인칭 -> 삼인칭
 	{
@@ -850,6 +850,21 @@ void ATestCharacter::CharacterReload() // => 매인 적용.
 		return;
 	}
 	ItemSlot[CurItemIndex].ReloadLeftNum = ItemSlot[CurItemIndex].ReloadMaxNum;
+	
+	/* // Main
+	// Widget 숨기기
+	Reload_Widget->SetVisibility(ESlateVisibility::Hidden);
+
+	// 총알 데이터 설정.
+	ItemSlot[CurItemIndex].ReloadLeftNum = ItemSlot[CurItemIndex].ReloadMaxNum;
+
+	// 변경된 총알 데이터 호출.
+	AMainPlayerController* Con = Cast<AMainPlayerController>(GetController());
+	if (nullptr != Con)
+	{
+		Con->FCharacterToReload.Execute(); // Execute -> Delegate 실행.
+	}
+	*/
 }
 
 void ATestCharacter::MapItemOverlapStart(AActor* _OtherActor, UPrimitiveComponent* _Collision) // => 매인 적용.
