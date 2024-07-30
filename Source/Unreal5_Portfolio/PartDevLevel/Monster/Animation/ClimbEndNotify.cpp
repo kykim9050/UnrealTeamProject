@@ -17,7 +17,7 @@ void UClimbEndNotify::NotifyBegin(USkeletalMeshComponent* MeshComp, UAnimSequenc
 		ATestMonsterBaseAIController* Controller = Cast<ATestMonsterBaseAIController>(Monster->GetController());
 		if (nullptr != Controller)
 		{
-			UTestMonsterBaseData* MonsterData = Cast<UTestMonsterBaseData>(Controller->GetBlackboardComponent()->GetValueAsObject(TEXT("MonsterData")));
+			UTestMonsterDataBase* MonsterData = Cast<UTestMonsterDataBase>(Controller->GetBlackboardComponent()->GetValueAsObject(TEXT("MonsterData")));
 			FVector ClimbDestLoc = Controller->GetBlackboardComponent()->GetValueAsVector("DestinationLocation");
 			FVector CurLoc = MonsterData->LerpPos;
 			CurLoc.Z = ClimbDestLoc.Z;

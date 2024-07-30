@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFrameWork/Character.h"
 
-#include "PartDevLevel/Monster/Data/TestMonsterBaseData.h"
+#include "PartDevLevel/Monster/Data/TestMonsterDataBase.h"
 #include "Components/TimeLineComponent.h"
 #include "Global/DataTable/MonsterDataRow.h"
 
@@ -95,7 +95,7 @@ private:
 
 private:
 	UPROPERTY()
-	UTestMonsterBaseData* SettingData;
+	UTestMonsterDataBase* SettingData;
 
 	UPROPERTY(Category = "Data", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	FName BaseDataName;

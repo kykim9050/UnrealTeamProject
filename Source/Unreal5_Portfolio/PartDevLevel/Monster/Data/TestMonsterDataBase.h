@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
-#include "TestMonsterBaseData.generated.h"
+#include "TestMonsterDataBase.generated.h"
 
 struct FMonsterDataRow;
 
@@ -12,7 +12,7 @@ struct FMonsterDataRow;
  * 
  */
 UCLASS()
-class UNREAL5_PORTFOLIO_API UTestMonsterBaseData : public UObject
+class UNREAL5_PORTFOLIO_API UTestMonsterDataBase : public UObject
 {
 	GENERATED_BODY()
 

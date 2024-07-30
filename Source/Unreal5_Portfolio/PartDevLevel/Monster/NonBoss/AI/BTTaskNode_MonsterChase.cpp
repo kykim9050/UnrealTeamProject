@@ -22,7 +22,7 @@ EBTNodeResult::Type UBTTaskNode_MonsterChase::ExecuteTask(UBehaviorTreeComponent
 		return EBTNodeResult::Type::Aborted;
 	}
 
-	UTestMonsterBaseData* MonsterData = GetValueAsObject<UTestMonsterBaseData>(_OwnerComp, TEXT("MonsterData"));
+	UTestMonsterDataBase* MonsterData = GetValueAsObject<UTestMonsterDataBase>(_OwnerComp, TEXT("MonsterData"));
 	Monster->GetCharacterMovement()->MaxWalkSpeed = Monster->GetBaseData()->GetRunSpeed();
 	Monster->ChangeRandomAnimation(ETestMonsterAnim::Run);
 
@@ -39,7 +39,7 @@ void UBTTaskNode_MonsterChase::TickTask(UBehaviorTreeComponent& _OwnerComp, uint
 		return;
 	}
 
-	UTestMonsterBaseData* MonsterData = GetValueAsObject<UTestMonsterBaseData>(_OwnerComp, TEXT("MonsterData"));
+	UTestMonsterDataBase* MonsterData = GetValueAsObject<UTestMonsterDataBase>(_OwnerComp, TEXT("MonsterData"));
 	ATestMonsterBase* Monster = GetActor<ATestMonsterBase>(_OwnerComp);
 	FVector MonsterLocation = Monster->GetActorLocation();
 	
