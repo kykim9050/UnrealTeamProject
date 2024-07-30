@@ -118,8 +118,8 @@ ATestCharacter::ATestCharacter()
 	// HeadName Component	// => 메인으로 이전 필요 (24.07.30 추가됨)
 	HeadNameComponent = CreateDefaultSubobject<UHeadNameWidgetComponent>(TEXT("HeadNameWidgetComponent"));
 	HeadNameComponent->SetupAttachment(RootComponent);
-	HeadNameComponent->bHiddenInSceneCapture = true;
 	HeadNameComponent->SetOwnerNoSee(true);
+	HeadNameComponent->bHiddenInSceneCapture = true;
 
 	// Riding Character Mesh => 메인캐릭터 적용.(주석)
 	RidingMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("RidingMesh"));
@@ -221,6 +221,12 @@ void ATestCharacter::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 	UpdatePlayerHp(DeltaTime); // => 매인 적용.
+
+	// 다른 플레이어의 HeadNameComponent가 항상 나를 향하도록 회전	// => 메인 이전 필요 (24.07.30 추가됨)
+	if (nullptr != HeadNameComponent)
+	{
+		HeadNameComponent->BilboardRotate(GetActorLocation());
+	}
 
 	// 7/29 기절 상태일 때 캐릭터 회전 금지 코드
 	if (IsFaint == false) // 정상 상태 
