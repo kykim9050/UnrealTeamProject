@@ -4,6 +4,7 @@
 #include "MainGameLevel/UI/InGame/HeadNameWidgetComponent.h"
 
 #include "Kismet/KismetMathLibrary.h"
+#include "Kismet/GameplayStatics.h"
 
 UHeadNameWidgetComponent::UHeadNameWidgetComponent()
 {
@@ -24,12 +25,23 @@ void UHeadNameWidgetComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	SetRelativeLocation(FVector(0, 0, 50));
+	SetRelativeLocation(FVector(0, 0, 75));
 	SetRelativeScale3D(FVector(0.2f, 0.2f, 0.2f));
 
 	FQuat Q;
 	UKismetMathLibrary::Quat_SetFromEuler(Q, FVector(0.f, 0.f, 0.f));
 	SetRelativeRotation(Q);
+}
 
-	SetWidgetSpace(EWidgetSpace::Screen);
+void UHeadNameWidgetComponent::BilboardRotate(FVector _WorldLocation)
+{
+	FVector CameraLoc = UGameplayStatics::GetPlayerCameraManager(GetWorld(), 0)->GetCameraLocation();
+	FRotator Rot = UKismetMathLibrary::FindLookAtRotation(_WorldLocation, CameraLoc);
+	FVector X = FVector::ZeroVector;
+	FVector Y = FVector::ZeroVector;
+	FVector Z = FVector::ZeroVector;
+	UKismetMathLibrary::GetAxes(Rot, X, Y, Z);
+	FRotator Res = UKismetMathLibrary::Conv_VectorToRotator(X);
+
+	SetWorldRotation(Res);
 }

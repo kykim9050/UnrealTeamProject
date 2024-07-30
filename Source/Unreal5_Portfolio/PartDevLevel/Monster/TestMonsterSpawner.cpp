@@ -2,7 +2,7 @@
 
 
 #include "PartDevLevel/Monster/TestMonsterSpawner.h"
-#include "PartDevLevel/Monster/TestMonsterBase.h"
+#include "PartDevLevel/Monster/Base/TestMonsterBase.h"
 
 #include "TestLevel/Character/TestCharacter.h"
 

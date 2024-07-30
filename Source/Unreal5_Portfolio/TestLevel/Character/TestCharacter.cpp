@@ -21,8 +21,9 @@
 #include "TestLevel/Item/WeaponComponent.h"
 #include "TestLevel/Item/WeaponBase.h"
 #include "PartDevLevel/Character/PlayerAnimInstance.h"
-#include "PartDevLevel/Monster/TestMonsterBase.h"
+#include "PartDevLevel/Monster/Base/TestMonsterBase.h"
 #include "PartDevLevel/Monster/Boss/TestBossMonsterBase.h"
+#include "PartDevLevel/Object/TestArea.h"
 #include "MainGameLevel/Object/MapObjectBase.h"
 #include "MainGameLevel/Object/Bomb.h"
 #include "MainGameLevel/UI/InGame/HeadNameWidgetComponent.h"
@@ -117,6 +118,7 @@ ATestCharacter::ATestCharacter()
 	// HeadName Component	// => 메인으로 이전 필요 (24.07.30 추가됨)
 	HeadNameComponent = CreateDefaultSubobject<UHeadNameWidgetComponent>(TEXT("HeadNameWidgetComponent"));
 	HeadNameComponent->SetupAttachment(RootComponent);
+	HeadNameComponent->SetOwnerNoSee(true);
 	HeadNameComponent->bHiddenInSceneCapture = true;
 
 	// Riding Character Mesh => 메인캐릭터 적용.(주석)
@@ -220,6 +222,12 @@ void ATestCharacter::Tick(float DeltaTime)
 
 	UpdatePlayerHp(DeltaTime); // => 매인 적용.
 
+	// 다른 플레이어의 HeadNameComponent가 항상 나를 향하도록 회전	// => 메인 이전 필요 (24.07.30 추가됨)
+	if (nullptr != HeadNameComponent)
+	{
+		HeadNameComponent->BilboardRotate(GetActorLocation());
+	}
+
 	// 7/29 기절 상태일 때 캐릭터 회전 금지 코드
 	if (IsFaint == false) // 정상 상태 
 	{
@@ -290,7 +298,7 @@ void ATestCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLi
 	DOREPLIFETIME(ATestCharacter, Token); // => 매인 적용.
 }
 
-void ATestCharacter::FireRayCast_Implementation() // => 메인도 수정해야 함 (24.07.25 수정됨) // Main 적용.
+void ATestCharacter::FireRayCast_Implementation() // => 메인 수정 필요 (24.07.30 DebugMessage 부분 수정됨)
 {
 	if (CurItemIndex == -1 || CurItemIndex == 2)
 	{
@@ -311,7 +319,9 @@ void ATestCharacter::FireRayCast_Implementation() // => 메인도 수정해야 함 (24.0
 	if (GetWorld())
 	{
 		ItemSlot[CurItemIndex].ReloadLeftNum -= 1;
+#ifdef WITH_EDITOR
 		GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, FString::Printf(TEXT("Bullet left : %d / %d"), ItemSlot[CurItemIndex].ReloadLeftNum, ItemSlot[CurItemIndex].ReloadMaxNum));
+#endif // WITH_EDITOR
 
 		//bool ActorHit = GetWorld()->LineTraceSingleByChannel(Hit, Start, End, ECC_GameTraceChannel9, FCollisionQueryParams(), FCollisionResponseParams());
 		TArray<AActor*> IgnoreActors;
@@ -342,21 +352,47 @@ void ATestCharacter::FireRayCast_Implementation() // => 메인도 수정해야 함 (24.0
 	}
 }
 
-void ATestCharacter::Drink_Implementation()	// => 메인에 추후 이전해야 함 (24.07.29 추가 후 테스팅 중)
+void ATestCharacter::Drink_Implementation()	// => 메인에 추후 이전해야 함 (24.07.30 수정 및 테스팅 중)
 {
 	// 음료 아이템이 없다면 return
 	if (IsItemIn[3] == false)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, FString::Printf(TEXT("There's no item to drop. (Current posture is 'Barehand')")));
+#ifdef WITH_EDITOR
+		GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Yellow, FString::Printf(TEXT("The item slot is empty. (Index : %d)"), 4));
+#endif // WITH_EDITOR
 		return;
 	}
 
+	// 자세 변경
+	ChangePosture(EPlayerPosture::Drink);
 
+	// 실질적으로 플레이어 HP가 회복되는 부분
+
+
+	// 아이템 삭제
+	DeleteItem(3);
 }
 
-void ATestCharacter::BombSetStart_Implementation()	// => 메인에 추후 이전해야 함 (24.07.29 추가 후 테스팅 중)
+void ATestCharacter::BombSetStart_Implementation()	// => 메인에 추후 이전해야 함 (24.07.30 수정 및 테스팅 중)
 {
 	// 폭탄 아이템이 없다면 return
+	if (IsItemIn[4] == false)
+	{
+#ifdef WITH_EDITOR
+		GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Yellow, FString::Printf(TEXT("The item slot is empty. (Index : %d)"), 5));
+#endif // WITH_EDITOR
+		return;
+	}
+
+	// 폭탄 설치 가능한 Area가 아닐 경우 return
+	ATestArea* GetMapItem = Cast<ATestArea>(GetMapItemData);
+	if (GetMapItem == nullptr)
+	{
+#ifdef WITH_EDITOR
+		GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Yellow, FString(TEXT("You have to set the bomb in proper area.")));
+#endif // WITH_EDITOR
+		return;
+	}
 
 
 }
@@ -458,14 +494,16 @@ void ATestCharacter::ChangeState_Implementation(EPlayerState _Type)
 	StateValue = _Type;
 }
 
-void ATestCharacter::ChangePosture_Implementation(EPlayerPosture _Type)	// => 메인으로 이전해야 함 (24.07.25 수정됨) // Main에 적용.
+void ATestCharacter::ChangePosture_Implementation(EPlayerPosture _Type)	// => 메인으로 이전해야 함 (24.07.30 수정 중)
 {
-	if (_Type == EPlayerPosture::Bomb || _Type == EPlayerPosture::Drink)	// Bomb, Drink => 자세변경할 수 없음
+	if (_Type == EPlayerPosture::Bomb || _Type == EPlayerPosture::Drink)
 	{
+		// 0. Bomb, Drink => 자세변경할 수 없음 (수정 필요)
 		return;
 	}
-	else if (_Type == EPlayerPosture::Barehand)								// Barehand => 맨손 자세로 변경
+	else if (_Type == EPlayerPosture::Barehand)			
 	{
+		// 1. Barehand => 맨손 자세로 변경
 		PostureValue = _Type;
 		CurItemIndex = -1;
 
@@ -473,12 +511,15 @@ void ATestCharacter::ChangePosture_Implementation(EPlayerPosture _Type)	// => 메
 		ItemSocketMesh->SetVisibility(false);
 		FPVItemSocketMesh->SetVisibility(false);
 	}
-	else																	// Rifle1, Rifle2, Melee => 무기를 든 자세로 변경
+	else
 	{
+		// 2. Rifle1, Rifle2, Melee => 무기를 든 자세로 변경
 		int ItemSlotIndex = static_cast<int>(_Type);
 		if (IsItemIn[ItemSlotIndex] == false)
 		{
-			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("The item slot is empty."));
+#ifdef WITH_EDITOR
+			GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Yellow, FString::Printf(TEXT("The item slot is empty. (Index : %d)"), ItemSlotIndex + 1));
+#endif // WITH_EDITOR
 			return;
 		}
 		PostureValue = _Type;
@@ -526,12 +567,14 @@ void ATestCharacter::ChangeIsFaint_Implementation()
 	}
 }
 
-void ATestCharacter::CheckItem()	// => 메인캐릭터로 이전해야 함 (24.07.29 추가됨)
+void ATestCharacter::CheckItem() // => 메인 수정 필요 (24.07.30 DebugMessage 부분 수정됨)
 {
 	// 맵에 아이템이 없을 경우.
 	if (nullptr == GetMapItemData)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, TEXT("There is no item to check."));
+#ifdef WITH_EDITOR
+		GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Yellow, FString(TEXT("There is no item to check.")));
+#endif // WITH_EDITOR
 		return;
 	}
 
@@ -560,6 +603,9 @@ void ATestCharacter::InteractObject_Implementation(AMapObjectBase* _MapObject)	/
 	_MapObject->InterAction();
 
 	// (이건 뭐하는 코드인가요?)
+	// 특정 아이템 획득시 해당 아이템이 맵에서 지워지도록 하는 코드 입니다.
+	// 테스트 코드라 지우는 여부는 확인이 필요합니다.
+
 	ABomb* GetSampleData = Cast<ABomb>(_MapObject);
 	if (nullptr != GetSampleData)
 	{
@@ -574,7 +620,7 @@ void ATestCharacter::InteractObject_Implementation(AMapObjectBase* _MapObject)	/
 	}
 }
 
-void ATestCharacter::PickUpItem_Implementation()	// => 메인캐릭터로 이전해야 함 (24.07.29 수정됨)
+void ATestCharacter::PickUpItem_Implementation() // => 메인 수정 필요 (24.07.30 DebugMessage 부분 수정됨)
 {
 	// Overlap된 아이템의 Tag 이름을 통해 FName을 가져온다.
 	FString TagName = "";
@@ -699,19 +745,23 @@ void ATestCharacter::PickUpItem_Implementation()	// => 메인캐릭터로 이전해야 함 
 	}
 }
 
-void ATestCharacter::DropItem_Implementation()	// => 메인캐릭터로 이전해야 함 (24.07.29 수정됨)
+void ATestCharacter::DropItem_Implementation() // => 메인 수정 필요 (24.07.30 DebugMessage 부분 수정됨)
 {
 	// DropItem 할 수 없는 경우 1: 맨손일 때
 	if (CurItemIndex == -1)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, FString::Printf(TEXT("There's no item to drop. (Current posture is 'Barehand')")));
+#ifdef WITH_EDITOR
+		GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Yellow, FString(TEXT("There's no item to drop. (Current posture is 'Barehand')")));
+#endif // WITH_EDITOR
 		return;
 	}
 
 	// DropItem 할 수 없는 경우 2: (그럴리는 없겠지만) 현재 Posture에 해당하는 무기가 인벤토리에 없을 때
 	if (IsItemIn[CurItemIndex] == false)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, FString::Printf(TEXT("There's no item to drop. (The item slot is empty)")));
+#ifdef WITH_EDITOR
+		GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Yellow, FString(TEXT("There's no item to drop. (The item slot is empty)")));
+#endif // WITH_EDITOR
 		return;
 	}
 
@@ -786,7 +836,7 @@ void ATestCharacter::DeleteItem(int _Index)
 	IsItemIn[_Index] = false;
 }
 
-void ATestCharacter::ChangePOV()	// => 메인캐릭터로 이전해야 함 (24.07.29 수정 중)
+void ATestCharacter::ChangePOV()	// => 메인캐릭터로 이전해야 함 (24.07.29 수정 중) => 메인 적용.
 {
 	if (IsFPV)	// 일인칭 -> 삼인칭
 	{
@@ -847,6 +897,21 @@ void ATestCharacter::CharacterReload() // => 매인 적용.
 		return;
 	}
 	ItemSlot[CurItemIndex].ReloadLeftNum = ItemSlot[CurItemIndex].ReloadMaxNum;
+	
+	/* // Main
+	// Widget 숨기기
+	Reload_Widget->SetVisibility(ESlateVisibility::Hidden);
+
+	// 총알 데이터 설정.
+	ItemSlot[CurItemIndex].ReloadLeftNum = ItemSlot[CurItemIndex].ReloadMaxNum;
+
+	// 변경된 총알 데이터 호출.
+	AMainPlayerController* Con = Cast<AMainPlayerController>(GetController());
+	if (nullptr != Con)
+	{
+		Con->FCharacterToReload.Execute(); // Execute -> Delegate 실행.
+	}
+	*/
 }
 
 void ATestCharacter::MapItemOverlapStart(AActor* _OtherActor, UPrimitiveComponent* _Collision) // => 매인 적용.
