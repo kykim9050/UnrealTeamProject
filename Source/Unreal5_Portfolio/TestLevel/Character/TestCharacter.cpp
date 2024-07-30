@@ -163,11 +163,6 @@ void ATestCharacter::ChangeHandAttackCollisionProfile(FName _Name) // => 매인 적
 	HandAttackComponent->SetCollisionProfileName(_Name);
 }
 
-void ATestCharacter::GetDamage(float _Damage)
-{
-	PlayerHp -= _Damage;
-}
-
 // 메인 플레이어 추가 필요 코드 (태환) 07/24 => 매인 적용.
 void ATestCharacter::PostInitializeComponents()
 {
@@ -291,9 +286,6 @@ void ATestCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLi
 	// Item
 	DOREPLIFETIME(ATestCharacter, RayCastToItemName);
 
-	// HP (for UI, Monster test)
-	DOREPLIFETIME(ATestCharacter, PlayerHp);
-
 	// Server?
 	DOREPLIFETIME(ATestCharacter, Token); // => 매인 적용.
 }
@@ -367,7 +359,16 @@ void ATestCharacter::Drink_Implementation()	// => 메인에 추후 이전해야 함 (24.07
 	ChangePosture(EPlayerPosture::Drink);
 
 	// 실질적으로 플레이어 HP가 회복되는 부분
+	ATestPlayerState* MyTestPlayerState = GetPlayerState<ATestPlayerState>();
+	if (nullptr == MyTestPlayerState)
+	{
+		return;
+	}
+	MyTestPlayerState->HealHp();
 
+#ifdef WITH_EDITOR
+	GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Yellow, FString(TEXT("HP recovered!")));
+#endif // WITH_EDITOR
 
 	// 아이템 삭제
 	DeleteItem(3);
@@ -591,39 +592,27 @@ void ATestCharacter::CheckItem() // => 메인 수정 필요 (24.07.30 DebugMessage 부�
 	}
 }
 
-void ATestCharacter::InteractObject_Implementation(AMapObjectBase* _MapObject)	// => 메인캐릭터로 이전해야 함 (24.07.30 수정 중)
+void ATestCharacter::InteractObject_Implementation(AMapObjectBase* _MapObject)	// => 메인 이전 필요 (24.07.30 수정 중)
 {
+	// Bomb일 경우 : 인벤토리에 아이템 집어넣기, 맵에서 아이템을 삭제
+	ABomb* BombObject = Cast<ABomb>(_MapObject);
+	if (nullptr != BombObject)
+	{
+		PickUpItem();
+		return;
+	}
+
 	// Area일 경우 : 상호작용은 플레이어쪽에서 처리해야 하므로 return
 
 
 	// Door일 경우 : 상호작용은 Switch가 발동시키므로 return
 
 
-	// Bomb일 경우 : 인벤토리에 아이템 집어넣기, 맵에서 아이템을 삭제
-
-
 	// 그 외 맵오브젝트(Switch 등)일 경우 : 상호작용 발동
 	_MapObject->InterAction();
-
-	// (이건 뭐하는 코드인가요?)
-	// 특정 아이템 획득시 해당 아이템이 맵에서 지워지도록 하는 코드 입니다.
-	// 테스트 코드라 지우는 여부는 확인이 필요합니다.
-
-	ABomb* GetSampleData = Cast<ABomb>(_MapObject);
-	if (nullptr != GetSampleData)
-	{
-		for (size_t i = 0; i < GetSampleData->Tags.Num(); i++)
-		{
-			FName GetItemTag = GetSampleData->Tags[i];
-			if ("Sample" == GetItemTag)
-			{
-				GetSampleData->CharacterToDestroy();
-			}
-		}
-	}
 }
 
-void ATestCharacter::PickUpItem_Implementation() // => 메인 수정 필요 (24.07.30 DebugMessage 부분 수정됨)
+void ATestCharacter::PickUpItem_Implementation() // => 메인 수정 필요 (24.07.30 수정됨)
 {
 	// Overlap된 아이템의 Tag 이름을 통해 FName을 가져온다.
 	FString TagName = "";
@@ -707,7 +696,7 @@ void ATestCharacter::PickUpItem_Implementation() // => 메인 수정 필요 (24.07.30 
 	}
 }
 
-void ATestCharacter::ItemSetting(FName _TagName, int _SlotIndex)
+void ATestCharacter::ItemSetting(FName _TagName, int _SlotIndex) // => 메인 수정 필요 (24.07.30 추가됨)
 {
 	// ItemName에 맞는 아이템 정보를 DT에서 가져온다.
 	UMainGameInstance* Inst = GetGameInstance<UMainGameInstance>();
@@ -937,7 +926,7 @@ void ATestCharacter::NetCheck() // => 매인 적용.
 		UMainGameInstance* Inst = GetGameInstance<UMainGameInstance>();
 		// 이토큰은 그 인덱스가 아니다.
 		Token = Inst->GetNetToken();
-		MyMaxHp = Inst->GetPlayerData(FName("TestPlayer"))->GetHp();
+		//MyMaxHp = Inst->GetPlayerData(FName("TestPlayer"))->GetHp();
 
 		// UGameplayStatics::GetPlayerPawn(Token)
 	}
