@@ -26,6 +26,9 @@ enum class EPlayerState : uint8
 	Fire	UMETA(DisplayName = "Fire"),
 };
 
+/// <summary>
+/// 게임 Stage 관련 Enum
+/// </summary>
 UENUM(BlueprintType)
 enum class EGameStage : uint8
 {
