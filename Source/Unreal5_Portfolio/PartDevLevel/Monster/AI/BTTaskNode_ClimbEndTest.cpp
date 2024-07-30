@@ -2,19 +2,18 @@
 
 
 #include "PartDevLevel/Monster/AI/BTTaskNode_ClimbEndTest.h"
-
-#include "Global/ContentsLog.h"
 #include "PartDevLevel/Monster/Animation/MonsterAnimInstance.h"
 #include "PartDevLevel/Monster/TestMonsterBaseAIController.h"
 #include "PartDevLevel/Monster/TestMonsterBase.h"
 
-#include "GameFramework/CharacterMovementComponent.h"
-
 #include "TestLevel/Character/TestPlayerState.h"
 #include "TestLevel/Character/TestCharacter.h"
 
+#include "GameFramework/CharacterMovementComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Kismet/KismetMathLibrary.h"
+
+#include "Global/ContentsLog.h"
 
 EBTNodeResult::Type UBTTaskNode_ClimbEndTest::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
 {
@@ -27,7 +26,7 @@ EBTNodeResult::Type UBTTaskNode_ClimbEndTest::ExecuteTask(UBehaviorTreeComponent
 		return EBTNodeResult::Type::Aborted;
 	}
 
-	UMonsterData* MonsterData = GetValueAsObject<UMonsterData>(OwnerComp, "MonsterData");
+	UTestMonsterData* MonsterData = GetValueAsObject<UTestMonsterData>(OwnerComp, "MonsterData");
 	if (false == MonsterData->IsValidLowLevel())
 	{
 		LOG(MonsterLog, Fatal, "MonsterData Is Not Valid");
@@ -51,7 +50,7 @@ void UBTTaskNode_ClimbEndTest::TickTask(UBehaviorTreeComponent& OwnerComp, uint8
 	}
 
 	ATestMonsterBase* Monster = GetActor<ATestMonsterBase>(OwnerComp);
-	UMonsterData* MonsterData = GetValueAsObject<UMonsterData>(OwnerComp, TEXT("MonsterData"));
+	UTestMonsterData* MonsterData = GetValueAsObject<UTestMonsterData>(OwnerComp, TEXT("MonsterData"));
 
 	if (nullptr == Monster)
 	{

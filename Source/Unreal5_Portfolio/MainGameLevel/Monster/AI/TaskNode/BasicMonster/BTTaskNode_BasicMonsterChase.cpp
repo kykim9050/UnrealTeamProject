@@ -4,6 +4,7 @@
 #include "MainGameLevel/Monster/AI/TaskNode/BasicMonster/BTTaskNode_BasicMonsterChase.h"
 #include "MainGameLevel/Monster/AI/BasicMonsterAIController.h"
 #include "MainGameLevel/Monster/Base/BasicMonsterBase.h"
+#include "MainGameLevel/Monster/Data/BasicMonsterData.h"
 
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Navigation/PathFollowingComponent.h"
@@ -21,7 +22,7 @@ EBTNodeResult::Type UBTTaskNode_BasicMonsterChase::ExecuteTask(UBehaviorTreeComp
 		return EBTNodeResult::Type::Aborted;
 	}
 
-	UMonsterData* MonsterData = GetValueAsObject<UMonsterData>(OwnerComp, TEXT("MonsterData"));
+	UBasicMonsterData* MonsterData = GetValueAsObject<UBasicMonsterData>(OwnerComp, TEXT("MonsterData"));
 	if (false == MonsterData->IsValidLowLevel())
 	{
 		LOG(MonsterLog, Fatal, TEXT("MonsterData Is Not Valid"));
@@ -52,10 +53,10 @@ void UBTTaskNode_BasicMonsterChase::TickTask(UBehaviorTreeComponent& OwnerComp, 
 	FVector TargetLocation = TargetActor->GetActorLocation();
 
 	// 공격 범위 안에 있으면 Attack
-	UMonsterData* MonsterData = GetValueAsObject<UMonsterData>(OwnerComp, TEXT("MonsterData"));
+	UBasicMonsterData* MonsterData = GetValueAsObject<UBasicMonsterData>(OwnerComp, TEXT("MonsterData"));
 	FVector LocationDiff = TargetLocation - MonsterLocation;
 	float DiffLength = LocationDiff.Size();
-	if (DiffLength <= MonsterData->AttackBoundary)
+	if (DiffLength <= MonsterData->AttackRange)
 	{
 		StateChange(OwnerComp, EBasicMonsterState::Attack);
 		return;

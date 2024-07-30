@@ -92,7 +92,7 @@ private:
 
 private:
 	UPROPERTY()
-	UMonsterData* SettingData;
+	UTestMonsterData* SettingData;
 
 	UPROPERTY(Category = "Data", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	FName BaseDataName;

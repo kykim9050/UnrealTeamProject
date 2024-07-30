@@ -63,10 +63,9 @@ void ABasicMonsterBase::BeginPlay()
 		return;
 	}
 
-	SettingData = NewObject<UMonsterData>(this);
-	SettingData->BaseData = BaseData;
-	SettingData->AttackDamage = 34.0f;
+	SettingData = NewObject<UBasicMonsterData>(this);
 	SettingData->OriginPos = GetActorLocation();
+	SettingData->BaseData = BaseData;
 
 	// 애니메이션 세팅
 	AnimInst = Cast<UBasicMonsterAnimInstance>(GetMesh()->GetAnimInstance());
