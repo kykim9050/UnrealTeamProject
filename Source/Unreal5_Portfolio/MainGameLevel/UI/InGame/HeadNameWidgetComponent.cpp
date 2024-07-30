@@ -16,16 +16,20 @@ UHeadNameWidgetComponent::UHeadNameWidgetComponent()
 	{
 		int a = 0;
 	}
+
+	SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 
 void UHeadNameWidgetComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	SetRelativeLocation(FVector(0, 0, 25));
-	SetRelativeScale3D(FVector(0.4f, 0.4f, 0.4f));
+	SetRelativeLocation(FVector(0, 0, 50));
+	SetRelativeScale3D(FVector(0.2f, 0.2f, 0.2f));
 
 	FQuat Q;
 	UKismetMathLibrary::Quat_SetFromEuler(Q, FVector(0.f, 0.f, 0.f));
 	SetRelativeRotation(Q);
+
+	SetWidgetSpace(EWidgetSpace::Screen);
 }
