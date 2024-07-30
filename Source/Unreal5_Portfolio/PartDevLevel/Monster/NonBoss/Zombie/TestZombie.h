@@ -14,7 +14,6 @@ class UNREAL5_PORTFOLIO_API ATestZombie : public ATestMonsterBase
 {
 	GENERATED_BODY()
 
-private:
-	
+private:	
 	
 };

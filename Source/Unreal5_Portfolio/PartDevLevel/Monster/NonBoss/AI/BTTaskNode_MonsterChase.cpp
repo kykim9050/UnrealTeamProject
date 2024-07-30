@@ -22,7 +22,7 @@ EBTNodeResult::Type UBTTaskNode_MonsterChase::ExecuteTask(UBehaviorTreeComponent
 		return EBTNodeResult::Type::Aborted;
 	}
 
-	UTestMonsterData* MonsterData = GetValueAsObject<UTestMonsterData>(_OwnerComp, TEXT("MonsterData"));
+	UTestMonsterBaseData* MonsterData = GetValueAsObject<UTestMonsterBaseData>(_OwnerComp, TEXT("MonsterData"));
 	Monster->GetCharacterMovement()->MaxWalkSpeed = Monster->GetBaseData()->GetRunSpeed();
 	Monster->ChangeRandomAnimation(ETestMonsterAnim::Run);
 
@@ -39,7 +39,7 @@ void UBTTaskNode_MonsterChase::TickTask(UBehaviorTreeComponent& _OwnerComp, uint
 		return;
 	}
 
-	UTestMonsterData* MonsterData = GetValueAsObject<UTestMonsterData>(_OwnerComp, TEXT("MonsterData"));
+	UTestMonsterBaseData* MonsterData = GetValueAsObject<UTestMonsterBaseData>(_OwnerComp, TEXT("MonsterData"));
 	ATestMonsterBase* Monster = GetActor<ATestMonsterBase>(_OwnerComp);
 	FVector MonsterLocation = Monster->GetActorLocation();
 	
@@ -51,7 +51,7 @@ void UBTTaskNode_MonsterChase::TickTask(UBehaviorTreeComponent& _OwnerComp, uint
 	// 범위 안에 있으면 공격상태로 변경
 	FVector LocationDiff = TargetLocation - MonsterLocation;
 	double DiffLength = LocationDiff.Size();
-	if (DiffLength <= MonsterData->AttackBoundary)
+	if (DiffLength <= MonsterData->AttackRange)
 	{
 		StateChange(_OwnerComp, ETestMonsterState::Attack);
 		return;

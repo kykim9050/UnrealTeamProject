@@ -3,6 +3,7 @@
 
 #include "BTTaskNode_KrakenChase.h"
 #include "PartDevLevel/Monster/NonBoss/TestMonsterBaseAIController.h"
+#include "PartDevLevel/Monster/Data/TestMonsterBaseData.h"
 #include "PartDevLevel/Monster/Base/TestMonsterBase.h"
 
 #include "Navigation/PathFollowingComponent.h"
@@ -36,7 +37,7 @@ EBTNodeResult::Type UBTTaskNode_KrakenChase::ExecuteTask(UBehaviorTreeComponent&
 		return EBTNodeResult::Type::Succeeded;
 	}
 
-	UTestMonsterData* MonsterData = GetValueAsObject<UTestMonsterData>(OwnerComp, TEXT("MonsterData"));
+	UTestMonsterBaseData* MonsterData = GetValueAsObject<UTestMonsterBaseData>(OwnerComp, TEXT("MonsterData"));
 	MonsterData->DestLoc = Target->GetActorLocation();
 
 	Monster->ChangeRandomAnimation(ETestMonsterAnim::Run);
@@ -48,14 +49,14 @@ void UBTTaskNode_KrakenChase::TickTask(UBehaviorTreeComponent& OwnerComp, uint8*
 	Super::TickTask(OwnerComp, pNodeMemory, DeltaSeconds);
 
 	ATestMonsterBase* Monster = GetActor<ATestMonsterBase>(OwnerComp);
-	UTestMonsterData* MonsterData = GetValueAsObject<UTestMonsterData>(OwnerComp, TEXT("MonsterData"));
+	UTestMonsterBaseData* MonsterData = GetValueAsObject<UTestMonsterBaseData>(OwnerComp, TEXT("MonsterData"));
 
 	EPathFollowingRequestResult::Type IsMove = Monster->GetAIController()->MoveToLocation(MonsterData->DestLoc);
 
 	AActor* Target = Cast<AActor>(OwnerComp.GetBlackboardComponent()->GetValueAsObject(TEXT("TargetActor")));
 	FVector LocationDiff = Target->GetActorLocation() - Monster->GetActorLocation();
 	double DiffLength = LocationDiff.Size();
-	if (DiffLength <= MonsterData->AttackBoundary)
+	if (DiffLength <= MonsterData->AttackRange)
 	{
 		StateChange(OwnerComp, ETestMonsterState::Attack);
 		return;

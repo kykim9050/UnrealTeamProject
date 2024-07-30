@@ -26,7 +26,7 @@ EBTNodeResult::Type UMyBTTaskNode_MutantAttack::ExecuteTask(UBehaviorTreeCompone
 		return EBTNodeResult::Aborted;
 	}
 
-	UTestMonsterData* MonsterData = GetValueAsObject<UTestMonsterData>(_OwnerComp, TEXT("MonsterData"));
+	UTestMonsterBaseData* MonsterData = GetValueAsObject<UTestMonsterBaseData>(_OwnerComp, TEXT("MonsterData"));
 	MonsterData->AnimationTime = Monster->GetAnimInstance()->GetKeyAnimMontage(ETestMonsterAnim::Attack, Monster->GetAniIndex())->GetPlayLength();
 
 	AActor* Target = Cast<AActor>(_OwnerComp.GetBlackboardComponent()->GetValueAsObject(TEXT("TargetActor")));
@@ -51,7 +51,7 @@ void UMyBTTaskNode_MutantAttack::TickTask(UBehaviorTreeComponent& _OwnerComp, ui
 	}
 
 	ATestMonsterBase* Monster = GetActor<ATestMonsterBase>(_OwnerComp);
-	UTestMonsterData* MonsterData = GetValueAsObject<UTestMonsterData>(_OwnerComp, TEXT("MonsterData"));
+	UTestMonsterBaseData* MonsterData = GetValueAsObject<UTestMonsterBaseData>(_OwnerComp, TEXT("MonsterData"));
 
 	if (nullptr == Monster)
 	{
@@ -81,7 +81,7 @@ void UMyBTTaskNode_MutantAttack::TickTask(UBehaviorTreeComponent& _OwnerComp, ui
 		{
 			FVector LocationDiff = TargetLocation - MonsterLocation;
 			float Dist = LocationDiff.Size();
-			if (MonsterData->AttackBoundary >= Dist)
+			if (MonsterData->AttackRange >= Dist)
 			{
 				MonsterData->AnimationTime = Monster->GetAnimInstance()->GetKeyAnimMontage(ETestMonsterAnim::Attack, Monster->GetAniIndex())->GetPlayLength();
 				return;
