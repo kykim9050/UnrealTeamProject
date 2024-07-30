@@ -65,6 +65,7 @@ void AMainPlayerController::SetupInputComponent()
 		EnhancedInputComponent->BindAction(InputData->Actions[14], ETriggerEvent::Started, this, &AMainPlayerController::P_ChangePOVController);
 		EnhancedInputComponent->BindAction(InputData->Actions[15], ETriggerEvent::Started, this, &AMainPlayerController::LCtrl_Crouch);
 		EnhancedInputComponent->BindAction(InputData->Actions[16], ETriggerEvent::Started, this, &AMainPlayerController::R_Reload);
+		// 17 - G
 	}
 }
 
