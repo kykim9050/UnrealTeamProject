@@ -46,10 +46,10 @@ void AMainPlayerController::SetupInputComponent()
 	if (nullptr != InputData->InputMapping)
 	{
 		EnhancedInputComponent->BindAction(InputData->Actions[0], ETriggerEvent::Triggered, this, &AMainPlayerController::MouseRotation);
-		EnhancedInputComponent->BindAction(InputData->Actions[1], ETriggerEvent::Triggered, this, &AMainPlayerController::W_MoveFront);
-		EnhancedInputComponent->BindAction(InputData->Actions[2], ETriggerEvent::Triggered, this, &AMainPlayerController::S_MoveBack);
 		EnhancedInputComponent->BindAction(InputData->Actions[3], ETriggerEvent::Triggered, this, &AMainPlayerController::D_MoveRight);
 		EnhancedInputComponent->BindAction(InputData->Actions[4], ETriggerEvent::Triggered, this, &AMainPlayerController::A_MoveLeft);
+		EnhancedInputComponent->BindAction(InputData->Actions[1], ETriggerEvent::Triggered, this, &AMainPlayerController::W_MoveFront);
+		EnhancedInputComponent->BindAction(InputData->Actions[2], ETriggerEvent::Triggered, this, &AMainPlayerController::S_MoveBack);
 		EnhancedInputComponent->BindAction(InputData->Actions[5], ETriggerEvent::Triggered, this, &AMainPlayerController::Spase_Jump);
 		EnhancedInputComponent->BindAction(InputData->Actions[5], ETriggerEvent::Completed, this, &AMainPlayerController::Spase_JumpEnd);
 		EnhancedInputComponent->BindAction(InputData->Actions[6], ETriggerEvent::Started, this, &AMainPlayerController::MouseLeft_FireStart);

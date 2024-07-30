@@ -28,7 +28,7 @@ EBTNodeResult::Type UBTTaskNode_KrakenRotate::ExecuteTask(UBehaviorTreeComponent
 		return EBTNodeResult::Type::Aborted;
 	}
 
-	UTestMonsterDataBase* MonsterData = GetValueAsObject<UTestMonsterDataBase>(_OwnerComp, TEXT("MonsterData"));
+	UTestMonsterData* MonsterData = GetValueAsObject<UTestMonsterData>(_OwnerComp, TEXT("MonsterData"));
 	AActor* Target = Cast<AActor>(_OwnerComp.GetBlackboardComponent()->GetValueAsObject(TEXT("TargetActor")));
 	ETestMonsterAnim NextAnim;
 
@@ -66,7 +66,7 @@ void UBTTaskNode_KrakenRotate::TickTask(UBehaviorTreeComponent& _OwnerComp, uint
 {
 	Super::TickTask(_OwnerComp, _pNodeMemory, _DeltaSeconds);
 
-	UTestMonsterDataBase* MonsterData = GetValueAsObject<UTestMonsterDataBase>(_OwnerComp, TEXT("MonsterData"));
+	UTestMonsterData* MonsterData = GetValueAsObject<UTestMonsterData>(_OwnerComp, TEXT("MonsterData"));
 	ATestMonsterBase* Monster = GetActor<ATestMonsterBase>(_OwnerComp);
 
 	AActor* Target = Cast<AActor>(_OwnerComp.GetBlackboardComponent()->GetValueAsObject(TEXT("TargetActor")));
@@ -74,7 +74,7 @@ void UBTTaskNode_KrakenRotate::TickTask(UBehaviorTreeComponent& _OwnerComp, uint
 	FVector MonsterLocation = Monster->GetActorLocation();
 	FVector MonsterToTarget = MonsterLocation - TargetLocation;
 
-	if (MonsterToTarget.Size() <= MonsterData->AttackRange)
+	if (false == MonsterData->IsGroundAttack && MonsterToTarget.Size() <= MonsterData->AttackBoundary)
 	{
 		StateChange(_OwnerComp, ETestMonsterState::Attack);
 		return;
@@ -87,6 +87,12 @@ void UBTTaskNode_KrakenRotate::TickTask(UBehaviorTreeComponent& _OwnerComp, uint
 
 	if (2.0f < MonsterData->AnimationTime)
 	{
+		if (true == MonsterData->IsGroundAttack)
+		{
+			StateChange(_OwnerComp, ETestMonsterState::GroundAttack);
+			return;
+		}
+
 		StateChange(_OwnerComp, ETestMonsterState::Chase);
 		return;
 	}
