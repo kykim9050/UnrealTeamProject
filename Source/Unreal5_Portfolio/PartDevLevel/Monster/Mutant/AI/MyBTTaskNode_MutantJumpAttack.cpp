@@ -2,18 +2,17 @@
 
 
 #include "PartDevLevel/Monster/Mutant/AI/MyBTTaskNode_MutantJumpAttack.h"
-
-#include "Global/ContentsLog.h"
 #include "PartDevLevel/Monster/Animation/MonsterAnimInstance.h"
 #include "PartDevLevel/Monster/TestMonsterBaseAIController.h"
 #include "PartDevLevel/Monster/TestMonsterBase.h"
 
-#include "GameFramework/CharacterMovementComponent.h"
-
 #include "TestLevel/Character/TestPlayerState.h"
 #include "TestLevel/Character/TestCharacter.h"
 
+#include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/KismetMathLibrary.h"
+
+#include "Global/ContentsLog.h"
 
 EBTNodeResult::Type UMyBTTaskNode_MutantJumpAttack::ExecuteTask(UBehaviorTreeComponent& _OwnerComp, uint8* _NodeMemory)
 {
@@ -26,7 +25,7 @@ EBTNodeResult::Type UMyBTTaskNode_MutantJumpAttack::ExecuteTask(UBehaviorTreeCom
 		return EBTNodeResult::Aborted;
 	}
 
-	UMonsterData* MonsterData = GetValueAsObject<UMonsterData>(_OwnerComp, TEXT("MonsterData"));
+	UTestMonsterData* MonsterData = GetValueAsObject<UTestMonsterData>(_OwnerComp, TEXT("MonsterData"));
 	MonsterData->AnimationTime = Monster->GetAnimInstance()->GetKeyAnimMontage(ETestMonsterAnim::JumpAttack, Monster->GetAniIndex())->GetPlayLength();
 
 	AActor* Target = Cast<AActor>(_OwnerComp.GetBlackboardComponent()->GetValueAsObject(TEXT("TargetActor")));
@@ -47,7 +46,7 @@ void UMyBTTaskNode_MutantJumpAttack::TickTask(UBehaviorTreeComponent& _OwnerComp
 	Super::TickTask(_OwnerComp, _pNodeMemory, _DeltaSeconds);
 
 	ATestMonsterBase* Monster = GetActor<ATestMonsterBase>(_OwnerComp);
-	UMonsterData* MonsterData = GetValueAsObject<UMonsterData>(_OwnerComp, TEXT("MonsterData"));
+	UTestMonsterData* MonsterData = GetValueAsObject<UTestMonsterData>(_OwnerComp, TEXT("MonsterData"));
 
 	if (nullptr == Monster)
 	{

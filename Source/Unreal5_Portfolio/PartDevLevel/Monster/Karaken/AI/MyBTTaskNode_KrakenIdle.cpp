@@ -3,12 +3,13 @@
 
 #include "PartDevLevel/Monster/Karaken/AI/MyBTTaskNode_KrakenIdle.h"
 #include "PartDevLevel/Monster/TestMonsterBase.h"
-#include "Global/DataTable/MonsterDataRow.h"
-#include "Global/ContentsLog.h"
-#include "BehaviorTree/BlackboardComponent.h"
-#include "Global/MainGameState.h"
-#include "Global/MainGameBlueprintFunctionLibrary.h"
 
+#include "BehaviorTree/BlackboardComponent.h"
+
+#include "Global/MainGameBlueprintFunctionLibrary.h"
+#include "Global/DataTable/MonsterDataRow.h"
+#include "Global/MainGameState.h"
+#include "Global/ContentsLog.h"
 
 EBTNodeResult::Type UMyBTTaskNode_KrakenIdle::ExecuteTask(UBehaviorTreeComponent& _OwnerComp, uint8* _NodeMemory)
 {
@@ -28,8 +29,7 @@ EBTNodeResult::Type UMyBTTaskNode_KrakenIdle::ExecuteTask(UBehaviorTreeComponent
 		return EBTNodeResult::Type::Aborted;
 	}
 
-
-	UMonsterData* MonsterData = GetValueAsObject<UMonsterData>(_OwnerComp, TEXT("MonsterData"));
+	UTestMonsterData* MonsterData = GetValueAsObject<UTestMonsterData>(_OwnerComp, TEXT("MonsterData"));
 	MonsterData->IdleTime = 0.0f;
 	Monster->ChangeRandomAnimation(ETestMonsterAnim::Idle);
 
@@ -40,7 +40,7 @@ void UMyBTTaskNode_KrakenIdle::TickTask(UBehaviorTreeComponent& _OwnerComp, uint
 {
 	Super::TickTask(_OwnerComp, _pNodeMemory, _DeltaSeconds);
 
-	UMonsterData* MonsterData = GetValueAsObject<UMonsterData>(_OwnerComp, TEXT("MonsterData"));
+	UTestMonsterData* MonsterData = GetValueAsObject<UTestMonsterData>(_OwnerComp, TEXT("MonsterData"));
 	ATestMonsterBase* Monster = GetActor<ATestMonsterBase>(_OwnerComp);
 
 	AMainGameState* CurGameState = UMainGameBlueprintFunctionLibrary::GetMainGameState(GetWorld());

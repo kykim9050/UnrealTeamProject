@@ -3,10 +3,11 @@
 
 #include "PartDevLevel/Monster/AI/BTTaskNode_MonsterIdle.h"
 #include "PartDevLevel/Monster/TestMonsterBase.h"
-#include "Global/DataTable/MonsterDataRow.h"
-#include "Global/ContentsLog.h"
+
 #include "BehaviorTree/BlackboardComponent.h"
 
+#include "Global/DataTable/MonsterDataRow.h"
+#include "Global/ContentsLog.h"
 
 EBTNodeResult::Type UBTTaskNode_MonsterIdle::ExecuteTask(UBehaviorTreeComponent& _OwnerComp, uint8* _NodeMemory)
 {
@@ -19,7 +20,7 @@ EBTNodeResult::Type UBTTaskNode_MonsterIdle::ExecuteTask(UBehaviorTreeComponent&
         return EBTNodeResult::Type::Aborted;
     }
 
-    UMonsterData* MonsterData = GetValueAsObject<UMonsterData>(_OwnerComp, TEXT("MonsterData"));
+    UTestMonsterData* MonsterData = GetValueAsObject<UTestMonsterData>(_OwnerComp, TEXT("MonsterData"));
     MonsterData->IdleTime = 0.0f;
 
     Monster->ChangeRandomAnimation(ETestMonsterAnim::Idle);
@@ -31,7 +32,7 @@ void UBTTaskNode_MonsterIdle::TickTask(UBehaviorTreeComponent& _OwnerComp, uint8
 {
     Super::TickTask(_OwnerComp, _pNodeMemory, _DeltaSeconds);
 
-    UMonsterData* MonsterData = GetValueAsObject<UMonsterData>(_OwnerComp, TEXT("MonsterData"));
+    UTestMonsterData* MonsterData = GetValueAsObject<UTestMonsterData>(_OwnerComp, TEXT("MonsterData"));
 
     bool CanSee = _OwnerComp.GetBlackboardComponent()->GetValueAsBool(TEXT("CanSeePlayer"));
     if (true == CanSee)

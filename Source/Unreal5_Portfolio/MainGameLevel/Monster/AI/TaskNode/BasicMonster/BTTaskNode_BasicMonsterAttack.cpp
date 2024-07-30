@@ -3,6 +3,7 @@
 
 #include "MainGameLevel/Monster/AI/TaskNode/BasicMonster/BTTaskNode_BasicMonsterAttack.h"
 #include "MainGameLevel/Monster/Base/BasicMonsterBase.h"
+#include "MainGameLevel/Monster/Data/BasicMonsterData.h"
 #include "MainGameLevel/Player/MainPlayerState.h"
 #include "MainGameLevel/Player/MainCharacter.h"
 
@@ -22,7 +23,7 @@ EBTNodeResult::Type UBTTaskNode_BasicMonsterAttack::ExecuteTask(UBehaviorTreeCom
 		return EBTNodeResult::Type::Aborted;
 	}
 
-	UMonsterData* MonsterData = GetValueAsObject<UMonsterData>(OwnerComp, TEXT("MonsterData"));
+	UBasicMonsterData* MonsterData = GetValueAsObject<UBasicMonsterData>(OwnerComp, TEXT("MonsterData"));
 	if (false == MonsterData->IsValidLowLevel())
 	{
 		LOG(MonsterLog, Fatal, TEXT("MonsterData Is Not Valid"));
@@ -56,14 +57,14 @@ void UBTTaskNode_BasicMonsterAttack::TickTask(UBehaviorTreeComponent& OwnerComp,
 	}
 
 	ABasicMonsterBase* Monster = GetSelfActor<ABasicMonsterBase>(OwnerComp);
-	UMonsterData* MonsterData = GetValueAsObject<UMonsterData>(OwnerComp, TEXT("MonsterData"));
+	UBasicMonsterData* MonsterData = GetValueAsObject<UBasicMonsterData>(OwnerComp, TEXT("MonsterData"));
 
 	FVector MonsterLocation = Monster->GetActorLocation();
 	FVector TargetPlayerLocation = TargetPlayer->GetActorLocation();
 
 	FVector LocationDiff = TargetPlayerLocation - MonsterLocation;
 	float Distance = LocationDiff.Size();
-	if (Distance >= MonsterData->AttackBoundary)
+	if (Distance >= MonsterData->AttackRange)
 	{
 		// 몬스터 회전
 		FRotator TurnRot = UKismetMathLibrary::FindLookAtRotation(MonsterLocation, TargetPlayerLocation);
