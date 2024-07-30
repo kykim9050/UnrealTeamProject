@@ -1,8 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "MainGameLevel/Monster/AI/TaskNode/BasicMonster/BTTaskNode_BasicMonsterPatrol.h"
-#include "MainGameLevel/Monster/AI/BasicMonsterAIController.h"
+#include "BTTaskNode_BasicMonsterPatrol.h"
+#include "MainGameLevel/Monster/BasicMonster/AI/BasicMonsterAIController.h"
 #include "MainGameLevel/Monster/Base/BasicMonsterBase.h"
 #include "MainGameLevel/Monster/Data/BasicMonsterData.h"
 

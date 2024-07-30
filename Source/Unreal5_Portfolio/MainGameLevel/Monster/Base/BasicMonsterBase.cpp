@@ -3,7 +3,7 @@
 
 #include "MainGameLevel/Monster/Base/BasicMonsterBase.h"
 #include "MainGameLevel/Monster/Animation/BasicMonsterAnimInstance.h"
-#include "MainGameLevel/Monster/AI/BasicMonsterAIController.h"
+#include "MainGameLevel/Monster/BasicMonster/AI/BasicMonsterAIController.h"
 #include "MainGameLevel/Player/MainPlayerState.h"
 #include "MainGameLevel/Player/MainCharacter.h"
 
