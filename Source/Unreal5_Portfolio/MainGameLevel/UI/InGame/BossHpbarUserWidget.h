@@ -32,6 +32,8 @@ public:
 	UPROPERTY(meta = (BindWidget))
 	class UTextBlock* BossHpText;
 
+	UFUNCTION(Blueprintcallable)
 	void SetHp(float _CurHp, float _MaxHp);
+	UFUNCTION(Blueprintcallable)
 	void SetBossName(FText _name);
 };
