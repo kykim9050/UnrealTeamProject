@@ -56,7 +56,7 @@ public :
 	UFUNCTION(BlueprintCallable)
 	void MouseLeft_FireEnd(const FInputActionValue& Value);
 	UFUNCTION(BlueprintCallable)
-	void E_PickUpItem();
+	void E_CheckItem();
 	UFUNCTION(BlueprintCallable)
 	void P_ChangePOVController();
 	UFUNCTION(BlueprintCallable)
@@ -64,9 +64,15 @@ public :
 	UFUNCTION(BlueprintCallable)
 	void R_Reload();
 
-	// Posture
+	// Number Key
 	UFUNCTION(BlueprintCallable)
 	void Num_ChangePosture(EPlayerPosture _Posture);
+	UFUNCTION(BlueprintCallable)
+	void Num_Drink_Con();
+	UFUNCTION(BlueprintCallable)
+	void Num_BombSetStart();
+	UFUNCTION(BlueprintCallable)
+	void Num_BombSetEnd();
 
 	// «œ√º
 	UFUNCTION(BlueprintCallable)
