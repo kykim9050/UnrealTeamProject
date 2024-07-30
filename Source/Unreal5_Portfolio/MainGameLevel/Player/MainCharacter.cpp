@@ -681,8 +681,8 @@ void AMainCharacter::ChangePOV()
 	if (IsFPV)
 	{
 		// SpringArm 위치 수정
-		SpringArmComponent->TargetArmLength = 200.0f;
-		SpringArmComponent->SetRelativeLocation(FVector(0.0f, 0.0f, 80.0f));
+		SpringArmComponent->TargetArmLength = 300.0f;
+		SpringArmComponent->SetRelativeLocation(CameraRelLoc);
 
 		// Character Mesh 전환
 		GetMesh()->SetOwnerNoSee(false);
@@ -702,7 +702,17 @@ void AMainCharacter::ChangePOV()
 	{
 		// SpringArm 위치 수정
 		SpringArmComponent->TargetArmLength = 0.0f;
-		SpringArmComponent->SetRelativeLocation(FVector(20.0f, 0.0f, 67.0f));
+		switch (LowerStateValue)
+		{
+		case EPlayerLowerState::Idle:
+			SpringArmComponent->SetRelativeLocation(FPVCameraRelLoc);
+			break;
+		case EPlayerLowerState::Crouch:
+			SpringArmComponent->SetRelativeLocation(FPVCameraRelLoc_Crouch);
+			break;
+		default:
+			break;
+		}
 
 		// Character Mesh 전환
 		GetMesh()->SetOwnerNoSee(true);
@@ -793,11 +803,11 @@ void AMainCharacter::NetCheck()
 
 void AMainCharacter::SendTokenToHpBarWidget()
 {
-	//AMainPlayerController* Con = Cast<AMainPlayerController>(GetController());
-	//if (nullptr == Con)
-	//{
-	//	return;
-	//}
+	AMainPlayerController* Con = Cast<AMainPlayerController>(GetController());
+	if (nullptr == Con)
+	{
+		return;
+	}
 	//AMainPlayHUD* PlayHUD = Cast<ATestPlayHUD>(Con->GetHUD());
 	//if (nullptr == PlayHUD)
 	//{

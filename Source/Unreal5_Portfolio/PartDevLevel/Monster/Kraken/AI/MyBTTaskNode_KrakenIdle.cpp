@@ -30,7 +30,7 @@ EBTNodeResult::Type UMyBTTaskNode_KrakenIdle::ExecuteTask(UBehaviorTreeComponent
 	}
 
 
-	UTestMonsterData* MonsterData = GetValueAsObject<UTestMonsterData>(OwnerComp, TEXT("MonsterData"));
+	UTestMonsterDataBase* MonsterData = GetValueAsObject<UTestMonsterDataBase>(OwnerComp, TEXT("MonsterData"));
 	MonsterData->IdleTime = 0.0f;
 	Monster->ChangeRandomAnimation(ETestMonsterAnim::Idle);
 
@@ -41,7 +41,7 @@ void UMyBTTaskNode_KrakenIdle::TickTask(UBehaviorTreeComponent& OwnerComp, uint8
 {
 	Super::TickTask(OwnerComp, pNodeMemory, DeltaSeconds);
 
-	UTestMonsterData* MonsterData = GetValueAsObject<UTestMonsterData>(OwnerComp, TEXT("MonsterData"));
+	UTestMonsterDataBase* MonsterData = GetValueAsObject<UTestMonsterDataBase>(OwnerComp, TEXT("MonsterData"));
 	ATestMonsterBase* Monster = GetActor<ATestMonsterBase>(OwnerComp);
 
 	AMainGameState* CurGameState = UMainGameBlueprintFunctionLibrary::GetMainGameState(GetWorld());

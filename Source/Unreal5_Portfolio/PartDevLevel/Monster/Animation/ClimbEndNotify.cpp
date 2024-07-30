@@ -2,7 +2,7 @@
 
 
 #include "PartDevLevel/Monster/Animation/ClimbEndNotify.h"
-#include "PartDevLevel/Monster/TestMonsterBaseAIController.h"
+#include "PartDevLevel/Monster/NonBoss/TestMonsterBaseAIController.h"
 #include "PartDevLevel/Monster/Base/TestMonsterBase.h"
 
 #include "GameFramework/CharacterMovementComponent.h"
@@ -11,13 +11,15 @@
 
 void UClimbEndNotify::NotifyBegin(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation, float TotalDuration)
 {
+	Super::NotifyBegin(MeshComp, Animation, TotalDuration);
+
 	ATestMonsterBase* Monster = Cast<ATestMonsterBase>(MeshComp->GetOwner());
 	if (nullptr != Monster)
 	{
 		ATestMonsterBaseAIController* Controller = Cast<ATestMonsterBaseAIController>(Monster->GetController());
 		if (nullptr != Controller)
 		{
-			UTestMonsterData* MonsterData = Cast<UTestMonsterData>(Controller->GetBlackboardComponent()->GetValueAsObject(TEXT("MonsterData")));
+			UTestMonsterDataBase* MonsterData = Cast<UTestMonsterDataBase>(Controller->GetBlackboardComponent()->GetValueAsObject(TEXT("MonsterData")));
 			FVector ClimbDestLoc = Controller->GetBlackboardComponent()->GetValueAsVector("DestinationLocation");
 			FVector CurLoc = MonsterData->LerpPos;
 			CurLoc.Z = ClimbDestLoc.Z;
@@ -29,6 +31,8 @@ void UClimbEndNotify::NotifyBegin(USkeletalMeshComponent* MeshComp, UAnimSequenc
 
 void UClimbEndNotify::NotifyTick(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation, float FrameDeltaTime)
 {
+	Super::NotifyTick(MeshComp, Animation, FrameDeltaTime);
+
 	ATestMonsterBase* Monster = Cast<ATestMonsterBase>(MeshComp->GetOwner());
 	if (nullptr != Monster)
 	{
@@ -45,4 +49,5 @@ void UClimbEndNotify::NotifyTick(USkeletalMeshComponent* MeshComp, UAnimSequence
 
 void UClimbEndNotify::NotifyEnd(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation)
 {
+	Super::NotifyEnd(MeshComp, Animation);
 }

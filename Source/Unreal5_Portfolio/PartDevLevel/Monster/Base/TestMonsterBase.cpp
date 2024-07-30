@@ -3,7 +3,7 @@
 
 #include "PartDevLevel/Monster/Base/TestMonsterBase.h"
 #include "PartDevLevel/Monster/Animation/MonsterAnimInstance.h"
-#include "PartDevLevel/Monster/TestMonsterBaseAIController.h"
+#include "PartDevLevel/Monster/NonBoss/TestMonsterBaseAIController.h"
 #include "TestLevel/Character/TestPlayerState.h"
 #include "TestLevel/Character/TestCharacter.h"
 
@@ -68,10 +68,10 @@ void ATestMonsterBase::BeginPlay()
 	}
 
 	//  몬스터 데이터 세팅
-	SettingData = NewObject<UTestMonsterData>(this);
+	SettingData = NewObject<UTestMonsterDataBase>(this);
 	SettingData->BaseData = BaseData;
 	SettingData->AttackDamage = 34.0f;
-	SettingData->AttackBoundary = BaseData->GetAttackRange();
+	SettingData->AttackRange = BaseData->GetAttackRange();
 	SettingData->OriginPos = GetActorLocation();
 	SettingData->SpawnCount = BaseData->GetSpawnRockCount();
 

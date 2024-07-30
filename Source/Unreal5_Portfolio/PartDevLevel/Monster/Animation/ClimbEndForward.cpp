@@ -2,7 +2,7 @@
 
 
 #include "PartDevLevel/Monster/Animation/ClimbEndForward.h"
-#include "PartDevLevel/Monster/TestMonsterBaseAIController.h"
+#include "PartDevLevel/Monster/NonBoss/TestMonsterBaseAIController.h"
 #include "PartDevLevel/Monster/Base/TestMonsterBase.h"
 
 #include "GameFramework/CharacterMovementComponent.h"
@@ -11,13 +11,15 @@
 
 void UClimbEndForward::NotifyBegin(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation, float TotalDuration)
 {
+	Super::NotifyBegin(MeshComp, Animation, TotalDuration);
+
 	ATestMonsterBase* Monster = Cast<ATestMonsterBase>(MeshComp->GetOwner());
 	if (nullptr != Monster)
 	{
 		ATestMonsterBaseAIController* Controller = Cast<ATestMonsterBaseAIController>(Monster->GetController());
 		if (nullptr != Controller)
 		{
-			UTestMonsterData* MonsterData = Cast<UTestMonsterData>(Controller->GetBlackboardComponent()->GetValueAsObject(TEXT("MonsterData")));
+			UTestMonsterDataBase* MonsterData = Cast<UTestMonsterDataBase>(Controller->GetBlackboardComponent()->GetValueAsObject(TEXT("MonsterData")));
 			FVector ClimbDestLoc = Controller->GetBlackboardComponent()->GetValueAsVector("DestinationLocation");
 			FVector CurLoc = Monster->GetActorLocation();
 			MonsterData->LerpPos = CurLoc;
@@ -30,13 +32,15 @@ void UClimbEndForward::NotifyBegin(USkeletalMeshComponent* MeshComp, UAnimSequen
 
 void UClimbEndForward::NotifyTick(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation, float FrameDeltaTime)
 {
+	Super::NotifyTick(MeshComp, Animation, FrameDeltaTime);
+
 	ATestMonsterBase* Monster = Cast<ATestMonsterBase>(MeshComp->GetOwner());
 	if (nullptr != Monster)
 	{
 		ATestMonsterBaseAIController* Controller = Cast<ATestMonsterBaseAIController>(Monster->GetController());
 		if (nullptr != Controller)
 		{
-			UTestMonsterData* MonsterData = Cast<UTestMonsterData>(Controller->GetBlackboardComponent()->GetValueAsObject(TEXT("MonsterData")));
+			UTestMonsterDataBase* MonsterData = Cast<UTestMonsterDataBase>(Controller->GetBlackboardComponent()->GetValueAsObject(TEXT("MonsterData")));
 			FVector LerpMove = FMath::Lerp(MonsterData->LerpPos, MonsterData->DestLoc, FMath::Clamp(MonsterData->ClimbEndUpTime, 0.0f, 1.0f));
 			Monster->SetActorLocation(LerpMove, false);
 			MonsterData->ClimbEndUpTime += FrameDeltaTime;
@@ -46,6 +50,8 @@ void UClimbEndForward::NotifyTick(USkeletalMeshComponent* MeshComp, UAnimSequenc
 
 void UClimbEndForward::NotifyEnd(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation)
 {
+	Super::NotifyEnd(MeshComp, Animation);
+
 	ATestMonsterBase* Monster = Cast<ATestMonsterBase>(MeshComp->GetOwner());
 	if (nullptr != Monster)
 	{
