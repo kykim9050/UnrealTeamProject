@@ -54,7 +54,6 @@ void ABomb::InterAction()
 
 	if (BombState::Idle == CurBombState)
 	{
-		UMainGameBlueprintFunctionLibrary::GetMainGameState(GetWorld())->AddArmoryWeaponNum(EPlayerPosture::Bomb);
 		Destroy();
 	}
 }

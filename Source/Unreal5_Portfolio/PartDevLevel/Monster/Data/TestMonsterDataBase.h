@@ -61,4 +61,7 @@ public:
 
 	FRotator DestRotate = FRotator::ZeroRotator;
 	FRotator MyRotate = FRotator::ZeroRotator;
+
+	int SpawnCount = 0;
+	bool IsGroundAttack = false;
 };

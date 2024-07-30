@@ -4,6 +4,8 @@
 #include "Global/MainGameState.h"
 #include "Net/UnrealNetwork.h"
 
+
+
 AMainGameState::AMainGameState()
 {
 
@@ -41,77 +43,41 @@ UActorGroup* AMainGameState::GetActorGroup(uint8 _Index)
 	return AllActor[_Index];
 }
 
-void AMainGameState::AddMeleeNum_Implementation()
+void AMainGameState::GameStateCheck_Implementation()
 {
 	if (false == HasAuthority())
 	{
 		return;
 	}
 
-	if (MaxMeleeNum <= MeleeNum)
+	if (MaxPlayerCount == PlayerCount)
 	{
-		return;
+		switch (CurStage)
+		{
+		case EGameStage::Init:
+		{
+			CurStage = EGameStage::VisitArmory;
+			PlayerCount = 0;
+			break;
+		}
+		case EGameStage::VisitArmory:
+			break;
+		case EGameStage::ObtainFirstSample:
+			break;
+		case EGameStage::ObtainSecondSample:
+			break;
+		case EGameStage::ObtainThirdSample:
+			break;
+		case EGameStage::PlantingBomb:
+			break;
+		case EGameStage::MoveToGatheringPoint:
+			break;
+		case EGameStage::Defensing:
+			break;
+		case EGameStage::MissionClear:
+			break;
+		default:
+			break;
+		}
 	}
-
-	++MeleeNum;
-
-	if (MaxMeleeNum == MeleeNum)
-	{
-		CurStage = EGameStage::VisitArmory;
-		return;
-	}
-}
-
-void AMainGameState::AddArmoryWeaponNum(EPlayerPosture _ItemType)
-{
-	if (MaxBombNum <= BombNum
-		&& MaxRifleNum <= RifleNum)
-	{
-		return;
-	}
-
-	EPlayerPosture ItemType = _ItemType;
-
-	switch (ItemType)
-	{
-	case EPlayerPosture::Rifle1:
-		++RifleNum;
-		break;
-	case EPlayerPosture::Bomb:
-		++BombNum;
-		break;
-	default:
-		return;
-	}
-
-	if (MaxBombNum == BombNum
-		&& MaxRifleNum == RifleNum)
-	{
-		CurStage = EGameStage::ObtainFirstSample;
-		return;
-	}
-}
-
-void AMainGameState::SetClearBoss1Stage()
-{
-	if (true == ClearBoss1Stage)
-	{
-		return;
-	}
-
-	ClearBoss1Stage = true;
-
-	CurStage = EGameStage::ObtainSecondSample;
-}
-
-void AMainGameState::SetClearBoss2Stage()
-{
-	if (true == ClearBoss2Stage)
-	{
-		return;
-	}
-
-	ClearBoss2Stage = true;
-
-	CurStage = EGameStage::PlantingBomb;
 }

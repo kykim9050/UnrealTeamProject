@@ -55,13 +55,6 @@ public:
 	}
 
 	/// <summary>
-	/// Melee 확보시 호출되는 함수
-	/// </summary>
-	UFUNCTION(Reliable, NetMulticast)
-	void AddMeleeNum();
-	void AddMeleeNum_Implementation();
-
-	/// <summary>
 	/// 확보된 Melee 수를 반환
 	/// </summary>
 	/// <returns></returns>
@@ -69,11 +62,6 @@ public:
 	{
 		return MeleeNum;
 	}
-
-	/// <summary>
-	/// 무기고에서 아이템 확보시 아이템 수를 갱신하는 함수
-	/// </summary>
-	void AddArmoryWeaponNum(EPlayerPosture _ItemType);
 
 	/// <summary>
 	/// 확보된 Rifle 수를 반환
@@ -94,14 +82,36 @@ public:
 	}
 
 	/// <summary>
-	/// 보스1 스테이지 클리어
+	/// 현재 게임 진행 관련 체크 함수
 	/// </summary>
-	void SetClearBoss1Stage();
-	
-	/// <summary>
-	/// 보스2 스테이지 클리어
-	/// </summary>
-	void SetClearBoss2Stage();
+	UFUNCTION(Reliable, NetMulticast)
+	void GameStateCheck();
+	void GameStateCheck_Implementation();
+
+	UFUNCTION()
+	FORCEINLINE int GetPlayerCount() const
+	{
+		return PlayerCount;
+	}
+
+	UFUNCTION()
+	FORCEINLINE void AddPlayerCount()
+	{
+		++PlayerCount;
+	}
+
+	UFUNCTION()
+	FORCEINLINE void SubPlayerCount()
+	{
+		if (0 >= PlayerCount)
+		{
+			PlayerCount = 0;
+			return;
+		}
+
+		--PlayerCount;
+	}
+
 
 protected:
 	AMainGameState();
@@ -165,5 +175,17 @@ private:
 	/// </summary>
 	UPROPERTY(Replicated)
 	bool ClearBoss2Stage = false;
+
+	/// <summary>
+	/// 플레이어 수
+	/// </summary>
+	UPROPERTY(Replicated)
+	int PlayerCount = 0;
+
+	/// <summary>
+	/// 플레이어 최대 수
+	/// </summary>
+	UPROPERTY()
+	int MaxPlayerCount = 2;
 
 };

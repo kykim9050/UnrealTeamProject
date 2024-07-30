@@ -29,7 +29,7 @@ EBTNodeResult::Type UBTTaskNode_KrakenGroundAttack::ExecuteTask(UBehaviorTreeCom
 		return EBTNodeResult::Type::Aborted;
 	}
 
-	UTestMonsterData* MonsterData = GetValueAsObject<UTestMonsterData>(OwnerComp, TEXT("MonsterData"));
+	UTestMonsterDataBase* MonsterData = GetValueAsObject<UTestMonsterDataBase>(OwnerComp, TEXT("MonsterData"));
 	MonsterData->IsGroundAttack = false;
 
 	Monster->ChangeRandomAnimation(ETestMonsterAnim::Attack);
@@ -43,7 +43,7 @@ void UBTTaskNode_KrakenGroundAttack::TickTask(UBehaviorTreeComponent& OwnerComp,
 	Super::TickTask(OwnerComp, pNodeMemory, DeltaSeconds);
 	
 	ATestMonsterBase* Monster = GetActor<ATestMonsterBase>(OwnerComp);
-	UTestMonsterData* MonsterData = GetValueAsObject<UTestMonsterData>(OwnerComp, TEXT("MonsterData"));
+	UTestMonsterDataBase* MonsterData = GetValueAsObject<UTestMonsterDataBase>(OwnerComp, TEXT("MonsterData"));
 	if (0.0f >= MonsterData->AnimationTime)
 	{
 		Monster->SpawnRock();

@@ -181,8 +181,6 @@ void ATestBossMonsterBase::SetOnDead_Implementation()
 
 void ATestBossMonsterBase::OnDead()
 {
-	UMainGameBlueprintFunctionLibrary::GetMainGameState(GetWorld())->SetClearBoss1Stage();
-
 	SetOnDead();
 	ChangeAniValue(EBossMonsterAnim::Dead);
 
