@@ -25,6 +25,7 @@
 #include "PartDevLevel/Monster/Boss/TestBossMonsterBase.h"
 #include "MainGameLevel/Object/MapObjectBase.h"
 #include "MainGameLevel/Object/Bomb.h"
+//#include "MainGameLevel/UI/InGame/HeadNameWidgetComponent.h"
 #include "TestPlayerController.h"
 
 
@@ -112,6 +113,10 @@ ATestCharacter::ATestCharacter()
 	MinimapIconComponent = CreateDefaultSubobject<UTestMinimapIconComponent>(TEXT("MinimapPlayerIcon"));
 	MinimapIconComponent->SetupAttachment(RootComponent);
 	MinimapIconComponent->bVisibleInSceneCaptureOnly = true;
+
+	// HeadName Component
+	//HeadNameComponent = CreateDefaultSubobject<UHeadNameWidgetComponent>(TEXT("HeadNameWidgetComponent"));
+	//HeadNameComponent->SetupAttachment(RootComponent);
 
 	// Riding Character Mesh => 메인캐릭터 적용.(주석)
 	RidingMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("RidingMesh"));
@@ -324,11 +329,19 @@ void ATestCharacter::FireRayCast_Implementation() // => 메인도 수정해야 함 (24.0
 
 void ATestCharacter::Drink_Implementation()	// => 메인에 추후 이전해야 함 (24.07.29 추가 후 테스팅 중)
 {
+	// 음료 아이템이 없다면 return
+	if (IsItemIn[3] == false)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, FString::Printf(TEXT("There's no item to drop. (Current posture is 'Barehand')")));
+		return;
+	}
+
 
 }
 
 void ATestCharacter::BombSetStart_Implementation()	// => 메인에 추후 이전해야 함 (24.07.29 추가 후 테스팅 중)
 {
+	// 폭탄 아이템이 없다면 return
 
 }
 
@@ -519,10 +532,18 @@ void ATestCharacter::CheckItem()	// => 메인캐릭터로 이전해야 함 (24.07.29 추가됨
 	}
 }
 
-void ATestCharacter::InteractObject_Implementation(AMapObjectBase* _MapObject)	// => 메인캐릭터로 이전해야 함 (24.07.29 추가됨)
+void ATestCharacter::InteractObject_Implementation(AMapObjectBase* _MapObject)	// => 메인캐릭터로 이전해야 함 (24.07.30 수정 중)
 {
+	// Area일 경우 : 상호작용은 플레이어쪽에서 처리해야 하므로 return
+
+
+	// Door일 경우 : 상호작용은 Switch가 발동시키므로 return
+
+
+	// 그 외 맵오브젝트(Switch 등)일 경우 : 상호작용 발동
 	_MapObject->InterAction();
 
+	// (이건 뭐하는 코드인가요?)
 	ABomb* GetSampleData = Cast<ABomb>(_MapObject);
 	if (nullptr != GetSampleData)
 	{
@@ -614,11 +635,11 @@ void ATestCharacter::PickUpItem_Implementation()	// => 메인캐릭터로 이전해야 함 
 		}
 	}
 
-	// Map에 있는 아이템 삭제.
-	GetMapItemData->Destroy();
-
 	// 무기 Type에 따른 애니메이션 변화 함수 호출.
 	ChangePosture(ItemType);
+
+	// Map에 있는 아이템 삭제.
+	GetMapItemData->Destroy();
 
 	ATestPlayerController* Con = Cast<ATestPlayerController>(GetController());
 	Con->FGetItemToWidget_Test.Execute();
