@@ -19,4 +19,8 @@ public:
 	//void InitWidget() override;
 
 	UHeadNameWidgetComponent();
+
+	UFUNCTION()
+	void BilboardRotate(FVector _WorldLocation);
+
 };
