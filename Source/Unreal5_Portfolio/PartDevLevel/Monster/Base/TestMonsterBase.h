@@ -4,8 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "GameFrameWork/Character.h"
+
+#include "PartDevLevel/Monster/Data/TestMonsterBaseData.h"
 #include "Components/TimeLineComponent.h"
 #include "Global/DataTable/MonsterDataRow.h"
+
 #include "TestMonsterBase.generated.h"
 
 class USphereComponent;
@@ -92,7 +95,7 @@ private:
 
 private:
 	UPROPERTY()
-	UTestMonsterData* SettingData;
+	UTestMonsterBaseData* SettingData;
 
 	UPROPERTY(Category = "Data", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	FName BaseDataName;
