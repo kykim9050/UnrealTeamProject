@@ -261,37 +261,6 @@ void AMainCharacter::ChangePlayerDir_Implementation(EPlayerMoveDir _Dir)
 
 void AMainCharacter::PickUpItem_Implementation()
 {
-	// 맵에 아이템이 없을 경우. -> 콜리전에 충돌이 없는 경우
-	if (nullptr == GetMapItemData)
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, TEXT("There is no item."));
-		return;
-	}
-
-	// 1. 맵오브젝트일 경우
-	{
-		AMapObjectBase* GetMapItem = Cast<AMapObjectBase>(GetMapItemData);
-		if (nullptr != GetMapItem)
-		{
-			GetMapItem->InterAction();
-
-			ABomb* GetSampleData = Cast<ABomb>(GetMapItem);
-			if (nullptr != GetSampleData)
-			{
-				for (size_t i = 0; i < GetSampleData->Tags.Num(); i++)
-				{
-					FName GetItemTag = GetSampleData->Tags[i];
-					if ("Sample" == GetItemTag)
-					{
-						GetSampleData->CharacterToDestroy();
-					}
-				}
-			}
-			return;
-		}
-	}
-
-	// 2. 주울 수 있는 아이템일 경우
 	// 맵에 Actor가 있다면 해당 Actor의 Tag를 가져온다.
 	FString TagName = "";
 	for (size_t i = 0; i < GetMapItemData->Tags.Num(); i++) // 불안한 곳.(약속 깨지면 터짐)
@@ -301,51 +270,38 @@ void AMainCharacter::PickUpItem_Implementation()
 
 	FName ItemStringToName = FName(*TagName);
 
-	// ItemName에 맞는 아이템 정보를 DT에서 가져온다.
-	UMainGameInstance* Inst = GetGameInstance<UMainGameInstance>();
-	const FItemDataRow* ItemData = Inst->GetItemData(ItemStringToName);
-
-	EPlayerPosture ItemType = ItemData->GetType();		// 아이템 타입
-
-	// 이미 인벤토리에 같은 이름을 가진 아이템이 있을 경우.
-	if (ItemStringToName == ItemSlot[static_cast<int>(ItemType)].Name)
 	{
-		return;
+		// 버리기 키가 없을 때를 가정.
+		if (false == IsItemIn[static_cast<int>(EPlayerPosture::Rifle1)])
+		{
+			// 1번 슬롯이 비어있는 경우.
+			ItemSetting(ItemStringToName, false);
+		}
+		else if (true == IsItemIn[static_cast<int>(EPlayerPosture::Rifle1)] && false == IsItemIn[static_cast<int>(EPlayerPosture::Rifle2)])
+		{
+			// 1번 슬롯이 있고 2번 슬롯이 비어있는 경우.
+			ItemSetting(ItemStringToName, true);
+		}
+		else
+		{
+			// 1, 2번 슬롯이 비어있지 않는 경우.
+			if (PostureValue == EPlayerPosture::Rifle1)
+			{
+				DropItem();
+				DeleteItem(static_cast<int>(EPlayerPosture::Rifle1));
+				ItemSetting(ItemStringToName, false);
+			}
+			else if (PostureValue == EPlayerPosture::Rifle2)
+			{
+				DropItem();
+				DeleteItem(static_cast<int>(EPlayerPosture::Rifle2));
+				ItemSetting(ItemStringToName, true);
+			}
+		}
 	}
-
-	// 이미 인벤토리에 같은 타입의 아이템이 있을 경우. (추후 수정될 수도 있음)
-	if (true == IsItemIn[static_cast<uint8>(ItemType)])
-	{
-		CharacterPlayerToDropItem();
-	}
-
-	int ItemReloadNum = ItemData->GetReloadNum();		// 무기 장전 단위 (30, 40)	// -1일 경우 총기류 무기가 아님
-	int ItemDamage = ItemData->GetDamage();				// 무기 공격력				// 0일 경우 무기가 아님
-	UStaticMesh* ItemMeshRes = ItemData->GetResMesh();	// 스태틱 메시
-	FVector ItemRelLoc = ItemData->GetRelLoc();			// 스태틱 메시 컴포넌트 상대적 위치
-	FRotator ItemRelRot = ItemData->GetRelRot();		// 스태틱 메시 컴포넌트 상대적 회전
-	FVector ItemRelScale = ItemData->GetRelScale();		// 스태틱 메시 컴포넌트 상대적 크기
-
-	uint8 ItemIndex = static_cast<uint8>(ItemType);		// 아이템을 넣을 인벤토리 인덱스
-
-	// 손에 아이템을 생성한다.
-	// 인벤토리에 아이템 집어넣기. (스태틱메시로 아이템을 가져가는 방식 채택!!!)
-	IsItemIn[ItemIndex] = true;
-
-	ItemSlot[ItemIndex].Name = ItemStringToName;
-	ItemSlot[ItemIndex].ReloadMaxNum = ItemReloadNum;
-	ItemSlot[ItemIndex].ReloadLeftNum = ItemReloadNum;
-	ItemSlot[ItemIndex].Damage = ItemDamage;
-	ItemSlot[ItemIndex].MeshRes = ItemMeshRes;
-	ItemSlot[ItemIndex].RelLoc = ItemRelLoc;
-	ItemSlot[ItemIndex].RelRot = ItemRelRot;
-	ItemSlot[ItemIndex].RelScale = ItemRelScale;
 
 	// 주은 무기 삭제.
 	GetMapItemData->Destroy();
-
-	// 무기 Type에 따른 애니메이션 변화 함수 호출.
-	ChangePosture(ItemType);
 
 	// To Controller -> To Widget
 	AMainPlayerController* Con = Cast<AMainPlayerController>(GetController());
@@ -355,7 +311,49 @@ void AMainCharacter::PickUpItem_Implementation()
 	}
 }
 
-void AMainCharacter::CharacterPlayerToDropItem_Implementation()
+void AMainCharacter::ItemSetting(FName _TagName, bool _InNextSlotToItem)
+{
+	// ItemName에 맞는 아이템 정보를 DT에서 가져온다.
+	UMainGameInstance* Inst = GetGameInstance<UMainGameInstance>();
+	const FItemDataRow* ItemData = Inst->GetItemData(_TagName);
+	EPlayerPosture ItemType = ItemData->GetType();
+
+	// Data Table에 있는 아이템 정보 가져오기.
+	int ItemReloadNum = ItemData->GetReloadNum();		// 무기 장전 단위 (30, 40)	// -1일 경우 총기류 무기가 아님
+	int ItemDamage = ItemData->GetDamage();				// 무기 공격력				// 0일 경우 무기가 아님
+	UStaticMesh* ItemMeshRes = ItemData->GetResMesh();	// 스태틱 메시 리소스
+	FVector ItemRelLoc = ItemData->GetRelLoc();			// 스태틱 메시 컴포넌트 상대적 위치
+	FRotator ItemRelRot = ItemData->GetRelRot();		// 스태틱 메시 컴포넌트 상대적 회
+	FVector ItemRelScale = ItemData->GetRelScale();		// 스태틱 메시 컴포넌트 상대적 크기
+
+	uint8 ItemIndex = static_cast<uint8>(ItemType);		// 아이템을 넣을 인벤토리 인덱스
+	if (true == _InNextSlotToItem)
+	{
+		ItemIndex += 1;
+	}
+	IsItemIn[ItemIndex] = true;
+
+	ItemSlot[ItemIndex].Name = _TagName;
+	ItemSlot[ItemIndex].ReloadMaxNum = ItemReloadNum;
+	ItemSlot[ItemIndex].ReloadLeftNum = ItemReloadNum;
+	ItemSlot[ItemIndex].Damage = ItemDamage;
+	ItemSlot[ItemIndex].MeshRes = ItemMeshRes;
+	ItemSlot[ItemIndex].RelLoc = ItemRelLoc;
+	ItemSlot[ItemIndex].RelRot = ItemRelRot;
+	ItemSlot[ItemIndex].RelScale = ItemRelScale;
+
+	// 무기 Type에 따른 애니메이션 변화 함수 호출.
+	if (true == _InNextSlotToItem)
+	{
+		ChangePosture(EPlayerPosture::Rifle2);
+	}
+	else
+	{
+		ChangePosture(EPlayerPosture::Rifle1);
+	}
+}
+
+void AMainCharacter::DropItem_Implementation()
 {
 	// DropItem 할 수 없는 경우 1: 맨손일 때
 	if (CurItemIndex == -1)
@@ -597,6 +595,35 @@ void AMainCharacter::UpdatePlayerHp(float _DeltaTime)
 	// {
 }
 
+void AMainCharacter::CheckItem()
+{
+	// 맵에 아이템이 없을 경우.
+	if (nullptr == GetMapItemData)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, TEXT("There is no item to check."));
+		return;
+	}
+
+	AMapObjectBase* GetMapItem = Cast<AMapObjectBase>(GetMapItemData);
+	if (nullptr != GetMapItem)
+	{
+		// 1. 맵오브젝트일 경우
+		InteractObject(GetMapItem);
+	}
+	else
+	{
+		// 2. 주울 수 있는 아이템일 경우
+		PickUpItem();
+	}
+}
+
+void AMainCharacter::DeleteItem(int _Index)
+{
+	FPlayerItemInformation NewSlot;
+	ItemSlot[_Index] = NewSlot;
+	IsItemIn[_Index] = false;
+}
+
 void AMainCharacter::ChangeIsFaint_Implementation()
 {
 	AMainPlayerController* Con = Cast<AMainPlayerController>(GetController());
@@ -618,6 +645,29 @@ void AMainCharacter::ChangeIsFaint_Implementation()
 			Con->FCharacterToFaint.Execute(IsFaint); // Execute -> Delegate 실행.
 			this->bUseControllerRotationYaw = false;
 		}
+	}
+}
+
+void AMainCharacter::InteractObject_Implementation(AMapObjectBase* _MapObject)
+{
+	// 그 외 맵오브젝트(Switch 등)일 경우 : 상호작용 발동
+	if (nullptr != _MapObject)
+	{
+		_MapObject->InterAction();
+
+		ABomb* GetSampleData = Cast<ABomb>(_MapObject);
+		if (nullptr != GetSampleData)
+		{
+			for (size_t i = 0; i < GetSampleData->Tags.Num(); i++)
+			{
+				FName GetItemTag = GetSampleData->Tags[i];
+				if ("Sample" == GetItemTag)
+				{
+					GetSampleData->CharacterToDestroy();
+				}
+			}
+		}
+		return;
 	}
 }
 
