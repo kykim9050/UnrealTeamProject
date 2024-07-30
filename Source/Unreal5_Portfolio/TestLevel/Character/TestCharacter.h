@@ -148,6 +148,10 @@ public:
 	UFUNCTION(Reliable, Server, BlueprintCallable)
 	void DropItem();	// => 메인캐릭터로 이전해야 함 (24.07.29 수정됨)
 	void DropItem_Implementation();
+
+	UFUNCTION(BlueprintCallable)
+	void ItemSetting(FName _TagName, bool _InNextSlotToItem);
+
 	UFUNCTION(BlueprintCallable)
 	void DeleteItem(int _Index);	// => 메인캐릭터로 이전해야 함 (24.07.29 추가됨)
 
