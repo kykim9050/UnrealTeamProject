@@ -25,7 +25,7 @@
 #include "PartDevLevel/Monster/Boss/TestBossMonsterBase.h"
 #include "MainGameLevel/Object/MapObjectBase.h"
 #include "MainGameLevel/Object/Bomb.h"
-//#include "MainGameLevel/UI/InGame/HeadNameWidgetComponent.h"
+#include "MainGameLevel/UI/InGame/HeadNameWidgetComponent.h"
 #include "TestPlayerController.h"
 
 
@@ -103,7 +103,7 @@ ATestCharacter::ATestCharacter()
 		IsItemIn.Push(false);
 	}
 
-	// HandAttack Component = > 메인캐릭터 적용.[주석이 없는 3줄 적용. 확인 필요.]
+	// HandAttack Component => 메인캐릭터 적용.[주석이 없는 3줄 적용. 확인 필요.]
 	//FString Name = "Punch";
 	HandAttackComponent = CreateDefaultSubobject<USphereComponent>(TEXT("Hand Attack Comp"));
 	HandAttackComponent->SetupAttachment(GetMesh());
@@ -114,9 +114,10 @@ ATestCharacter::ATestCharacter()
 	MinimapIconComponent->SetupAttachment(RootComponent);
 	MinimapIconComponent->bVisibleInSceneCaptureOnly = true;
 
-	// HeadName Component
-	//HeadNameComponent = CreateDefaultSubobject<UHeadNameWidgetComponent>(TEXT("HeadNameWidgetComponent"));
-	//HeadNameComponent->SetupAttachment(RootComponent);
+	// HeadName Component	// => 메인으로 이전 필요 (24.07.30 추가됨)
+	HeadNameComponent = CreateDefaultSubobject<UHeadNameWidgetComponent>(TEXT("HeadNameWidgetComponent"));
+	HeadNameComponent->SetupAttachment(RootComponent);
+	HeadNameComponent->bHiddenInSceneCapture = true;
 
 	// Riding Character Mesh => 메인캐릭터 적용.(주석)
 	RidingMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("RidingMesh"));
@@ -342,6 +343,7 @@ void ATestCharacter::Drink_Implementation()	// => 메인에 추후 이전해야 함 (24.07
 void ATestCharacter::BombSetStart_Implementation()	// => 메인에 추후 이전해야 함 (24.07.29 추가 후 테스팅 중)
 {
 	// 폭탄 아이템이 없다면 return
+
 
 }
 
