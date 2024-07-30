@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "MyBTTaskNode_MonsterScream.h"
+#include "BTTaskNode_MutantScream.h"
 #include "PartDevLevel/Monster/Animation/MonsterAnimInstance.h"
 #include "PartDevLevel/Monster/NonBoss/TestMonsterBaseAIController.h"
 #include "PartDevLevel/Monster/Base/TestMonsterBase.h"
@@ -11,7 +11,7 @@
 
 #include "Global/ContentsLog.h"
 
-EBTNodeResult::Type UMyBTTaskNode_MonsterScream::ExecuteTask(UBehaviorTreeComponent& _OwnerComp, uint8* _NodeMemory)
+EBTNodeResult::Type UBTTaskNode_MutantScream::ExecuteTask(UBehaviorTreeComponent& _OwnerComp, uint8* _NodeMemory)
 {
     EBTNodeResult::Type Result = Super::ExecuteTask(_OwnerComp, _NodeMemory);
 
@@ -30,7 +30,7 @@ EBTNodeResult::Type UMyBTTaskNode_MonsterScream::ExecuteTask(UBehaviorTreeCompon
 	return EBTNodeResult::InProgress;
 }
 
-void UMyBTTaskNode_MonsterScream::TickTask(UBehaviorTreeComponent& _OwnerComp, uint8* _pNodeMemory, float _DeltaSeconds)
+void UBTTaskNode_MutantScream::TickTask(UBehaviorTreeComponent& _OwnerComp, uint8* _pNodeMemory, float _DeltaSeconds)
 {
 	Super::TickTask(_OwnerComp, _pNodeMemory, _DeltaSeconds);
 
