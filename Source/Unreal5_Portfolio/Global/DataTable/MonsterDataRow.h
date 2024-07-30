@@ -79,7 +79,7 @@ private:
 };
 
 UCLASS()
-class UMonsterData : public UObject
+class UTestMonsterData : public UObject
 {
 	GENERATED_BODY()
 
@@ -91,20 +91,29 @@ public:
 	const FMonsterDataRow* BaseData;
 
 	// °³º° Data
-	FVector OriginPos = FVector::ZeroVector;
 
-	FVector LerpPos = FVector::ZeroVector;
-
+	// Basic
 	UPROPERTY(Replicated)
 	float Hp = 100.0f;
+	
+	float AttackDamage = 0.0f;
+	float AttackBoundary = 200.0f;
+
+
+
+	/// <summary>
+	/// /////
+	/// </summary>
+	FVector OriginPos = FVector::ZeroVector;
+
+
+	FVector LerpPos = FVector::ZeroVector;
 
 	float IdleTime = 0.0f;
 	
 	float Max_PatrolRange = 800.0f;
 	
 	float AttackTime = 0.0f;
-	float AttackDamage = 0.0f;
-	float AttackBoundary = 200.0f;
 
 	float ClimbTime = 0.0f;
 	float ClimbTotal = 0.0f;

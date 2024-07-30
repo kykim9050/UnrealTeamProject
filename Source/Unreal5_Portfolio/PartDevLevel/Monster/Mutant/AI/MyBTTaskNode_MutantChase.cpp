@@ -2,8 +2,6 @@
 
 
 #include "PartDevLevel/Monster/Mutant/AI/MyBTTaskNode_MutantChase.h"
-
-#include "Global/ContentsLog.h"
 #include "PartDevLevel/Monster/TestMonsterBaseAIController.h"
 #include "PartDevLevel/Monster/TestMonsterBase.h"
 
@@ -11,6 +9,7 @@
 #include "Navigation/PathFollowingComponent.h"
 #include "Kismet/KismetMathLibrary.h"
 
+#include "Global/ContentsLog.h"
 
 EBTNodeResult::Type UMyBTTaskNode_MutantChase::ExecuteTask(UBehaviorTreeComponent& _OwnerComp, uint8* _NodeMemory)
 {
@@ -23,7 +22,7 @@ EBTNodeResult::Type UMyBTTaskNode_MutantChase::ExecuteTask(UBehaviorTreeComponen
 		return EBTNodeResult::Type::Aborted;
 	}
 
-	UMonsterData* MonsterData = GetValueAsObject<UMonsterData>(_OwnerComp, TEXT("MonsterData"));
+	UTestMonsterData* MonsterData = GetValueAsObject<UTestMonsterData>(_OwnerComp, TEXT("MonsterData"));
 	Monster->GetCharacterMovement()->MovementMode = EMovementMode::MOVE_NavWalking;
 	Monster->GetCharacterMovement()->MaxWalkSpeed = Monster->GetBaseData()->GetRunSpeed();
 	Monster->ChangeRandomAnimation(ETestMonsterAnim::Run);
@@ -41,7 +40,7 @@ void UMyBTTaskNode_MutantChase::TickTask(UBehaviorTreeComponent& _OwnerComp, uin
 		return;
 	}
 
-	UMonsterData* MonsterData = GetValueAsObject<UMonsterData>(_OwnerComp, TEXT("MonsterData"));
+	UTestMonsterData* MonsterData = GetValueAsObject<UTestMonsterData>(_OwnerComp, TEXT("MonsterData"));
 	ATestMonsterBase* Monster = GetActor<ATestMonsterBase>(_OwnerComp);
 	FVector MonsterLocation = Monster->GetActorLocation();
 

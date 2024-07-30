@@ -4,9 +4,9 @@
 #include "Global/DataTable/MonsterDataRow.h"
 #include "Net/UnrealNetwork.h"
 
-void UMonsterData::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+void UTestMonsterData::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
-	DOREPLIFETIME(UMonsterData, Hp);
+	DOREPLIFETIME(UTestMonsterData, Hp);
 }

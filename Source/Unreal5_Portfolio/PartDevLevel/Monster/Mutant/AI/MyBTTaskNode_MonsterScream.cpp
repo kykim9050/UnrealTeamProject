@@ -2,13 +2,14 @@
 
 
 #include "PartDevLevel/Monster/Mutant/AI/MyBTTaskNode_MonsterScream.h"
-
-#include "Global/ContentsLog.h"
-#include "Kismet/KismetMathLibrary.h"
 #include "PartDevLevel/Monster/Animation/MonsterAnimInstance.h"
 #include "PartDevLevel/Monster/TestMonsterBaseAIController.h"
 #include "PartDevLevel/Monster/TestMonsterBase.h"
+
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Kismet/KismetMathLibrary.h"
+
+#include "Global/ContentsLog.h"
 
 EBTNodeResult::Type UMyBTTaskNode_MonsterScream::ExecuteTask(UBehaviorTreeComponent& _OwnerComp, uint8* _NodeMemory)
 {
@@ -23,7 +24,7 @@ EBTNodeResult::Type UMyBTTaskNode_MonsterScream::ExecuteTask(UBehaviorTreeCompon
 
 	Monster->ChangeRandomAnimation(ETestMonsterAnim::Scream);
 	Monster->GetCharacterMovement()->MovementMode = EMovementMode::MOVE_None;
-	UMonsterData* MonsterData = GetValueAsObject<UMonsterData>(_OwnerComp, TEXT("MonsterData"));
+	UTestMonsterData* MonsterData = GetValueAsObject<UTestMonsterData>(_OwnerComp, TEXT("MonsterData"));
 	MonsterData->AnimationTime = Monster->GetAnimInstance()->GetKeyAnimMontage(ETestMonsterAnim::Scream, Monster->GetAniIndex())->GetPlayLength();
 
 	return EBTNodeResult::InProgress;
@@ -34,7 +35,7 @@ void UMyBTTaskNode_MonsterScream::TickTask(UBehaviorTreeComponent& _OwnerComp, u
 	Super::TickTask(_OwnerComp, _pNodeMemory, _DeltaSeconds);
 
 	ATestMonsterBase* Monster = GetActor<ATestMonsterBase>(_OwnerComp);
-	UMonsterData* MonsterData = GetValueAsObject<UMonsterData>(_OwnerComp, TEXT("MonsterData"));
+	UTestMonsterData* MonsterData = GetValueAsObject<UTestMonsterData>(_OwnerComp, TEXT("MonsterData"));
 
 	if (ETestMonsterState::Scream != static_cast<ETestMonsterState>(GetCurState(_OwnerComp)))
 	{

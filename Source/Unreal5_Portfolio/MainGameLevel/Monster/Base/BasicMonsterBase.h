@@ -4,8 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
-#include "Components/TimeLineComponent.h"
+
+#include "MainGameLevel/Monster/Data/BasicMonsterData.h"
 #include "Global/DataTable/MonsterDataRow.h"
+#include "Components/TimeLineComponent.h"
+
 #include "BasicMonsterBase.generated.h"
 
 class UCurveFloat;
@@ -96,7 +99,7 @@ private:
 	FName BaseDataName;
 
 	UPROPERTY()
-	UMonsterData* SettingData = nullptr;
+	UBasicMonsterData* SettingData = nullptr;
 
 	UPROPERTY()
 	ABasicMonsterAIController* AIController = nullptr;

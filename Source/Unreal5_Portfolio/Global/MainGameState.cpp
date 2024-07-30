@@ -17,6 +17,8 @@ void AMainGameState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLi
 	DOREPLIFETIME(AMainGameState, MeleeNum);
 	DOREPLIFETIME(AMainGameState, RifleNum);
 	DOREPLIFETIME(AMainGameState, BombNum);
+	DOREPLIFETIME(AMainGameState, ClearBoss1Stage);
+	DOREPLIFETIME(AMainGameState, ClearBoss2Stage);
 }
 
 void AMainGameState::PushActor(uint8 _Index, AActor* _Actor)
@@ -83,4 +85,28 @@ void AMainGameState::AddArmoryWeaponNum(EPlayerPosture _ItemType)
 		CurStage = EGameStage::ObtainFirstSample;
 		return;
 	}
+}
+
+void AMainGameState::SetClearBoss1Stage()
+{
+	if (true == ClearBoss1Stage)
+	{
+		return;
+	}
+
+	ClearBoss1Stage = true;
+
+	CurStage = EGameStage::ObtainSecondSample;
+}
+
+void AMainGameState::SetClearBoss2Stage()
+{
+	if (true == ClearBoss2Stage)
+	{
+		return;
+	}
+
+	ClearBoss2Stage = true;
+
+	CurStage = EGameStage::PlantingBomb;
 }
