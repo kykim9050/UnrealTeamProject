@@ -1,16 +1,14 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "PartDevLevel/Monster/TestMonsterBaseAIController.h"
+#include "TestMonsterBaseAIController.h"
+#include "TestLevel/Character/TestCharacter.h"
+#include "TestLevel/Character/TestPlayerState.h"
 
 #include "Perception/AISenseConfig_Sight.h"
 #include "Perception/AIPerceptionComponent.h"
-
 #include "BehaviorTree/BlackboardComponent.h"
 #include "GenericTeamAgentInterface.h"
-
-#include "TestLevel/Character/TestCharacter.h"
-#include "TestLevel/Character/TestPlayerState.h"
 
 #include "Global/MainGameBlueprintFunctionLibrary.h"
 #include "Global/ContentsEnum.h"

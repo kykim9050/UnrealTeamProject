@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "PartDevLevel/Monster/AI/BTTaskNode_Monster.h"
+#include "BTTaskNode_Monster.h"
 #include "Global/ContentsEnum.h"
 
 UBTTaskNode_Monster::UBTTaskNode_Monster()

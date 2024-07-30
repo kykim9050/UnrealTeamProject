@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "PartDevLevel/Monster/AI/BTTaskNode_MonsterIdle.h"
+#include "BTTaskNode_MonsterIdle.h"
 #include "PartDevLevel/Monster/Base/TestMonsterBase.h"
 
 #include "BehaviorTree/BlackboardComponent.h"

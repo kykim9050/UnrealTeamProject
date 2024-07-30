@@ -3,7 +3,7 @@
 
 #include "PartDevLevel/Monster/Base/TestMonsterBase.h"
 #include "PartDevLevel/Monster/Animation/MonsterAnimInstance.h"
-#include "PartDevLevel/Monster/TestMonsterBaseAIController.h"
+#include "PartDevLevel/Monster/NonBoss/TestMonsterBaseAIController.h"
 #include "TestLevel/Character/TestPlayerState.h"
 #include "TestLevel/Character/TestCharacter.h"
 

@@ -1,8 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "PartDevLevel/Monster/AI/BTTaskNode_MonsterPatrol.h"
-#include "PartDevLevel/Monster/TestMonsterBaseAIController.h"
+#include "BTTaskNode_MonsterPatrol.h"
+#include "PartDevLevel/Monster/NonBoss/TestMonsterBaseAIController.h"
 #include "PartDevLevel/Monster/Base/TestMonsterBase.h"
 
 #include "GameFramework/CharacterMovementComponent.h"

@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "PartDevLevel/Monster/AI/BTTaskNode_Monster.h"
+#include "PartDevLevel/Monster/NonBoss/AI/BTTaskNode_Monster.h"
 #include "MyBTTaskNode_KrakenIdle.generated.h"
 
 /**

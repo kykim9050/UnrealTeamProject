@@ -1,8 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "PartDevLevel/Monster/Mutant/AI/MyBTTaskNode_MutantChase.h"
-#include "PartDevLevel/Monster/TestMonsterBaseAIController.h"
+#include "MyBTTaskNode_MutantChase.h"
+#include "PartDevLevel/Monster/NonBoss/TestMonsterBaseAIController.h"
 #include "PartDevLevel/Monster/Base/TestMonsterBase.h"
 
 #include "GameFramework/CharacterMovementComponent.h"

@@ -3,19 +3,18 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "PartDevLevel/Monster/AI/BTTaskNode_Monster.h"
-#include "MyBTTaskNode_MutantJumpAttack.generated.h"
+#include "PartDevLevel/Monster/NonBoss/AI/BTTaskNode_Monster.h"
+#include "MyBTTaskNode_MutantAttack.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class UNREAL5_PORTFOLIO_API UMyBTTaskNode_MutantJumpAttack : public UBTTaskNode_Monster
+class UNREAL5_PORTFOLIO_API UMyBTTaskNode_MutantAttack : public UBTTaskNode_Monster
 {
 	GENERATED_BODY()
 	
 public:
 	EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& _OwnerComp, uint8* _NodeMemory) override;
 	void TickTask(UBehaviorTreeComponent& _OwnerComp, uint8* _pNodeMemory, float _DeltaSeconds) override;
-
 };
