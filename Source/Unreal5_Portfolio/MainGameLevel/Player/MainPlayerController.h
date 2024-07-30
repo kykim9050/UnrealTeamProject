@@ -38,37 +38,35 @@ public :
 	UFUNCTION(BlueprintCallable)
 	void MouseRotation(const FInputActionValue& Value);
 	UFUNCTION(BlueprintCallable)
-	void MoveFront(const FInputActionValue& Value);
+	void W_MoveFront(const FInputActionValue& Value);
 	UFUNCTION(BlueprintCallable)
-	void MoveBack(const FInputActionValue& Value);
+	void S_MoveBack(const FInputActionValue& Value);
 	UFUNCTION(BlueprintCallable)
-	void MoveRight(const FInputActionValue& Value);
+	void D_MoveRight(const FInputActionValue& Value);
 	UFUNCTION(BlueprintCallable)
-	void MoveLeft(const FInputActionValue& Value);
+	void A_MoveLeft(const FInputActionValue& Value);
 	UFUNCTION(BlueprintCallable)
-	void Jump(const FInputActionValue& Value);
+	void Spase_Jump(const FInputActionValue& Value);
 	UFUNCTION(BlueprintCallable)
-	void JumpEnd(const FInputActionValue& Value);
+	void Spase_JumpEnd(const FInputActionValue& Value);
 	UFUNCTION(BlueprintCallable)
-	void FireStart(const FInputActionValue& Value);
+	void MouseLeft_FireStart(const FInputActionValue& Value);
 	UFUNCTION(BlueprintCallable)
-	void FireTick(float _DeltaTime);
+	void MouseLeft_FireTick(float _DeltaTime);
 	UFUNCTION(BlueprintCallable)
-	void FireEnd(const FInputActionValue& Value);
+	void MouseLeft_FireEnd(const FInputActionValue& Value);
 	UFUNCTION(BlueprintCallable)
-	void PickUpItem();
+	void E_PickUpItem();
 	UFUNCTION(BlueprintCallable)
-	void ChangePOVController();
+	void P_ChangePOVController();
 	UFUNCTION(BlueprintCallable)
-	void Crouch(const FInputActionValue& Value);
-	// Reload (k)
+	void LCtrl_Crouch(const FInputActionValue& Value);
 	UFUNCTION(BlueprintCallable)
-	void IAReload();
-
+	void R_Reload();
 
 	// Posture
 	UFUNCTION(BlueprintCallable)
-	void ChangePosture(EPlayerPosture _Posture);
+	void Num_ChangePosture(EPlayerPosture _Posture);
 
 	// «œ√º
 	UFUNCTION(BlueprintCallable)
