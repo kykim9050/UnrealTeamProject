@@ -26,6 +26,9 @@ enum class EPlayerState : uint8
 	Fire	UMETA(DisplayName = "Fire"),
 };
 
+/// <summary>
+/// 게임 Stage 관련 Enum
+/// </summary>
 UENUM(BlueprintType)
 enum class EGameStage : uint8
 {
@@ -70,7 +73,8 @@ enum class ETestMonsterState : uint8
 	Dead,
 	JumpAttack,
 	Scream,
-	Rotate
+	Rotate,
+	GroundAttack,
 };
 
 UENUM(BlueprintType)
@@ -109,6 +113,8 @@ enum class ETestMonsterAnim : uint8
 	JumpAttack	UMETA(DisplayName = "JumpAttack"),
 	LRotate		UMETA(DisplayName = "LeftRotate"),
 	RRotate		UMETA(DisplayName = "RightRotate"),
+	LAttack		UMETA(DisplayName = "LeftAttack"),
+	RAttack		UMETA(DisplayName = "RightAttack"),
 };
 
 UENUM(BlueprintType)

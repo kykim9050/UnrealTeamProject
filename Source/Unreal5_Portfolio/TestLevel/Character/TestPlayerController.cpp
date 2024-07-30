@@ -59,15 +59,15 @@ void ATestPlayerController::SetupInputComponent()
 			//EnhancedInputComponent->BindAction(InputData->Actions[6], ETriggerEvent::Started, this, &ATestPlayerController::FireStart);
 			//EnhancedInputComponent->BindAction(InputData->Actions[6], ETriggerEvent::Triggered, this, &ATestPlayerController::FireTick);
 			//EnhancedInputComponent->BindAction(InputData->Actions[6], ETriggerEvent::Completed, this, &ATestPlayerController::FireEnd);
-			EnhancedInputComponent->BindAction(InputData->Actions[7], ETriggerEvent::Triggered, this, &ATestPlayerController::ChangePosture, static_cast<EPlayerPosture>(0));
-			EnhancedInputComponent->BindAction(InputData->Actions[8], ETriggerEvent::Triggered, this, &ATestPlayerController::ChangePosture, static_cast<EPlayerPosture>(1));
-			EnhancedInputComponent->BindAction(InputData->Actions[9], ETriggerEvent::Triggered, this, &ATestPlayerController::ChangePosture, static_cast<EPlayerPosture>(2));
-			EnhancedInputComponent->BindAction(InputData->Actions[10], ETriggerEvent::Triggered, this, &ATestPlayerController::Drink_Controller);			// => 메인도 수정해야 함 (24.07.29 수정됨)
-			EnhancedInputComponent->BindAction(InputData->Actions[11], ETriggerEvent::Triggered, this, &ATestPlayerController::BombSetStart_Controller);	// => 메인도 수정해야 함 (24.07.29 수정됨)
-			EnhancedInputComponent->BindAction(InputData->Actions[11], ETriggerEvent::Completed, this, &ATestPlayerController::BombSetCancel_Controller);	// => 메인도 수정해야 함 (24.07.29 수정됨)
-			EnhancedInputComponent->BindAction(InputData->Actions[20], ETriggerEvent::Triggered, this, &ATestPlayerController::ChangePosture, static_cast<EPlayerPosture>(5));		// => 메인도 수정해야 함 (24.07.25 수정됨) (Barehand로의 자세변경 키를 '0'에서 'X'로 변경함)
-			EnhancedInputComponent->BindAction(InputData->Actions[13], ETriggerEvent::Triggered, this, &ATestPlayerController::CheckItem);	// => 메인에 이전 필요 (24.07.29 추가됨) (E키를 눌렀을 때 PickUpItem 대신 CheckItem 함수 실행하도록 변경)
-			EnhancedInputComponent->BindAction(InputData->Actions[14], ETriggerEvent::Triggered, this, &ATestPlayerController::ChangePOVController);
+			EnhancedInputComponent->BindAction(InputData->Actions[7], ETriggerEvent::Triggered, this, &ATestPlayerController::ChangePosture_Con, static_cast<EPlayerPosture>(0));	// => 메인 수정 필요 (24.07.30 플레이어 함수와의 혼동을 방지하지 위해 이름 수정됨)
+			EnhancedInputComponent->BindAction(InputData->Actions[8], ETriggerEvent::Triggered, this, &ATestPlayerController::ChangePosture_Con, static_cast<EPlayerPosture>(1));	// => 메인 수정 필요 (24.07.30 플레이어 함수와의 혼동을 방지하지 위해 이름 수정됨)
+			EnhancedInputComponent->BindAction(InputData->Actions[9], ETriggerEvent::Triggered, this, &ATestPlayerController::ChangePosture_Con, static_cast<EPlayerPosture>(2));	// => 메인 수정 필요 (24.07.30 플레이어 함수와의 혼동을 방지하지 위해 이름 수정됨)
+			EnhancedInputComponent->BindAction(InputData->Actions[10], ETriggerEvent::Triggered, this, &ATestPlayerController::Drink_Con);			// => 메인 수정 필요 (24.07.29 해당 키에 연동된 함수 변경됨)
+			EnhancedInputComponent->BindAction(InputData->Actions[11], ETriggerEvent::Triggered, this, &ATestPlayerController::BombSetStart_Con);	// => 메인 수정 필요 (24.07.29 해당 키에 연동된 함수 변경됨)
+			EnhancedInputComponent->BindAction(InputData->Actions[11], ETriggerEvent::Completed, this, &ATestPlayerController::BombSetCancel_Con);	// => 메인 수정 필요 (24.07.29 해당 키에 연동된 함수 변경됨)
+			EnhancedInputComponent->BindAction(InputData->Actions[20], ETriggerEvent::Triggered, this, &ATestPlayerController::ChangePosture_Con, static_cast<EPlayerPosture>(5));	// => 메인 수정 필요 (24.07.25 해당 함수에 연동된 키 변경됨) ('0' -> 'X')
+			EnhancedInputComponent->BindAction(InputData->Actions[13], ETriggerEvent::Triggered, this, &ATestPlayerController::CheckItem_Con);		// => 메인 수정 필요 (24.07.29 해당 키에 연동된 함수 변경됨) (PickUpItem -> CheckItem)
+			EnhancedInputComponent->BindAction(InputData->Actions[14], ETriggerEvent::Triggered, this, &ATestPlayerController::ChangePOV_Con);		// => 메인 수정 필요 (24.07.30 플레이어 함수와의 혼동을 방지하지 위해 이름 수정됨)
 			EnhancedInputComponent->BindAction(InputData->Actions[15], ETriggerEvent::Started, this, &ATestPlayerController::Crouch);
 			EnhancedInputComponent->BindAction(InputData->Actions[16], ETriggerEvent::Started, this, &ATestPlayerController::IAReload);
 		}
@@ -102,7 +102,7 @@ void ATestPlayerController::MoveFront(const FInputActionValue& Value)
 		return;
 	}
 
-	ChangeState(EPlayerState::Walk);
+	ChangeState_Con(EPlayerState::Walk);
 	FVector Forward = GetPawn()->GetActorForwardVector();
 	GetPawn()->AddMovementInput(Forward);
 	ChangePlayerDir(EPlayerMoveDir::Forward);
@@ -116,7 +116,7 @@ void ATestPlayerController::MoveBack(const FInputActionValue& Value)
 		return;
 	}
 
-	ChangeState(EPlayerState::Walk);
+	ChangeState_Con(EPlayerState::Walk);
 	FVector Forward = GetPawn()->GetActorForwardVector();
 	GetPawn()->AddMovementInput(-Forward);
 	ChangePlayerDir(EPlayerMoveDir::Back);
@@ -130,7 +130,7 @@ void ATestPlayerController::MoveRight(const FInputActionValue& Value)
 		return;
 	}
 
-	ChangeState(EPlayerState::Walk);
+	ChangeState_Con(EPlayerState::Walk);
 	FVector Rightward = GetPawn()->GetActorRightVector();
 	GetPawn()->AddMovementInput(Rightward);
 	ChangePlayerDir(EPlayerMoveDir::Right);
@@ -144,7 +144,7 @@ void ATestPlayerController::MoveLeft(const FInputActionValue& Value)
 		return;
 	}
 
-	ChangeState(EPlayerState::Walk);
+	ChangeState_Con(EPlayerState::Walk);
 	FVector Rightward = GetPawn()->GetActorRightVector();
 	GetPawn()->AddMovementInput(-Rightward);
 	ChangePlayerDir(EPlayerMoveDir::Left);
@@ -184,7 +184,7 @@ void ATestPlayerController::Crouch(const FInputActionValue& Value)
 
 void ATestPlayerController::FireStart(float _DeltaTime)	// => 메인도 수정해야 함 (24.07.25 수정됨)
 {
-	ChangeState(EPlayerState::Fire);
+	ChangeState_Con(EPlayerState::Fire);
 	ATestCharacter* Ch = GetPawn<ATestCharacter>();
 
 	if (Ch->CurItemIndex == 3 || Ch->CurItemIndex == 4)
@@ -212,7 +212,7 @@ void ATestPlayerController::FireTick(float _DeltaTime)	// => 메인도 수정해야 함 
 
 void ATestPlayerController::FireEnd()
 {
-	ChangeState(EPlayerState::Idle);
+	ChangeState_Con(EPlayerState::Idle);
 	ATestCharacter* Ch = GetPawn<ATestCharacter>();
 
 	//
@@ -226,44 +226,44 @@ void ATestPlayerController::FireEnd()
 	GEngine->AddOnScreenDebugMessage(-1, 0.2f, FColor::Red, TEXT("End"));
 }
 
-void ATestPlayerController::Drink_Controller()	// => 메인에 추후 이전해야 함 (24.07.29 추가 후 테스팅 중)
+void ATestPlayerController::Drink_Con()	// => 메인에 추후 이전해야 함 (24.07.29 추가 후 테스팅 중)
 {
 	ATestCharacter* Ch = GetPawn<ATestCharacter>();
 	Ch->Drink();
 }
 
-void ATestPlayerController::BombSetStart_Controller()	// => 메인에 추후 이전해야 함 (24.07.29 추가 후 테스팅 중)
+void ATestPlayerController::BombSetStart_Con()	// => 메인에 추후 이전해야 함 (24.07.29 추가 후 테스팅 중)
 {
 	ATestCharacter* Ch = GetPawn<ATestCharacter>();
 	Ch->BombSetStart();
 }
 
-void ATestPlayerController::BombSetCancel_Controller()	// => 메인에 추후 이전해야 함 (24.07.29 추가 후 테스팅 중)
+void ATestPlayerController::BombSetCancel_Con()	// => 메인에 추후 이전해야 함 (24.07.29 추가 후 테스팅 중)
 {
 	ATestCharacter* Ch = GetPawn<ATestCharacter>();
 	Ch->BombSetCancel();
 }
 
-void ATestPlayerController::CheckItem()	// => 메인으로 이전 필요 (24.07.29 추가됨)
+void ATestPlayerController::CheckItem_Con()	// => 메인으로 이전 필요 (24.07.29 추가됨)
 {
 	ATestCharacter* Ch = GetPawn<ATestCharacter>();
 	Ch->CheckItem();
 }
 
-void ATestPlayerController::ChangeState(EPlayerState _State)
+void ATestPlayerController::ChangeState_Con(EPlayerState _State)
 {
 	ATestCharacter* Ch = GetPawn<ATestCharacter>();
 	Ch->ChangeState(_State);
 }
 
-void ATestPlayerController::ChangePosture(EPlayerPosture _Posture)
+void ATestPlayerController::ChangePosture_Con(EPlayerPosture _Posture)
 {
 	ATestCharacter* Ch = GetPawn<ATestCharacter>();
 	Ch->ChangePosture(_Posture);
 	ChangePostureToWidget(_Posture);
 }
 
-void ATestPlayerController::ChangePOVController()
+void ATestPlayerController::ChangePOV_Con()
 {
 	ATestCharacter* Ch = GetPawn<ATestCharacter>();
 	Ch->ChangePOV();

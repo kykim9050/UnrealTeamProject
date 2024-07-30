@@ -3,10 +3,12 @@
 
 #include "PartDevLevel/Monster/Karaken/AI/BTTaskNode_KrakenRotate.h"
 #include "PartDevLevel/Monster/TestMonsterBase.h"
-#include "Global/DataTable/MonsterDataRow.h"
-#include "Global/ContentsLog.h"
+
 #include "BehaviorTree/BlackboardComponent.h"
 #include "Kismet/KismetMathLibrary.h"
+
+#include "Global/DataTable/MonsterDataRow.h"
+#include "Global/ContentsLog.h"
 
 EBTNodeResult::Type UBTTaskNode_KrakenRotate::ExecuteTask(UBehaviorTreeComponent& _OwnerComp, uint8* _NodeMemory)
 {
@@ -26,7 +28,7 @@ EBTNodeResult::Type UBTTaskNode_KrakenRotate::ExecuteTask(UBehaviorTreeComponent
 		return EBTNodeResult::Type::Aborted;
 	}
 
-	UMonsterData* MonsterData = GetValueAsObject<UMonsterData>(_OwnerComp, TEXT("MonsterData"));
+	UTestMonsterData* MonsterData = GetValueAsObject<UTestMonsterData>(_OwnerComp, TEXT("MonsterData"));
 	AActor* Target = Cast<AActor>(_OwnerComp.GetBlackboardComponent()->GetValueAsObject(TEXT("TargetActor")));
 	ETestMonsterAnim NextAnim;
 
@@ -64,7 +66,7 @@ void UBTTaskNode_KrakenRotate::TickTask(UBehaviorTreeComponent& _OwnerComp, uint
 {
 	Super::TickTask(_OwnerComp, _pNodeMemory, _DeltaSeconds);
 
-	UMonsterData* MonsterData = GetValueAsObject<UMonsterData>(_OwnerComp, TEXT("MonsterData"));
+	UTestMonsterData* MonsterData = GetValueAsObject<UTestMonsterData>(_OwnerComp, TEXT("MonsterData"));
 	ATestMonsterBase* Monster = GetActor<ATestMonsterBase>(_OwnerComp);
 
 	AActor* Target = Cast<AActor>(_OwnerComp.GetBlackboardComponent()->GetValueAsObject(TEXT("TargetActor")));

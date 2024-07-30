@@ -3,25 +3,25 @@
 
 #include "PartDevLevel/Monster/TestMonsterBase.h"
 #include "PartDevLevel/Monster/Animation/MonsterAnimInstance.h"
-#include "TestMonsterBaseAIController.h"
 #include "TestLevel/Character/TestPlayerState.h"
 #include "TestLevel/Character/TestCharacter.h"
+#include "TestMonsterBaseAIController.h"
 
 #include "GameFrameWork/CharacterMovementComponent.h"
 #include "Blueprint/AIBlueprintHelperLibrary.h"
 #include "BehaviorTree/BlackboardComponent.h"
-#include "BrainComponent.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "Components/SphereComponent.h"
+#include "MotionWarpingComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Net/UnrealNetwork.h"
+#include "BrainComponent.h"
 
 #include "Global/MainGameBlueprintFunctionLibrary.h"
 #include "Global/ContentsEnum.h"
 #include "Global/ContentsLog.h"
 
-#include "Components/SphereComponent.h"
-#include "MotionWarpingComponent.h"
 
 // Sets default values
 ATestMonsterBase::ATestMonsterBase()
@@ -68,9 +68,10 @@ void ATestMonsterBase::BeginPlay()
 	}
 
 	//  몬스터 데이터 세팅
-	SettingData = NewObject<UMonsterData>(this);
+	SettingData = NewObject<UTestMonsterData>(this);
 	SettingData->BaseData = BaseData;
 	SettingData->AttackDamage = 34.0f;
+	SettingData->AttackBoundary = BaseData->GetAttackRange();
 	SettingData->OriginPos = GetActorLocation();
 
 	// 클라이언트일 경우

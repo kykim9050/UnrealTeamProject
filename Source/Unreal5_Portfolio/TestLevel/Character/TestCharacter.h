@@ -62,6 +62,8 @@ public:
 	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	class UTestMinimapIconComponent* MinimapIconComponent = nullptr;
 	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	class UHeadNameWidgetComponent* HeadNameComponent = nullptr;	// => 메인으로 이전 필요 (24.07.30 추가됨)
+	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	class UBoxComponent* GetMapItemCollisonComponent = nullptr;
 
 	// State, Posture

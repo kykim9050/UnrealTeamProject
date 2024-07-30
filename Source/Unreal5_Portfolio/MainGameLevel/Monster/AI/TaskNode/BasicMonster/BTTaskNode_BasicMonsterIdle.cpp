@@ -3,6 +3,7 @@
 
 #include "MainGameLevel/Monster/AI/TaskNode/BasicMonster/BTTaskNode_BasicMonsterIdle.h"
 #include "MainGameLevel/Monster/Base/BasicMonsterBase.h"
+#include "MainGameLevel/Monster/Data/BasicMonsterData.h"
 
 #include "BehaviorTree/BlackboardComponent.h"
 
@@ -21,14 +22,14 @@ EBTNodeResult::Type UBTTaskNode_BasicMonsterIdle::ExecuteTask(UBehaviorTreeCompo
         return EBTNodeResult::Type::Aborted;
     }
 
-    UMonsterData* MonsterData = GetValueAsObject<UMonsterData>(OwnerComp, TEXT("MonsterData"));
+    UBasicMonsterData* MonsterData = GetValueAsObject<UBasicMonsterData>(OwnerComp, TEXT("MonsterData"));
     if (false == MonsterData->IsValidLowLevel())
     {
         LOG(MonsterLog, Fatal, TEXT("MonsterData Is Not Valid"));
         return EBTNodeResult::Type::Aborted;
     }
 
-    MonsterData->IdleTime = 2.0f;
+    MonsterData->TimeCount = IdleTime;
     Monster->ChangeRandomAnimation(EBasicMonsterAnim::Idle);
 
     return EBTNodeResult::Type::InProgress;
@@ -46,7 +47,7 @@ void UBTTaskNode_BasicMonsterIdle::TickTask(UBehaviorTreeComponent& OwnerComp, u
         return;
     }
 
-    UMonsterData* MonsterData = GetValueAsObject<UMonsterData>(OwnerComp, TEXT("MonsterData"));
+    UBasicMonsterData* MonsterData = GetValueAsObject<UBasicMonsterData>(OwnerComp, TEXT("MonsterData"));
     if (false == MonsterData->IsValidLowLevel())
     {
         LOG(MonsterLog, Fatal, TEXT("MonsterData Is Not Valid"));
@@ -54,11 +55,11 @@ void UBTTaskNode_BasicMonsterIdle::TickTask(UBehaviorTreeComponent& OwnerComp, u
     }
 
     // IdleTime 이후 Patrol 상태로
-    if (0.0f > MonsterData->IdleTime)
+    if (0.0f > MonsterData->TimeCount)
     {
         StateChange(OwnerComp, EBasicMonsterState::Patrol);
         return;
     }
 
-    MonsterData->IdleTime -= DeltaSeconds;
+    MonsterData->TimeCount -= DeltaSeconds;
 }

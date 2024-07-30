@@ -13,11 +13,11 @@
 #include "Components/CapsuleComponent.h"
 #include "Navigation/PathFollowingComponent.h"
 
-EBTNodeResult::Type UBTTaskNode_MonsterClimb::ExecuteTask(UBehaviorTreeComponent& _OwnerComp, uint8* _NodeMemory)
+EBTNodeResult::Type UBTTaskNode_MonsterClimb::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
 {
-	Super::ExecuteTask(_OwnerComp, _NodeMemory);
+	Super::ExecuteTask(OwnerComp, NodeMemory);
 
-	ATestMonsterBase* Monster = GetActor<ATestMonsterBase>(_OwnerComp);
+	ATestMonsterBase* Monster = GetActor<ATestMonsterBase>(OwnerComp);
 	if (false == Monster->IsValidLowLevel())
 	{
 		LOG(MonsterLog, Fatal, TEXT("Monster Is Not Valid"));
@@ -32,11 +32,11 @@ EBTNodeResult::Type UBTTaskNode_MonsterClimb::ExecuteTask(UBehaviorTreeComponent
 	return EBTNodeResult::InProgress;
 }
 
-void UBTTaskNode_MonsterClimb::TickTask(UBehaviorTreeComponent& _OwnerComp, uint8* _pNodeMemory, float _DeltaSeconds)
+void UBTTaskNode_MonsterClimb::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* pNodeMemory, float DeltaSeconds)
 {
-	Super::TickTask(_OwnerComp, _pNodeMemory, _DeltaSeconds);
+	Super::TickTask(OwnerComp, pNodeMemory, DeltaSeconds);
 
-	ATestMonsterBase* Monster = GetActor<ATestMonsterBase>(_OwnerComp);
+	ATestMonsterBase* Monster = GetActor<ATestMonsterBase>(OwnerComp);
 	ATestMonsterBaseAIController* Controller = Cast<ATestMonsterBaseAIController>(Monster->GetController());
 	FVector Dest = Controller->GetBlackboardComponent()->GetValueAsVector("DestinationLocation");
 	FVector CurPos = Monster->GetActorLocation();
@@ -45,7 +45,7 @@ void UBTTaskNode_MonsterClimb::TickTask(UBehaviorTreeComponent& _OwnerComp, uint
 	{
 		Monster->GetCapsuleComponent()->SetCapsuleRadius(34.0f);
 		//Monster->GetCharacterMovement()->MovementMode = EMovementMode::MOVE_None;
-		StateChange(_OwnerComp, ETestMonsterState::ClimbEnd);
+		StateChange(OwnerComp, ETestMonsterState::ClimbEnd);
 		return;
 	}
 
