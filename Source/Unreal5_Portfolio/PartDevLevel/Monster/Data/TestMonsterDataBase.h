@@ -38,8 +38,6 @@ public:
 	/// <summary>
 	/// /////
 	/// </summary>
-
-
 	FVector LerpPos = FVector::ZeroVector;
 
 	float IdleTime = 0.0f;
