@@ -243,19 +243,6 @@ void ATestCharacter::Tick(float DeltaTime)
 			return;
 		}
 
-		int MeleeNum = CurGameState->GetMeleeNum();
-		FString MNumString = FString::FromInt(MeleeNum);
-		UMainGameBlueprintFunctionLibrary::DebugTextPrint(GetWorld(), FString(TEXT("CurMeleeNum = ")) + MNumString);
-
-		int RifleNum = CurGameState->GetRifleNum();
-		FString RNumString = FString::FromInt(RifleNum);
-		UMainGameBlueprintFunctionLibrary::DebugTextPrint(GetWorld(), FString(TEXT("CurRifleNum = ")) + RNumString);
-
-		int BombNum = CurGameState->GetBombNum();
-		FString BNumString = FString::FromInt(BombNum);
-		UMainGameBlueprintFunctionLibrary::DebugTextPrint(GetWorld(), FString(TEXT("CurBombNum = ")) + BNumString);
-
-
 		EGameStage StageNum = CurGameState->GetCurStage();
 		FString StageString = FString();
 		const UEnum* StateEnum = FindObject<UEnum>(ANY_PACKAGE, TEXT("EGameStage"), true);

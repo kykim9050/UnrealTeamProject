@@ -55,13 +55,6 @@ public:
 	}
 
 	/// <summary>
-	/// Melee 확보시 호출되는 함수
-	/// </summary>
-	UFUNCTION(Reliable, NetMulticast)
-	void AddMeleeNum();
-	void AddMeleeNum_Implementation();
-
-	/// <summary>
 	/// 확보된 Melee 수를 반환
 	/// </summary>
 	/// <returns></returns>
@@ -69,11 +62,6 @@ public:
 	{
 		return MeleeNum;
 	}
-
-	/// <summary>
-	/// 무기고에서 아이템 확보시 아이템 수를 갱신하는 함수
-	/// </summary>
-	void AddArmoryWeaponNum(EPlayerPosture _ItemType);
 
 	/// <summary>
 	/// 확보된 Rifle 수를 반환
@@ -92,16 +80,6 @@ public:
 	{
 		return BombNum;
 	}
-
-	/// <summary>
-	/// 보스1 스테이지 클리어
-	/// </summary>
-	void SetClearBoss1Stage();
-	
-	/// <summary>
-	/// 보스2 스테이지 클리어
-	/// </summary>
-	void SetClearBoss2Stage();
 
 	/// <summary>
 	/// 현재 게임 진행 관련 체크 함수
