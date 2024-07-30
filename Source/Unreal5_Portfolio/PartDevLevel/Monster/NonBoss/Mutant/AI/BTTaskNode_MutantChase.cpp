@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "MyBTTaskNode_MutantChase.h"
+#include "BTTaskNode_MutantChase.h"
 #include "PartDevLevel/Monster/NonBoss/TestMonsterBaseAIController.h"
 #include "PartDevLevel/Monster/Base/TestMonsterBase.h"
 
@@ -11,7 +11,7 @@
 
 #include "Global/ContentsLog.h"
 
-EBTNodeResult::Type UMyBTTaskNode_MutantChase::ExecuteTask(UBehaviorTreeComponent& _OwnerComp, uint8* _NodeMemory)
+EBTNodeResult::Type UBTTaskNode_MutantChase::ExecuteTask(UBehaviorTreeComponent& _OwnerComp, uint8* _NodeMemory)
 {
 	Super::ExecuteTask(_OwnerComp, _NodeMemory);
 
@@ -30,7 +30,7 @@ EBTNodeResult::Type UMyBTTaskNode_MutantChase::ExecuteTask(UBehaviorTreeComponen
 	return EBTNodeResult::Type::InProgress;
 }
 
-void UMyBTTaskNode_MutantChase::TickTask(UBehaviorTreeComponent& _OwnerComp, uint8* _pNodeMemory, float _DeltaSeconds)
+void UBTTaskNode_MutantChase::TickTask(UBehaviorTreeComponent& _OwnerComp, uint8* _pNodeMemory, float _DeltaSeconds)
 {
 	Super::TickTask(_OwnerComp, _pNodeMemory, _DeltaSeconds);
 
