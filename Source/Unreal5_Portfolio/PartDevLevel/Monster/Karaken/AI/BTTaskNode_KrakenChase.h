@@ -3,14 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "BTTaskNode_Monster.h"
-#include "BTTaskNode_MonsterChase.generated.h"
+#include "PartDevLevel/Monster/AI/BTTaskNode_Monster.h"
+#include "BTTaskNode_KrakenChase.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class UNREAL5_PORTFOLIO_API UBTTaskNode_MonsterChase : public UBTTaskNode_Monster
+class UNREAL5_PORTFOLIO_API UBTTaskNode_KrakenChase : public UBTTaskNode_Monster
 {
 	GENERATED_BODY()
 	

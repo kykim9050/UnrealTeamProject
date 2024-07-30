@@ -8,26 +8,26 @@
 #include "BehaviorTree/BlackboardComponent.h"
 #include "Kismet/KismetMathLibrary.h"
 
-EBTNodeResult::Type UBTTaskNode_KrakenRotate::ExecuteTask(UBehaviorTreeComponent& _OwnerComp, uint8* _NodeMemory)
+EBTNodeResult::Type UBTTaskNode_KrakenRotate::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
 {
-	EBTNodeResult::Type Result = Super::ExecuteTask(_OwnerComp, _NodeMemory);
+	EBTNodeResult::Type Result = Super::ExecuteTask(OwnerComp, NodeMemory);
 
-	ATestMonsterBase* Monster = GetActor<ATestMonsterBase>(_OwnerComp);
+	ATestMonsterBase* Monster = GetActor<ATestMonsterBase>(OwnerComp);
 	if (false == Monster->IsValidLowLevel())
 	{
 		LOG(MonsterLog, Fatal, TEXT("Monster Is Not Valid"));
 		return EBTNodeResult::Type::Aborted;
 	}
 
-	ETestMonsterState CurState = static_cast<ETestMonsterState>(GetCurState(_OwnerComp));
+	ETestMonsterState CurState = static_cast<ETestMonsterState>(GetCurState(OwnerComp));
 	if (ETestMonsterState::Rotate != CurState)
 	{
 		LOG(MonsterLog, Fatal, TEXT("Monster State Is Not Rotate"));
 		return EBTNodeResult::Type::Aborted;
 	}
 
-	UMonsterData* MonsterData = GetValueAsObject<UMonsterData>(_OwnerComp, TEXT("MonsterData"));
-	AActor* Target = Cast<AActor>(_OwnerComp.GetBlackboardComponent()->GetValueAsObject(TEXT("TargetActor")));
+	UMonsterData* MonsterData = GetValueAsObject<UMonsterData>(OwnerComp, TEXT("MonsterData"));
+	AActor* Target = Cast<AActor>(OwnerComp.GetBlackboardComponent()->GetValueAsObject(TEXT("TargetActor")));
 	ETestMonsterAnim NextAnim;
 
 	FVector MonsterLocation = Monster->GetActorLocation();
@@ -37,21 +37,20 @@ EBTNodeResult::Type UBTTaskNode_KrakenRotate::ExecuteTask(UBehaviorTreeComponent
 
 	FRotator Rotate = UKismetMathLibrary::FindLookAtRotation(MonsterLocation, TargetLocation);
 	double Rot = Rotate.Yaw;
-	if (abs(Rot) <= 20.0f)
+	if (abs(Rot) <= 30.0f)
 	{
-		StateChange(_OwnerComp, ETestMonsterState::Chase);
+		StateChange(OwnerComp, ETestMonsterState::Chase);
 		return EBTNodeResult::Type::Succeeded;
 	}
-	else if (Rot > 20.0f)
+	else if (Rot > 30.0f)
 	{
 		NextAnim = ETestMonsterAnim::RRotate;
 	}
-	else if (Rot < -20.0f)
+	else if (Rot < -30.0f)
 	{
 		NextAnim = ETestMonsterAnim::LRotate;
 	}
 
-	MonsterData->DestLoc = Target->GetActorLocation();
 	MonsterData->DestRotate = Rotate;
 	MonsterData->MyRotate = Monster->GetActorRotation();
 	MonsterData->AnimationTime = 0.0f;
@@ -60,22 +59,27 @@ EBTNodeResult::Type UBTTaskNode_KrakenRotate::ExecuteTask(UBehaviorTreeComponent
 	return EBTNodeResult::Type::InProgress;
 }
 
-void UBTTaskNode_KrakenRotate::TickTask(UBehaviorTreeComponent& _OwnerComp, uint8* _pNodeMemory, float _DeltaSeconds)
+void UBTTaskNode_KrakenRotate::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* pNodeMemory, float DeltaSeconds)
 {
-	Super::TickTask(_OwnerComp, _pNodeMemory, _DeltaSeconds);
+	Super::TickTask(OwnerComp, pNodeMemory, DeltaSeconds);
 
-	UMonsterData* MonsterData = GetValueAsObject<UMonsterData>(_OwnerComp, TEXT("MonsterData"));
-	ATestMonsterBase* Monster = GetActor<ATestMonsterBase>(_OwnerComp);
+	UMonsterData* MonsterData = GetValueAsObject<UMonsterData>(OwnerComp, TEXT("MonsterData"));
+	ATestMonsterBase* Monster = GetActor<ATestMonsterBase>(OwnerComp);
 
-	AActor* Target = Cast<AActor>(_OwnerComp.GetBlackboardComponent()->GetValueAsObject(TEXT("TargetActor")));
+	AActor* Target = Cast<AActor>(OwnerComp.GetBlackboardComponent()->GetValueAsObject(TEXT("TargetActor")));
 	FVector TargetLocation = Target->GetActorLocation();
 	FVector MonsterLocation = Monster->GetActorLocation();
 	FVector MonsterToTarget = MonsterLocation - TargetLocation;
 
 	if (MonsterToTarget.Size() <= MonsterData->AttackBoundary)
 	{
-		StateChange(_OwnerComp, ETestMonsterState::Attack);
-		return;
+		FRotator Rotate = UKismetMathLibrary::FindLookAtRotation(MonsterLocation, TargetLocation);
+		double Rot = Rotate.Yaw;
+		if (abs(Rot) <= 30.0f)
+		{
+			StateChange(OwnerComp, ETestMonsterState::Attack);
+			return;
+		}
 	}
 	
 	float Alpha = FMath::Clamp(MonsterData->AnimationTime, 0.0f, 2.0f);
@@ -85,9 +89,9 @@ void UBTTaskNode_KrakenRotate::TickTask(UBehaviorTreeComponent& _OwnerComp, uint
 
 	if (2.0f < MonsterData->AnimationTime)
 	{
-		StateChange(_OwnerComp, ETestMonsterState::Chase);
+		StateChange(OwnerComp, ETestMonsterState::Chase);
 		return;
 	}
 
-	MonsterData->AnimationTime += _DeltaSeconds;
+	MonsterData->AnimationTime += DeltaSeconds;
 }

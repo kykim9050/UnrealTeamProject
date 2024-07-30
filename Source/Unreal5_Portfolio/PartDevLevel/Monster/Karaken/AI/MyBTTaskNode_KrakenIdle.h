@@ -15,7 +15,7 @@ class UNREAL5_PORTFOLIO_API UMyBTTaskNode_KrakenIdle : public UBTTaskNode_Monste
 	GENERATED_BODY()
 	
 public:
-	EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& _OwnerComp, uint8* _NodeMemory) override;
-	void TickTask(UBehaviorTreeComponent& _OwnerComp, uint8* _pNodeMemory, float _DeltaSeconds) override;
+	EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) override;
+	void TickTask(UBehaviorTreeComponent& OwnerComp, uint8* pNodeMemory, float DeltaSeconds) override;
 
 };

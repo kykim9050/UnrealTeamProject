@@ -104,7 +104,8 @@ public:
 	
 	float AttackTime = 0.0f;
 	float AttackDamage = 0.0f;
-	float AttackBoundary = 200.0f;
+	//float AttackBoundary = 200.0f;
+	float AttackBoundary = 1200.0f;
 
 	float ClimbTime = 0.0f;
 	float ClimbTotal = 0.0f;
