@@ -74,7 +74,7 @@ void UBTTaskNode_KrakenRotate::TickTask(UBehaviorTreeComponent& _OwnerComp, uint
 	FVector MonsterLocation = Monster->GetActorLocation();
 	FVector MonsterToTarget = MonsterLocation - TargetLocation;
 
-	if (MonsterToTarget.Size() <= MonsterData->AttackBoundary)
+	if (MonsterToTarget.Size() <= MonsterData->AttackRange)
 	{
 		StateChange(_OwnerComp, ETestMonsterState::Attack);
 		return;
