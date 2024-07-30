@@ -11,6 +11,8 @@
 
 void UClimbEndNotify::NotifyBegin(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation, float TotalDuration)
 {
+	Super::NotifyBegin(MeshComp, Animation, TotalDuration);
+
 	ATestMonsterBase* Monster = Cast<ATestMonsterBase>(MeshComp->GetOwner());
 	if (nullptr != Monster)
 	{
@@ -29,6 +31,8 @@ void UClimbEndNotify::NotifyBegin(USkeletalMeshComponent* MeshComp, UAnimSequenc
 
 void UClimbEndNotify::NotifyTick(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation, float FrameDeltaTime)
 {
+	Super::NotifyTick(MeshComp, Animation, FrameDeltaTime);
+
 	ATestMonsterBase* Monster = Cast<ATestMonsterBase>(MeshComp->GetOwner());
 	if (nullptr != Monster)
 	{
@@ -45,4 +49,5 @@ void UClimbEndNotify::NotifyTick(USkeletalMeshComponent* MeshComp, UAnimSequence
 
 void UClimbEndNotify::NotifyEnd(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation)
 {
+	Super::NotifyEnd(MeshComp, Animation);
 }
