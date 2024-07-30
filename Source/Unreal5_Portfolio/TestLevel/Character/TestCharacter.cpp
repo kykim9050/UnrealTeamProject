@@ -374,6 +374,11 @@ void ATestCharacter::Drink_Implementation()	// => 메인에 추후 이전해야 함 (24.07
 	DeleteItem(3);
 }
 
+void ATestCharacter::DrinkComplete_Implementation()	// => 메인에 추후 이전해야 함 (24.07.30 추가 후 테스팅 중)
+{
+	ChangePosture(static_cast<EPlayerPosture>(PrevItemIndex));
+}
+
 void ATestCharacter::BombSetStart_Implementation()	// => 메인에 추후 이전해야 함 (24.07.30 수정 및 테스팅 중)
 {
 	// 폭탄 아이템이 없다면 return
@@ -395,6 +400,11 @@ void ATestCharacter::BombSetStart_Implementation()	// => 메인에 추후 이전해야 함
 		return;
 	}
 
+
+}
+
+void ATestCharacter::BombSetTick_Implementation()	// => 메인에 추후 이전해야 함 (24.07.30 추가 후 테스팅 중)
+{
 
 }
 
@@ -497,15 +507,11 @@ void ATestCharacter::ChangeState_Implementation(EPlayerState _Type)
 
 void ATestCharacter::ChangePosture_Implementation(EPlayerPosture _Type)	// => 메인으로 이전해야 함 (24.07.30 수정 중)
 {
-	if (_Type == EPlayerPosture::Bomb || _Type == EPlayerPosture::Drink)
-	{
-		// 0. Bomb, Drink => 자세변경할 수 없음 (수정 필요)
-		return;
-	}
-	else if (_Type == EPlayerPosture::Barehand)			
+	if (_Type == EPlayerPosture::Barehand)			
 	{
 		// 1. Barehand => 맨손 자세로 변경
 		PostureValue = _Type;
+		PrevItemIndex = CurItemIndex;
 		CurItemIndex = -1;
 
 		// 아이템 메시 visibility 끄기
@@ -514,7 +520,7 @@ void ATestCharacter::ChangePosture_Implementation(EPlayerPosture _Type)	// => 메
 	}
 	else
 	{
-		// 2. Rifle1, Rifle2, Melee => 무기를 든 자세로 변경
+		// 2. Rifle1, Rifle2, Melee, Drink, Bomb => 아이템을 든 자세로 변경
 		int ItemSlotIndex = static_cast<int>(_Type);
 		if (IsItemIn[ItemSlotIndex] == false)
 		{
@@ -524,6 +530,7 @@ void ATestCharacter::ChangePosture_Implementation(EPlayerPosture _Type)	// => 메
 			return;
 		}
 		PostureValue = _Type;
+		PrevItemIndex = CurItemIndex;
 		CurItemIndex = ItemSlotIndex;
 
 		// 아이템 static mesh 세팅

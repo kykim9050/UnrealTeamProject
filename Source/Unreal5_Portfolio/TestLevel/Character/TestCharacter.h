@@ -127,6 +127,8 @@ public:
 	TArray<bool> IsItemIn;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	int CurItemIndex = -1;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	int PrevItemIndex = -1;
 
 	// Item
 	UPROPERTY(Category = "Contents", VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
@@ -164,13 +166,6 @@ public:
 	// Notify에서 호출.
 	void ChangeHandAttackCollisionProfile(FName _Name);
 
-	// HP (for UI, Monster Test)
-	UFUNCTION(BlueprintCallable)
-	FORCEINLINE float GetPlayerHp()
-	{
-		return PlayerHp;
-	}
-
 	UFUNCTION()
 	void SendTokenToHpBarWidget();
 
@@ -195,10 +190,6 @@ protected:
 	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	bool PickUp = false;
 
-	// HP (for UI, Monster Test)
-	UPROPERTY(Category = "Contents", Replicated, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	float PlayerHp = 100.0f;
-
 private:
 	// 근접 공격에 사용 중 (태환)
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
@@ -220,6 +211,9 @@ public:
 	UFUNCTION(Reliable, Server, BlueprintCallable)
 	void Drink();	// => 메인에 추후 이전해야 함 (24.07.29 추가 후 테스팅 중)
 	void Drink_Implementation();
+	UFUNCTION(Reliable, Server, BlueprintCallable)
+	void DrinkComplete();	// => 메인에 추후 이전해야 함 (24.07.30 추가 후 테스팅 중)
+	void DrinkComplete_Implementation();
 
 	// Bomb Setting
 	UPROPERTY(Replicated ,BlueprintReadWrite)
@@ -227,6 +221,9 @@ public:
 	UFUNCTION(Reliable, Server, BlueprintCallable)
 	void BombSetStart();	// => 메인에 추후 이전해야 함 (24.07.29 추가 후 테스팅 중)
 	void BombSetStart_Implementation();
+	UFUNCTION(Reliable, Server, BlueprintCallable)
+	void BombSetTick();	// => 메인에 추후 이전해야 함 (24.07.30 추가 후 테스팅 중)
+	void BombSetTick_Implementation();
 	UFUNCTION(Reliable, Server, BlueprintCallable)
 	void BombSetCancel();	// => 메인에 추후 이전해야 함 (24.07.29 추가 후 테스팅 중)
 	void BombSetCancel_Implementation();
