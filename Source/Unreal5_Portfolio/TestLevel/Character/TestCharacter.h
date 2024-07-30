@@ -145,13 +145,11 @@ public:
 	UFUNCTION(Reliable, Server)
 	void PickUpItem();
 	void PickUpItem_Implementation();
+	UFUNCTION(BlueprintCallable)
+	void ItemSetting(FName _TagName, int _SlotIndex);	// => 메인캐릭터로 이전해야 함 (24.07.30 추가됨)
 	UFUNCTION(Reliable, Server, BlueprintCallable)
 	void DropItem(int _SlotIndex);	// => 메인캐릭터로 이전해야 함 (24.07.30 수정됨)
 	void DropItem_Implementation(int _SlotIndex);
-
-	UFUNCTION(BlueprintCallable)
-	void ItemSetting(FName _TagName, int _SlotIndex);	// => 메인캐릭터로 이전해야 함 (24.07.30 추가됨)
-
 	UFUNCTION(BlueprintCallable)
 	void DeleteItem(int _Index);	// => 메인캐릭터로 이전해야 함 (24.07.29 추가됨)
 
@@ -172,9 +170,6 @@ public:
 	{
 		return PlayerHp;
 	}
-
-	UFUNCTION(BlueprintCallable)
-	void GetDamage(float _Damage); // Player State로 이동.
 
 	UFUNCTION()
 	void SendTokenToHpBarWidget();
@@ -214,13 +209,6 @@ private:
 	class UPlayerAnimInstance* PlayerAnimInst;
 	UPROPERTY()
 	class UPlayerAnimInstance* FPVPlayerAnimInst;
-
-
-	//UPROPERTY()
-	//float CurHp = 0.0f;
-
-	UPROPERTY()
-	float MyMaxHp = 0.0f;
 
 public:
 	// Fire
