@@ -43,6 +43,11 @@ public:
 		return AllAnimMontages;
 	}
 
+	int GetSpawnRockCount() const
+	{
+		return SpawnRockCount;
+	}
+
 
 	// Test
 	ETestMonsterType GetMonsterType() const
@@ -85,4 +90,62 @@ private:
 	UPROPERTY(EditAnywhere, meta = (AllowprivateAccess = "true"))
 	TMap<ETestMonsterAnim, FAnimMontageGroup> TestAnimMontages;
 
+	// 스폰 돌 갯수
+	UPROPERTY(EditAnywhere, meta = (AllowprivateAccess = "true"))
+	int SpawnRockCount;
+
+};
+
+UCLASS()
+class UTestMonsterData : public UObject
+{
+	GENERATED_BODY()
+
+protected:
+	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+
+public:
+	// 기본 설정 Data
+	const FMonsterDataRow* BaseData;
+
+	// 개별 Data
+
+	// Basic
+	UPROPERTY(Replicated)
+	float Hp = 100.0f;
+	
+	float AttackDamage = 0.0f;
+	float AttackBoundary = 200.0f;
+
+
+
+	/// <summary>
+	/// /////
+	/// </summary>
+	FVector OriginPos = FVector::ZeroVector;
+
+
+	FVector LerpPos = FVector::ZeroVector;
+
+	float IdleTime = 0.0f;
+	
+	float Max_PatrolRange = 800.0f;
+	
+	float AttackTime = 0.0f;
+
+	float ClimbTime = 0.0f;
+	float ClimbTotal = 0.0f;
+
+	FVector DestLoc = FVector::ZeroVector;
+	float ClimbEndUpTime = 0.0f;
+
+	float AnimationTime = 0.0f;
+	float JumpSpeed = 30.0f;
+	float JumpAttackDamage = 50.0f;
+	float JumpAttackBoundary = 500.0f;
+
+	bool IsChange = false;
+
+	FRotator DestRotate = FRotator::ZeroRotator;
+	FRotator MyRotate = FRotator::ZeroRotator;
 };
