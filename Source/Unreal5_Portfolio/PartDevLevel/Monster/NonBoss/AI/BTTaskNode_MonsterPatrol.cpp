@@ -23,7 +23,7 @@ EBTNodeResult::Type UBTTaskNode_MonsterPatrol::ExecuteTask(UBehaviorTreeComponen
 		return EBTNodeResult::Type::Aborted;
 	}
 
-	UTestMonsterBaseData* MonsterData = GetValueAsObject<UTestMonsterBaseData>(_OwnerComp, TEXT("MonsterData"));
+	UTestMonsterDataBase* MonsterData = GetValueAsObject<UTestMonsterDataBase>(_OwnerComp, TEXT("MonsterData"));
 	
 	// Find PatrolLocation
 	UNavigationSystemV1* NavSystem = UNavigationSystemV1::GetNavigationSystem(GetWorld());
