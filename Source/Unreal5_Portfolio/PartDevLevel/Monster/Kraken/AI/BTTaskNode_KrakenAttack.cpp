@@ -42,15 +42,15 @@ EBTNodeResult::Type UBTTaskNode_KrakenAttack::ExecuteTask(UBehaviorTreeComponent
 
 	FRotator Rotate = UKismetMathLibrary::FindLookAtRotation(MonsterLocation, TargetLocation);
 	double Rot = Rotate.Yaw;
-	if (abs(Rot) <= 30.0f)
+	if (abs(Rot) <= 45.0f)
 	{
 		NextAnim = ETestMonsterAnim::Attack;
 	}
-	else if (Rot > 30.0f)
+	else if (Rot > 45.0f)
 	{
 		NextAnim = ETestMonsterAnim::RAttack;
 	}
-	else if (Rot < -30.0f)
+	else if (Rot < -45.0f)
 	{
 		NextAnim = ETestMonsterAnim::LAttack;
 	}

@@ -63,8 +63,8 @@ void UBTTaskNode_KrakenChase::TickTask(UBehaviorTreeComponent& OwnerComp, uint8*
 
 	if (IsMove == EPathFollowingRequestResult::Type::AlreadyAtGoal)
 	{
-		//StateChange(OwnerComp, ETestMonsterState::GroundAttack);
-		StateChange(OwnerComp, ETestMonsterState::Idle);
+		MonsterData->IsGroundAttack = true;
+		StateChange(OwnerComp, ETestMonsterState::Rotate);
 		return;
 	}
 }

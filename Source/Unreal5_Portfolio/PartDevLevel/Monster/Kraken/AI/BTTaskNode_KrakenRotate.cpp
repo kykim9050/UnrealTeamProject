@@ -74,7 +74,7 @@ void UBTTaskNode_KrakenRotate::TickTask(UBehaviorTreeComponent& _OwnerComp, uint
 	FVector MonsterLocation = Monster->GetActorLocation();
 	FVector MonsterToTarget = MonsterLocation - TargetLocation;
 
-	if (MonsterToTarget.Size() <= MonsterData->AttackBoundary)
+	if (false == MonsterData->IsGroundAttack && MonsterToTarget.Size() <= MonsterData->AttackBoundary)
 	{
 		StateChange(_OwnerComp, ETestMonsterState::Attack);
 		return;
@@ -87,6 +87,12 @@ void UBTTaskNode_KrakenRotate::TickTask(UBehaviorTreeComponent& _OwnerComp, uint
 
 	if (2.0f < MonsterData->AnimationTime)
 	{
+		if (true == MonsterData->IsGroundAttack)
+		{
+			StateChange(_OwnerComp, ETestMonsterState::GroundAttack);
+			return;
+		}
+
 		StateChange(_OwnerComp, ETestMonsterState::Chase);
 		return;
 	}

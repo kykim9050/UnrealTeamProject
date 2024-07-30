@@ -69,6 +69,8 @@ public:
 
 	class UMotionWarpingComponent* GetMotionWarpingComponent();
 
+	void SpawnRock();
+
 protected:
 	UFUNCTION()
 	void OnAttackOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);

@@ -43,6 +43,11 @@ public:
 		return AllAnimMontages;
 	}
 
+	int GetSpawnRockCount() const
+	{
+		return SpawnRockCount;
+	}
+
 
 	// Test
 	ETestMonsterType GetMonsterType() const
@@ -84,6 +89,10 @@ private:
 	// ¸ùÅ¸ÁÖ
 	UPROPERTY(EditAnywhere, meta = (AllowprivateAccess = "true"))
 	TMap<ETestMonsterAnim, FAnimMontageGroup> TestAnimMontages;
+
+	// ½ºÆù µ¹ °¹¼ö
+	UPROPERTY(EditAnywhere, meta = (AllowprivateAccess = "true"))
+	int SpawnRockCount;
 
 };
 
@@ -139,4 +148,7 @@ public:
 
 	FRotator DestRotate = FRotator::ZeroRotator;
 	FRotator MyRotate = FRotator::ZeroRotator;
+	bool IsGroundAttack = false;
+
+	int SpawnCount = 0;
 };

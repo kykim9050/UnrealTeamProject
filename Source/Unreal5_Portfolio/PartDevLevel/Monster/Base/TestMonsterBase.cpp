@@ -73,6 +73,7 @@ void ATestMonsterBase::BeginPlay()
 	SettingData->AttackDamage = 34.0f;
 	SettingData->AttackBoundary = BaseData->GetAttackRange();
 	SettingData->OriginPos = GetActorLocation();
+	SettingData->SpawnCount = BaseData->GetSpawnRockCount();
 
 	// 클라이언트일 경우
 	AIController = GetController<ATestMonsterBaseAIController>();
@@ -227,6 +228,20 @@ void ATestMonsterBase::SetChasePlayer()
 UMotionWarpingComponent* ATestMonsterBase::GetMotionWarpingComponent()
 {
 	return MotionWarpComponent;
+}
+
+void ATestMonsterBase::SpawnRock()
+{
+	if (false == HasAuthority())
+	{
+		return;
+	}
+
+	for (int i = 0; i < SettingData->SpawnCount; i++)
+	{
+		//GetWorld()->SpawnActor<>();
+		LOG(MonsterLog, Log, TEXT("Rock Spawn"));
+	}
 }
 
 void ATestMonsterBase::SetOnDead_Implementation()
