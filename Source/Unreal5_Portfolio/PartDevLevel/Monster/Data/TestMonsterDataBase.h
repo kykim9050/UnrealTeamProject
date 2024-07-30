@@ -38,8 +38,6 @@ public:
 	/// <summary>
 	/// /////
 	/// </summary>
-
-
 	FVector LerpPos = FVector::ZeroVector;
 
 	float IdleTime = 0.0f;
@@ -63,4 +61,7 @@ public:
 
 	FRotator DestRotate = FRotator::ZeroRotator;
 	FRotator MyRotate = FRotator::ZeroRotator;
+
+	int SpawnCount = 0;
+	bool IsGroundAttack = false;
 };

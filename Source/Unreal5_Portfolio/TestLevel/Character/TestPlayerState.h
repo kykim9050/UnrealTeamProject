@@ -24,6 +24,10 @@ public:
 	}
 
 	UFUNCTION(Reliable, Server)
+	void HealHp();
+	void HealHp_Implementation();
+
+	UFUNCTION(Reliable, Server)
 	void AddDamage(float _Damage);
 	void AddDamage_Implementation(float _Damage);
 

@@ -10,6 +10,7 @@
 
 void UJumpAttackNotify::Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation)
 {
+	Super::Notify(MeshComp, Animation);
 
 	ATestMonsterBase* Monster = Cast<ATestMonsterBase>(MeshComp->GetOwner());
 	if (nullptr == Monster)

@@ -87,6 +87,12 @@ void UBTTaskNode_KrakenRotate::TickTask(UBehaviorTreeComponent& _OwnerComp, uint
 
 	if (2.0f < MonsterData->AnimationTime)
 	{
+		if (true == MonsterData->IsGroundAttack)
+		{
+			StateChange(_OwnerComp, ETestMonsterState::GroundAttack);
+			return;
+		}
+
 		StateChange(_OwnerComp, ETestMonsterState::Chase);
 		return;
 	}

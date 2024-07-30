@@ -26,6 +26,12 @@ void ATestPlayerState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Out
 	DOREPLIFETIME(ATestPlayerState, PlayerHp);
 }
 
+void ATestPlayerState::HealHp_Implementation()
+{
+	UMainGameInstance* MainGameInst = UMainGameBlueprintFunctionLibrary::GetMainGameInstance(GetWorld());
+	PlayerHp = MainGameInst->GetPlayerData(FName("TestPlayer"))->GetHp();
+}
+
 void ATestPlayerState::AddDamage_Implementation(float _Damage)
 {
 	PlayerHp -= _Damage;

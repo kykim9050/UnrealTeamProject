@@ -8,6 +8,8 @@
 
 void UBasicMonsterAttackNotify::NotifyBegin(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation, float TotalDuration)
 {
+	Super::NotifyBegin(MeshComp, Animation, TotalDuration);
+	
 	ABasicMonsterBase* Monster = Cast<ABasicMonsterBase>(MeshComp->GetOwner());
 	if (nullptr != Monster)
 	{
@@ -17,6 +19,8 @@ void UBasicMonsterAttackNotify::NotifyBegin(USkeletalMeshComponent* MeshComp, UA
 
 void UBasicMonsterAttackNotify::NotifyEnd(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation)
 {
+	Super::NotifyEnd(MeshComp, Animation);
+
 	ABasicMonsterBase* Monster = Cast<ABasicMonsterBase>(MeshComp->GetOwner());
 	if (nullptr != Monster)
 	{
