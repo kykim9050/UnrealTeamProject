@@ -581,12 +581,13 @@ void ATestCharacter::PickUpItem_Implementation()	// => 메인캐릭터로 이전해야 함 
 	FName ItemStringToName = FName(*TagName);			// 아이템 이름
 
 	{
+		// 버리기 키가 없을 때를 가정.
 		if(false == IsItemIn[static_cast<int>(EPlayerPosture::Rifle1)])
 		{
 			// 1번 슬롯이 비어있는 경우.
 			ItemSetting(ItemStringToName, false);
 		}
-		else if (true == IsItemIn[static_cast<int>(EPlayerPosture::Rifle1)] && true == IsItemIn[static_cast<int>(EPlayerPosture::Rifle2)])
+		else if (true == IsItemIn[static_cast<int>(EPlayerPosture::Rifle1)] && false == IsItemIn[static_cast<int>(EPlayerPosture::Rifle2)])
 		{
 			// 1번 슬롯이 있고 2번 슬롯이 비어있는 경우.
 			ItemSetting(ItemStringToName, true);
@@ -597,13 +598,13 @@ void ATestCharacter::PickUpItem_Implementation()	// => 메인캐릭터로 이전해야 함 
 			if (PostureValue == EPlayerPosture::Rifle1)
 			{
 				DropItem();
-				DeleteItem(static_cast<int>(PostureValue));
+				DeleteItem(static_cast<int>(EPlayerPosture::Rifle1));
 				ItemSetting(ItemStringToName, false);
 			}
 			else if (PostureValue == EPlayerPosture::Rifle2)
 			{
 				DropItem();
-				DeleteItem(static_cast<int>(PostureValue));
+				DeleteItem(static_cast<int>(EPlayerPosture::Rifle2));
 				ItemSetting(ItemStringToName, true);
 			}
 		}
@@ -737,8 +738,7 @@ void ATestCharacter::ItemSetting(FName _TagName, bool _InNextSlotToItem)
 	// ItemName에 맞는 아이템 정보를 DT에서 가져온다.
 	UMainGameInstance* Inst = GetGameInstance<UMainGameInstance>();
 	const FItemDataRow* ItemData = Inst->GetItemData(_TagName);
-	//EPlayerPosture ItemType = ItemData->GetType(); // 무기에 따른 포즈를 취했어야 했지만 권총이 없어지면서 의미가 없어짐.
-	EPlayerPosture ItemType = PostureValue;
+	EPlayerPosture ItemType = ItemData->GetType();
 
 	// Data Table에 있는 아이템 정보 가져오기.
 	int ItemReloadNum = ItemData->GetReloadNum();		// 무기 장전 단위 (30, 40)	// -1일 경우 총기류 무기가 아님
