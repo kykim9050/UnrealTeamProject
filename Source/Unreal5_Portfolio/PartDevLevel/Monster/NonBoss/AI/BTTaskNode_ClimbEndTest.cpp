@@ -26,7 +26,7 @@ EBTNodeResult::Type UBTTaskNode_ClimbEndTest::ExecuteTask(UBehaviorTreeComponent
 		return EBTNodeResult::Type::Aborted;
 	}
 
-	UTestMonsterBaseData* MonsterData = GetValueAsObject<UTestMonsterBaseData>(OwnerComp, "MonsterData");
+	UTestMonsterDataBase* MonsterData = GetValueAsObject<UTestMonsterDataBase>(OwnerComp, "MonsterData");
 	if (false == MonsterData->IsValidLowLevel())
 	{
 		LOG(MonsterLog, Fatal, "MonsterData Is Not Valid");
@@ -50,7 +50,7 @@ void UBTTaskNode_ClimbEndTest::TickTask(UBehaviorTreeComponent& OwnerComp, uint8
 	}
 
 	ATestMonsterBase* Monster = GetActor<ATestMonsterBase>(OwnerComp);
-	UTestMonsterBaseData* MonsterData = GetValueAsObject<UTestMonsterBaseData>(OwnerComp, TEXT("MonsterData"));
+	UTestMonsterDataBase* MonsterData = GetValueAsObject<UTestMonsterDataBase>(OwnerComp, TEXT("MonsterData"));
 
 	if (nullptr == Monster)
 	{

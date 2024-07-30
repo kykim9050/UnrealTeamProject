@@ -25,7 +25,7 @@ EBTNodeResult::Type UMyBTTaskNode_MutantJumpAttack::ExecuteTask(UBehaviorTreeCom
 		return EBTNodeResult::Aborted;
 	}
 
-	UTestMonsterBaseData* MonsterData = GetValueAsObject<UTestMonsterBaseData>(_OwnerComp, TEXT("MonsterData"));
+	UTestMonsterDataBase* MonsterData = GetValueAsObject<UTestMonsterDataBase>(_OwnerComp, TEXT("MonsterData"));
 	MonsterData->AnimationTime = Monster->GetAnimInstance()->GetKeyAnimMontage(ETestMonsterAnim::JumpAttack, Monster->GetAniIndex())->GetPlayLength();
 
 	AActor* Target = Cast<AActor>(_OwnerComp.GetBlackboardComponent()->GetValueAsObject(TEXT("TargetActor")));
@@ -46,7 +46,7 @@ void UMyBTTaskNode_MutantJumpAttack::TickTask(UBehaviorTreeComponent& _OwnerComp
 	Super::TickTask(_OwnerComp, _pNodeMemory, _DeltaSeconds);
 
 	ATestMonsterBase* Monster = GetActor<ATestMonsterBase>(_OwnerComp);
-	UTestMonsterBaseData* MonsterData = GetValueAsObject<UTestMonsterBaseData>(_OwnerComp, TEXT("MonsterData"));
+	UTestMonsterDataBase* MonsterData = GetValueAsObject<UTestMonsterDataBase>(_OwnerComp, TEXT("MonsterData"));
 
 	if (nullptr == Monster)
 	{

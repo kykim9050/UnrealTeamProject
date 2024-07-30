@@ -24,7 +24,7 @@ EBTNodeResult::Type UMyBTTaskNode_MonsterScream::ExecuteTask(UBehaviorTreeCompon
 
 	Monster->ChangeRandomAnimation(ETestMonsterAnim::Scream);
 	Monster->GetCharacterMovement()->MovementMode = EMovementMode::MOVE_None;
-	UTestMonsterBaseData* MonsterData = GetValueAsObject<UTestMonsterBaseData>(_OwnerComp, TEXT("MonsterData"));
+	UTestMonsterDataBase* MonsterData = GetValueAsObject<UTestMonsterDataBase>(_OwnerComp, TEXT("MonsterData"));
 	MonsterData->AnimationTime = Monster->GetAnimInstance()->GetKeyAnimMontage(ETestMonsterAnim::Scream, Monster->GetAniIndex())->GetPlayLength();
 
 	return EBTNodeResult::InProgress;
@@ -35,7 +35,7 @@ void UMyBTTaskNode_MonsterScream::TickTask(UBehaviorTreeComponent& _OwnerComp, u
 	Super::TickTask(_OwnerComp, _pNodeMemory, _DeltaSeconds);
 
 	ATestMonsterBase* Monster = GetActor<ATestMonsterBase>(_OwnerComp);
-	UTestMonsterBaseData* MonsterData = GetValueAsObject<UTestMonsterBaseData>(_OwnerComp, TEXT("MonsterData"));
+	UTestMonsterDataBase* MonsterData = GetValueAsObject<UTestMonsterDataBase>(_OwnerComp, TEXT("MonsterData"));
 
 	if (ETestMonsterState::Scream != static_cast<ETestMonsterState>(GetCurState(_OwnerComp)))
 	{
