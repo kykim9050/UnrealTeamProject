@@ -4,6 +4,8 @@
 #include "Global/MainGameState.h"
 #include "Net/UnrealNetwork.h"
 
+
+
 AMainGameState::AMainGameState()
 {
 
@@ -114,4 +116,43 @@ void AMainGameState::SetClearBoss2Stage()
 	ClearBoss2Stage = true;
 
 	CurStage = EGameStage::PlantingBomb;
+}
+
+void AMainGameState::GameStateCheck_Implementation()
+{
+	if (false == HasAuthority())
+	{
+		return;
+	}
+
+	if (MaxPlayerCount == PlayerCount)
+	{
+		switch (CurStage)
+		{
+		case EGameStage::Init:
+		{
+			CurStage = EGameStage::VisitArmory;
+			PlayerCount = 0;
+			break;
+		}
+		case EGameStage::VisitArmory:
+			break;
+		case EGameStage::ObtainFirstSample:
+			break;
+		case EGameStage::ObtainSecondSample:
+			break;
+		case EGameStage::ObtainThirdSample:
+			break;
+		case EGameStage::PlantingBomb:
+			break;
+		case EGameStage::MoveToGatheringPoint:
+			break;
+		case EGameStage::Defensing:
+			break;
+		case EGameStage::MissionClear:
+			break;
+		default:
+			break;
+		}
+	}
 }
