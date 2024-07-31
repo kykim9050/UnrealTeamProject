@@ -21,6 +21,32 @@ protected:
 	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
 public:
+	const FMonsterDataRow* GetBaseData() const
+	{
+		return BaseData;
+	}
+
+	float GetHp()
+	{
+		return Hp;
+	}
+
+
+
+public:
+	void SetBaseData(const FMonsterDataRow* Value)
+	{
+		BaseData = Value;
+	}
+
+	void SetHp(float Value)
+	{
+		Hp = Value;
+	}
+
+
+
+private:
 	// 기본 설정 Data
 	const FMonsterDataRow* BaseData;
 
@@ -28,6 +54,7 @@ public:
 	UPROPERTY(Replicated)
 	float Hp = 100.0f;
 
+public:
 	float PatrolRange = 800.0f;
 
 	float AttackDamage = 34.0f;
