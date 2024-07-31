@@ -53,53 +53,7 @@ void AMainGameState::GameStateCheck_Implementation(AActor* _OtherActor)
 	// 추후 MainCharacter로 변경 필요
 	ATestCharacter* Player = Cast<ATestCharacter>(_OtherActor);
 
-	if (nullptr == Player)
-	{
-		LOG(GlobalLog, Fatal, "if (nullptr == Player)");
-		return;
-	}
-
-	// 조건 관련 변수 정보 갱신
-	switch (CurStage)
-	{
-	case EGameStage::Init:
-	{
-		if (true == Player->IsItemIn[static_cast<int>(EPlayerPosture::Melee)])
-		{
-			++ItemCount;
-		}
-		break;
-	}
-	case EGameStage::VisitArmory:
-	{
-		if (true == Player->IsItemIn[static_cast<int>(EPlayerPosture::Rifle1)])
-		{
-			++ItemCount;
-		}
-
-		if (true == Player->IsItemIn[static_cast<int>(EPlayerPosture::Bomb)])
-		{
-			++BombCount;
-		}
-		break;
-	}
-	case EGameStage::ObtainFirstSample:
-		break;
-	case EGameStage::ObtainSecondSample:
-		break;
-	case EGameStage::ObtainThirdSample:
-		break;
-	case EGameStage::PlantingBomb:
-		break;
-	case EGameStage::MoveToGatheringPoint:
-		break;
-	case EGameStage::Defensing:
-		break;
-	case EGameStage::MissionClear:
-		break;
-	default:
-		break;
-	}
+	GameStateConditionUpdate(_OtherActor, true);
 
 	// 플레이어 수가 일정 수 도달했을 때 조건 체크 함수
 	if (MaxPlayerCount == PlayerCount)
@@ -156,6 +110,11 @@ void AMainGameState::GameStateModify_Implementation(AActor* _OtherActor)
 		return;
 	}
 
+	GameStateConditionUpdate(_OtherActor, false);
+}
+
+void AMainGameState::GameStateConditionUpdate(AActor* _OtherActor, bool _IsAdd)
+{
 	// 추후 MainCharacter로 변경 필요
 	ATestCharacter* Player = Cast<ATestCharacter>(_OtherActor);
 
@@ -171,7 +130,14 @@ void AMainGameState::GameStateModify_Implementation(AActor* _OtherActor)
 	{
 		if (true == Player->IsItemIn[static_cast<int>(EPlayerPosture::Melee)])
 		{
-			--ItemCount;
+			if (true == _IsAdd)
+			{
+				++ItemCount;
+			}
+			else
+			{
+				--ItemCount;
+			}
 		}
 		break;
 	}
@@ -179,12 +145,26 @@ void AMainGameState::GameStateModify_Implementation(AActor* _OtherActor)
 	{
 		if (true == Player->IsItemIn[static_cast<int>(EPlayerPosture::Rifle1)])
 		{
-			--ItemCount;
+			if (true == _IsAdd)
+			{
+				++ItemCount;
+			}
+			else
+			{
+				--ItemCount;
+			}
 		}
 
 		if (true == Player->IsItemIn[static_cast<int>(EPlayerPosture::Bomb)])
 		{
-			--BombCount;
+			if (true == _IsAdd)
+			{
+				++BombCount;
+			}
+			else
+			{
+				--BombCount;
+			}
 		}
 		break;
 	}

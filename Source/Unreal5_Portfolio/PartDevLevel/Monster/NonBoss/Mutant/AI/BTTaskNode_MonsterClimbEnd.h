@@ -4,13 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "PartDevLevel/Monster/NonBoss/AI/BTTaskNode_Monster.h"
-#include "BTTaskNode_Monster_ClimbEnd.generated.h"
+#include "BTTaskNode_MonsterClimbEnd.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class UNREAL5_PORTFOLIO_API UBTTaskNode_Monster_ClimbEnd : public UBTTaskNode_Monster
+class UNREAL5_PORTFOLIO_API UBTTaskNode_MonsterClimbEnd : public UBTTaskNode_Monster
 {
 	GENERATED_BODY()
 
