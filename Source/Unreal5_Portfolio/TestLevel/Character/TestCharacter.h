@@ -73,6 +73,8 @@ public:
 	EPlayerState StateValue = EPlayerState::Idle;
 	UPROPERTY(Category = "Contents", Replicated, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	EPlayerPosture PostureValue = EPlayerPosture::Barehand;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	EPlayerPosture PrevPostureValue = EPlayerPosture::Barehand;		// => 메인으로 이전 필요 (24.07.31 추가됨)
 
 	// LowerState (태환)
 	UPROPERTY(Category = "Contents", Replicated, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
@@ -129,8 +131,6 @@ public:
 	TArray<bool> IsItemIn;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	int CurItemIndex = -1;
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	int PrevItemIndex = -1;
 
 	// Item
 	UPROPERTY(Category = "Contents", VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))

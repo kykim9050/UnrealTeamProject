@@ -347,7 +347,7 @@ void ATestCharacter::Drink_Implementation()	// => 메인에 추후 이전해야 함 (24.07
 	{
 #ifdef WITH_EDITOR
 		GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Yellow, FString::Printf(TEXT("The item slot is empty. (Index : %d)"), 4));
-#endif // WITH_EDITOR
+#endif
 		return;
 	}
 
@@ -364,7 +364,7 @@ void ATestCharacter::Drink_Implementation()	// => 메인에 추후 이전해야 함 (24.07
 
 #ifdef WITH_EDITOR
 	GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Yellow, FString(TEXT("HP recovered!")));
-#endif // WITH_EDITOR
+#endif
 
 	// 음료 아이템 삭제
 	DeleteItem(3);
@@ -373,7 +373,7 @@ void ATestCharacter::Drink_Implementation()	// => 메인에 추후 이전해야 함 (24.07
 void ATestCharacter::DrinkComplete_Implementation()	// => 메인에 추후 이전해야 함 (24.07.30 추가 후 테스팅 중)
 {
 	// 이전 자세로 애니메이션 변경
-	ChangePosture(static_cast<EPlayerPosture>(PrevItemIndex));
+	ChangePosture(PrevPostureValue);
 }
 
 void ATestCharacter::BombSetStart_Implementation()	// => 메인에 추후 이전해야 함 (24.07.31 수정 및 테스팅 중)
@@ -383,7 +383,7 @@ void ATestCharacter::BombSetStart_Implementation()	// => 메인에 추후 이전해야 함
 	{
 #ifdef WITH_EDITOR
 		GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Yellow, FString::Printf(TEXT("The item slot is empty. (Index : %d)"), 5));
-#endif // WITH_EDITOR
+#endif
 		return;
 	}
 
@@ -393,16 +393,16 @@ void ATestCharacter::BombSetStart_Implementation()	// => 메인에 추후 이전해야 함
 	{
 #ifdef WITH_EDITOR
 		GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Yellow, FString(TEXT("You have to set the bomb in proper area.")));
-#endif // WITH_EDITOR
+#endif
 		return;
 	}
 
 	// 폭탄 설치 가능한 것으로 판단, 설치 시작
 	IsBombSetting = true;
-	/* 설치 시간 초기화 */
+	AreaObject->ResetBombTime();
 #ifdef WITH_EDITOR
 	GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, FString(TEXT("Bomb setting start.")));
-#endif // WITH_EDITOR
+#endif
 
 	// 애니메이션 변경
 	ChangePosture(EPlayerPosture::Bomb);
@@ -413,10 +413,25 @@ void ATestCharacter::BombSetTick_Implementation()		// => 메인에 추후 이전해야 함
 	if (true == IsBombSetting)
 	{
 		ATestArea* AreaObject = Cast<ATestArea>(GetMapItemData);
-		if (nullptr != AreaObject)
+		if (nullptr == AreaObject)
 		{
-			//AreaObject->InstallBomb(GetWorld()->GetDeltaSeconds());
+#ifdef WITH_EDITOR
+			GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Yellow, FString(TEXT("You have to set the bomb in proper area.")));
+#endif
+			return;
 		}
+
+		// 설치 시간 카운트가 끝났을 경우
+		if (0 >= AreaObject->GetInstallBombTime())
+		{
+			BombSetComplete();
+		}
+
+		// 설치 시간 카운팅
+		AreaObject->InstallBomb(GetWorld()->GetDeltaSeconds());
+#ifdef WITH_EDITOR
+		GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, FString::Printf(TEXT("%f seconds left..."), AreaObject->GetInstallBombTime()));
+#endif
 	}
 }
 
@@ -426,28 +441,35 @@ void ATestCharacter::BombSetCancel_Implementation()		// => 메인에 추후 이전해야 
 	{
 		// 폭탄 설치 중단
 		IsBombSetting = false;
-		/* 설치 시간 초기화 */
+		ATestArea* AreaObject = Cast<ATestArea>(GetMapItemData);
+		if (nullptr != AreaObject)
+		{
+			AreaObject->ResetBombTime();
+		}
 
-		// 애니메이션 변경
-		ChangePosture(static_cast<EPlayerPosture>(PrevItemIndex));
+		// 이전 자세로 애니메이션 변경
+		ChangePosture(PrevPostureValue);
 	}
 }
 
 void ATestCharacter::BombSetComplete_Implementation()	// => 메인에 추후 이전해야 함 (24.07.31 수정 및 테스팅 중)
 {
 	// 폭탄 설치 완료
+	IsBombSetting = false;
 	ATestArea* AreaObject = Cast<ATestArea>(GetMapItemData);
 	if (nullptr != AreaObject)
 	{
-		//AreaObject->InterAction();
+		AreaObject->InterAction();
 	}
-	IsBombSetting = false;
+#ifdef WITH_EDITOR
+	GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, FString(TEXT("Bomb setting completed!")));
+#endif // WITH_EDITOR
 
 	// 폭탄 아이템 삭제
 	DeleteItem(4);
 
-	// 애니메이션 변경
-	ChangePosture(static_cast<EPlayerPosture>(PrevItemIndex));
+	// 이전 자세로 애니메이션 변경
+	ChangePosture(PrevPostureValue);
 }
 
 void ATestCharacter::ChangeMontage_Implementation(bool _IsFireEnd) // => 매인 적용.
@@ -542,8 +564,8 @@ void ATestCharacter::ChangePosture_Implementation(EPlayerPosture _Type)	// => 메
 	if (_Type == EPlayerPosture::Barehand)			
 	{
 		// 1. Barehand => 맨손 자세로 변경
+		PrevPostureValue = PostureValue;
 		PostureValue = _Type;
-		PrevItemIndex = CurItemIndex;
 		CurItemIndex = -1;
 
 		// 아이템 메시 visibility 끄기
@@ -561,8 +583,8 @@ void ATestCharacter::ChangePosture_Implementation(EPlayerPosture _Type)	// => 메
 #endif // WITH_EDITOR
 			return;
 		}
+		PrevPostureValue = PostureValue;
 		PostureValue = _Type;
-		PrevItemIndex = CurItemIndex;
 		CurItemIndex = ItemSlotIndex;
 
 		// 아이템 static mesh 세팅
