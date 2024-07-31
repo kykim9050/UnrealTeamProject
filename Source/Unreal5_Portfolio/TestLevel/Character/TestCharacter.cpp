@@ -26,6 +26,7 @@
 #include "PartDevLevel/Object/TestArea.h"
 #include "MainGameLevel/Object/MapObjectBase.h"
 #include "MainGameLevel/Object/Bomb.h"
+#include "MainGameLevel/Object/DoorObject.h"
 #include "MainGameLevel/UI/InGame/HeadNameWidgetComponent.h"
 #include "TestPlayerController.h"
 #include "Particles/ParticleSystemComponent.h"
@@ -337,10 +338,10 @@ void ATestCharacter::FireRayCast_Implementation() // => ¸ŞÀÎ ¼öÁ¤ ÇÊ¿ä (24.07.30
 	}
 }
 
-void ATestCharacter::Drink_Implementation()	// => ¸ŞÀÎ¿¡ ÃßÈÄ ÀÌÀüÇØ¾ß ÇÔ (24.07.30 ¼öÁ¤ ¹× Å×½ºÆÃ Áß)
+void ATestCharacter::Drink_Implementation()	// => ¸ŞÀÎ¿¡ ÃßÈÄ ÀÌÀüÇØ¾ß ÇÔ (24.07.31 ¼öÁ¤ ¹× Å×½ºÆÃ Áß)
 {
 	// À½·á ¾ÆÀÌÅÛÀÌ ¾ø´Ù¸é return
-	if (IsItemIn[3] == false)
+	if (false == IsItemIn[3])
 	{
 #ifdef WITH_EDITOR
 		GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Yellow, FString::Printf(TEXT("The item slot is empty. (Index : %d)"), 4));
@@ -372,10 +373,10 @@ void ATestCharacter::DrinkComplete_Implementation()	// => ¸ŞÀÎ¿¡ ÃßÈÄ ÀÌÀüÇØ¾ß Ç
 	ChangePosture(static_cast<EPlayerPosture>(PrevItemIndex));
 }
 
-void ATestCharacter::BombSetStart_Implementation()	// => ¸ŞÀÎ¿¡ ÃßÈÄ ÀÌÀüÇØ¾ß ÇÔ (24.07.30 ¼öÁ¤ ¹× Å×½ºÆÃ Áß)
+void ATestCharacter::BombSetStart_Implementation()	// => ¸ŞÀÎ¿¡ ÃßÈÄ ÀÌÀüÇØ¾ß ÇÔ (24.07.31 ¼öÁ¤ ¹× Å×½ºÆÃ Áß)
 {
 	// ÆøÅº ¾ÆÀÌÅÛÀÌ ¾ø´Ù¸é return
-	if (IsItemIn[4] == false)
+	if (false == IsItemIn[4])
 	{
 #ifdef WITH_EDITOR
 		GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Yellow, FString::Printf(TEXT("The item slot is empty. (Index : %d)"), 5));
@@ -384,8 +385,8 @@ void ATestCharacter::BombSetStart_Implementation()	// => ¸ŞÀÎ¿¡ ÃßÈÄ ÀÌÀüÇØ¾ß ÇÔ
 	}
 
 	// ÆøÅº ¼³Ä¡ °¡´ÉÇÑ Area°¡ ¾Æ´Ò °æ¿ì return
-	ATestArea* GetMapItem = Cast<ATestArea>(GetMapItemData);
-	if (GetMapItem == nullptr)
+	ATestArea* AreaObject = Cast<ATestArea>(GetMapItemData);
+	if (nullptr == AreaObject)
 	{
 #ifdef WITH_EDITOR
 		GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Yellow, FString(TEXT("You have to set the bomb in proper area.")));
@@ -393,22 +394,48 @@ void ATestCharacter::BombSetStart_Implementation()	// => ¸ŞÀÎ¿¡ ÃßÈÄ ÀÌÀüÇØ¾ß ÇÔ
 		return;
 	}
 
+	// ÆøÅº ¼³Ä¡ °¡´ÉÇÑ °ÍÀ¸·Î ÆÇ´Ü, ¼³Ä¡ ½ÃÀÛ
+	IsBombSetting = true;
+#ifdef WITH_EDITOR
+	GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, FString(TEXT("Bomb setting start.")));
+#endif // WITH_EDITOR
+
+	// ¾Ö´Ï¸ŞÀÌ¼Ç º¯°æ
+	ChangePosture(EPlayerPosture::Bomb);
+}
+
+void ATestCharacter::BombSetTick_Implementation()		// => ¸ŞÀÎ¿¡ ÃßÈÄ ÀÌÀüÇØ¾ß ÇÔ (24.07.31 ¼öÁ¤ ¹× Å×½ºÆÃ Áß)
+{
+	// ÆøÅº ¼³Ä¡ ÁßÀÏ °æ¿ì¸¸
+	if (true == IsBombSetting)
+	{
+		AMapObjectBase* AreaObject = Cast<AMapObjectBase>(GetMapItemData);
+		if (nullptr != AreaObject)
+		{
+			AreaObject->InterAction();
+		}
+	}
+}
+
+void ATestCharacter::BombSetCancel_Implementation()		// => ¸ŞÀÎ¿¡ ÃßÈÄ ÀÌÀüÇØ¾ß ÇÔ (24.07.31 ¼öÁ¤ ¹× Å×½ºÆÃ Áß)
+{
+	// ÆøÅº ¼³Ä¡ ÁßÀÏ °æ¿ì¸¸
+	if (true == IsBombSetting)
+	{
+		// ¼³Ä¡ Áß´Ü
+		IsBombSetting = false;
+
+		// ¾Ö´Ï¸ŞÀÌ¼Ç º¯°æ
+		ChangePosture(static_cast<EPlayerPosture>(PrevItemIndex));
+	}
+
+	// ¼³Ä¡ ½Ã°£ ÃÊ±âÈ­
 
 }
 
-void ATestCharacter::BombSetTick_Implementation()	// => ¸ŞÀÎ¿¡ ÃßÈÄ ÀÌÀüÇØ¾ß ÇÔ (24.07.30 Ãß°¡ ÈÄ Å×½ºÆÃ Áß)
+void ATestCharacter::BombSetComplete_Implementation()	// => ¸ŞÀÎ¿¡ ÃßÈÄ ÀÌÀüÇØ¾ß ÇÔ (24.07.31 ¼öÁ¤ ¹× Å×½ºÆÃ Áß)
 {
-
-}
-
-void ATestCharacter::BombSetCancel_Implementation()	// => ¸ŞÀÎ¿¡ ÃßÈÄ ÀÌÀüÇØ¾ß ÇÔ (24.07.29 Ãß°¡ ÈÄ Å×½ºÆÃ Áß)
-{
-
-}
-
-void ATestCharacter::BombSetComplete_Implementation()	// => ¸ŞÀÎ¿¡ ÃßÈÄ ÀÌÀüÇØ¾ß ÇÔ (24.07.29 Ãß°¡ ÈÄ Å×½ºÆÃ Áß)
-{
-
+	IsBombSetting = false;
 }
 
 void ATestCharacter::ChangeMontage_Implementation(bool _IsFireEnd) // => ¸ÅÀÎ Àû¿ë.
@@ -592,8 +619,18 @@ void ATestCharacter::CheckItem() // => ¸ŞÀÎ ¼öÁ¤ ÇÊ¿ä (24.07.30 DebugMessage ºÎº
 	}
 }
 
-void ATestCharacter::InteractObject_Implementation(AMapObjectBase* _MapObject)	// => ¸ŞÀÎ ÀÌÀü ÇÊ¿ä (24.07.30 ¼öÁ¤ Áß)
+void ATestCharacter::InteractObject_Implementation(AMapObjectBase* _MapObject)	// => ¸ŞÀÎ ÀÌÀü ÇÊ¿ä (24.07.31 ¼öÁ¤ Áß)
 {
+	// DoorÀÏ °æ¿ì : »óÈ£ÀÛ¿ëÀº Switch°¡ ¹ßµ¿½ÃÅ°¹Ç·Î return
+
+
+	// AreaÀÏ °æ¿ì : »óÈ£ÀÛ¿ëÀº ÇÃ·¹ÀÌ¾îÂÊ¿¡¼­ Ã³¸®ÇØ¾ß ÇÏ¹Ç·Î return
+	ADoorObject* DoorObject = Cast<ADoorObject>(_MapObject);
+	if (nullptr != DoorObject)
+	{
+		return;
+	}
+
 	// BombÀÏ °æ¿ì : ÀÎº¥Åä¸®¿¡ ¾ÆÀÌÅÛ Áı¾î³Ö±â, ¸Ê¿¡¼­ ¾ÆÀÌÅÛÀ» »èÁ¦
 	ABomb* BombObject = Cast<ABomb>(_MapObject);
 	if (nullptr != BombObject)
@@ -601,12 +638,6 @@ void ATestCharacter::InteractObject_Implementation(AMapObjectBase* _MapObject)	/
 		PickUpItem();
 		return;
 	}
-
-	// AreaÀÏ °æ¿ì : »óÈ£ÀÛ¿ëÀº ÇÃ·¹ÀÌ¾îÂÊ¿¡¼­ Ã³¸®ÇØ¾ß ÇÏ¹Ç·Î return
-
-
-	// DoorÀÏ °æ¿ì : »óÈ£ÀÛ¿ëÀº Switch°¡ ¹ßµ¿½ÃÅ°¹Ç·Î return
-
 
 	// ±× ¿Ü ¸Ê¿ÀºêÁ§Æ®(Switch µî)ÀÏ °æ¿ì : »óÈ£ÀÛ¿ë ¹ßµ¿
 	_MapObject->InterAction();
@@ -629,12 +660,12 @@ void ATestCharacter::PickUpItem_Implementation() // => ¸ŞÀÎ ¼öÁ¤ ÇÊ¿ä (24.07.30 
 
 	if (ItemType == EPlayerPosture::Rifle1)	// Rifle ¾ÆÀÌÅÛÀ» Áİ´Â °æ¿ì
 	{
-		if (IsItemIn[static_cast<int>(EPlayerPosture::Rifle1)] == false)
+		if (false == IsItemIn[static_cast<int>(EPlayerPosture::Rifle1)])
 		{
 			// 1¹ø ½½·ÔÀÌ ºñ¾îÀÖ´Â °æ¿ì => 1¹ø ½½·Ô
 			ItemSetting(ItemStringToName, 0);
 		}
-		else if (IsItemIn[static_cast<int>(EPlayerPosture::Rifle1)] == true && IsItemIn[static_cast<int>(EPlayerPosture::Rifle2)] == false)
+		else if (true == IsItemIn[static_cast<int>(EPlayerPosture::Rifle1)] && false == IsItemIn[static_cast<int>(EPlayerPosture::Rifle2)])
 		{
 			// 1¹ø ½½·ÔÀº ºñ¾îÀÖÁö ¾Ê°í, 2¹ø ½½·Ô¸¸ ºñ¾îÀÖ´Â °æ¿ì => 2¹ø ½½·Ô
 			ItemSetting(ItemStringToName, 1);
@@ -644,12 +675,12 @@ void ATestCharacter::PickUpItem_Implementation() // => ¸ŞÀÎ ¼öÁ¤ ÇÊ¿ä (24.07.30 
 			// 1¹ø ½½·Ôµµ 2¹ø ½½·Ôµµ ºñ¾îÀÖÁö ¾ÊÀ» °æ¿ì
 			if (PostureValue == EPlayerPosture::Rifle1 || PostureValue == EPlayerPosture::Rifle2)
 			{
-				// ¾ÆÀÌÅÛÀ» Áİ±â Á÷Àü¿¡ 1¹ø ¶Ç´Â 2¹ø ¾ÆÀÌÅÛÀ» ¼Õ¿¡ µé°í ÀÖ¾úÀ» °æ¿ì => 1¹ø ¶Ç´Â 2¹ø ½½·Ô
+				// ¾ÆÀÌÅÛÀ» Áİ±â Á÷Àü¿¡ 1¹ø ¶Ç´Â 2¹ø ¾ÆÀÌÅÛÀ» ¼Õ¿¡ µé°í ÀÖ¾ú´Ù¸é => °¢°¢ 1¹ø ¶Ç´Â 2¹ø ½½·Ô
 				ItemSetting(ItemStringToName, static_cast<int>(PostureValue));
 			}
 			else
 			{
-				// ¾ÆÀÌÅÛÀ» Áİ±â Á÷Àü¿¡ ¸Ç¼ÕÀÌ°Å³ª, 3¹ø ¾ÆÀÌÅÛÀ» ¼Õ¿¡ µé°í ÀÖ¾úÀ» °æ¿ì => 1¹ø ½½·Ô
+				// ¾ÆÀÌÅÛÀ» Áİ±â Á÷Àü¿¡ ¸Ç¼ÕÀÌ°Å³ª, 3¹ø ¾ÆÀÌÅÛÀ» ¼Õ¿¡ µé°í ÀÖ¾ú´Ù¸é => 1¹ø ½½·Ô
 				ItemSetting(ItemStringToName, 0);
 			}
 		}
@@ -696,7 +727,7 @@ void ATestCharacter::PickUpItem_Implementation() // => ¸ŞÀÎ ¼öÁ¤ ÇÊ¿ä (24.07.30 
 	}
 }
 
-void ATestCharacter::ItemSetting(FName _TagName, int _SlotIndex) // => ¸ŞÀÎ ¼öÁ¤ ÇÊ¿ä (24.07.30 Ãß°¡µÊ)
+void ATestCharacter::ItemSetting(FName _TagName, int _SlotIndex) // => ¸ŞÀÎ ¼öÁ¤ ÇÊ¿ä (24.07.31 ¼öÁ¤µÊ)
 {
 	// ItemName¿¡ ¸Â´Â ¾ÆÀÌÅÛ Á¤º¸¸¦ DT¿¡¼­ °¡Á®¿Â´Ù.
 	UMainGameInstance* Inst = GetGameInstance<UMainGameInstance>();
@@ -739,14 +770,17 @@ void ATestCharacter::ItemSetting(FName _TagName, int _SlotIndex) // => ¸ŞÀÎ ¼öÁ¤
 	ItemSlot[_SlotIndex].RelScale = ItemRelScale;
 
 #ifdef WITH_EDITOR
-	GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, FString::Printf(TEXT("Picked up new item! (Index : %d)"), _SlotIndex));
+	GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, FString::Printf(TEXT("Picked up new item! (Index : %d)"), _SlotIndex + 1));
 #endif // WITH_EDITOR
-
-	// ¾ÆÀÌÅÛ Type¿¡ µû¸¥ ¾Ö´Ï¸ŞÀÌ¼Ç ÀÚ¼¼ º¯È­.
-	ChangePosture(ItemType);
 
 	// Map¿¡ ÀÖ´Â ¾ÆÀÌÅÛ »èÁ¦.
 	GetMapItemData->Destroy();
+
+	// ¾ÆÀÌÅÛ Type¿¡ µû¸¥ ¾Ö´Ï¸ŞÀÌ¼Ç ÀÚ¼¼ º¯È­. (ItemTypeÀÌ Rifle1, Rifle2, MeleeÀÏ °æ¿ì¸¸)
+	if (ItemType == EPlayerPosture::Rifle1 || ItemType == EPlayerPosture::Rifle2 || ItemType == EPlayerPosture::Melee)
+	{
+		ChangePosture(ItemType);
+	}
 }
 
 void ATestCharacter::DropItem_Implementation(int _SlotIndex) // => ¸ŞÀÎ ¼öÁ¤ ÇÊ¿ä (24.07.30 DebugMessage ºÎºĞ ¼öÁ¤µÊ)

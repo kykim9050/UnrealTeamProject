@@ -64,6 +64,7 @@ void ATestPlayerController::SetupInputComponent()
 			EnhancedInputComponent->BindAction(InputData->Actions[9], ETriggerEvent::Triggered, this, &ATestPlayerController::ChangePosture_Con, static_cast<EPlayerPosture>(2));	// => 메인 수정 필요 (24.07.30 플레이어 함수와의 혼동을 방지하지 위해 이름 수정됨)
 			EnhancedInputComponent->BindAction(InputData->Actions[10], ETriggerEvent::Triggered, this, &ATestPlayerController::Drink_Con);			// => 메인 수정 필요 (24.07.30 해당 키에 연동된 함수 변경됨)
 			EnhancedInputComponent->BindAction(InputData->Actions[11], ETriggerEvent::Started, this, &ATestPlayerController::BombSetStart_Con);		// => 메인 수정 필요 (24.07.30 해당 키에 연동된 함수 변경됨)
+			EnhancedInputComponent->BindAction(InputData->Actions[11], ETriggerEvent::Triggered, this, &ATestPlayerController::BombSetTick_Con);	// => 메인 이전 필요 (24.07.31 추가됨)
 			EnhancedInputComponent->BindAction(InputData->Actions[11], ETriggerEvent::Completed, this, &ATestPlayerController::BombSetCancel_Con);	// => 메인 수정 필요 (24.07.30 해당 키에 연동된 함수 변경됨)
 			EnhancedInputComponent->BindAction(InputData->Actions[20], ETriggerEvent::Triggered, this, &ATestPlayerController::ChangePosture_Con, static_cast<EPlayerPosture>(5));	// => 메인 수정 필요 (24.07.30 해당 함수에 연동된 키 변경됨) ('0' -> 'X')
 			EnhancedInputComponent->BindAction(InputData->Actions[13], ETriggerEvent::Triggered, this, &ATestPlayerController::CheckItem_Con);		// => 메인 수정 필요 (24.07.29 해당 키에 연동된 함수 변경됨) (PickUpItem -> CheckItem)
@@ -236,6 +237,12 @@ void ATestPlayerController::BombSetStart_Con()	// => 메인에 추후 이전해야 함 (24
 {
 	ATestCharacter* Ch = GetPawn<ATestCharacter>();
 	Ch->BombSetStart();
+}
+
+void ATestPlayerController::BombSetTick_Con()	// => 메인에 추후 이전해야 함 (24.07.31 추가 후 테스팅 중)
+{
+	ATestCharacter* Ch = GetPawn<ATestCharacter>();
+	Ch->BombSetTick();
 }
 
 void ATestPlayerController::BombSetCancel_Con()	// => 메인에 추후 이전해야 함 (24.07.29 추가 후 테스팅 중) => 메인 적용(주석)

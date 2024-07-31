@@ -17,6 +17,11 @@ AStageCheckBox::AStageCheckBox()
 
 void AStageCheckBox::OnOverlapBegin(AActor* OverlappedActor, AActor* OtherActor)
 {
+	if (false == HasAuthority())
+	{
+		return;
+	}
+
 	AMainGameState* MainGameState = UMainGameBlueprintFunctionLibrary::GetMainGameState(GetWorld());
 
 	if (nullptr == MainGameState)
@@ -32,6 +37,11 @@ void AStageCheckBox::OnOverlapBegin(AActor* OverlappedActor, AActor* OtherActor)
 
 void AStageCheckBox::OnOverlapEnd(AActor* OverlappedActor, AActor* OtherActor)
 {
+	if (false == HasAuthority())
+	{
+		return;
+	}
+
 	AMainGameState* MainGameState = UMainGameBlueprintFunctionLibrary::GetMainGameState(GetWorld());
 
 	if (nullptr == MainGameState)

@@ -2,7 +2,7 @@
 
 
 #include "MainGameLevel/Monster/Base/BasicMonsterBase.h"
-#include "MainGameLevel/Monster/Animation/BasicMonsterAnimInstance.h"
+#include "MainGameLevel/Monster/Animation/MonsterRandomAnimInstance.h"
 #include "MainGameLevel/Monster/BasicMonster/AI/BasicMonsterAIController.h"
 #include "MainGameLevel/Player/MainPlayerState.h"
 #include "MainGameLevel/Player/MainCharacter.h"
@@ -68,7 +68,7 @@ void ABasicMonsterBase::BeginPlay()
 	SettingData->BaseData = BaseData;
 
 	// 애니메이션 세팅
-	AnimInst = Cast<UBasicMonsterAnimInstance>(GetMesh()->GetAnimInstance());
+	AnimInst = Cast<UMonsterRandomAnimInstance>(GetMesh()->GetAnimInstance());
 	if (nullptr == AnimInst)
 	{
 		LOG(MonsterLog, Fatal, TEXT("AnimInst Is Null"));

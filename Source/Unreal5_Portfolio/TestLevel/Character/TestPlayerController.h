@@ -73,6 +73,8 @@ public :
 	UFUNCTION(BlueprintCallable)
 	void BombSetStart_Con();	// => 메인에 추후 이전해야 함 (24.07.30 함수 이름 수정, 테스팅 중) => 메인 적용(주석)
 	UFUNCTION(BlueprintCallable)
+	void BombSetTick_Con();		// => 메인에 추후 이전해야 함 (24.07.31 추가됨, 테스팅 중)
+	UFUNCTION(BlueprintCallable)
 	void BombSetCancel_Con();	// => 메인에 추후 이전해야 함 (24.07.30 함수 이름 수정, 테스팅 중) => 메인 적용(주석)
 
 	// Item

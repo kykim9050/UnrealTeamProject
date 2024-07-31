@@ -21,11 +21,6 @@ void AMainGameState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLi
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
 	DOREPLIFETIME(AMainGameState, CurStage);
-	DOREPLIFETIME(AMainGameState, MeleeNum);
-	DOREPLIFETIME(AMainGameState, RifleNum);
-	DOREPLIFETIME(AMainGameState, BombNum);
-	DOREPLIFETIME(AMainGameState, ClearBoss1Stage);
-	DOREPLIFETIME(AMainGameState, ClearBoss2Stage);
 }
 
 void AMainGameState::PushActor(uint8 _Index, AActor* _Actor)
@@ -97,6 +92,37 @@ void AMainGameState::GameStateCheck_Implementation()
 		}
 		case EGameStage::VisitArmory:
 		{
+			for (int i = 0; i < PlayerGroup->Actors.Num(); i++)
+			{
+				// 추후 메인 Player로 변경 필요
+				ATestCharacter* Player = Cast<ATestCharacter>(PlayerGroup->Actors[i]);
+
+				if (nullptr == Player)
+				{
+					LOG(GlobalLog, Fatal, "if (nullptr == Player)");
+					return;
+				}
+
+				if (true == Player->IsItemIn[static_cast<int>(EPlayerPosture::Rifle1)])
+				{
+					++ItemCount;
+				}
+
+				if (true == Player->IsItemIn[static_cast<int>(EPlayerPosture::Bomb)])
+				{
+					++BombCount;
+				}
+			}
+
+			if (MaxPlayerCount == ItemCount
+				&& MaxBombCount == BombCount)
+			{
+				CurStage = EGameStage::ObtainFirstSample;
+				PlayerCount = 0;
+			}
+
+			BombCount = 0;
+			ItemCount = 0;
 			break;
 		}
 		case EGameStage::ObtainFirstSample:

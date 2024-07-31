@@ -40,11 +40,20 @@ void ATestArea::InterAction()
 {
 	Super::InterAction();
 
-	SetBomb();
+	if (0.f <= InstallBombTime)
+	{
+		SetBomb();
+	}
 
 
 
 }
+
+void ATestArea::InstallBomb(float _DeltaTime)
+{
+	InstallBombTime -= _DeltaTime;
+}
+
 
 void ATestArea::SetBomb()
 {
