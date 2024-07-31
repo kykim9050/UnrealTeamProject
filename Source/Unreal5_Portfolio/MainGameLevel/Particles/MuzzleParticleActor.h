@@ -23,4 +23,17 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+private :
+	UFUNCTION()
+	void DestroyTime(float _DeltaTime);
+
+private :
+	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	class UParticleSystemComponent* MuzzleParticleComponent = nullptr;
+
+	UPROPERTY()
+	float LifeTime = 0.2;
+
+	UPROPERTY()
+	float CalLifeTime = 0.0f;
 };
