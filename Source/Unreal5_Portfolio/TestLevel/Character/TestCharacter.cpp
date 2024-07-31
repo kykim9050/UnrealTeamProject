@@ -110,7 +110,7 @@ ATestCharacter::ATestCharacter()
 	//FString Name = "Punch";
 	HandAttackComponent = CreateDefaultSubobject<USphereComponent>(TEXT("Hand Attack Comp"));
 	HandAttackComponent->SetupAttachment(GetMesh());
-	HandAttackComponent->SetRelativeLocation({ 0.0f, 80.0f, 120.0f });
+	HandAttackComponent->SetRelativeLocation({ 0.0f, 100.0f, 120.0f });
 
 	// MinimapIcon Component => 메인캐릭터 적용.
 	MinimapIconComponent = CreateDefaultSubobject<UTestMinimapIconComponent>(TEXT("MinimapPlayerIcon"));
