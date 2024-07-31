@@ -1,11 +1,11 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "MainGameLevel/Monster/Animation/BasicMonsterAnimInstance.h"
+#include "MainGameLevel/Monster/Animation/MonsterRandomAnimInstance.h"
 #include "Global/MainGameBlueprintFunctionLibrary.h"
 #include "Global/MainGameInstance.h"
 
-void UBasicMonsterAnimInstance::SetRandomAnimIndex(uint8 Key, int& Index)
+void UMonsterRandomAnimInstance::SetRandomAnimIndex(uint8 Key, int& Index)
 {
 	if (false == GetOwningActor()->HasAuthority())
 	{

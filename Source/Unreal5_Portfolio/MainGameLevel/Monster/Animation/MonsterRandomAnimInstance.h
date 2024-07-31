@@ -4,13 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "Global/Animation/MainMultiAnimInstance.h"
-#include "BasicMonsterAnimInstance.generated.h"
+#include "MonsterRandomAnimInstance.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class UNREAL5_PORTFOLIO_API UBasicMonsterAnimInstance : public UMainMultiAnimInstance
+class UNREAL5_PORTFOLIO_API UMonsterRandomAnimInstance : public UMainMultiAnimInstance
 {
 	GENERATED_BODY()
 
