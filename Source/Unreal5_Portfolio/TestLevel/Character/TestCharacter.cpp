@@ -358,10 +358,8 @@ void ATestCharacter::Drink_Implementation()					// => 메인에 이전 필요 (24.07.31
 
 	// 애니메이션 변경
 	ChangePosture(EPlayerPosture::Drink);
-}
-
-	// 메인 추가 필요
 	ChangeMontage(false);
+}
 
 void ATestCharacter::DrinkComplete_Implementation()			// => 메인에 이전 필요 (24.07.31 수정됨)
 {
