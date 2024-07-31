@@ -29,7 +29,7 @@ void ATestArea::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if (BombState::Install == HaveBomb->CurBombState)
+	if (nullptr != HaveBomb && BombState::Install == HaveBomb->CurBombState)
 	{
 		TimeFlow(DeltaTime);
 	}
@@ -41,6 +41,8 @@ void ATestArea::InterAction()
 	Super::InterAction();
 
 	SetBomb();
+
+
 
 }
 

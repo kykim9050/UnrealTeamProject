@@ -33,7 +33,7 @@ protected:
 
 private:
 
-	ABomb* HaveBomb = nullptr;
+	class ABomb* HaveBomb = nullptr;
 
 	void SetBomb();
 
