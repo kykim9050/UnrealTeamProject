@@ -3,6 +3,11 @@
 
 #include "Global/MainGameState.h"
 #include "Net/UnrealNetwork.h"
+#include "Global/ContentsEnum.h"
+#include "Global/ContentsLog.h"
+
+// 추후 바꿔야할 헤더 MainCharacter로 변경해야 함
+#include "TestLevel/Character/TestCharacter.h"
 
 
 
@@ -52,16 +57,42 @@ void AMainGameState::GameStateCheck_Implementation()
 
 	if (MaxPlayerCount == PlayerCount)
 	{
+		UActorGroup* PlayerGroup = GetActorGroup<EObjectType>(EObjectType::Player);
+		
+		if (nullptr == PlayerGroup)
+		{
+			LOG(GlobalLog, Fatal, "if (nullptr == PlayerGroup)");
+			return;
+		}
+
 		switch (CurStage)
 		{
 		case EGameStage::Init:
 		{
-			CurStage = EGameStage::VisitArmory;
-			PlayerCount = 0;
+			for (int i = 0; i < PlayerGroup->Actors.Num(); i++)
+			{
+				// 추후 메인 Player로 변경 필요
+				ATestCharacter* Player = Cast<ATestCharacter>(PlayerGroup->Actors[i]);
+
+				if (true == Player->IsItemIn[static_cast<int>(EPlayerPosture::Melee)])
+				{
+					++ItemCount;
+				}
+			}
+
+			if (MaxItemCount == ItemCount)
+			{
+				CurStage = EGameStage::VisitArmory;
+				PlayerCount = 0;
+			}
+
+			ItemCount = 0;
 			break;
 		}
 		case EGameStage::VisitArmory:
+		{
 			break;
+		}
 		case EGameStage::ObtainFirstSample:
 			break;
 		case EGameStage::ObtainSecondSample:
