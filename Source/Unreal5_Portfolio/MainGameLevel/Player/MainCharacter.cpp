@@ -117,7 +117,7 @@ AMainCharacter::AMainCharacter()
 	// Hand Attack Component
 	HandAttackComponent = CreateDefaultSubobject<USphereComponent>(TEXT("Hand Attack Comp"));
 	HandAttackComponent->SetupAttachment(GetMesh());
-	HandAttackComponent->SetRelativeLocation({ 0.0f, 80.0f, 120.0f });
+	HandAttackComponent->SetRelativeLocation({ 0.0f, 100.0f, 120.0f });
 }
 
 void AMainCharacter::PostInitializeComponents() // FName 부분 수정 필요.
