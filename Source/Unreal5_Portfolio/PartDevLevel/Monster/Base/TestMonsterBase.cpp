@@ -21,7 +21,7 @@
 #include "Global/MainGameBlueprintFunctionLibrary.h"
 #include "Global/ContentsEnum.h"
 #include "Global/ContentsLog.h"
-
+#include "PartDevLevel/Monster/Kraken/KrakenProjectile.h"
 
 // Sets default values
 ATestMonsterBase::ATestMonsterBase()
@@ -237,10 +237,26 @@ void ATestMonsterBase::SpawnRock()
 		return;
 	}
 
-	for (int i = 0; i < SettingData->SpawnCount; i++)
+	if (nullptr != RockProjectile)
 	{
-		//GetWorld()->SpawnActor<>();
-		LOG(MonsterLog, Log, TEXT("Rock Spawn"));
+		UWorld* World = GetWorld();
+		if (nullptr != World)
+		{
+			FActorSpawnParameters SpawnParams;
+			SpawnParams.Owner = this;
+			SpawnParams.Instigator = GetInstigator();
+
+			for (int i = 0; i < SettingData->SpawnCount; i++)
+			{
+				AKrakenProjectile* Rock = World->SpawnActor<AKrakenProjectile>(RockProjectile, AttackComponent->GetComponentLocation(), FRotator::ZeroRotator, SpawnParams);
+				if (nullptr != Rock)
+				{
+					FVector LaunchDirection = Rock->GetActorLocation() - GetActorLocation();
+					Rock->SetDirection(LaunchDirection);
+					LOG(MonsterLog, Log, TEXT("Rock Spawn"));
+				}
+			}
+		}
 	}
 }
 

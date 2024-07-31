@@ -1,4 +1,4 @@
- // Fill out your copyright notice in the Description page of Project Settings.
+// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
@@ -37,7 +37,7 @@ protected:
 public:
 	class ATestMonsterBaseAIController* GetAIController();
 	class UMonsterAnimInstance* GetAnimInstance();
-	
+
 	template<typename EnumType>
 	void ChangeRandomAnimation(EnumType _Type)
 	{
@@ -116,13 +116,13 @@ private:
 	int AniIndex;
 
 	TArray<class UMaterialInstanceDynamic*> DynamicMaterials;
-	
+
 	UPROPERTY()
 	FTimeline DeadTimeLine;
 
 	UPROPERTY(EditAnywhere, Category = "DeadTimeLine")
 	class UCurveFloat* DeadDissolveCurve;
-	
+
 	FOnTimelineFloat DeadDissolveCallBack;
 	FOnTimelineEvent DeadTimelineFinish;
 
@@ -135,4 +135,7 @@ private:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class UMotionWarpingComponent> MotionWarpComponent;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	TSubclassOf<class AKrakenProjectile> RockProjectile;
 };

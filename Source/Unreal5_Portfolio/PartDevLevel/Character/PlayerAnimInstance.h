@@ -43,5 +43,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	bool PlayerIsFaint = false;
 
+	// 7/31 Ãß°¡
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	bool PlayerIsBombSetting = false;
+
 	class UMainGameInstance* MainGameInst;
 };

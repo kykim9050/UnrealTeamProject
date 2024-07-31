@@ -35,6 +35,7 @@ void UPlayerAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 	PlayerUppperState = OwnerPlayer->UpperStateValue;
 	PlayerDir = OwnerPlayer->DirValue;
 	PlayerIsFaint = OwnerPlayer->IsFaint;
+	PlayerIsBombSetting = OwnerPlayer->IsBombSetting;
 }
 
 void UPlayerAnimInstance::ChangeAnimation(EPlayerUpperState _UpperState)
