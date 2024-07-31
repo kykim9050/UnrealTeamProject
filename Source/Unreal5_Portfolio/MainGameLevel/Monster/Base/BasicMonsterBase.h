@@ -49,7 +49,7 @@ public:
 
 	FORCEINLINE const FMonsterDataRow* GetBaseData() const
 	{
-		return SettingData->BaseData;
+		return SettingData->GetBaseData();
 	}
 
 	FORCEINLINE int GetAnimIndex()

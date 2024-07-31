@@ -33,7 +33,7 @@ EBTNodeResult::Type UBTTaskNode_BasicMonsterPatrol::ExecuteTask(UBehaviorTreeCom
 
 	FNavLocation PatrolLocation(FVector::ZeroVector);
 	UNavigationSystemV1* NavSystem = UNavigationSystemV1::GetNavigationSystem(GetWorld());
-	bool IsFind = NavSystem->GetRandomReachablePointInRadius(MonsterData->OriginPos, MonsterData->PatrolRange, PatrolLocation);
+	bool IsFind = NavSystem->GetRandomReachablePointInRadius(MonsterData->GetOriginPos(), MonsterData->GetPatrolRange(), PatrolLocation);
 	if (false == IsFind)
 	{
 		return EBTNodeResult::Type::Failed;

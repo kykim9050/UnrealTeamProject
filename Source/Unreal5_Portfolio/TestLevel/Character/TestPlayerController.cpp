@@ -88,6 +88,7 @@ void ATestPlayerController::PlayerTick(float DeltaTime)
 	}
 
 	PlayerIsFaint = Ch->IsFaint;
+	PlayerIsBombSetting = Ch->IsBombSetting;
 }
 
 void ATestPlayerController::MouseRotation(const FInputActionValue& Value)
@@ -99,13 +100,13 @@ void ATestPlayerController::MouseRotation(const FInputActionValue& Value)
 
 void ATestPlayerController::MoveFront(const FInputActionValue& Value)
 {
-	// 기절 상태 이동 불가능
-	if (PlayerIsFaint == true)
+	// 메인 적용 필요
+	// 기절, 폭탄 설치 상태 이동 불가능
+	if (PlayerIsFaint == true || PlayerIsBombSetting == true)
 	{
 		return;
 	}
 
-	ChangeState_Con(EPlayerState::Walk);
 	FVector Forward = GetPawn()->GetActorForwardVector();
 	GetPawn()->AddMovementInput(Forward);
 	ChangePlayerDir(EPlayerMoveDir::Forward);
@@ -113,13 +114,13 @@ void ATestPlayerController::MoveFront(const FInputActionValue& Value)
 
 void ATestPlayerController::MoveBack(const FInputActionValue& Value)
 {
-	// 기절 상태 이동 불가능
-	if (PlayerIsFaint == true)
+	// 메인 적용 필요
+	// 기절, 폭탄 설치 상태 이동 불가능
+	if (PlayerIsFaint == true || PlayerIsBombSetting == true)
 	{
 		return;
 	}
 
-	ChangeState_Con(EPlayerState::Walk);
 	FVector Forward = GetPawn()->GetActorForwardVector();
 	GetPawn()->AddMovementInput(-Forward);
 	ChangePlayerDir(EPlayerMoveDir::Back);
@@ -127,13 +128,13 @@ void ATestPlayerController::MoveBack(const FInputActionValue& Value)
 
 void ATestPlayerController::MoveRight(const FInputActionValue& Value)
 {
-	// 기절 상태 이동 불가능
-	if (PlayerIsFaint == true)
+	// 메인 적용 필요
+	// 기절, 폭탄 설치 상태 이동 불가능
+	if (PlayerIsFaint == true || PlayerIsBombSetting == true)
 	{
 		return;
 	}
 
-	ChangeState_Con(EPlayerState::Walk);
 	FVector Rightward = GetPawn()->GetActorRightVector();
 	GetPawn()->AddMovementInput(Rightward);
 	ChangePlayerDir(EPlayerMoveDir::Right);
@@ -141,13 +142,13 @@ void ATestPlayerController::MoveRight(const FInputActionValue& Value)
 
 void ATestPlayerController::MoveLeft(const FInputActionValue& Value)
 {
-	// 기절 상태 이동 불가능
-	if (PlayerIsFaint == true)
+	// 메인 적용 필요
+	// 기절, 폭탄 설치 상태 이동 불가능
+	if (PlayerIsFaint == true || PlayerIsBombSetting == true)
 	{
 		return;
 	}
 
-	ChangeState_Con(EPlayerState::Walk);
 	FVector Rightward = GetPawn()->GetActorRightVector();
 	GetPawn()->AddMovementInput(-Rightward);
 	ChangePlayerDir(EPlayerMoveDir::Left);
@@ -187,7 +188,6 @@ void ATestPlayerController::Crouch(const FInputActionValue& Value)
 
 void ATestPlayerController::FireStart(float _DeltaTime)	// => 메인도 수정해야 함 (24.07.25 수정됨) => 메인 적용
 {
-	ChangeState_Con(EPlayerState::Fire);
 	ATestCharacter* Ch = GetPawn<ATestCharacter>();
 
 	if (Ch->CurItemIndex == 3 || Ch->CurItemIndex == 4)
@@ -215,15 +215,11 @@ void ATestPlayerController::FireTick(float _DeltaTime)	// => 메인도 수정해야 함 
 
 void ATestPlayerController::FireEnd()
 {
-	ChangeState_Con(EPlayerState::Idle);
 	ATestCharacter* Ch = GetPawn<ATestCharacter>();
-
-	//
 	if (Ch->PostureValue == EPlayerPosture::Rifle1 || Ch->PostureValue == EPlayerPosture::Rifle2)
 	{
 		FireEndMontagePlay();
 	}
-	//
 
 	GetWorld()->GetTimerManager().ClearTimer(MyTimeHandle);
 	GEngine->AddOnScreenDebugMessage(-1, 0.2f, FColor::Red, TEXT("End"));
@@ -259,12 +255,6 @@ void ATestPlayerController::CheckItem_Con()	// => 메인으로 이전 필요 (24.07.29 �
 	Ch->CheckItem();
 }
 
-void ATestPlayerController::ChangeState_Con(EPlayerState _State)
-{
-	ATestCharacter* Ch = GetPawn<ATestCharacter>();
-	Ch->ChangeState(_State);
-}
-
 void ATestPlayerController::ChangePosture_Con(EPlayerPosture _Posture)
 {
 	ATestCharacter* Ch = GetPawn<ATestCharacter>();
@@ -298,12 +288,26 @@ void ATestPlayerController::ChangePlayerDir(EPlayerMoveDir _Dir)
 
 void ATestPlayerController::AttackMontagePlay()
 {
+	// 메인 적용 필요
+	// 기절, 폭탄 설치 상태 몽타주 실행 불가능
+	if (PlayerIsFaint == true || PlayerIsBombSetting == true)
+	{
+		return;
+	}
+
 	ATestCharacter* Ch = GetPawn<ATestCharacter>();
 	Ch->ChangeMontage(false);
 }
 
 void ATestPlayerController::FireEndMontagePlay()
 {
+	// 메인 적용 필요
+	// 기절, 폭탄 설치 상태 몽타주 실행 불가능
+	if (PlayerIsFaint == true || PlayerIsBombSetting == true)
+	{
+		return;
+	}
+
 	ATestCharacter* Ch = GetPawn<ATestCharacter>();
 	Ch->ChangeMontage(true);
 }
