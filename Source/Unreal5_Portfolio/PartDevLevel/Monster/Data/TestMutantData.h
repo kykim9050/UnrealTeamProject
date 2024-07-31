@@ -4,15 +4,14 @@
 
 #include "CoreMinimal.h"
 #include "PartDevLevel/Monster/Data/TestMonsterDataBase.h"
-#include "TestZombieData.generated.h"
+#include "TestMutantData.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class UNREAL5_PORTFOLIO_API UTestZombieData : public UTestMonsterDataBase
+class UNREAL5_PORTFOLIO_API UTestMutantData : public UTestMonsterDataBase
 {
 	GENERATED_BODY()
-
-
+	
 };

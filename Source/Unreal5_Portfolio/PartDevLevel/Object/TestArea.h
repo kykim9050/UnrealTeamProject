@@ -18,15 +18,13 @@ public:
 
 	ATestArea();
 	void InterAction() override;
-
+	void ResetBombTime();
+	void InstallBomb(float _DeltaTime);
 
 
 protected:
 	void BeginPlay() override;
 	void Tick(float DeltaTime) override;
-
-
-	void InstallBomb(float _DeltaTime);
 
 
 	UPROPERTY(EditAnywhere)
