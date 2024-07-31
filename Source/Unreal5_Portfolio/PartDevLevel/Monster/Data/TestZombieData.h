@@ -3,14 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "UObject/NoExportTypes.h"
+#include "PartDevLevel/Monster/Data/TestMonsterDataBase.h"
 #include "TestZombieData.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class UNREAL5_PORTFOLIO_API UTestZombieData : public UObject
+class UNREAL5_PORTFOLIO_API UTestZombieData : public UTestMonsterDataBase
 {
 	GENERATED_BODY()
 

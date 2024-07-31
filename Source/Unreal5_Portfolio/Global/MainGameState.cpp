@@ -43,86 +43,90 @@ UActorGroup* AMainGameState::GetActorGroup(uint8 _Index)
 	return AllActor[_Index];
 }
 
-void AMainGameState::GameStateCheck_Implementation()
+void AMainGameState::GameStateCheck_Implementation(AActor* _OtherActor)
 {
 	if (false == HasAuthority())
 	{
 		return;
 	}
 
-	if (MaxPlayerCount == PlayerCount)
+	// 추후 MainCharacter로 변경 필요
+	ATestCharacter* Player = Cast<ATestCharacter>(_OtherActor);
+
+	if (nullptr == Player)
 	{
-		UActorGroup* PlayerGroup = GetActorGroup<EObjectType>(EObjectType::Player);
-		
-		if (nullptr == PlayerGroup)
+		LOG(GlobalLog, Fatal, "if (nullptr == Player)");
+		return;
+	}
+
+	// 조건 관련 변수 정보 갱신
+	switch (CurStage)
+	{
+	case EGameStage::Init:
+	{
+		if (true == Player->IsItemIn[static_cast<int>(EPlayerPosture::Melee)])
 		{
-			LOG(GlobalLog, Fatal, "if (nullptr == PlayerGroup)");
-			return;
+			++ItemCount;
+		}
+		break;
+	}
+	case EGameStage::VisitArmory:
+	{
+		if (true == Player->IsItemIn[static_cast<int>(EPlayerPosture::Rifle1)])
+		{
+			++ItemCount;
 		}
 
+		if (true == Player->IsItemIn[static_cast<int>(EPlayerPosture::Bomb)])
+		{
+			++BombCount;
+		}
+		break;
+	}
+	case EGameStage::ObtainFirstSample:
+		break;
+	case EGameStage::ObtainSecondSample:
+		break;
+	case EGameStage::ObtainThirdSample:
+		break;
+	case EGameStage::PlantingBomb:
+		break;
+	case EGameStage::MoveToGatheringPoint:
+		break;
+	case EGameStage::Defensing:
+		break;
+	case EGameStage::MissionClear:
+		break;
+	default:
+		break;
+	}
+
+	// 플레이어 수가 일정 수 도달했을 때 조건 체크 함수
+	if (MaxPlayerCount == PlayerCount)
+	{
 		switch (CurStage)
 		{
 		case EGameStage::Init:
 		{
-			for (int i = 0; i < PlayerGroup->Actors.Num(); i++)
-			{
-				// 추후 메인 Player로 변경 필요
-				ATestCharacter* Player = Cast<ATestCharacter>(PlayerGroup->Actors[i]);
-
-				if (nullptr == Player)
-				{
-					LOG(GlobalLog, Fatal, "if (nullptr == Player)");
-					return;
-				}
-
-				if (true == Player->IsItemIn[static_cast<int>(EPlayerPosture::Melee)])
-				{
-					++ItemCount;
-				}
-			}
-
 			if (MaxPlayerCount == ItemCount)
 			{
 				CurStage = EGameStage::VisitArmory;
 				PlayerCount = 0;
+				ItemCount = 0;
+				break;
 			}
-
-			ItemCount = 0;
 			break;
 		}
 		case EGameStage::VisitArmory:
 		{
-			for (int i = 0; i < PlayerGroup->Actors.Num(); i++)
-			{
-				// 추후 메인 Player로 변경 필요
-				ATestCharacter* Player = Cast<ATestCharacter>(PlayerGroup->Actors[i]);
-
-				if (nullptr == Player)
-				{
-					LOG(GlobalLog, Fatal, "if (nullptr == Player)");
-					return;
-				}
-
-				if (true == Player->IsItemIn[static_cast<int>(EPlayerPosture::Rifle1)])
-				{
-					++ItemCount;
-				}
-
-				if (true == Player->IsItemIn[static_cast<int>(EPlayerPosture::Bomb)])
-				{
-					++BombCount;
-				}
-			}
-
 			if (MaxPlayerCount == ItemCount
 				&& MaxBombCount == BombCount)
 			{
 				CurStage = EGameStage::ObtainFirstSample;
 				PlayerCount = 0;
+				BombCount = 0;
+				ItemCount = 0;
 			}
-
-			BombCount = 0;
-			ItemCount = 0;
 			break;
 		}
 		case EGameStage::ObtainFirstSample:
@@ -142,5 +146,63 @@ void AMainGameState::GameStateCheck_Implementation()
 		default:
 			break;
 		}
+	}
+}
+
+void AMainGameState::GameStateModify_Implementation(AActor* _OtherActor)
+{
+	if (false == HasAuthority())
+	{
+		return;
+	}
+
+	// 추후 MainCharacter로 변경 필요
+	ATestCharacter* Player = Cast<ATestCharacter>(_OtherActor);
+
+	if (nullptr == Player)
+	{
+		LOG(GlobalLog, Fatal, "if (nullptr == Player)");
+		return;
+	}
+
+	switch (CurStage)
+	{
+	case EGameStage::Init:
+	{
+		if (true == Player->IsItemIn[static_cast<int>(EPlayerPosture::Melee)])
+		{
+			--ItemCount;
+		}
+		break;
+	}
+	case EGameStage::VisitArmory:
+	{
+		if (true == Player->IsItemIn[static_cast<int>(EPlayerPosture::Rifle1)])
+		{
+			--ItemCount;
+		}
+
+		if (true == Player->IsItemIn[static_cast<int>(EPlayerPosture::Bomb)])
+		{
+			--BombCount;
+		}
+		break;
+	}
+	case EGameStage::ObtainFirstSample:
+		break;
+	case EGameStage::ObtainSecondSample:
+		break;
+	case EGameStage::ObtainThirdSample:
+		break;
+	case EGameStage::PlantingBomb:
+		break;
+	case EGameStage::MoveToGatheringPoint:
+		break;
+	case EGameStage::Defensing:
+		break;
+	case EGameStage::MissionClear:
+		break;
+	default:
+		break;
 	}
 }

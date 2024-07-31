@@ -32,7 +32,7 @@ void AStageCheckBox::OnOverlapBegin(AActor* OverlappedActor, AActor* OtherActor)
 
 	MainGameState->AddPlayerCount();
 
-	MainGameState->GameStateCheck();
+	MainGameState->GameStateCheck(OtherActor);
 }
 
 void AStageCheckBox::OnOverlapEnd(AActor* OverlappedActor, AActor* OtherActor)
@@ -51,4 +51,6 @@ void AStageCheckBox::OnOverlapEnd(AActor* OverlappedActor, AActor* OtherActor)
 	}
 
 	MainGameState->SubPlayerCount();
+
+	MainGameState->GameStateModify(OtherActor);
 }
