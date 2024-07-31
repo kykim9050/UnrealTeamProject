@@ -188,4 +188,6 @@ private:
 	UPROPERTY()
 	int MaxPlayerCount = 2;
 
+	UPROPERTY()
+	int ItemCount = 0;
 };

@@ -42,10 +42,6 @@ void ABomb::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	
-	if (BombState::Install == CurBombState)
-	{
-		TimeFlow(DeltaTime);
-	}
 }
 
 void ABomb::InterAction()
@@ -58,7 +54,4 @@ void ABomb::InterAction()
 	}
 }
 
-void ABomb::TimeFlow(float _DeltaTime)
-{
-	BombTime -= _DeltaTime;
-}
+

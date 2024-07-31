@@ -62,11 +62,14 @@ void UBTTaskNode_BasicMonsterAttack::TickTask(UBehaviorTreeComponent& OwnerComp,
 	FVector MonsterLocation = Monster->GetActorLocation();
 	FVector TargetPlayerLocation = TargetPlayer->GetActorLocation();
 
+	// 공격 범위 체크
 	FVector LocationDiff = TargetPlayerLocation - MonsterLocation;
 	float Distance = LocationDiff.Size();
-	if (Distance >= MonsterData->AttackRange)
+	if (Distance <= MonsterData->AttackRange)
 	{
-		// 몬스터 회전
+		MonsterLocation.Z = 0.0f;
+		TargetPlayerLocation.Z = 0.0f;
+
 		FRotator TurnRot = UKismetMathLibrary::FindLookAtRotation(MonsterLocation, TargetPlayerLocation);
 		Monster->SetActorRotation(TurnRot);
 	}

@@ -39,13 +39,10 @@ protected:
 	void Tick(float DeltaTime) override;
 	void InterAction() override;
 
-	void TimeFlow(float _DeltaTime);
-
 private:
 	TSubclassOf<AActor> InteractObjClass = TSubclassOf<AActor>();
 
 	bool BombStart = false;
 
-	float BombTime = 3.f;
 
 };

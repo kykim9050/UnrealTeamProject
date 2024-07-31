@@ -95,10 +95,11 @@ private:
 		Destroy();
 	}
 
-private:
+protected:
 	UPROPERTY()
 	UTestMonsterDataBase* SettingData;
 
+private:
 	UPROPERTY(Category = "Data", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	FName BaseDataName;
 

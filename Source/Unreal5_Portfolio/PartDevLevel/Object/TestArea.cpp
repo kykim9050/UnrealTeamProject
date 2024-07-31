@@ -29,8 +29,10 @@ void ATestArea::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-
-
+	if (nullptr != HaveBomb && BombState::Install == HaveBomb->CurBombState)
+	{
+		TimeFlow(DeltaTime);
+	}
 
 }
 
@@ -39,6 +41,8 @@ void ATestArea::InterAction()
 	Super::InterAction();
 
 	SetBomb();
+
+
 
 }
 
@@ -65,6 +69,13 @@ void ATestArea::SetBomb()
 
 		InteractObj->SetActorLocation(SetBombBox->GetComponentLocation());
 		InteractObj->CurBombState = BombState::Install;
+		HaveBomb = InteractObj;
+
 	}
 
+}
+
+void ATestArea::TimeFlow(float _DeltaTime)
+{
+	BombTime -= _DeltaTime;
 }

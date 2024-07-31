@@ -13,5 +13,6 @@ UCLASS()
 class UNREAL5_PORTFOLIO_API UTestZombieData : public UObject
 {
 	GENERATED_BODY()
-	
+
+
 };

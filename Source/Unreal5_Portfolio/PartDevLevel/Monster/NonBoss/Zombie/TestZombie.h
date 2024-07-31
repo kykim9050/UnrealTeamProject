@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "PartDevLevel/Monster/Base/TestMonsterBase.h"
+#include "PartDevLevel/Monster/Data/TestZombieData.h"
 #include "TestZombie.generated.h"
 
 /**
@@ -14,6 +15,11 @@ class UNREAL5_PORTFOLIO_API ATestZombie : public ATestMonsterBase
 {
 	GENERATED_BODY()
 
-private:	
-	
+protected:
+	virtual void BeginPlay() override;
+
+private:
+	UPROPERTY()
+	UTestZombieData* ZombieSettingData = nullptr;
+
 };
