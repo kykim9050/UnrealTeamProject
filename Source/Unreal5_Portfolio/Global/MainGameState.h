@@ -7,6 +7,16 @@
 #include "Global/ContentsEnum.h"
 #include "MainGameState.generated.h"
 
+UENUM(BlueprintType)
+enum class EQuestItem : uint8
+{
+	Report1		UMETA(DisplayName = "특수 개체1 사냥 후 드롭되는 보고서"),
+	Report2		UMETA(DisplayName = "창고에 있는 보고서"),
+	Report3		UMETA(DisplayName = "특수 개체2 사냥 후, 실험실2에서 얻는 보고서"),
+	Max			UMETA(Hidden)
+};
+
+
 UCLASS()
 class UNREAL5_PORTFOLIO_API UActorGroup : public UObject
 {
@@ -162,4 +172,10 @@ private:
 	/// </summary>
 	UPROPERTY()
 	int ItemCount = 0;
+
+	/// <summary>
+	/// StageClear에 필요한 퀘스트 아이템 수집 상태 관련 TArray
+	/// </summary>
+	UPROPERTY()
+	TArray<bool> QuestItems = TArray<bool>();
 };

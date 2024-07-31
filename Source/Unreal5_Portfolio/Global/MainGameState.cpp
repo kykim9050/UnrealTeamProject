@@ -13,7 +13,12 @@
 
 AMainGameState::AMainGameState()
 {
+	int QuestItemsNum = static_cast<int>(EQuestItem::Max);
 
+	for (int i = 0; i < QuestItemsNum; i++)
+	{
+		QuestItems.Add(false);
+	}
 }
 
 void AMainGameState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -87,11 +92,56 @@ void AMainGameState::GameStateCheck_Implementation(AActor* _OtherActor)
 			break;
 		}
 		case EGameStage::ObtainFirstSample:
+		{
+			int QuestItemsNum = static_cast<int>(EQuestItem::Report1);
+
+			for (int i = 0; i < QuestItemsNum; i++)
+			{
+				if (false == QuestItems[i])
+				{
+					break;
+				}
+			}
+
+			PlayerCount = 0;
+			CurStage = EGameStage::ObtainSecondSample;
+			SetIsStageChange(true);
 			break;
+		}
 		case EGameStage::ObtainSecondSample:
+		{
+			int QuestItemsNum = static_cast<int>(EQuestItem::Report2);
+
+			for (int i = 0; i < QuestItemsNum; i++)
+			{
+				if (false == QuestItems[i])
+				{
+					break;
+				}
+			}
+
+			PlayerCount = 0;
+			CurStage = EGameStage::ObtainThirdSample;
+			SetIsStageChange(true);
 			break;
+		}
 		case EGameStage::ObtainThirdSample:
+		{
+			int QuestItemsNum = static_cast<int>(EQuestItem::Report3);
+
+			for (int i = 0; i < QuestItemsNum; i++)
+			{
+				if (false == QuestItems[i])
+				{
+					break;
+				}
+			}
+
+			PlayerCount = 0;
+			CurStage = EGameStage::PlantingBomb;
+			SetIsStageChange(true);
 			break;
+		}
 		case EGameStage::PlantingBomb:
 			break;
 		case EGameStage::MoveToGatheringPoint:
