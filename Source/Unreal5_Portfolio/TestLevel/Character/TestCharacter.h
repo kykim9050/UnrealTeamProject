@@ -52,13 +52,13 @@ public:
 	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	class UCameraComponent* CameraComponent = nullptr;
 	UPROPERTY(Category = "Contents", VisibleDefaultsOnly)
-	USkeletalMeshComponent* FPVMesh = nullptr;	// => 메인캐릭터로 이전해야 함 (새로 추가됨)
+	USkeletalMeshComponent* FPVMesh = nullptr;						// => 메인캐릭터로 이전해야 함 (새로 추가됨)
 	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-	class UStaticMeshComponent* RidingMesh = nullptr;	// => 메인캐릭터로 이전해야 함 (새로 추가됨) [뭐하는 Component?] [탈것 테스팅용 (성우님 요청)]
+	class UStaticMeshComponent* RidingMesh = nullptr;				// => 메인캐릭터로 이전해야 함 (새로 추가됨) [뭐하는 Component?] [탈것 테스팅용 (성우님 요청)]
 	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-	class UStaticMeshComponent* ItemSocketMesh = nullptr;	// => 메인캐릭터로 이전해야 함 (새로 추가됨)
+	class UStaticMeshComponent* ItemSocketMesh = nullptr;			// => 메인캐릭터로 이전해야 함 (새로 추가됨)
 	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-	class UStaticMeshComponent* FPVItemSocketMesh = nullptr;	// => 메인캐릭터로 이전해야 함 (새로 추가됨)
+	class UStaticMeshComponent* FPVItemSocketMesh = nullptr;		// => 메인캐릭터로 이전해야 함 (새로 추가됨)
 	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	class UTestMinimapIconComponent* MinimapIconComponent = nullptr;
 	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
@@ -114,10 +114,10 @@ public:
 	void ChangeIsFaint();
 	void ChangeIsFaint_Implementation();
 
-	// POV	// => const 값들 메인캐릭터 이전 필요 (24.07.29 추가됨) => 메인 적용.
-	const FVector CameraRelLoc = FVector(0.0f, 60.0f, 110.0f);
-	const FVector FPVCameraRelLoc = FVector(0.0f, 0.0f, 72.0f);
-	const FVector FPVCameraRelLoc_Crouch = FVector(10.0f, 0.0f, 10.0f);
+	// POV
+	const FVector CameraRelLoc = FVector(0.0f, 60.0f, 110.0f);			// => 메인캐릭터 이전 필요 (24.07.29 추가됨) => 메인 적용.
+	const FVector FPVCameraRelLoc = FVector(0.0f, 0.0f, 72.0f);			// => 메인캐릭터 이전 필요 (24.07.29 추가됨) => 메인 적용.
+	const FVector FPVCameraRelLoc_Crouch = FVector(10.0f, 0.0f, 10.0f);	// => 메인캐릭터 이전 필요 (24.07.29 추가됨) => 메인 적용.
 	bool IsFPV = true;
 	UFUNCTION()
 	void ChangePOV();
@@ -142,7 +142,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void MapItemOverlapEnd();
 	UFUNCTION(BlueprintCallable)
-	void CheckItem();	// => 메인캐릭터로 이전해야 함 (24.07.29 추가됨)
+	void CheckItem();									// => 메인캐릭터로 이전해야 함 (24.07.29 추가됨)
 	UFUNCTION(Reliable, Server)
 	void InteractObject(AMapObjectBase* _MapObject);	// => 메인캐릭터로 이전해야 함 (24.07.29 추가됨)
 	void InteractObject_Implementation(AMapObjectBase* _MapObject);
@@ -152,10 +152,10 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void ItemSetting(FName _TagName, int _SlotIndex);	// => 메인캐릭터로 이전해야 함 (24.07.30 추가됨)
 	UFUNCTION(Reliable, Server, BlueprintCallable)
-	void DropItem(int _SlotIndex);	// => 메인캐릭터로 이전해야 함 (24.07.30 수정됨)
+	void DropItem(int _SlotIndex);						// => 메인캐릭터로 이전해야 함 (24.07.30 수정됨)
 	void DropItem_Implementation(int _SlotIndex);
 	UFUNCTION(BlueprintCallable)
-	void DeleteItem(int _Index);	// => 메인캐릭터로 이전해야 함 (24.07.29 추가됨)
+	void DeleteItem(int _Index);						// => 메인캐릭터로 이전해야 함 (24.07.29 추가됨)
 
 	// Collision
 	//UFUNCTION(BlueprintCallable)
@@ -217,26 +217,26 @@ public:
 
 	// Drink
 	UFUNCTION(Reliable, Server, BlueprintCallable)
-	void Drink();				// => 메인에 추후 이전해야 함 (24.07.29 추가 후 테스팅 중)
+	void Drink();				// => 메인에 이전 필요 (24.07.31 수정됨)
 	void Drink_Implementation();
 	UFUNCTION(Reliable, Server, BlueprintCallable)
-	void DrinkComplete();		// => 메인에 추후 이전해야 함 (24.07.30 추가 후 테스팅 중)
+	void DrinkComplete();		// => 메인에 이전 필요 (24.07.31 수정됨)
 	void DrinkComplete_Implementation();
 
 	// Bomb Setting
 	UPROPERTY(Replicated ,BlueprintReadWrite)
-	bool IsBombSetting = false;	// => 메인에 추후 이전해야 함 (24.07.29 추가 후 테스팅 중)
+	bool IsBombSetting = false;	// => 메인에 이전 필요 (24.07.29 추가됨)
 	UFUNCTION(Reliable, Server, BlueprintCallable)
-	void BombSetStart();		// => 메인에 추후 이전해야 함 (24.07.29 추가 후 테스팅 중)
+	void BombSetStart();		// => 메인에 이전 필요 (24.07.31 수정됨)
 	void BombSetStart_Implementation();
 	UFUNCTION(Reliable, Server, BlueprintCallable)
-	void BombSetTick();			// => 메인에 추후 이전해야 함 (24.07.30 추가 후 테스팅 중)
+	void BombSetTick();			// => 메인에 이전 필요 (24.07.31 수정됨)
 	void BombSetTick_Implementation();
 	UFUNCTION(Reliable, Server, BlueprintCallable)
-	void BombSetCancel();		// => 메인에 추후 이전해야 함 (24.07.29 추가 후 테스팅 중)
+	void BombSetCancel();		// => 메인에 이전 필요 (24.07.31 수정됨)
 	void BombSetCancel_Implementation();
 	UFUNCTION(Reliable, Server, BlueprintCallable)
-	void BombSetComplete();		// => 메인에 추후 이전해야 함 (24.07.29 추가 후 테스팅 중)
+	void BombSetComplete();		// => 메인에 이전 필요 (24.07.31 수정됨)
 	void BombSetComplete_Implementation();
 
 	// 공격 시 서버 캐릭터 몽타주 변경 함수 (태환)

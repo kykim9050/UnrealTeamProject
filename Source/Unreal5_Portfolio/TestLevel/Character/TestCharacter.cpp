@@ -280,7 +280,7 @@ void ATestCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLi
 	DOREPLIFETIME(ATestCharacter, LowerStateValue); // => 매인 적용.
 	DOREPLIFETIME(ATestCharacter, DirValue);		// => 매인 적용.
 	DOREPLIFETIME(ATestCharacter, IsFaint);			// 7/26 추가
-	DOREPLIFETIME(ATestCharacter, IsBombSetting);	// => 메인에 추후 이전해야 함 (24.07.29 추가 후 테스팅 중)
+	DOREPLIFETIME(ATestCharacter, IsBombSetting);	// => 메인에 이전 필요 (24.07.29 추가됨)
 
 	// Item
 	DOREPLIFETIME(ATestCharacter, RayCastToItemName);
@@ -343,7 +343,7 @@ void ATestCharacter::FireRayCast_Implementation() // => 메인 수정 필요 (24.07.30
 	}
 }
 
-void ATestCharacter::Drink_Implementation()	// => 메인에 추후 이전해야 함 (24.07.31 수정 및 테스팅 중)
+void ATestCharacter::Drink_Implementation()					// => 메인에 이전 필요 (24.07.31 수정됨)
 {
 	// 음료 아이템이 없다면 return
 	if (false == IsItemIn[3])
@@ -354,9 +354,15 @@ void ATestCharacter::Drink_Implementation()	// => 메인에 추후 이전해야 함 (24.07
 		return;
 	}
 
+	// 음료 아이템 삭제
+	DeleteItem(3);
+
 	// 애니메이션 변경
 	ChangePosture(EPlayerPosture::Drink);
+}
 
+void ATestCharacter::DrinkComplete_Implementation()			// => 메인에 이전 필요 (24.07.31 수정됨)
+{
 	// 실질적인 플레이어 HP 회복
 	ATestPlayerState* MyTestPlayerState = GetPlayerState<ATestPlayerState>();
 	if (nullptr == MyTestPlayerState)
@@ -366,20 +372,14 @@ void ATestCharacter::Drink_Implementation()	// => 메인에 추후 이전해야 함 (24.07
 	MyTestPlayerState->HealHp();
 
 #ifdef WITH_EDITOR
-	GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Yellow, FString(TEXT("HP recovered!")));
+	GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Red, FString(TEXT("HP recovered!")));
 #endif
 
-	// 음료 아이템 삭제
-	DeleteItem(3);
-}
-
-void ATestCharacter::DrinkComplete_Implementation()	// => 메인에 추후 이전해야 함 (24.07.30 추가 후 테스팅 중)
-{
 	// 이전 자세로 애니메이션 변경
 	ChangePosture(PrevPostureValue);
 }
 
-void ATestCharacter::BombSetStart_Implementation()	// => 메인에 추후 이전해야 함 (24.07.31 수정 및 테스팅 중)
+void ATestCharacter::BombSetStart_Implementation()			// => 메인에 이전 필요 (24.07.31 수정됨)
 {
 	// 폭탄 아이템이 없다면 return
 	if (false == IsItemIn[4])
@@ -411,7 +411,7 @@ void ATestCharacter::BombSetStart_Implementation()	// => 메인에 추후 이전해야 함
 	ChangePosture(EPlayerPosture::Bomb);
 }
 
-void ATestCharacter::BombSetTick_Implementation()		// => 메인에 추후 이전해야 함 (24.07.31 수정 및 테스팅 중)
+void ATestCharacter::BombSetTick_Implementation()		// => 메인에 이전 필요 (24.07.31 수정됨)
 {
 	if (true == IsBombSetting)
 	{
@@ -438,7 +438,7 @@ void ATestCharacter::BombSetTick_Implementation()		// => 메인에 추후 이전해야 함
 	}
 }
 
-void ATestCharacter::BombSetCancel_Implementation()		// => 메인에 추후 이전해야 함 (24.07.31 수정 및 테스팅 중)
+void ATestCharacter::BombSetCancel_Implementation()		// => 메인에 이전 필요 (24.07.31 수정됨)
 {
 	if (true == IsBombSetting)
 	{
@@ -455,7 +455,7 @@ void ATestCharacter::BombSetCancel_Implementation()		// => 메인에 추후 이전해야 
 	}
 }
 
-void ATestCharacter::BombSetComplete_Implementation()	// => 메인에 추후 이전해야 함 (24.07.31 수정 및 테스팅 중)
+void ATestCharacter::BombSetComplete_Implementation()	// => 메인에 이전 필요 (24.07.31 수정됨)
 {
 	// 폭탄 설치 완료
 	IsBombSetting = false;

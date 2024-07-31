@@ -24,6 +24,8 @@ ATestPlayerController::ATestPlayerController()
 
 		InputData = ResPath.Object;
 	}
+	
+	//PlayerCameraManager->StartCameraShake();
 }
 
 void ATestPlayerController::BeginPlay()

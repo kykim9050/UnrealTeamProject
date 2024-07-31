@@ -21,7 +21,7 @@ public:
 	void ResetBombTime();
 	void InstallBomb(float _DeltaTime);
 
-	inline float GetInstallBombTime()
+	FORCEINLINE float GetInstallBombTime()
 	{
 		return InstallBombTime;
 	}
