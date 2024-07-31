@@ -81,9 +81,7 @@ public :
 	UFUNCTION(BlueprintCallable)
 	void CheckItem_Con();	// => 메인 수정 필요 (24.07.30 플레이어 함수와의 혼동을 방지하지 위해 이름 수정됨) (PickUpItem 함수 대체) => 메인 적용
 
-	// State, Posture
-	UFUNCTION(BlueprintCallable)
-	void ChangeState_Con(EPlayerState _State);	// => 메인 수정 필요 (24.07.30 플레이어 함수와의 혼동을 방지하지 위해 이름 수정됨) => 사용 안함.
+	// Posture
 	UFUNCTION(BlueprintCallable)
 	void ChangePosture_Con(EPlayerPosture _Posture);	// => 메인 수정 필요 (24.07.30 플레이어 함수와의 혼동을 방지하지 위해 이름 수정됨) => 메인 적용
 

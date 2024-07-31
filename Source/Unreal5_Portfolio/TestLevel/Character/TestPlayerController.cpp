@@ -103,7 +103,6 @@ void ATestPlayerController::MoveFront(const FInputActionValue& Value)
 		return;
 	}
 
-	ChangeState_Con(EPlayerState::Walk);
 	FVector Forward = GetPawn()->GetActorForwardVector();
 	GetPawn()->AddMovementInput(Forward);
 	ChangePlayerDir(EPlayerMoveDir::Forward);
@@ -117,7 +116,6 @@ void ATestPlayerController::MoveBack(const FInputActionValue& Value)
 		return;
 	}
 
-	ChangeState_Con(EPlayerState::Walk);
 	FVector Forward = GetPawn()->GetActorForwardVector();
 	GetPawn()->AddMovementInput(-Forward);
 	ChangePlayerDir(EPlayerMoveDir::Back);
@@ -131,7 +129,6 @@ void ATestPlayerController::MoveRight(const FInputActionValue& Value)
 		return;
 	}
 
-	ChangeState_Con(EPlayerState::Walk);
 	FVector Rightward = GetPawn()->GetActorRightVector();
 	GetPawn()->AddMovementInput(Rightward);
 	ChangePlayerDir(EPlayerMoveDir::Right);
@@ -145,7 +142,6 @@ void ATestPlayerController::MoveLeft(const FInputActionValue& Value)
 		return;
 	}
 
-	ChangeState_Con(EPlayerState::Walk);
 	FVector Rightward = GetPawn()->GetActorRightVector();
 	GetPawn()->AddMovementInput(-Rightward);
 	ChangePlayerDir(EPlayerMoveDir::Left);
@@ -185,7 +181,6 @@ void ATestPlayerController::Crouch(const FInputActionValue& Value)
 
 void ATestPlayerController::FireStart(float _DeltaTime)	// => 메인도 수정해야 함 (24.07.25 수정됨) => 메인 적용
 {
-	ChangeState_Con(EPlayerState::Fire);
 	ATestCharacter* Ch = GetPawn<ATestCharacter>();
 
 	if (Ch->CurItemIndex == 3 || Ch->CurItemIndex == 4)
@@ -213,15 +208,11 @@ void ATestPlayerController::FireTick(float _DeltaTime)	// => 메인도 수정해야 함 
 
 void ATestPlayerController::FireEnd()
 {
-	ChangeState_Con(EPlayerState::Idle);
 	ATestCharacter* Ch = GetPawn<ATestCharacter>();
-
-	//
 	if (Ch->PostureValue == EPlayerPosture::Rifle1 || Ch->PostureValue == EPlayerPosture::Rifle2)
 	{
 		FireEndMontagePlay();
 	}
-	//
 
 	GetWorld()->GetTimerManager().ClearTimer(MyTimeHandle);
 	GEngine->AddOnScreenDebugMessage(-1, 0.2f, FColor::Red, TEXT("End"));
@@ -255,12 +246,6 @@ void ATestPlayerController::CheckItem_Con()	// => 메인으로 이전 필요 (24.07.29 �
 {
 	ATestCharacter* Ch = GetPawn<ATestCharacter>();
 	Ch->CheckItem();
-}
-
-void ATestPlayerController::ChangeState_Con(EPlayerState _State)
-{
-	ATestCharacter* Ch = GetPawn<ATestCharacter>();
-	Ch->ChangeState(_State);
 }
 
 void ATestPlayerController::ChangePosture_Con(EPlayerPosture _Posture)

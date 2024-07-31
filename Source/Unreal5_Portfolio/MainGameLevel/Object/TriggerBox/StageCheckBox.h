@@ -25,6 +25,10 @@ protected:
 	UFUNCTION()
 	void OnOverlapEnd(AActor* OverlappedActor, AActor* OtherActor);
 
+	UFUNCTION(Reliable, NetMulticast)
+	void DestroyTrigger();
+	void DestroyTrigger_Implementation();
+
 private:
 
 };

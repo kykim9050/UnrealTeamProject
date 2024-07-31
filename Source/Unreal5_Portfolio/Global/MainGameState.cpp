@@ -67,6 +67,7 @@ void AMainGameState::GameStateCheck_Implementation(AActor* _OtherActor)
 				CurStage = EGameStage::VisitArmory;
 				PlayerCount = 0;
 				ItemCount = 0;
+				SetIsStageChange(true);
 				break;
 			}
 			break;
@@ -80,6 +81,8 @@ void AMainGameState::GameStateCheck_Implementation(AActor* _OtherActor)
 				PlayerCount = 0;
 				BombCount = 0;
 				ItemCount = 0;
+				SetIsStageChange(true);
+				break;
 			}
 			break;
 		}
