@@ -274,8 +274,7 @@ void ATestCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLi
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
-	// State, Posture, Action
-	DOREPLIFETIME(ATestCharacter, StateValue);
+	// Posture, Action
 	DOREPLIFETIME(ATestCharacter, PostureValue);	// => 매인 적용.
 	DOREPLIFETIME(ATestCharacter, LowerStateValue); // => 매인 적용.
 	DOREPLIFETIME(ATestCharacter, DirValue);		// => 매인 적용.
@@ -555,11 +554,6 @@ void ATestCharacter::ClientChangeMontage_Implementation(bool _IsFireEnd) // => �
 		PlayerAnimInst->ChangeAnimation(UpperStateValue);
 		FPVPlayerAnimInst->ChangeAnimation(UpperStateValue);
 	}
-}
-
-void ATestCharacter::ChangeState_Implementation(EPlayerState _Type)
-{
-	StateValue = _Type;
 }
 
 void ATestCharacter::ChangePosture_Implementation(EPlayerPosture _Type)	// => 메인으로 이전해야 함 (24.07.30 수정 중)
