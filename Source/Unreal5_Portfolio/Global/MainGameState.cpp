@@ -21,11 +21,6 @@ void AMainGameState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLi
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
 	DOREPLIFETIME(AMainGameState, CurStage);
-	DOREPLIFETIME(AMainGameState, MeleeNum);
-	DOREPLIFETIME(AMainGameState, RifleNum);
-	DOREPLIFETIME(AMainGameState, BombNum);
-	DOREPLIFETIME(AMainGameState, ClearBoss1Stage);
-	DOREPLIFETIME(AMainGameState, ClearBoss2Stage);
 }
 
 void AMainGameState::PushActor(uint8 _Index, AActor* _Actor)
