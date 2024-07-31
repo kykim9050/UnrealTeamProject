@@ -110,7 +110,7 @@ ATestCharacter::ATestCharacter()
 	//FString Name = "Punch";
 	HandAttackComponent = CreateDefaultSubobject<USphereComponent>(TEXT("Hand Attack Comp"));
 	HandAttackComponent->SetupAttachment(GetMesh());
-	HandAttackComponent->SetRelativeLocation({ 0.0f, 80.0f, 120.0f });
+	HandAttackComponent->SetRelativeLocation({ 0.0f, 100.0f, 120.0f });
 
 	// MinimapIcon Component => 메인캐릭터 적용.
 	MinimapIconComponent = CreateDefaultSubobject<UTestMinimapIconComponent>(TEXT("MinimapPlayerIcon"));
@@ -263,6 +263,8 @@ void ATestCharacter::Tick(float DeltaTime)
 	//DefaultRayCast(DeltaTime);
 	//TArray<FItemInformation> I = ItemSlot;
 	//AGameModeBase* Ptr = GetWorld()->GetAuthGameMode();
+	//float ts = GetWorld()->GetDeltaSeconds();
+	//int a = 0;
 }
 
 void ATestCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -349,10 +351,10 @@ void ATestCharacter::Drink_Implementation()	// => 메인에 추후 이전해야 함 (24.07
 		return;
 	}
 
-	// 자세 변경
+	// 애니메이션 변경
 	ChangePosture(EPlayerPosture::Drink);
 
-	// 실질적으로 플레이어 HP가 회복되는 부분
+	// 실질적인 플레이어 HP 회복
 	ATestPlayerState* MyTestPlayerState = GetPlayerState<ATestPlayerState>();
 	if (nullptr == MyTestPlayerState)
 	{
@@ -364,12 +366,13 @@ void ATestCharacter::Drink_Implementation()	// => 메인에 추후 이전해야 함 (24.07
 	GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Yellow, FString(TEXT("HP recovered!")));
 #endif // WITH_EDITOR
 
-	// 아이템 삭제
+	// 음료 아이템 삭제
 	DeleteItem(3);
 }
 
 void ATestCharacter::DrinkComplete_Implementation()	// => 메인에 추후 이전해야 함 (24.07.30 추가 후 테스팅 중)
 {
+	// 이전 자세로 애니메이션 변경
 	ChangePosture(static_cast<EPlayerPosture>(PrevItemIndex));
 }
 
@@ -396,6 +399,7 @@ void ATestCharacter::BombSetStart_Implementation()	// => 메인에 추후 이전해야 함
 
 	// 폭탄 설치 가능한 것으로 판단, 설치 시작
 	IsBombSetting = true;
+	/* 설치 시간 초기화 */
 #ifdef WITH_EDITOR
 	GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, FString(TEXT("Bomb setting start.")));
 #endif // WITH_EDITOR
@@ -406,36 +410,44 @@ void ATestCharacter::BombSetStart_Implementation()	// => 메인에 추후 이전해야 함
 
 void ATestCharacter::BombSetTick_Implementation()		// => 메인에 추후 이전해야 함 (24.07.31 수정 및 테스팅 중)
 {
-	// 폭탄 설치 중일 경우만
 	if (true == IsBombSetting)
 	{
-		AMapObjectBase* AreaObject = Cast<AMapObjectBase>(GetMapItemData);
+		ATestArea* AreaObject = Cast<ATestArea>(GetMapItemData);
 		if (nullptr != AreaObject)
 		{
-			AreaObject->InterAction();
+			//AreaObject->InstallBomb(GetWorld()->GetDeltaSeconds());
 		}
 	}
 }
 
 void ATestCharacter::BombSetCancel_Implementation()		// => 메인에 추후 이전해야 함 (24.07.31 수정 및 테스팅 중)
 {
-	// 폭탄 설치 중일 경우만
 	if (true == IsBombSetting)
 	{
-		// 설치 중단
+		// 폭탄 설치 중단
 		IsBombSetting = false;
+		/* 설치 시간 초기화 */
 
 		// 애니메이션 변경
 		ChangePosture(static_cast<EPlayerPosture>(PrevItemIndex));
 	}
-
-	// 설치 시간 초기화
-
 }
 
 void ATestCharacter::BombSetComplete_Implementation()	// => 메인에 추후 이전해야 함 (24.07.31 수정 및 테스팅 중)
 {
+	// 폭탄 설치 완료
+	ATestArea* AreaObject = Cast<ATestArea>(GetMapItemData);
+	if (nullptr != AreaObject)
+	{
+		//AreaObject->InterAction();
+	}
 	IsBombSetting = false;
+
+	// 폭탄 아이템 삭제
+	DeleteItem(4);
+
+	// 애니메이션 변경
+	ChangePosture(static_cast<EPlayerPosture>(PrevItemIndex));
 }
 
 void ATestCharacter::ChangeMontage_Implementation(bool _IsFireEnd) // => 매인 적용.
@@ -622,11 +634,15 @@ void ATestCharacter::CheckItem() // => 메인 수정 필요 (24.07.30 DebugMessage 부�
 void ATestCharacter::InteractObject_Implementation(AMapObjectBase* _MapObject)	// => 메인 이전 필요 (24.07.31 수정 중)
 {
 	// Door일 경우 : 상호작용은 Switch가 발동시키므로 return
-
-
-	// Area일 경우 : 상호작용은 플레이어쪽에서 처리해야 하므로 return
 	ADoorObject* DoorObject = Cast<ADoorObject>(_MapObject);
 	if (nullptr != DoorObject)
+	{
+		return;
+	}
+
+	// Area일 경우 : 상호작용은 플레이어쪽에서 처리해야 하므로 return
+	ATestArea* AreaObject = Cast<ATestArea>(_MapObject);
+	if (nullptr != AreaObject)
 	{
 		return;
 	}
