@@ -51,7 +51,7 @@ void ATestArea::InterAction()
 
 void ATestArea::ResetBombTime()
 {
-	InstallBombTime == 3.f;
+	InstallBombTime = 3.f;
 }
 
 void ATestArea::InstallBomb(float _DeltaTime)
