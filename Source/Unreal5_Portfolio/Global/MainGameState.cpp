@@ -5,8 +5,9 @@
 #include "Net/UnrealNetwork.h"
 #include "Global/ContentsEnum.h"
 #include "Global/ContentsLog.h"
+#include "MainGameLevel/Player/MainCharacter.h"
 
-// 추후 바꿔야할 헤더 MainCharacter로 변경해야 함
+// 추후 삭제 필요
 #include "TestLevel/Character/TestCharacter.h"
 
 
@@ -57,6 +58,7 @@ void AMainGameState::GameStateCheck_Implementation(AActor* _OtherActor)
 
 	// 추후 MainCharacter로 변경 필요
 	ATestCharacter* Player = Cast<ATestCharacter>(_OtherActor);
+	//AMainCharacter* Player = Cast<AMainCharacter>(_OtherActor);
 
 	GameStateConditionUpdate(_OtherActor, true);
 
@@ -170,6 +172,7 @@ void AMainGameState::GameStateConditionUpdate(AActor* _OtherActor, bool _IsAdd)
 {
 	// 추후 MainCharacter로 변경 필요
 	ATestCharacter* Player = Cast<ATestCharacter>(_OtherActor);
+	//AMainCharacter* Player = Cast<AMainCharacter>(_OtherActor);
 
 	if (nullptr == Player)
 	{
