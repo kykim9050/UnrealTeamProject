@@ -355,6 +355,8 @@ void ATestCharacter::Drink_Implementation()	// => 메인에 추후 이전해야 함 (24.07
 
 	// 애니메이션 변경
 	ChangePosture(EPlayerPosture::Drink);
+
+	// 메인 추가 필요
 	ChangeMontage(false);
 
 	// 실질적인 플레이어 HP 회복

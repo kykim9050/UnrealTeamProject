@@ -124,6 +124,9 @@ private:
 	UPROPERTY()
 	bool PlayerIsFaint = false; // => 메인 적용(Delegate)
 
+	UPROPERTY()
+	bool PlayerIsBombSetting = false; // 메인 적용 필요
+
 	// HUD / Widget
 	UFUNCTION()
 	void CallGetItem(); // => 메인 적용(Delegate)

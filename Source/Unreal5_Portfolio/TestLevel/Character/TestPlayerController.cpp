@@ -86,6 +86,7 @@ void ATestPlayerController::PlayerTick(float DeltaTime)
 	}
 
 	PlayerIsFaint = Ch->IsFaint;
+	PlayerIsBombSetting = Ch->IsBombSetting;
 }
 
 void ATestPlayerController::MouseRotation(const FInputActionValue& Value)
@@ -97,8 +98,9 @@ void ATestPlayerController::MouseRotation(const FInputActionValue& Value)
 
 void ATestPlayerController::MoveFront(const FInputActionValue& Value)
 {
-	// 기절 상태 이동 불가능
-	if (PlayerIsFaint == true)
+	// 메인 적용 필요
+	// 기절, 폭탄 설치 상태 이동 불가능
+	if (PlayerIsFaint == true || PlayerIsBombSetting == true)
 	{
 		return;
 	}
@@ -110,8 +112,9 @@ void ATestPlayerController::MoveFront(const FInputActionValue& Value)
 
 void ATestPlayerController::MoveBack(const FInputActionValue& Value)
 {
-	// 기절 상태 이동 불가능
-	if (PlayerIsFaint == true)
+	// 메인 적용 필요
+	// 기절, 폭탄 설치 상태 이동 불가능
+	if (PlayerIsFaint == true || PlayerIsBombSetting == true)
 	{
 		return;
 	}
@@ -123,8 +126,9 @@ void ATestPlayerController::MoveBack(const FInputActionValue& Value)
 
 void ATestPlayerController::MoveRight(const FInputActionValue& Value)
 {
-	// 기절 상태 이동 불가능
-	if (PlayerIsFaint == true)
+	// 메인 적용 필요
+	// 기절, 폭탄 설치 상태 이동 불가능
+	if (PlayerIsFaint == true || PlayerIsBombSetting == true)
 	{
 		return;
 	}
@@ -136,8 +140,9 @@ void ATestPlayerController::MoveRight(const FInputActionValue& Value)
 
 void ATestPlayerController::MoveLeft(const FInputActionValue& Value)
 {
-	// 기절 상태 이동 불가능
-	if (PlayerIsFaint == true)
+	// 메인 적용 필요
+	// 기절, 폭탄 설치 상태 이동 불가능
+	if (PlayerIsFaint == true || PlayerIsBombSetting == true)
 	{
 		return;
 	}
@@ -281,12 +286,26 @@ void ATestPlayerController::ChangePlayerDir(EPlayerMoveDir _Dir)
 
 void ATestPlayerController::AttackMontagePlay()
 {
+	// 메인 적용 필요
+	// 기절, 폭탄 설치 상태 몽타주 실행 불가능
+	if (PlayerIsFaint == true || PlayerIsBombSetting == true)
+	{
+		return;
+	}
+
 	ATestCharacter* Ch = GetPawn<ATestCharacter>();
 	Ch->ChangeMontage(false);
 }
 
 void ATestPlayerController::FireEndMontagePlay()
 {
+	// 메인 적용 필요
+	// 기절, 폭탄 설치 상태 몽타주 실행 불가능
+	if (PlayerIsFaint == true || PlayerIsBombSetting == true)
+	{
+		return;
+	}
+
 	ATestCharacter* Ch = GetPawn<ATestCharacter>();
 	Ch->ChangeMontage(true);
 }
