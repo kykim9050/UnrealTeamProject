@@ -431,6 +431,12 @@ void AMainCharacter::FireRayCast_Implementation(float _DeltaTime)
 			{
 				Monster->Damaged(ItemSlot[CurItemIndex].Damage);
 			}
+
+			ATestBossMonsterBase* BossMonster = Cast<ATestBossMonsterBase>(Hit.GetActor());
+			if(nullptr != BossMonster)
+			{
+				BossMonster->Damaged(ItemSlot[CurItemIndex].Damage);
+			}
 		}
 	}
 }
