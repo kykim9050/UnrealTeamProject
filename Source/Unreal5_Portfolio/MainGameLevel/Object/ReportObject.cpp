@@ -2,6 +2,12 @@
 
 #include "MainGameLevel/Object/ReportObject.h"
 #include "Components/CapsuleComponent.h"
+#include "Kismet/GameplayStatics.h"
+#include "Global/ContentsLog.h"
+#include "MainGameLevel/Player/MainCharacter.h"
+
+// 추후 삭제 필요
+#include "TestLevel/Character/TestCharacter.h"
 
 void AReportObject::BeginPlay()
 {
@@ -29,10 +35,29 @@ void AReportObject::Tick(float DeltaTime)
 
 void AReportObject::OnCollisionOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	int a = 0;
+	// MainCharacter로 변경 필요
+	ATestCharacter* Player = Cast<ATestCharacter>(OtherActor);
+	//AMainCharacter* Player = Cast<AMainCharacter>(OtherActor);
+
+	if (nullptr == Player)
+	{
+		return;
+	}
+
+	
+
 }
 
 void AReportObject::OnCollisionOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
-	int a = 0;
+	// MainCharacter로 변경 필요
+	ATestCharacter* Player = Cast<ATestCharacter>(OtherActor);
+	//AMainCharacter* Player = Cast<AMainCharacter>(OtherActor);
+
+	if (nullptr == Player)
+	{
+		return;
+	}
+
+
 }
