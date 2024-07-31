@@ -177,6 +177,9 @@ enum class EUserWidgetType : uint8
 	ServerBtn,
 	ConnectBrowser,
 	SettingBrowser,
+
+	// Lobby
+	LobbyButton,
 };
 
 
