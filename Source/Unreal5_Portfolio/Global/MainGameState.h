@@ -100,6 +100,17 @@ public:
 		--PlayerCount;
 	}
 
+	UFUNCTION()
+	FORCEINLINE bool GetIsStageChange() const
+	{
+		return IsStageChange;
+	}
+
+	UFUNCTION()
+	FORCEINLINE void SetIsStageChange(bool _Value)
+	{
+		IsStageChange = _Value;
+	}
 
 protected:
 	AMainGameState();
@@ -115,6 +126,12 @@ private:
 	/// </summary>
 	UPROPERTY(Replicated)
 	EGameStage CurStage = EGameStage::Init;
+
+	/// <summary>
+	/// 게임 Stage가 바뀌었는지에 대한 유무 변수
+	/// </summary>
+	UPROPERTY()
+	bool IsStageChange = false;
 
 	/// <summary>
 	/// 현재 확보한 Bomb 수
