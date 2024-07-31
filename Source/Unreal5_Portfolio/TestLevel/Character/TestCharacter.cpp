@@ -353,12 +353,12 @@ void ATestCharacter::Drink_Implementation()					// => 메인에 이전 필요 (24.07.31
 		return;
 	}
 
-	// 음료 아이템 삭제
-	DeleteItem(3);
-
 	// 애니메이션 변경
 	ChangePosture(EPlayerPosture::Drink);
 	ChangeMontage(false);
+
+	// 음료 아이템 삭제
+	DeleteItem(3);
 }
 
 void ATestCharacter::DrinkComplete_Implementation()			// => 메인에 이전 필요 (24.07.31 수정됨)
