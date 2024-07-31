@@ -14,7 +14,7 @@
 class UCurveFloat;
 class USphereComponent;
 class UMaterialInstanceDynamic;
-class UBasicMonsterAnimInstance;
+class UMonsterRandomAnimInstance;
 class ABasicMonsterAIController;
 
 UCLASS()
@@ -37,7 +37,7 @@ public:
 		return AIController;
 	}
 
-	FORCEINLINE UBasicMonsterAnimInstance* GetAnimInstance() const
+	FORCEINLINE UMonsterRandomAnimInstance* GetAnimInstance() const
 	{
 		return AnimInst;
 	}
@@ -122,7 +122,7 @@ private:
 	int AnimIndex = 0;
 
 	UPROPERTY()
-	UBasicMonsterAnimInstance* AnimInst = nullptr;
+	UMonsterRandomAnimInstance* AnimInst = nullptr;
 
 private:
 	// ÄÄÆ÷³ÍÆ®

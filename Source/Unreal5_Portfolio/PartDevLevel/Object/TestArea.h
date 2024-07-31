@@ -17,6 +17,7 @@ class UNREAL5_PORTFOLIO_API ATestArea : public AMapObjectBase
 public:
 
 	ATestArea();
+	void InterAction() override;
 
 
 
@@ -24,7 +25,8 @@ protected:
 	void BeginPlay() override;
 	void Tick(float DeltaTime) override;
 
-	void InterAction() override;
+
+	void InstallBomb(float _DeltaTime);
 
 
 	UPROPERTY(EditAnywhere)
@@ -40,7 +42,7 @@ private:
 	void TimeFlow(float _DeltaTime);
 
 
-	float SetBombTime = 0.f;
+	float InstallBombTime = 3.f;
 	float BombTime = 30.f;
 
 
