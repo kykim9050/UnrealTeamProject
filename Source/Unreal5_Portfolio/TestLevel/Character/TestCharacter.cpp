@@ -29,7 +29,7 @@
 #include "MainGameLevel/Object/DoorObject.h"
 #include "MainGameLevel/UI/InGame/HeadNameWidgetComponent.h"
 #include "TestPlayerController.h"
-#include "Particles/ParticleSystemComponent.h"
+#include "MainGameLevel/Particles/MuzzleParticleActor.h"
 
 
 // Sets default values
@@ -130,11 +130,6 @@ ATestCharacter::ATestCharacter()
 	RidingMesh->SetVisibility(false);
 	RidingMesh->SetIsReplicated(true);
 	RidingMesh->bHiddenInSceneCapture = true;
-
-	MuzzleParticleComponent = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("MuzzleParticle"));
-	MuzzleParticleComponent->SetupAttachment(RootComponent);
-	MuzzleParticleComponent->SetIsReplicated(true);
-	MuzzleParticleComponent->SetVisibility(false);
 }
 
 //void ATestCharacter::Collision(AActor* _OtherActor, UPrimitiveComponent* _Collision)
@@ -1085,12 +1080,6 @@ void ATestCharacter::SettingPlayerState_Implementation()
 
 void ATestCharacter::ShowMuzzle()
 {
-	FVector ShowPoint = GetMesh()->GetSocketLocation(FName("MuzzleSocket"));
-	MuzzleParticleComponent->SetRelativeLocation(ShowPoint);
-	MuzzleParticleComponent->SetVisibility(true);
-}
-
-void ATestCharacter::ShowEndMuzzle()
-{
-	MuzzleParticleComponent->SetVisibility(false);
+	FTransform CreatePosition = GetMesh()->GetBoneTransform(FName("RightHand"), ERelativeTransformSpace::RTS_World);
+	GetWorld()->SpawnActor<AActor>(AMuzzleParticleActor::StaticClass(), CreatePosition);
 }

@@ -10,11 +10,13 @@ void UAnimNotifyState_Muzzle_Particle::NotifyBegin(USkeletalMeshComponent* MeshC
 	Super::NotifyBegin(MeshComp, Animation, TotalDuration, EventReference);
 
 	ATestCharacter* PlayCharacter = MeshComp->GetOwner<ATestCharacter>();
-	if (nullptr == PlayCharacter)
+	if (nullptr != PlayCharacter)
 	{
-		return;
+		if (true == MeshComp->bOwnerNoSee)
+		{
+			PlayCharacter->ShowMuzzle();
+		}
 	}
-	PlayCharacter->ShowMuzzle();
 }
 
 void UAnimNotifyState_Muzzle_Particle::NotifyTick(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation, float FrameDeltaTime, const FAnimNotifyEventReference& EventReference)

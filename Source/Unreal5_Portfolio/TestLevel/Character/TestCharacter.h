@@ -65,8 +65,6 @@ public:
 	class UHeadNameWidgetComponent* HeadNameComponent = nullptr;	// => 메인으로 이전 필요 (24.07.30 추가됨)
 	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	class UBoxComponent* GetMapItemCollisonComponent = nullptr;
-	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-	class UParticleSystemComponent* MuzzleParticleComponent = nullptr;
 
 	// Posture
 	UPROPERTY(Category = "Contents", Replicated, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
@@ -175,9 +173,6 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void ShowMuzzle();
-
-	UFUNCTION(BlueprintCallable)
-	void ShowEndMuzzle();
 
 protected:
 	// 메인 플레이어 추가 필요 코드 (태환) 07/24
