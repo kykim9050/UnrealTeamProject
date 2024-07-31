@@ -54,16 +54,6 @@ public:
 		CurStage = _Stage;
 	}
 
-
-	/// <summary>
-	/// 확보된 Bomb 수를 반환
-	/// </summary>
-	/// <returns></returns>
-	FORCEINLINE int GetBombNum() const
-	{
-		return BombNum;
-	}
-
 	/// <summary>
 	/// 현재 게임 진행 관련 체크 함수
 	/// </summary>
@@ -109,19 +99,19 @@ private:
 	/// <summary>
 	/// 현재 확보한 Bomb 수
 	/// </summary>
-	UPROPERTY(Replicated)
-	int BombNum = 0;
+	UPROPERTY()
+	int BombCount = 0;
 
 	/// <summary>
 	/// 확보 가능한 최대 Bomb 수
 	/// </summary>
 	UPROPERTY()
-	int MaxBombNum = 1;
+	int MaxBombCount = 1;
 
 	/// <summary>
 	/// 플레이어 수
 	/// </summary>
-	UPROPERTY(Replicated)
+	UPROPERTY()
 	int PlayerCount = 0;
 
 	/// <summary>
