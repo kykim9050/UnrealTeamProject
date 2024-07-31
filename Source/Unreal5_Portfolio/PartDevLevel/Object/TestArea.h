@@ -33,10 +33,16 @@ protected:
 
 private:
 
+	ABomb* HaveBomb = nullptr;
+
 	void SetBomb();
 
+	void TimeFlow(float _DeltaTime);
+
+
 	float SetBombTime = 0.f;
-	float MaxSetBombTime = 3.f;
+	float BombTime = 30.f;
+
 
 	bool IsBomb = false;
 
