@@ -6,6 +6,11 @@
 void AReportObject::BeginPlay()
 {
 	Super::BeginPlay();
+
+	FName Name = FName(TEXT("Sample"));
+	Tags.Add(Name);
+
+	SetInfo(Name);
 }
 
 void AReportObject::Tick(float DeltaTime)
