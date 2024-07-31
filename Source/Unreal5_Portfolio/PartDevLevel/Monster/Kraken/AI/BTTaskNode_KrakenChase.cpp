@@ -55,7 +55,7 @@ void UBTTaskNode_KrakenChase::TickTask(UBehaviorTreeComponent& OwnerComp, uint8*
 	AActor* Target = Cast<AActor>(OwnerComp.GetBlackboardComponent()->GetValueAsObject(TEXT("TargetActor")));
 	FVector LocationDiff = Target->GetActorLocation() - Monster->GetActorLocation();
 	double DiffLength = LocationDiff.Size();
-	if (DiffLength <= MonsterData->AttackRange)
+	if (DiffLength <= MonsterData->AttackRange - MonsterData->AttackRange)
 	{
 		StateChange(OwnerComp, ETestMonsterState::Attack);
 		return;
