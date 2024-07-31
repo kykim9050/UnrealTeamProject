@@ -54,23 +54,6 @@ public:
 		CurStage = _Stage;
 	}
 
-	/// <summary>
-	/// 확보된 Melee 수를 반환
-	/// </summary>
-	/// <returns></returns>
-	FORCEINLINE int GetMeleeNum() const
-	{
-		return MeleeNum;
-	}
-
-	/// <summary>
-	/// 확보된 Rifle 수를 반환
-	/// </summary>
-	/// <returns></returns>
-	FORCEINLINE int GetRifleNum() const
-	{
-		return RifleNum;
-	}
 
 	/// <summary>
 	/// 확보된 Bomb 수를 반환
@@ -89,12 +72,6 @@ public:
 	void GameStateCheck_Implementation();
 
 	UFUNCTION()
-	FORCEINLINE int GetPlayerCount() const
-	{
-		return PlayerCount;
-	}
-
-	UFUNCTION()
 	FORCEINLINE void AddPlayerCount()
 	{
 		++PlayerCount;
@@ -103,6 +80,7 @@ public:
 	UFUNCTION()
 	FORCEINLINE void SubPlayerCount()
 	{
+
 		if (0 >= PlayerCount)
 		{
 			PlayerCount = 0;
@@ -129,30 +107,6 @@ private:
 	EGameStage CurStage = EGameStage::Init;
 
 	/// <summary>
-	/// 현재 확보한 Melee 수
-	/// </summary>
-	UPROPERTY(Replicated)
-	int MeleeNum = 0;
-
-	/// <summary>
-	/// 확보 가능한 최대 Melee 수
-	/// </summary>
-	UPROPERTY()
-	int MaxMeleeNum = 4;
-
-	/// <summary>
-	/// 현재 확보한 Rifle 수
-	/// </summary>
-	UPROPERTY(Replicated)
-	int RifleNum = 0;
-
-	/// <summary>
-	/// 확보 가능한 최대 Rifle 수
-	/// </summary>
-	UPROPERTY()
-	int MaxRifleNum = 4;
-
-	/// <summary>
 	/// 현재 확보한 Bomb 수
 	/// </summary>
 	UPROPERTY(Replicated)
@@ -163,18 +117,6 @@ private:
 	/// </summary>
 	UPROPERTY()
 	int MaxBombNum = 1;
-
-	/// <summary>
-	/// Boss1Stage 클리어 유무
-	/// </summary>
-	UPROPERTY(Replicated)
-	bool ClearBoss1Stage = false;
-
-	/// <summary>
-	/// Boss2Stage 클리어 유무
-	/// </summary>
-	UPROPERTY(Replicated)
-	bool ClearBoss2Stage = false;
 
 	/// <summary>
 	/// 플레이어 수
@@ -188,6 +130,9 @@ private:
 	UPROPERTY()
 	int MaxPlayerCount = 2;
 
+	/// <summary>
+	/// 체크할 아이템 카운트 수
+	/// </summary>
 	UPROPERTY()
 	int ItemCount = 0;
 };
