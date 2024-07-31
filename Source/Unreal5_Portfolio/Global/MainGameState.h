@@ -58,8 +58,17 @@ public:
 	/// 현재 게임 진행 관련 체크 함수
 	/// </summary>
 	UFUNCTION(Reliable, NetMulticast)
-	void GameStateCheck();
-	void GameStateCheck_Implementation();
+	void GameStateCheck(AActor* _OtherActor);
+	void GameStateCheck_Implementation(AActor* _OtherActor);
+
+	/// <summary>
+	/// 인자(AActor)의 대상에 대한 정보로 GameState 변수 조정
+	/// </summary>
+	/// <param name="_OtherActor"></param>
+	UFUNCTION(Reliable, NetMulticast)
+	void GameStateModify(AActor* _OtherActor);
+	void GameStateModify_Implementation(AActor* _OtherActor);
+
 
 	UFUNCTION()
 	FORCEINLINE void AddPlayerCount()
