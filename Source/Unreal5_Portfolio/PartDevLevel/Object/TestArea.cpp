@@ -40,7 +40,7 @@ void ATestArea::InterAction()
 {
 	Super::InterAction();
 
-	if (0.f <= InstallBombTime)
+	if (0.f >= InstallBombTime)
 	{
 		SetBomb();
 	}

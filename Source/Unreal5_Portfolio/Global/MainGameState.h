@@ -69,6 +69,18 @@ public:
 	void GameStateModify(AActor* _OtherActor);
 	void GameStateModify_Implementation(AActor* _OtherActor);
 
+	/// <summary>
+	/// GameState 변수 정보 갱신 함수
+	/// </summary>
+	/// <param name="_OtherActor"></param>
+	UFUNCTION()
+	void GameStateConditionUpdate(AActor* _OtherActor, bool _IsAdd);
+
+	UFUNCTION()
+	FORCEINLINE int GetPlayerCount()
+	{
+		return PlayerCount;
+	}
 
 	UFUNCTION()
 	FORCEINLINE void AddPlayerCount()
@@ -79,7 +91,6 @@ public:
 	UFUNCTION()
 	FORCEINLINE void SubPlayerCount()
 	{
-
 		if (0 >= PlayerCount)
 		{
 			PlayerCount = 0;
@@ -89,6 +100,17 @@ public:
 		--PlayerCount;
 	}
 
+	UFUNCTION()
+	FORCEINLINE bool GetIsStageChange() const
+	{
+		return IsStageChange;
+	}
+
+	UFUNCTION()
+	FORCEINLINE void SetIsStageChange(bool _Value)
+	{
+		IsStageChange = _Value;
+	}
 
 protected:
 	AMainGameState();
@@ -104,6 +126,12 @@ private:
 	/// </summary>
 	UPROPERTY(Replicated)
 	EGameStage CurStage = EGameStage::Init;
+
+	/// <summary>
+	/// 게임 Stage가 바뀌었는지에 대한 유무 변수
+	/// </summary>
+	UPROPERTY()
+	bool IsStageChange = false;
 
 	/// <summary>
 	/// 현재 확보한 Bomb 수

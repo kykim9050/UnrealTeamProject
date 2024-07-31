@@ -10,6 +10,8 @@
 
 AStageCheckBox::AStageCheckBox()
 {
+	bReplicates = true;
+
 	OnActorBeginOverlap.AddDynamic(this, &AStageCheckBox::OnOverlapBegin);
 	OnActorEndOverlap.AddDynamic(this, &AStageCheckBox::OnOverlapEnd);
 }
@@ -33,6 +35,12 @@ void AStageCheckBox::OnOverlapBegin(AActor* OverlappedActor, AActor* OtherActor)
 	MainGameState->AddPlayerCount();
 
 	MainGameState->GameStateCheck(OtherActor);
+
+	if (true == MainGameState->GetIsStageChange())
+	{
+		MainGameState->SetIsStageChange(false);
+		DestroyTrigger();
+	}
 }
 
 void AStageCheckBox::OnOverlapEnd(AActor* OverlappedActor, AActor* OtherActor)
@@ -53,4 +61,9 @@ void AStageCheckBox::OnOverlapEnd(AActor* OverlappedActor, AActor* OtherActor)
 	MainGameState->SubPlayerCount();
 
 	MainGameState->GameStateModify(OtherActor);
+}
+
+void AStageCheckBox::DestroyTrigger_Implementation()
+{
+	Destroy();
 }

@@ -21,6 +21,10 @@ public:
 	void ResetBombTime();
 	void InstallBomb(float _DeltaTime);
 
+	inline float GetInstallBombTime()
+	{
+		return InstallBombTime;
+	}
 
 protected:
 	void BeginPlay() override;
