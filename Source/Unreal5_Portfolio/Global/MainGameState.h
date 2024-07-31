@@ -190,10 +190,4 @@ private:
 
 	UPROPERTY()
 	int ItemCount = 0;
-
-	/// <summary>
-	/// Item
-	/// </summary>
-	UPROPERTY()
-	int MaxItemCount = 2;
 };
