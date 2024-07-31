@@ -65,7 +65,7 @@ void ABasicMonsterBase::BeginPlay()
 
 	SettingData = NewObject<UBasicMonsterData>(this);
 	SettingData->OriginPos = GetActorLocation();
-	SettingData->BaseData = BaseData;
+	SettingData->SetBaseData(BaseData);
 
 	// 애니메이션 세팅
 	AnimInst = Cast<UMonsterRandomAnimInstance>(GetMesh()->GetAnimInstance());
@@ -140,20 +140,28 @@ void ABasicMonsterBase::ChangeRandomAnimation(uint8 Type)
 void ABasicMonsterBase::Damaged(float Damage)
 {
 	// Server Only
-	if (false == HasAuthority() || 0.0f >= SettingData->Hp)
+	if (false == HasAuthority())
 	{
 		return;
 	}
 
-	SettingData->Hp -= Damage;
+	float CurHp = SettingData->GetHp();
+	if (0.0f >= CurHp)
+	{
+		return;
+	}
+
+	CurHp -= Damage;
 
 	// Dead
-	if (0.0f >= SettingData->Hp)
+	if (0.0f >= CurHp)
 	{
 		SetDead();
 		ChangeRandomAnimation(EBasicMonsterAnim::Dead);
 		AIController->GetBrainComponent()->StopLogic(TEXT("Dead"));
 	}
+
+	SettingData->SetHp(CurHp);
 }
 
 void ABasicMonsterBase::SetChasePlayer()
