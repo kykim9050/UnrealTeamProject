@@ -64,7 +64,7 @@ void ABasicMonsterBase::BeginPlay()
 	}
 
 	SettingData = NewObject<UBasicMonsterData>(this);
-	SettingData->OriginPos = GetActorLocation();
+	SettingData->SetOriginPos(GetActorLocation());
 	SettingData->SetBaseData(BaseData);
 
 	// 애니메이션 세팅
@@ -127,7 +127,7 @@ void ABasicMonsterBase::OnAttackOverlapEnd(UPrimitiveComponent* OverlappedComp, 
 			LOG(MonsterLog, Fatal, TEXT("HitPlayerState Is Not Valid"));
 		}
 
-		HitPlayerState->AddDamage(SettingData->AttackDamage);
+		HitPlayerState->AddDamage(SettingData->GetAttackDamage());
 	}
 }
 
