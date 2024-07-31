@@ -241,7 +241,7 @@ void ATestCharacter::Tick(float DeltaTime)
 	}
 
 #if WITH_EDITOR
-	// GameState 변수 출력용 TestCode
+	// GameState 변수 출력용 TestCode (이건 메인에 옮기시지 않아도 됩니다!! - 경윤 -)
 	{
 		AMainGameState* CurGameState = UMainGameBlueprintFunctionLibrary::GetMainGameState(GetWorld());
 
@@ -249,6 +249,9 @@ void ATestCharacter::Tick(float DeltaTime)
 		{
 			return;
 		}
+		int CurPlayerNum = CurGameState->GetPlayerCount();
+		FString PNString = FString::FromInt(CurPlayerNum);
+		UMainGameBlueprintFunctionLibrary::DebugTextPrint(GetWorld(), FString(TEXT("CurPlayerCount = ")) + PNString);
 
 		EGameStage StageNum = CurGameState->GetCurStage();
 		FString StageString = FString();

@@ -69,6 +69,18 @@ public:
 	void GameStateModify(AActor* _OtherActor);
 	void GameStateModify_Implementation(AActor* _OtherActor);
 
+	/// <summary>
+	/// GameState 변수 정보 갱신 함수
+	/// </summary>
+	/// <param name="_OtherActor"></param>
+	UFUNCTION()
+	void GameStateConditionUpdate(AActor* _OtherActor, bool _IsAdd);
+
+	UFUNCTION()
+	FORCEINLINE int GetPlayerCount()
+	{
+		return PlayerCount;
+	}
 
 	UFUNCTION()
 	FORCEINLINE void AddPlayerCount()
@@ -79,7 +91,6 @@ public:
 	UFUNCTION()
 	FORCEINLINE void SubPlayerCount()
 	{
-
 		if (0 >= PlayerCount)
 		{
 			PlayerCount = 0;
