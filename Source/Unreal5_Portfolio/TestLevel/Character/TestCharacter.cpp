@@ -182,15 +182,15 @@ void ATestCharacter::PostInitializeComponents()
 		}
 
 		// 스켈레탈 메쉬 선택
-		USkeletalMesh* PlayerSkeletalMesh = MainGameInst->GetPlayerData(FName("TestPlayer"))->GetPlayerSkeletalMesh();
+		USkeletalMesh* PlayerSkeletalMesh = MainGameInst->GetPlayerData(FName("Vanguard"))->GetPlayerSkeletalMesh();
 		GetMesh()->SetSkeletalMesh(PlayerSkeletalMesh);
 
 		// 팔 메쉬 선택 (메인 추가 필요)
-		USkeletalMesh* FPVSkeletalMesh = MainGameInst->GetPlayerData(FName("TestPlayer"))->GetPlayerFPVPlayerSkeletalMesh();
+		USkeletalMesh* FPVSkeletalMesh = MainGameInst->GetPlayerData(FName("Vanguard"))->GetPlayerFPVPlayerSkeletalMesh();
 		FPVMesh->SetSkeletalMesh(FPVSkeletalMesh);
 
 		// ABP 선택
-		UClass* AnimInst = Cast<UClass>(MainGameInst->GetPlayerData(FName("TestPlayer"))->GetPlayerAnimInstance());
+		UClass* AnimInst = Cast<UClass>(MainGameInst->GetPlayerData(FName("Vanguard"))->GetPlayerAnimInstance());
 		GetMesh()->SetAnimInstanceClass(AnimInst);
 	}
 
@@ -739,14 +739,17 @@ void ATestCharacter::ItemSetting(FName _TagName, int _SlotIndex) // => 메인 수정
 	ItemSlot[_SlotIndex].RelScale = ItemRelScale;
 
 #ifdef WITH_EDITOR
-	GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, FString::Printf(TEXT("Picked up new item! (Index : %d)"), _SlotIndex));
+	GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, FString::Printf(TEXT("Picked up new item! (Index : %d)"), _SlotIndex + 1));
 #endif // WITH_EDITOR
-
-	// 아이템 Type에 따른 애니메이션 자세 변화.
-	ChangePosture(ItemType);
 
 	// Map에 있는 아이템 삭제.
 	GetMapItemData->Destroy();
+
+	// 아이템 Type에 따른 애니메이션 자세 변화. (ItemType이 Rifle1, Rifle2, Melee일 경우만)
+	if (ItemType == EPlayerPosture::Rifle1 || ItemType == EPlayerPosture::Rifle2 || ItemType == EPlayerPosture::Melee)
+	{
+		ChangePosture(ItemType);
+	}
 }
 
 void ATestCharacter::DropItem_Implementation(int _SlotIndex) // => 메인 수정 필요 (24.07.30 DebugMessage 부분 수정됨)
