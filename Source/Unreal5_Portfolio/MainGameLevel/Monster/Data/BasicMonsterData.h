@@ -31,7 +31,25 @@ public:
 		return Hp;
 	}
 
+	FVector GetOriginPos()
+	{
+		return OriginPos;
+	}
 
+	float GetPatrolRange()
+	{
+		return PatrolRange;
+	}
+
+	float GetAttackDamage()
+	{
+		return AttackDamage;
+	}
+
+	float GetAttackRange()
+	{
+		return AttackRange;
+	}
 
 public:
 	void SetBaseData(const FMonsterDataRow* Value)
@@ -44,7 +62,10 @@ public:
 		Hp = Value;
 	}
 
-
+	void SetOriginPos(const FVector& Value)
+	{
+		OriginPos = Value;
+	}
 
 private:
 	// 기본 설정 Data
@@ -54,13 +75,15 @@ private:
 	UPROPERTY(Replicated)
 	float Hp = 100.0f;
 
-public:
+	// 스폰 위치
+	FVector OriginPos = FVector::ZeroVector;
+
 	float PatrolRange = 800.0f;
 
 	float AttackDamage = 34.0f;
 	float AttackRange = 200.0f;
 
+public:
 	float TimeCount = 0.0f;
-	FVector OriginPos = FVector::ZeroVector;
 
 };
