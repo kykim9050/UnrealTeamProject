@@ -2,12 +2,12 @@
 
 
 #include "MainGameLevel/Monster/BasicMonster/Mutant/BasicMutant.h"
-#include "MainGameLevel/Monster/BasicMonster/Mutant/BasicMutantData.h"
 
 void ABasicMutant::BeginPlay()
 {
-	SettingData = NewObject<UBasicMutantData>(this);
-	SettingData->bScream = true;
-	
+	MutantSettingData = NewObject<UBasicMutantData>(this);
+	MutantSettingData->bScream = true;
+
+	SettingData = MutantSettingData;
 	Super::BeginPlay();
 }

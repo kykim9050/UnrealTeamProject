@@ -123,6 +123,7 @@ UENUM(BlueprintType)
 enum class EBasicMonsterAnim : uint8
 {
 	Idle		UMETA(DisplayName = "Idle"),
+	Scream		UMETA(DisplayName = "Scream"),
 	Walk		UMETA(DisplayName = "Walk"),
 	Run			UMETA(DisplayName = "Run"),
 	Attack		UMETA(DisplayName = "Attack"),
