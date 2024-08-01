@@ -199,6 +199,8 @@ private:
 	UPROPERTY()
 	class UPlayerAnimInstance* FPVPlayerAnimInst;
 
+
+
 public:
 	// Fire
 	UFUNCTION(Reliable, Server, BlueprintCallable)
