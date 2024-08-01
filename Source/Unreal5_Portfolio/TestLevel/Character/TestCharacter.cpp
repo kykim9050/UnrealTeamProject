@@ -32,6 +32,8 @@
 #include "MainGameLevel/Particles/MuzzleParticleActor.h"
 #include "PartDevLevel/Monster/Kraken/KrakenProjectile.h"
 
+#include "MainGameLevel/Object/AreaObject.h"
+
 // Sets default values
 ATestCharacter::ATestCharacter()
 {
@@ -399,8 +401,10 @@ void ATestCharacter::BombSetStart_Implementation()			// => 메인에 이전 필요 (24.
 		return;
 	}
 
+	// 240801 AreaObject 추가로 해당 클래스 변경
 	// 폭탄 설치 가능한 Area가 아닐 경우 return
-	ATestArea* AreaObject = Cast<ATestArea>(GetMapItemData);
+	//ATestArea* AreaObject = Cast<ATestArea>(GetMapItemData);
+	AAreaObject* AreaObject = Cast<AAreaObject>(GetMapItemData);
 	if (nullptr == AreaObject)
 	{
 #ifdef WITH_EDITOR
@@ -424,7 +428,9 @@ void ATestCharacter::BombSetTick_Implementation()		// => 메인에 이전 필요 (24.07
 {
 	if (true == IsBombSetting)
 	{
-		ATestArea* AreaObject = Cast<ATestArea>(GetMapItemData);
+		// 240801 AreaObject 추가로 해당 클래스 변경
+		AAreaObject* AreaObject = Cast<AAreaObject>(GetMapItemData);
+		//ATestArea* AreaObject = Cast<ATestArea>(GetMapItemData);
 		if (nullptr == AreaObject)
 		{
 #ifdef WITH_EDITOR
@@ -453,7 +459,9 @@ void ATestCharacter::BombSetCancel_Implementation()		// => 메인에 이전 필요 (24.
 	{
 		// 폭탄 설치 중단
 		IsBombSetting = false;
-		ATestArea* AreaObject = Cast<ATestArea>(GetMapItemData);
+		// 240801 AreaObject 추가로 해당 클래스 변경
+		AAreaObject* AreaObject = Cast<AAreaObject>(GetMapItemData);
+		//ATestArea* AreaObject = Cast<ATestArea>(GetMapItemData);
 		if (nullptr != AreaObject)
 		{
 			AreaObject->ResetBombTime();
@@ -468,7 +476,10 @@ void ATestCharacter::BombSetComplete_Implementation()	// => 메인에 이전 필요 (24
 {
 	// 폭탄 설치 완료
 	IsBombSetting = false;
-	ATestArea* AreaObject = Cast<ATestArea>(GetMapItemData);
+
+	// 240801 AreaObject 추가로 해당 클래스 변경
+	AAreaObject* AreaObject = Cast<AAreaObject>(GetMapItemData);
+	//ATestArea* AreaObject = Cast<ATestArea>(GetMapItemData);
 	if (nullptr != AreaObject)
 	{
 		AreaObject->InterAction();
@@ -670,7 +681,15 @@ void ATestCharacter::InteractObject_Implementation(AMapObjectBase* _MapObject)	/
 	}
 
 	// Area일 경우 : 상호작용은 플레이어쪽에서 처리해야 하므로 return
-	ATestArea* AreaObject = Cast<ATestArea>(_MapObject);
+	//ATestArea* AreaObject = Cast<ATestArea>(_MapObject);
+	//if (nullptr != AreaObject)
+	//{
+	//	return;
+	//}
+
+	// 240801 AreaObject 추가로 해당 내용 추가되었습니다
+	// Area일 경우 :상호작용은 플레이어쪽에서 처리해야 하므로 return
+	AAreaObject* AreaObject = Cast<AAreaObject>(_MapObject);
 	if (nullptr != AreaObject)
 	{
 		return;

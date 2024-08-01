@@ -4,6 +4,7 @@
 #include "BTTaskNode_BasicMonsterAttack.h"
 #include "MainGameLevel/Monster/Base/BasicMonsterBase.h"
 #include "MainGameLevel/Monster/Base/BasicMonsterData.h"
+#include "MainGameLevel/Monster/Animation/MonsterRandomAnimInstance.h"
 #include "MainGameLevel/Player/MainPlayerState.h"
 #include "MainGameLevel/Player/MainCharacter.h"
 
@@ -31,6 +32,7 @@ EBTNodeResult::Type UBTTaskNode_BasicMonsterAttack::ExecuteTask(UBehaviorTreeCom
 	}
 
 	Monster->ChangeRandomAnimation(EBasicMonsterAnim::Attack);
+	MonsterData->TimeCount = Monster->GetAnimInstance()->GetKeyAnimMontage(EBasicMonsterAnim::Attack, Monster->GetAnimIndex())->GetPlayLength();
 
 	return EBTNodeResult::Type::InProgress;
 }
@@ -62,20 +64,17 @@ void UBTTaskNode_BasicMonsterAttack::TickTask(UBehaviorTreeComponent& OwnerComp,
 	FVector MonsterLocation = Monster->GetActorLocation();
 	FVector TargetPlayerLocation = TargetPlayer->GetActorLocation();
 
-	// 공격 범위 체크
-	FVector LocationDiff = TargetPlayerLocation - MonsterLocation;
-	float Distance = LocationDiff.Size();
-	if (Distance <= MonsterData->AttackRange)
-	{
-		MonsterLocation.Z = 0.0f;
-		TargetPlayerLocation.Z = 0.0f;
-
-		FRotator TurnRot = UKismetMathLibrary::FindLookAtRotation(MonsterLocation, TargetPlayerLocation);
-		Monster->SetActorRotation(TurnRot);
-	}
-	else
+	//MonsterLocation.Z = 0.0f;
+	//TargetPlayerLocation.Z = 0.0f;
+	//
+	//FRotator TurnRot = UKismetMathLibrary::FindLookAtRotation(MonsterLocation, TargetPlayerLocation);
+	//Monster->SetActorRotation(TurnRot);
+	
+	if (0.0f >= MonsterData->TimeCount)
 	{
 		StateChange(OwnerComp, EBasicMonsterState::Chase);
 		return;
 	}
+
+	MonsterData->TimeCount -= DeltaSeconds;
 }
