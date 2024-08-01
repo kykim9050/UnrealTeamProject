@@ -30,7 +30,7 @@
 #include "MainGameLevel/UI/InGame/HeadNameWidgetComponent.h"
 #include "TestPlayerController.h"
 #include "MainGameLevel/Particles/MuzzleParticleActor.h"
-
+#include "PartDevLevel/Monster/Kraken/KrakenProjectile.h"
 
 // Sets default values
 ATestCharacter::ATestCharacter()
@@ -157,6 +157,16 @@ void ATestCharacter::HandAttackCollision(AActor* _OtherActor, UPrimitiveComponen
 		if (nullptr != BossMonster)
 		{
 			BossMonster->Damaged(150.0f);
+		}
+	}
+
+
+	// Kraken의 바위 부시는 함수 호출 (메인 추가 필요)
+	{
+		AKrakenProjectile* Rock = Cast<AKrakenProjectile>(_OtherActor);
+		if (nullptr != Rock)
+		{
+			Rock->Damaged(150.0f);
 		}
 	}
 }
