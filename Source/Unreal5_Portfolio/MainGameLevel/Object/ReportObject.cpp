@@ -6,10 +6,10 @@
 #include "Global/ContentsLog.h"
 #include "MainGameLevel/Player/MainCharacter.h"
 #include "Global/MainGameBlueprintFunctionLibrary.h"
+#include "Global/MainGameState.h"
 
 // 추후 삭제 필요
 #include "TestLevel/Character/TestCharacter.h"
-#include "Global/MainGameState.h"
 
 AReportObject::AReportObject()
 {
