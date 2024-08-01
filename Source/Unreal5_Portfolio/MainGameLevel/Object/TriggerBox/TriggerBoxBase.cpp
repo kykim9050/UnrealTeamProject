@@ -4,11 +4,14 @@
 #include "MainGameLevel/Object/TriggerBox/TriggerBoxBase.h"
 #include "Engine/World.h"
 #include "GameFramework/Character.h"
+#include "GameFramework/SpringArmComponent.h"
+#include "Camera/CameraComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Net/UnrealNetwork.h"
 #include "LevelSequence.h"
 #include "LevelSequenceActor.h"
 #include "LevelSequencePlayer.h"
+
 
 #include "Global/ContentsLog.h"
 
@@ -26,14 +29,14 @@ void ATriggerBoxBase::BeginPlay()
 {
 	Super::BeginPlay();
 
-	TargetLocation = GetActorLocation();
+	CenterLocation = GetActorLocation();
 }
 
 void ATriggerBoxBase::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
-	DOREPLIFETIME(ATriggerBoxBase, TargetLocation);
+	DOREPLIFETIME(ATriggerBoxBase, CenterLocation);
 	DOREPLIFETIME(ATriggerBoxBase, LevelSequenceAsset);
 	DOREPLIFETIME(ATriggerBoxBase, IsPlayerTP);
 }
@@ -52,7 +55,7 @@ void ATriggerBoxBase::OnOverlapBegin(AActor* OverlappedActor, AActor* OtherActor
 	}
 
 	IsPlayerTP = true;
-	SetAllPlayersLocation(TargetLocation);
+	SetAllPlayersLocation(CenterLocation);
 
 	for (FConstPlayerControllerIterator PlayerIt = GetWorld()->GetPlayerControllerIterator(); PlayerIt; ++PlayerIt)
 	{
@@ -69,17 +72,58 @@ void ATriggerBoxBase::OnOverlapBegin(AActor* OverlappedActor, AActor* OtherActor
 
 void ATriggerBoxBase::SetAllPlayersLocation_Implementation(const FVector& NewLocation)
 {
-	// 모든 플레이어의 위치를 특정 지점으로 설정
-	for (FConstPlayerControllerIterator PlayerIt = GetWorld()->GetPlayerControllerIterator(); PlayerIt; ++PlayerIt)
+
+	const float DistanceFromCenter = 300.0f;
+
+	TArray<FVector> PlayerLocations;
+	PlayerLocations.Add(FVector(CenterLocation.X, CenterLocation.Y - (DistanceFromCenter * 2), CenterLocation.Z));
+	PlayerLocations.Add(FVector(CenterLocation.X, CenterLocation.Y - DistanceFromCenter, CenterLocation.Z));
+	PlayerLocations.Add(FVector(CenterLocation.X, CenterLocation.Y + DistanceFromCenter, CenterLocation.Z));
+	PlayerLocations.Add(FVector(CenterLocation.X, CenterLocation.Y + (DistanceFromCenter * 2), CenterLocation.Z));
+
+	// 플레이어 컨트롤러 순회 및 위치 설정
+	int32 PlayerIndex = 0;
+	for (FConstPlayerControllerIterator It = GetWorld()->GetPlayerControllerIterator(); It; ++It)
 	{
-		if (APlayerController* PlayerController = PlayerIt->Get())
+		if (APlayerController* PlayerController = It->Get())
 		{
 			if (APawn* PlayerPawn = PlayerController->GetPawn())
 			{
-				PlayerPawn->SetActorLocation(NewLocation);
+				// 플레이어를 박스 주변에 배치
+				if (PlayerIndex < PlayerLocations.Num())
+				{
+					PlayerPawn->SetActorLocation(PlayerLocations[PlayerIndex]);
+
+					//// 카메라가 바라볼 방향 설정 (Z축을 0으로 고정)
+					//FVector CameraDirection = FVector(1.0f, 0.0f, 0.0f); // 원하는 방향 설정
+					//FRotator LookAtRotation = FRotationMatrix::MakeFromX(CameraDirection).Rotator();
+
+					//if (ACharacter* Character = Cast<ACharacter>(PlayerPawn))
+					//{
+					//	UCameraComponent* CameraComponent = Character->FindComponentByClass<UCameraComponent>();
+					//	if (CameraComponent)
+					//	{
+					//		CameraComponent->SetWorldRotation(LookAtRotation);
+					//	}
+					//}
+
+					PlayerIndex++;
+				}
 			}
 		}
 	}
+
+	//// 모든 플레이어의 위치를 특정 지점으로 설정
+	//for (FConstPlayerControllerIterator PlayerIt = GetWorld()->GetPlayerControllerIterator(); PlayerIt; ++PlayerIt)
+	//{
+	//	if (APlayerController* PlayerController = PlayerIt->Get())
+	//	{
+	//		if (APawn* PlayerPawn = PlayerController->GetPawn())
+	//		{
+	//			PlayerPawn->SetActorLocation(NewLocation);
+	//		}
+	//	}
+	//}
 }
 
 void ATriggerBoxBase::PlayCinematicSequence_Implementation()
@@ -117,6 +161,8 @@ void ATriggerBoxBase::OnSequenceFinished()
 			EnablePlayerInput(PlayerController);
 		}
 	}
+
+	Destroy();
 }
 
 void ATriggerBoxBase::DisablePlayerInput_Implementation(APlayerController* PlayerController)
