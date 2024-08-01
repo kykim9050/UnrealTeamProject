@@ -50,8 +50,13 @@ private:
 	UPROPERTY(VisibleAnywhere)
 	UProjectileMovementComponent* ProjectileMovement;
 
+	UPROPERTY(VisibleAnywhere, Category = "Components")
+	UParticleSystemComponent* ParticleSystemComponent;
+
 	UPROPERTY(EditAnywhere, Category = "Particle", meta = (AllowPrivateAccess = true))
-	UParticleSystem* RockParticle;
+	UParticleSystem* DestroyParticle;
+	UPROPERTY(EditAnywhere, Category = "Particle", meta = (AllowPrivateAccess = true))
+	UParticleSystem* GroundParticle;
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -65,6 +70,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float UpSpeed = 0.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float RotateSpeed = 0.0f;
 
 	UPROPERTY(Replicated)
 	float Hp = 100.0f;
