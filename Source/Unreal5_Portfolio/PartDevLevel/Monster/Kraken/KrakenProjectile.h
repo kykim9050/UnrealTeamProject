@@ -76,4 +76,6 @@ public:
 
 	UPROPERTY(Replicated)
 	float Hp = 100.0f;
+
+	bool IsParticleChange = false;
 };

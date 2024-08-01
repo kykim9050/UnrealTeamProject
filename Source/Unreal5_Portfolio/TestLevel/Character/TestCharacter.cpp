@@ -224,7 +224,7 @@ void ATestCharacter::BeginPlay()	// => 메인 수정 필요 (24.08.01 수정, 추가된 요�
 	// GetMapItemCollisionComponent => MapItem과 Overlap될 시 실행할 함수 바인딩
 	GetMapItemCollisionComponent->OnComponentBeginOverlap.AddDynamic(this, &ATestCharacter::MapItemOverlapStart);
 	GetMapItemCollisionComponent->OnComponentEndOverlap.AddDynamic(this, &ATestCharacter::MapItemOverlapEnd);
-
+	
 	//UISetting();
 }
 
@@ -275,10 +275,10 @@ void ATestCharacter::Tick(float DeltaTime)
 	}
 #endif
 	//DefaultRayCast(DeltaTime);
-	//TArray<FItemInformation> I = ItemSlot;
+	TArray<FItemInformation> I = ItemSlot;
 	//AGameModeBase* Ptr = GetWorld()->GetAuthGameMode();
 	//float ts = GetWorld()->GetDeltaSeconds();
-	//int a = 0;
+	int a = 0;
 }
 
 void ATestCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -974,21 +974,36 @@ void ATestCharacter::CharacterReload() // => 매인 적용.
 	*/
 }
 
-void ATestCharacter::MapItemOverlapStart(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)	// => 메인 수정 필요 (24.08.01 수정됨)
+void ATestCharacter::MapItemOverlapStart(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)	// => 메인 수정 필요 (24.08.01 수정 중)
 {
 	GetMapItemData = OtherActor;
 
-	ATestPlayerController* MyController = Cast<ATestPlayerController>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
+	ATestPlayerController* MyController = Cast<ATestPlayerController>(GetController());
 	if (nullptr == MyController)
 	{
 		return;
 	}
 
 	ATestPlayHUD* PlayHUD = Cast<ATestPlayHUD>(MyController->GetHUD());
-	if (nullptr != PlayHUD)
+	if (nullptr == PlayHUD)
 	{
-		PlayHUD->UIOn(EUserWidgetType::E_Key);
+		return;
 	}
+
+	ATestArea* AreaObject = Cast<ATestArea>(GetMapItemData);
+	if (nullptr != AreaObject)
+	{
+		if (false == IsItemIn[4])
+		{
+			return;
+		}
+
+		// Area일 경우 => "5번키를 눌러 상호작용"
+		PlayHUD->UIOn(EUserWidgetType::Num5_Key);
+	}
+	
+	// 그 외의 경우 => "E키를 눌러 상호작용"
+	PlayHUD->UIOn(EUserWidgetType::E_Key);
 }
 
 void ATestCharacter::MapItemOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)	// => 메인 수정 필요 (24.08.01 수정됨)
@@ -998,17 +1013,21 @@ void ATestCharacter::MapItemOverlapEnd(UPrimitiveComponent* OverlappedComponent,
 		GetMapItemData = nullptr;
 	}
 
-	ATestPlayerController* MyController = Cast<ATestPlayerController>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
+	ATestPlayerController* MyController = Cast<ATestPlayerController>(GetController());
 	if (nullptr == MyController)
 	{
 		return;
 	}
 
 	ATestPlayHUD* PlayHUD = Cast<ATestPlayHUD>(MyController->GetHUD());
-	if (nullptr != PlayHUD)
+	if (nullptr == PlayHUD)
 	{
-		PlayHUD->UIOff(EUserWidgetType::E_Key);
+		return;
 	}
+
+	// 켜져 있는 상호작용 관련 UI 모두 끄기
+	PlayHUD->UIOff(EUserWidgetType::Num5_Key);
+	PlayHUD->UIOff(EUserWidgetType::E_Key);
 }
 
 void ATestCharacter::CrouchCameraMove() // => 매인에 적용 필요 (24.07.29 수정됨) => 메인 적용.
