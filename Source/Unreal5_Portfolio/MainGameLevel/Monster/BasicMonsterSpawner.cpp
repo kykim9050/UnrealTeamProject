@@ -3,14 +3,13 @@
 
 #include "MainGameLevel/Monster/BasicMonsterSpawner.h"
 #include "MainGameLevel/Monster/Base/BasicMonsterBase.h"
+#include "MainGameLevel/Player/MainCharacter.h"
 
 #include "Global/MainGameBlueprintFunctionLibrary.h"
 #include "Global/MainGameInstance.h"
 
 #include "Components/BillboardComponent.h"
 #include "Components/BoxComponent.h"
-
-#include "TestLevel/Character/TestCharacter.h"
 
 // Sets default values
 ABasicMonsterSpawner::ABasicMonsterSpawner()
@@ -92,8 +91,7 @@ void ABasicMonsterSpawner::SpawnBasicMonster()
 
 void ABasicMonsterSpawner::TriggerBoxBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	// Test
-	ATestCharacter* Player = Cast<ATestCharacter>(OtherActor);
+	AMainCharacter* Player = Cast<AMainCharacter>(OtherActor);
 	if (nullptr == Player)
 	{
 		return;
