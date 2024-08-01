@@ -90,12 +90,14 @@ enum class EBasicMonsterState : uint8
 {
 	Idle,
 	Patrol,
+	Scream,
 	Chase,
 	Fall,
 	Jump,
 	Climb,
 	ClimbEnd,
 	Attack,
+	JumpAttack,
 	Dead
 };
 
@@ -124,6 +126,7 @@ enum class EBasicMonsterAnim : uint8
 	Walk		UMETA(DisplayName = "Walk"),
 	Run			UMETA(DisplayName = "Run"),
 	Attack		UMETA(DisplayName = "Attack"),
+	JumpAttack	UMETA(DisplayName = "JumpAttack"),
 	Dead		UMETA(DisplayName = "Dead"),
 	Climb		UMETA(DisplayName = "Climb"),
 	ClimbEnd	UMETA(DisplayName = "ClimbEnd")
@@ -170,6 +173,8 @@ enum class EUserWidgetType : uint8
 	WorldMap,
 	ReloadComment,
 	BossHpbar,
+	E_Key,
+	Num5_Key,
 
 	// Title
 	TitleBackground,

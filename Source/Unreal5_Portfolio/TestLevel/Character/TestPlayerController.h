@@ -121,10 +121,10 @@ private:
 	FTimerHandle MyTimeHandle; // => 메인 적용
 	int Count = 0;
 
-	UPROPERTY()
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	bool PlayerIsFaint = false; // => 메인 적용(Delegate)
 
-	UPROPERTY()
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	bool PlayerIsBombSetting = false; // 메인 적용 필요
 
 	// HUD / Widget

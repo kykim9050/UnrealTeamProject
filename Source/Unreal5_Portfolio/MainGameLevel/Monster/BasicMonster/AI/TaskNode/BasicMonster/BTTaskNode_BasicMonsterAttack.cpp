@@ -3,7 +3,7 @@
 
 #include "BTTaskNode_BasicMonsterAttack.h"
 #include "MainGameLevel/Monster/Base/BasicMonsterBase.h"
-#include "MainGameLevel/Monster/Data/BasicMonsterData.h"
+#include "MainGameLevel/Monster/Base/BasicMonsterData.h"
 #include "MainGameLevel/Player/MainPlayerState.h"
 #include "MainGameLevel/Player/MainCharacter.h"
 
@@ -23,7 +23,7 @@ EBTNodeResult::Type UBTTaskNode_BasicMonsterAttack::ExecuteTask(UBehaviorTreeCom
 		return EBTNodeResult::Type::Aborted;
 	}
 
-	UBasicMonsterData* MonsterData = GetValueAsObject<UBasicMonsterData>(OwnerComp, TEXT("MonsterData"));
+	UBasicMonsterData* MonsterData = Monster->GetSettingData();
 	if (false == MonsterData->IsValidLowLevel())
 	{
 		LOG(MonsterLog, Fatal, TEXT("MonsterData Is Not Valid"));
@@ -57,7 +57,7 @@ void UBTTaskNode_BasicMonsterAttack::TickTask(UBehaviorTreeComponent& OwnerComp,
 	}
 
 	ABasicMonsterBase* Monster = GetSelfActor<ABasicMonsterBase>(OwnerComp);
-	UBasicMonsterData* MonsterData = GetValueAsObject<UBasicMonsterData>(OwnerComp, TEXT("MonsterData"));
+	UBasicMonsterData* MonsterData = Monster->GetSettingData();
 
 	FVector MonsterLocation = Monster->GetActorLocation();
 	FVector TargetPlayerLocation = TargetPlayer->GetActorLocation();
@@ -65,7 +65,7 @@ void UBTTaskNode_BasicMonsterAttack::TickTask(UBehaviorTreeComponent& OwnerComp,
 	// 공격 범위 체크
 	FVector LocationDiff = TargetPlayerLocation - MonsterLocation;
 	float Distance = LocationDiff.Size();
-	if (Distance <= MonsterData->GetAttackRange())
+	if (Distance <= MonsterData->AttackRange)
 	{
 		MonsterLocation.Z = 0.0f;
 		TargetPlayerLocation.Z = 0.0f;
