@@ -14,4 +14,7 @@ class UNREAL5_PORTFOLIO_API UBasicMutantData : public UBasicMonsterData
 {
 	GENERATED_BODY()
 	
+public:
+
+
 };

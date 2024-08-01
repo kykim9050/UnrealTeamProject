@@ -124,6 +124,7 @@ enum class EBasicMonsterAnim : uint8
 	Walk		UMETA(DisplayName = "Walk"),
 	Run			UMETA(DisplayName = "Run"),
 	Attack		UMETA(DisplayName = "Attack"),
+	JumpAttack	UMETA(DisplayName = "JumpAttack"),
 	Dead		UMETA(DisplayName = "Dead"),
 	Climb		UMETA(DisplayName = "Climb"),
 	ClimbEnd	UMETA(DisplayName = "ClimbEnd")
