@@ -103,7 +103,7 @@ public :
 
 	// 공격 몽타주 변경 함수  => 메인 적용
 	UFUNCTION(BlueprintCallable)
-	void AttackMontagePlay();
+	void PlayerMontagePlay();
 
 	// 공격 종료 몽타주 변경 함수  => 메인 적용
 	UFUNCTION(BlueprintCallable)
@@ -121,10 +121,10 @@ private:
 	FTimerHandle MyTimeHandle; // => 메인 적용
 	int Count = 0;
 
-	UPROPERTY()
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	bool PlayerIsFaint = false; // => 메인 적용(Delegate)
 
-	UPROPERTY()
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	bool PlayerIsBombSetting = false; // 메인 적용 필요
 
 	// HUD / Widget

@@ -22,6 +22,9 @@
 #include "Global/ContentsEnum.h"
 #include "Global/ContentsLog.h"
 #include "PartDevLevel/Monster/Kraken/KrakenProjectile.h"
+#include "PartDevLevel/Monster/Kraken/SpawnRock_Points.h"
+
+#include "Kismet/KismetMathLibrary.h"
 
 // Sets default values
 ATestMonsterBase::ATestMonsterBase()
@@ -36,6 +39,9 @@ ATestMonsterBase::ATestMonsterBase()
 	DeadDissolveCallBack.BindUFunction(this, "OnDeadDissolveInterp");
 
 	MotionWarpComponent = CreateDefaultSubobject<UMotionWarpingComponent>(TEXT("MotionWarp"));
+
+	RockSpawn = CreateDefaultSubobject<USpawnRock_Points>(TEXT("Rock Spawn Points"));
+	RockSpawn->SetupAttachment(RootComponent);
 }
 
 // Called when the game starts or when spawned
@@ -73,7 +79,6 @@ void ATestMonsterBase::BeginPlay()
 	SettingData->AttackDamage = 34.0f;
 	SettingData->AttackRange = BaseData->GetAttackRange();
 	SettingData->OriginPos = GetActorLocation();
-	SettingData->SpawnCount = BaseData->GetSpawnRockCount();
 
 	// 클라이언트일 경우
 	AIController = GetController<ATestMonsterBaseAIController>();
@@ -87,6 +92,8 @@ void ATestMonsterBase::BeginPlay()
 	AttackComponent->OnComponentEndOverlap.AddDynamic(this, &ATestMonsterBase::OnAttackOverlapEnd);
 	// 바인딩 함수 만들기
 	SetAttackCollision(false);
+
+	//SpawnArr.Init(, SettingData->SpawnCount)
 }
 
 // Called every frame
@@ -246,13 +253,18 @@ void ATestMonsterBase::SpawnRock()
 			SpawnParams.Owner = this;
 			SpawnParams.Instigator = GetInstigator();
 
-			for (int i = 0; i < SettingData->SpawnCount; i++)
+			for (int i = 0; i < RockSpawn->SpawnPos.Num(); i++)
 			{
-				AKrakenProjectile* Rock = World->SpawnActor<AKrakenProjectile>(RockProjectile, AttackComponent->GetComponentLocation(), FRotator::ZeroRotator, SpawnParams);
+				FVector ComponentLoc = RockSpawn->GetComponentLocation();
+				FVector SpawnPos = ComponentLoc + RockSpawn->SpawnPos[i];
+				FVector Direction = SpawnPos - GetActorLocation();
+				Direction.Normalize();
+				FRotator Rotate = Direction.Rotation();
+				AKrakenProjectile* Rock = World->SpawnActor<AKrakenProjectile>(RockProjectile, SpawnPos, Rotate, SpawnParams);
 				if (nullptr != Rock)
 				{
-					FVector LaunchDirection = Rock->GetActorLocation() - GetActorLocation();
-					Rock->SetDirection(LaunchDirection);
+					FVector LaunchDirection = SpawnPos - GetActorLocation();
+					Rock->SetDirection(Direction);
 					LOG(MonsterLog, Log, TEXT("Rock Spawn"));
 				}
 			}
