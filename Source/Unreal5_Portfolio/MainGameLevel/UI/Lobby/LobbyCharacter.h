@@ -36,7 +36,13 @@ public:
 	UPROPERTY()
 	bool ReadyClicked = false;
 
+	UPROPERTY(Replicated, BlueprintReadOnly)
+	int MyOrder = -1; // 나의 들어온 순서 및 번호 (0 ~ 3)
+
 private:
 	UPROPERTY()
 	AGameModeBase* IsServerPtr = nullptr; // nullptr이면 client
+
+	UPROPERTY()
+	bool SetWidgetNickName = false;
 };
