@@ -286,6 +286,7 @@ void ATestCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLi
 
 	// Posture, Action
 	DOREPLIFETIME(ATestCharacter, PostureValue);	// => 매인 적용.
+	DOREPLIFETIME(ATestCharacter, PrevPostureValue);
 	DOREPLIFETIME(ATestCharacter, LowerStateValue); // => 매인 적용.
 	DOREPLIFETIME(ATestCharacter, DirValue);		// => 매인 적용.
 	DOREPLIFETIME(ATestCharacter, IsFaint);			// 7/26 추가

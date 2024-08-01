@@ -69,7 +69,7 @@ public:
 	// Posture
 	UPROPERTY(Category = "Contents", Replicated, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	EPlayerPosture PostureValue = EPlayerPosture::Barehand;
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	UPROPERTY(Category = "Contents", Replicated, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	EPlayerPosture PrevPostureValue = EPlayerPosture::Barehand;		// => 메인으로 이전 필요 (24.07.31 추가됨)
 
 	// LowerState (태환)
