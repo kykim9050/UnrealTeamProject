@@ -15,7 +15,10 @@ class UNREAL5_PORTFOLIO_API AReportObject : public AMapObjectBase
 	GENERATED_BODY()
 	
 public:
+
+	UFUNCTION(Reliable, NetMulticast)
 	void InterAction() override;
+	void InterAction_Implementation();
 
 protected:
 	AReportObject();
