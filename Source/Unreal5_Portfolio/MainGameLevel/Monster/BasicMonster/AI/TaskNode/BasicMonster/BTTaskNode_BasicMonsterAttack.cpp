@@ -65,7 +65,7 @@ void UBTTaskNode_BasicMonsterAttack::TickTask(UBehaviorTreeComponent& OwnerComp,
 	// 공격 범위 체크
 	FVector LocationDiff = TargetPlayerLocation - MonsterLocation;
 	float Distance = LocationDiff.Size();
-	if (Distance <= MonsterData->GetAttackRange())
+	if (Distance <= MonsterData->AttackRange)
 	{
 		MonsterLocation.Z = 0.0f;
 		TargetPlayerLocation.Z = 0.0f;

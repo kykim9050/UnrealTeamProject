@@ -47,9 +47,9 @@ public:
 		return AttackComponent;
 	}
 
-	FORCEINLINE const FMonsterDataRow* GetBaseData() const
+	FORCEINLINE UBasicMonsterData* GetSettingData() const
 	{
-		return SettingData->GetBaseData();
+		return SettingData;
 	}
 
 	FORCEINLINE int GetAnimIndex()

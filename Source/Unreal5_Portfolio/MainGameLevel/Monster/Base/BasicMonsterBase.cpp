@@ -64,8 +64,8 @@ void ABasicMonsterBase::BeginPlay()
 	}
 
 	SettingData = NewObject<UBasicMonsterData>(this);
-	SettingData->SetOriginPos(GetActorLocation());
-	SettingData->SetBaseData(BaseData);
+	SettingData->OriginPos = GetActorLocation();
+	SettingData->BaseData = BaseData;
 
 	// 애니메이션 세팅
 	AnimInst = Cast<UMonsterRandomAnimInstance>(GetMesh()->GetAnimInstance());
@@ -127,7 +127,7 @@ void ABasicMonsterBase::OnAttackOverlapEnd(UPrimitiveComponent* OverlappedComp, 
 			LOG(MonsterLog, Fatal, TEXT("HitPlayerState Is Not Valid"));
 		}
 
-		HitPlayerState->AddDamage(SettingData->GetAttackDamage());
+		HitPlayerState->AddDamage(SettingData->AttackDamage);
 	}
 }
 
@@ -145,23 +145,20 @@ void ABasicMonsterBase::Damaged(float Damage)
 		return;
 	}
 
-	float CurHp = SettingData->GetHp();
-	if (0.0f >= CurHp)
+	if (0.0f >= SettingData->Hp)
 	{
 		return;
 	}
 
-	CurHp -= Damage;
+	SettingData->Hp -= Damage;
 
 	// Dead
-	if (0.0f >= CurHp)
+	if (0.0f >= SettingData->Hp)
 	{
 		SetDead();
 		ChangeRandomAnimation(EBasicMonsterAnim::Dead);
 		AIController->GetBrainComponent()->StopLogic(TEXT("Dead"));
 	}
-
-	SettingData->SetHp(CurHp);
 }
 
 void ABasicMonsterBase::SetChasePlayer()
