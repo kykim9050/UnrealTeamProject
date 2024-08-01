@@ -93,13 +93,14 @@ private:
 
 	TArray<UMaterialInstanceDynamic*> DynamicMaterials;
 
+protected:
+	UPROPERTY()
+	UBasicMonsterData* SettingData = nullptr;
+
 private:	
 	// Data
 	UPROPERTY(EditAnywhere, Category = "Data", meta = (AllowPrivateAccess = "true"))
 	FName BaseDataName;
-
-	UPROPERTY()
-	UBasicMonsterData* SettingData = nullptr;
 
 	UPROPERTY()
 	ABasicMonsterAIController* AIController = nullptr;

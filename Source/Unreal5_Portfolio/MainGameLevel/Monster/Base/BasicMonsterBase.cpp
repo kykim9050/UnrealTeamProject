@@ -63,7 +63,12 @@ void ABasicMonsterBase::BeginPlay()
 		return;
 	}
 
-	SettingData = NewObject<UBasicMonsterData>(this);
+	if (nullptr == SettingData)
+	{
+		LOG(MonsterLog, Fatal, TEXT("SettingData Is Null"));
+		return;
+	}
+
 	SettingData->OriginPos = GetActorLocation();
 	SettingData->BaseData = BaseData;
 
@@ -117,7 +122,7 @@ void ABasicMonsterBase::OnAttackOverlapEnd(UPrimitiveComponent* OverlappedComp, 
 		return;
 	}
 
-	EBasicMonsterState MonsterState = static_cast<EBasicMonsterState>(BlackBoard->GetValueAsEnum(TEXT("State")));
+	EBasicMonsterState MonsterState = static_cast<EBasicMonsterState>(BlackBoard->GetValueAsEnum(TEXT("CurState")));
 	AMainCharacter* HitCharacter = Cast<AMainCharacter>(OtherActor);
 	if (nullptr != HitCharacter && EBasicMonsterState::Attack == MonsterState)
 	{

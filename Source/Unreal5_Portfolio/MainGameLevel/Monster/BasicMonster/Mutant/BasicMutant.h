@@ -14,4 +14,7 @@ class UNREAL5_PORTFOLIO_API ABasicMutant : public ABasicMonsterBase
 {
 	GENERATED_BODY()
 	
+protected:
+	virtual void BeginPlay() override;
+
 };
