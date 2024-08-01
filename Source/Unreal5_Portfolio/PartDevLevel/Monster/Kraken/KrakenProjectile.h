@@ -17,13 +17,13 @@ class UNREAL5_PORTFOLIO_API AKrakenProjectile : public AActor
 public:
 	// Sets default values for this actor's properties
 	AKrakenProjectile();
+	void Damaged(float Damage);
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 	void Attack(AActor* _OtherActor, UPrimitiveComponent* _Collision);
-	void Damaged(float Damage);
 public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
