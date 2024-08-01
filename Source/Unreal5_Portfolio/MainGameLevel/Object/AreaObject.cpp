@@ -46,7 +46,7 @@ void AAreaObject::InterAction()
 	}
 }
 
-void AAreaObject::BombPlanting(FName _InfoName)
+void AAreaObject::BombPlanting_Implementation(FName _InfoName)
 {
 	UMainGameInstance* Inst = UMainGameBlueprintFunctionLibrary::GetMainGameInstance(GetWorld());
 

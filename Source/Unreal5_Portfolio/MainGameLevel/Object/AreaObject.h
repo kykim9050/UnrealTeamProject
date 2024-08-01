@@ -35,7 +35,9 @@ protected:
 	void BeginPlay() override;
 	void Tick(float DeltaTime) override;
 	
+	UFUNCTION(Reliable, NetMulticast)
 	void BombPlanting(FName _InfoName);
+	void BombPlanting_Implementation(FName _InfoName);
 
 private:
 	/// <summary>
