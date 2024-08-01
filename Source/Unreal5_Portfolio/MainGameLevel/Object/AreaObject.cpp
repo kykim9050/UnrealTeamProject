@@ -60,6 +60,18 @@ void AAreaObject::BombPlanting_Implementation(FName _InfoName)
 	BombMesh->SetStaticMesh(TableData->GetMesh());
 	BombMesh->SetRelativeScale3D(FVector(0.01f, 0.01f, 0.01f));
 	//PlantingSpotCollision->SetActive(false);
+
+	if (true == HasAuthority())
+	{
+		AMainGameState* MainGameState = UMainGameBlueprintFunctionLibrary::GetMainGameState(GetWorld());
+
+		if (nullptr == MainGameState)
+		{
+			return;
+		}
+
+		MainGameState->SetPlantingBombComplete();
+	}
 }
 
 void AAreaObject::InstallBomb(float _DeltaTime)

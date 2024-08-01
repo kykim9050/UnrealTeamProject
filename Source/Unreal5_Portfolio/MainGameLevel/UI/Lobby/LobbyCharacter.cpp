@@ -3,6 +3,14 @@
 
 #include "MainGameLevel/UI/Lobby/LobbyCharacter.h"
 #include "MainGameLevel/LobbyGameMode.h"
+#include "MainGameLevel/UI/Lobby/MainLobbyHUD.h"
+#include "MainGameLevel/UI/Lobby/PlayerLobbyUserWidget.h"
+
+#include "Global/MainGameInstance.h"
+
+#include "Blueprint/UserWidget.h"
+
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 ALobbyCharacter::ALobbyCharacter()
@@ -22,7 +30,10 @@ void ALobbyCharacter::BeginPlay()
 	{
 		// Server에 생긴 캐릭터라면 게임모드의 PlayerCount를 + 1
 		ALobbyGameMode* lobby = Cast<ALobbyGameMode>(IsServerPtr);
-		lobby->SetPlayerCount(lobby->GetPlayerCount() + 1);
+		int pc = lobby->GetPlayerCount();
+		lobby->SetPlayerCount(pc + 1);
+
+		MyOrder = pc; // 0, 1, 2, 3
 	}
 }
 
@@ -36,6 +47,20 @@ void ALobbyCharacter::Tick(float DeltaTime)
 	{
 		ClientReady();
 		ReadyClicked = false;
+	}
+
+	if (false == SetWidgetNickName)
+	{
+		SetWidgetNickName = true;
+
+		UMainGameInstance* Inst = GetGameInstance<UMainGameInstance>();
+
+		APlayerController* Con = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+		if (nullptr != Con)
+		{
+			AMainLobbyHUD* MyHUD = Cast<AMainLobbyHUD>(Con->GetHUD());		
+			Cast<UPlayerLobbyUserWidget>(MyHUD->GetWidget(EUserWidgetType::LobbyButton))->LobbyPlayerName(MyOrder, FText::FromString(Inst->GetMainNickName()));
+		}
 	}
 }
 
@@ -51,6 +76,7 @@ void ALobbyCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutL
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
+	DOREPLIFETIME(ALobbyCharacter, MyOrder);
 }
 
 

@@ -52,9 +52,8 @@ protected:
     void EnablePlayerInput_Implementation(APlayerController* PlayerController);
 
 protected:
-    // 정해진 위치
     UPROPERTY(Replicated)
-    FVector TargetLocation;
+    FVector CenterLocation;
 
     // 시네마틱 시퀀스 에셋
     UPROPERTY(Replicated, EditAnywhere, Category = "Cinematics")
@@ -62,4 +61,5 @@ protected:
 
     UPROPERTY(Replicated)
     bool IsPlayerTP = false;
+
 };

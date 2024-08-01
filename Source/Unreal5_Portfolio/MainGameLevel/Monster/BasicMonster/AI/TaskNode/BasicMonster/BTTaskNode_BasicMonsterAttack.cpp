@@ -63,12 +63,6 @@ void UBTTaskNode_BasicMonsterAttack::TickTask(UBehaviorTreeComponent& OwnerComp,
 
 	FVector MonsterLocation = Monster->GetActorLocation();
 	FVector TargetPlayerLocation = TargetPlayer->GetActorLocation();
-
-	//MonsterLocation.Z = 0.0f;
-	//TargetPlayerLocation.Z = 0.0f;
-	//
-	//FRotator TurnRot = UKismetMathLibrary::FindLookAtRotation(MonsterLocation, TargetPlayerLocation);
-	//Monster->SetActorRotation(TurnRot);
 	
 	if (0.0f >= MonsterData->TimeCount)
 	{
