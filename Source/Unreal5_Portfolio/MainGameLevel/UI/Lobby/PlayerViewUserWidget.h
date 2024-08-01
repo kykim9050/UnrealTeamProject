@@ -13,5 +13,5 @@ UCLASS()
 class UNREAL5_PORTFOLIO_API UPlayerViewUserWidget : public UUserWidget
 {
 	GENERATED_BODY()
-	
+
 };

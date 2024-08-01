@@ -171,6 +171,7 @@ enum class EUserWidgetType : uint8
 	ReloadComment,
 	BossHpbar,
 	E_Key,
+	Num5_Key,
 
 	// Title
 	TitleBackground,

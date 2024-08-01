@@ -9,6 +9,7 @@
 
 // 추후 삭제 필요
 #include "TestLevel/Character/TestCharacter.h"
+#include "Global/MainGameState.h"
 
 AReportObject::AReportObject()
 {
@@ -40,11 +41,15 @@ void AReportObject::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
-void AReportObject::InterAction()
+void AReportObject::InterAction_Implementation()
 {
 	Super::InterAction();
 
-	//UMainGameBlueprintFunctionLibrary::GetMainGameState()->
+	if (true == HasAuthority())
+	{
+		AMainGameState* MainGameState = UMainGameBlueprintFunctionLibrary::GetMainGameState(GetWorld());
+		MainGameState->QuestItemGet();
+	}
 
 	Destroy();
 }
