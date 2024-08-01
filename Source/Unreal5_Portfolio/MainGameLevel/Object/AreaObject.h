@@ -19,10 +19,16 @@ public:
 
 protected:
 	AAreaObject();
+	
 	void BeginPlay() override;
 	void Tick(float DeltaTime) override;
-
+	
+	void BombPlanting(FName _InfoName);
 
 private:
-	
+	float BombInstallTime = 3.0f;
+
+	class UStaticMeshComponent* BombMesh = nullptr;
+	class UBoxComponent* PlantingSpotCollision = nullptr;
+
 };
