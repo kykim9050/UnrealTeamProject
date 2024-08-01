@@ -23,16 +23,15 @@
 #include "PartDevLevel/Character/PlayerAnimInstance.h"
 #include "PartDevLevel/Monster/Base/TestMonsterBase.h"
 #include "PartDevLevel/Monster/Boss/TestBossMonsterBase.h"
-#include "PartDevLevel/Object/TestArea.h"
 #include "MainGameLevel/Object/MapObjectBase.h"
 #include "MainGameLevel/Object/Bomb.h"
 #include "MainGameLevel/Object/DoorObject.h"
+#include "MainGameLevel/Object/AreaObject.h"
 #include "MainGameLevel/UI/InGame/HeadNameWidgetComponent.h"
 #include "TestPlayerController.h"
 #include "MainGameLevel/Particles/MuzzleParticleActor.h"
 #include "PartDevLevel/Monster/Kraken/KrakenProjectile.h"
 
-#include "MainGameLevel/Object/AreaObject.h"
 
 // Sets default values
 ATestCharacter::ATestCharacter()
@@ -390,7 +389,7 @@ void ATestCharacter::DrinkComplete_Implementation()			// => 메인에 이전 필요 (24
 	ChangePosture(PrevPostureValue);
 }
 
-void ATestCharacter::BombSetStart_Implementation()			// => 메인에 이전 필요 (24.07.31 수정됨)
+void ATestCharacter::BombSetStart_Implementation()			// => 메인에 이전 필요 (24.08.01 수정됨)
 {
 	// 폭탄 아이템이 없다면 return
 	if (false == IsItemIn[4])
@@ -424,7 +423,7 @@ void ATestCharacter::BombSetStart_Implementation()			// => 메인에 이전 필요 (24.
 	ChangePosture(EPlayerPosture::Bomb);
 }
 
-void ATestCharacter::BombSetTick_Implementation()		// => 메인에 이전 필요 (24.07.31 수정됨)
+void ATestCharacter::BombSetTick_Implementation()		// => 메인에 이전 필요 (24.08.01 수정됨)
 {
 	if (true == IsBombSetting)
 	{
@@ -453,7 +452,7 @@ void ATestCharacter::BombSetTick_Implementation()		// => 메인에 이전 필요 (24.07
 	}
 }
 
-void ATestCharacter::BombSetCancel_Implementation()		// => 메인에 이전 필요 (24.07.31 수정됨)
+void ATestCharacter::BombSetCancel_Implementation()		// => 메인에 이전 필요 (24.08.01 수정됨)
 {
 	if (true == IsBombSetting)
 	{
@@ -472,7 +471,7 @@ void ATestCharacter::BombSetCancel_Implementation()		// => 메인에 이전 필요 (24.
 	}
 }
 
-void ATestCharacter::BombSetComplete_Implementation()	// => 메인에 이전 필요 (24.07.31 수정됨)
+void ATestCharacter::BombSetComplete_Implementation()	// => 메인에 이전 필요 (24.08.01 수정됨)
 {
 	// 폭탄 설치 완료
 	IsBombSetting = false;
@@ -990,16 +989,19 @@ void ATestCharacter::MapItemOverlapStart(UPrimitiveComponent* OverlappedComp, AA
 		return;
 	}
 
-	ATestArea* AreaObject = Cast<ATestArea>(GetMapItemData);
+	AAreaObject* AreaObject = Cast<AAreaObject>(GetMapItemData);
 	if (nullptr != AreaObject)
 	{
 		if (false == IsItemIn[4])
 		{
-			return;
+			
 		}
-
-		// Area일 경우 => "5번키를 눌러 상호작용"
-		PlayHUD->UIOn(EUserWidgetType::Num5_Key);
+		else
+		{
+			// Area일 경우 => "5번키를 눌러 상호작용"
+			PlayHUD->UIOn(EUserWidgetType::Num5_Key);
+		}
+		return;
 	}
 	
 	// 그 외의 경우 => "E키를 눌러 상호작용"
