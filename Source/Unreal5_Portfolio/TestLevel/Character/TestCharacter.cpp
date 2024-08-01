@@ -650,7 +650,7 @@ void ATestCharacter::CheckItem() // => 메인 수정 필요 (24.07.30 DebugMessage 부�
 	}
 }
 
-void ATestCharacter::InteractObject_Implementation(AMapObjectBase* _MapObject)	// => 메인 이전 필요 (24.07.31 수정 중)
+void ATestCharacter::InteractObject_Implementation(AMapObjectBase* _MapObject)	// => 메인 이전 필요 (24.08.01 수정 중)
 {
 	// Door일 경우 : 상호작용은 Switch가 발동시키므로 return
 	ADoorObject* DoorObject = Cast<ADoorObject>(_MapObject);
@@ -666,13 +666,13 @@ void ATestCharacter::InteractObject_Implementation(AMapObjectBase* _MapObject)	/
 		return;
 	}
 
-	// Bomb일 경우 : 인벤토리에 아이템 집어넣기, 맵에서 아이템을 삭제
-	ABomb* BombObject = Cast<ABomb>(_MapObject);
-	if (nullptr != BombObject)
-	{
-		PickUpItem();
-		return;
-	}
+	//// Bomb일 경우 : 인벤토리에 아이템 집어넣기, 맵에서 아이템을 삭제
+	//ABomb* BombObject = Cast<ABomb>(_MapObject);
+	//if (nullptr != BombObject)
+	//{
+	//	PickUpItem();
+	//	return;
+	//}
 
 	// 그 외 맵오브젝트(Switch 등)일 경우 : 상호작용 발동
 	_MapObject->InterAction();
