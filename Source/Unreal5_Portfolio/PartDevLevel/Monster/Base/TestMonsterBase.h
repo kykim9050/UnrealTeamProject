@@ -95,6 +95,10 @@ private:
 		Destroy();
 	}
 
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	class USpawnRock_Points* RockSpawn;
+
 protected:
 	UPROPERTY()
 	UTestMonsterDataBase* SettingData;
