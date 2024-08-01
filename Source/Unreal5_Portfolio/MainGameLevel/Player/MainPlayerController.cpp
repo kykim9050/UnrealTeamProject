@@ -167,7 +167,7 @@ void AMainPlayerController::MouseLeft_FireStart(const FInputActionValue& Value)
 	}
 	Ch->FireRayCast(GetWorld()->GetTimeSeconds());
 
-	AttackMontagePlay();
+	PlayerMontagePlay();
 
 	// ¹ß½Î ½ÅÈ£¸¦ HUD·Î ³Ñ±è.
 	BullitCountToHUD();
@@ -187,7 +187,7 @@ void AMainPlayerController::MouseLeft_FireTick(float _DeltaTime)
 	}
 	Ch->FireRayCast(_DeltaTime);
 
-	AttackMontagePlay();
+	PlayerMontagePlay();
 
 	// ¹ß½Î ½ÅÈ£¸¦ HUD·Î ³Ñ±è.
 	BullitCountToHUD();
@@ -338,7 +338,7 @@ void AMainPlayerController::ChangePlayerDir(EPlayerMoveDir _Dir)
 	Ch->ChangePlayerDir(_Dir);
 }
 
-void AMainPlayerController::AttackMontagePlay()
+void AMainPlayerController::PlayerMontagePlay()
 {
 	AMainCharacter* Ch = GetPawn<AMainCharacter>();
 	if (nullptr == Ch)

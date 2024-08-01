@@ -84,7 +84,7 @@ public :
 
 	// 공격 몽타주 실행
 	UFUNCTION(BlueprintCallable)
-	void AttackMontagePlay();
+	void PlayerMontagePlay();
 
 	// 공격 종료 몽타주 실행
 	UFUNCTION(BlueprintCallable)

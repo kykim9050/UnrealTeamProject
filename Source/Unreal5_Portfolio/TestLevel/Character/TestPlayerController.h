@@ -103,7 +103,7 @@ public :
 
 	// 공격 몽타주 변경 함수  => 메인 적용
 	UFUNCTION(BlueprintCallable)
-	void AttackMontagePlay();
+	void PlayerMontagePlay();
 
 	// 공격 종료 몽타주 변경 함수  => 메인 적용
 	UFUNCTION(BlueprintCallable)
