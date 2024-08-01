@@ -170,6 +170,7 @@ enum class EUserWidgetType : uint8
 	WorldMap,
 	ReloadComment,
 	BossHpbar,
+	E_Key,
 
 	// Title
 	TitleBackground,
