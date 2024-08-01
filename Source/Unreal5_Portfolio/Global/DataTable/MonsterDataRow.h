@@ -43,12 +43,6 @@ public:
 		return AllAnimMontages;
 	}
 
-	int GetSpawnRockCount() const
-	{
-		return SpawnRockCount;
-	}
-
-
 	// Test
 	ETestMonsterType GetMonsterType() const
 	{
@@ -60,7 +54,7 @@ public:
 		return TestAnimMontages;
 	}
 
-private:
+public:
 	// 몬스터 UClass
 	UPROPERTY(EditAnywhere, meta = (AllowprivateAccess = "true"))
 	TSubclassOf<AActor> MonsterUClass = TSubclassOf<AActor>();
@@ -89,9 +83,5 @@ private:
 	// 몽타주
 	UPROPERTY(EditAnywhere, meta = (AllowprivateAccess = "true"))
 	TMap<ETestMonsterAnim, FAnimMontageGroup> TestAnimMontages;
-
-	// 스폰 돌 갯수
-	UPROPERTY(EditAnywhere, meta = (AllowprivateAccess = "true"))
-	int SpawnRockCount;
 
 };

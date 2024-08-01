@@ -64,7 +64,7 @@ public:
 	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	class UHeadNameWidgetComponent* HeadNameComponent = nullptr;	// => 메인으로 이전 필요 (24.07.30 추가됨)
 	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-	class UBoxComponent* GetMapItemCollisonComponent = nullptr;
+	class UBoxComponent* GetMapItemCollisionComponent = nullptr;	// => 메인 수정 필요 (24.08.01 오타 수정됨)
 
 	// Posture
 	UPROPERTY(Category = "Contents", Replicated, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
@@ -131,9 +131,9 @@ public:
 	UPROPERTY(Category = "Contents", Replicated, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	FString RayCastToItemName = "";
 	UFUNCTION(BlueprintCallable)
-	void MapItemOverlapStart(AActor* _OtherActor, UPrimitiveComponent* _Collision);
+	void MapItemOverlapStart(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);	// => 메인 수정 필요 (24.08.01 수정됨)
 	UFUNCTION(BlueprintCallable)
-	void MapItemOverlapEnd();
+	void MapItemOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);	// => 메인 수정 필요 (24.08.01 수정됨)
 	UFUNCTION(BlueprintCallable)
 	void CheckItem();									// => 메인캐릭터로 이전해야 함 (24.07.29 추가됨)
 	UFUNCTION(Reliable, Server)

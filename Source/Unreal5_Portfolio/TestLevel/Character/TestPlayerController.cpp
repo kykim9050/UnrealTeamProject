@@ -196,7 +196,7 @@ void ATestPlayerController::FireStart(float _DeltaTime)	// => 메인도 수정해야 함
 	}
 
 	Ch->FireRayCast();
-	AttackMontagePlay();
+	PlayerMontagePlay();
 	GEngine->AddOnScreenDebugMessage(-1, 0.2f, FColor::Red, TEXT("Start"));
 	GetWorld()->GetTimerManager().SetTimer(MyTimeHandle, FTimerDelegate::CreateLambda([&]()
 		{
@@ -209,7 +209,7 @@ void ATestPlayerController::FireTick(float _DeltaTime)	// => 메인도 수정해야 함 
 	ATestCharacter* Ch = GetPawn<ATestCharacter>();
 	Ch->FireRayCast();
 	++Count;
-	AttackMontagePlay();
+	PlayerMontagePlay();
 	GEngine->AddOnScreenDebugMessage(-1, 0.2f, FColor::Red, FString::Printf(TEXT("Tick Count : %d"), Count));
 }
 
@@ -286,7 +286,7 @@ void ATestPlayerController::ChangePlayerDir(EPlayerMoveDir _Dir)
 	Ch->ChangePlayerDir(_Dir);
 }
 
-void ATestPlayerController::AttackMontagePlay()
+void ATestPlayerController::PlayerMontagePlay()
 {
 	// 메인 적용 필요
 	// 기절, 폭탄 설치 상태 몽타주 실행 불가능

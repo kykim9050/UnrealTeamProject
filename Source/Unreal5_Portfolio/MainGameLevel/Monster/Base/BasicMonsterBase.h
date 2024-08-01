@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 
-#include "MainGameLevel/Monster/Data/BasicMonsterData.h"
+#include "MainGameLevel/Monster/Base/BasicMonsterData.h"
 #include "Global/DataTable/MonsterDataRow.h"
 #include "Components/TimeLineComponent.h"
 
@@ -47,9 +47,9 @@ public:
 		return AttackComponent;
 	}
 
-	FORCEINLINE const FMonsterDataRow* GetBaseData() const
+	FORCEINLINE UBasicMonsterData* GetSettingData() const
 	{
-		return SettingData->GetBaseData();
+		return SettingData;
 	}
 
 	FORCEINLINE int GetAnimIndex()
@@ -93,13 +93,14 @@ private:
 
 	TArray<UMaterialInstanceDynamic*> DynamicMaterials;
 
+protected:
+	UPROPERTY()
+	UBasicMonsterData* SettingData = nullptr;
+
 private:	
 	// Data
 	UPROPERTY(EditAnywhere, Category = "Data", meta = (AllowPrivateAccess = "true"))
 	FName BaseDataName;
-
-	UPROPERTY()
-	UBasicMonsterData* SettingData = nullptr;
 
 	UPROPERTY()
 	ABasicMonsterAIController* AIController = nullptr;

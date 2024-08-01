@@ -13,5 +13,8 @@ UCLASS()
 class UNREAL5_PORTFOLIO_API ABasicZombie : public ABasicMonsterBase
 {
 	GENERATED_BODY()
+
+protected:
+	void BeginPlay() override;
 		
 };

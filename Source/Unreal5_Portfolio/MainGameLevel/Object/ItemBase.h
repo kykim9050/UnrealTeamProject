@@ -15,6 +15,11 @@ public:
 	// Sets default values for this actor's properties
 	AItemBase();
 
+	FORCEINLINE UStaticMeshComponent* GetStaticMeshComponent()
+	{
+		return StaticMeshComponent;
+	}
+
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 

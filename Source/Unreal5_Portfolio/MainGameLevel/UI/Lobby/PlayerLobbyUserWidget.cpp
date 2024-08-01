@@ -3,6 +3,8 @@
 
 #include "MainGameLevel/UI/Lobby/PlayerLobbyUserWidget.h"
 #include "MainGameLevel/UI/Lobby/LobbyCharacter.h"
+#include "MainGameLevel/UI/Lobby/PlayerViewUserWidget.h"
+#include "MainGameLevel/UI/Lobby/CharacterSelectionUserWidget.h"
 #include "MainGameLevel/UI/Title/ServerBtnUserWidget.h"
 #include "MainGameLevel/LobbyGameMode.h"
 
@@ -83,4 +85,31 @@ void UPlayerLobbyUserWidget::OnStartBtn()
 		// 시작할 수 없음.
 		int a = 0;
 	}
+}
+
+void UPlayerLobbyUserWidget::LobbyPlayerName(int _Order, FText _Name)
+{
+	switch (_Order)
+	{
+	case 0:
+		CurPlayerView->SetP0Name(_Name);
+		break;
+	case 1:
+		CurPlayerView->SetP1Name(_Name);
+		break;
+	case 2:
+		CurPlayerView->SetP2Name(_Name);
+		break;
+	case 3:
+		CurPlayerView->SetP3Name(_Name);
+		break;
+	default:
+		CurPlayerView->SetP0Name(_Name);
+		break;
+	}
+}
+
+void UPlayerLobbyUserWidget::LobbyPlayerView(int _Order, int _CharacterType)
+{
+	CurPlayerView->SetPlayerView(_Order, _CharacterType);
 }

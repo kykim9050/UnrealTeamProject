@@ -23,13 +23,14 @@
 #include "PartDevLevel/Character/PlayerAnimInstance.h"
 #include "PartDevLevel/Monster/Base/TestMonsterBase.h"
 #include "PartDevLevel/Monster/Boss/TestBossMonsterBase.h"
-#include "PartDevLevel/Object/TestArea.h"
 #include "MainGameLevel/Object/MapObjectBase.h"
 #include "MainGameLevel/Object/Bomb.h"
 #include "MainGameLevel/Object/DoorObject.h"
+#include "MainGameLevel/Object/AreaObject.h"
 #include "MainGameLevel/UI/InGame/HeadNameWidgetComponent.h"
 #include "TestPlayerController.h"
 #include "MainGameLevel/Particles/MuzzleParticleActor.h"
+#include "PartDevLevel/Monster/Kraken/KrakenProjectile.h"
 
 
 // Sets default values
@@ -86,18 +87,18 @@ ATestCharacter::ATestCharacter()
 	FPVItemSocketMesh->bCastDynamicShadow = false;
 	FPVItemSocketMesh->CastShadow = false;
 
-	// Map Item 검사 => 메인캐릭터 적용.
-	GetMapItemCollisonComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("GetMapItemCollisionComponent"));
-	GetMapItemCollisonComponent->SetupAttachment(RootComponent);
-	GetMapItemCollisonComponent->SetRelativeLocation(FVector(100.0, 0.0, -20.0f));
-	GetMapItemCollisonComponent->SetCollisionProfileName(FName("MapItemSearch"));
+	// Map Item 검사		// => 메인 수정 필요 (24.08.01 수정됨)
+	GetMapItemCollisionComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("GetMapItemCollisionComponent"));
+	GetMapItemCollisionComponent->SetupAttachment(RootComponent);
+	GetMapItemCollisionComponent->SetRelativeLocation(FVector(60.0, 0.0, -5.0f));
+	GetMapItemCollisionComponent->SetBoxExtent(FVector(55.0f, 50.0f, 100.0f));
+	GetMapItemCollisionComponent->SetCollisionProfileName(FName("MapItemSearch"));
 
 	UEnum* Enum = StaticEnum<EPlayerPosture>();
 
-	// = > 메인캐릭터 적용. [주석 부분 다르니 확인 요청.]
+	// Inventory (for UI Test)	// => 메인캐릭터 적용. [주석 부분 다르니 확인 요청.]
 	for (size_t i = 0; i < static_cast<size_t>(EPlayerPosture::Barehand); i++)
 	{
-		// Inventory (for UI Test)
 		FItemInformation NewSlot;
 		/*NewSlot.Name = "";
 		NewSlot.ReloadMaxNum = -1;
@@ -111,6 +112,7 @@ ATestCharacter::ATestCharacter()
 	HandAttackComponent = CreateDefaultSubobject<USphereComponent>(TEXT("Hand Attack Comp"));
 	HandAttackComponent->SetupAttachment(GetMesh());
 	HandAttackComponent->SetRelativeLocation({ 0.0f, 100.0f, 120.0f });
+	HandAttackComponent->SetCollisionProfileName(TEXT("NoCollision"));	// => 메인 수정 필요 (24.08.01 BeginPlay 함수에서 여기로 이동)
 
 	// MinimapIcon Component => 메인캐릭터 적용.
 	MinimapIconComponent = CreateDefaultSubobject<UTestMinimapIconComponent>(TEXT("MinimapPlayerIcon"));
@@ -158,6 +160,16 @@ void ATestCharacter::HandAttackCollision(AActor* _OtherActor, UPrimitiveComponen
 			BossMonster->Damaged(150.0f);
 		}
 	}
+
+
+	// Kraken의 바위 부시는 함수 호출 (메인 추가 필요)
+	{
+		AKrakenProjectile* Rock = Cast<AKrakenProjectile>(_OtherActor);
+		if (nullptr != Rock)
+		{
+			Rock->Damaged(150.0f);
+		}
+	}
 }
 
 void ATestCharacter::ChangeHandAttackCollisionProfile(FName _Name) // => 매인 적용.
@@ -191,25 +203,28 @@ void ATestCharacter::PostInitializeComponents()
 	}
 
 	Super::PostInitializeComponents();
-
 }
 
 // Called when the game starts or when spawned
-void ATestCharacter::BeginPlay()
+void ATestCharacter::BeginPlay()	// => 메인 수정 필요 (24.08.01 수정, 추가된 요소 있음)
 {
 	NetCheck();
 	Super::BeginPlay();
 
 	UMainGameBlueprintFunctionLibrary::PushActor(EObjectType::Player, this);
 
+	// PlayerState => 초기화
+	SettingPlayerState();
+
 	// 몽타주 변경에 필요한 세팅 추가 필요 (태환) // => 매인 적용.
 	PlayerAnimInst = Cast<UPlayerAnimInstance>(GetMesh()->GetAnimInstance());
 	FPVPlayerAnimInst = Cast<UPlayerAnimInstance>(FPVMesh->GetAnimInstance());
 
-	HandAttackComponent->SetCollisionProfileName(TEXT("NoCollision"));
+	// GetMapItemCollisionComponent => MapItem과 Overlap될 시 실행할 함수 바인딩
+	GetMapItemCollisionComponent->OnComponentBeginOverlap.AddDynamic(this, &ATestCharacter::MapItemOverlapStart);
+	GetMapItemCollisionComponent->OnComponentEndOverlap.AddDynamic(this, &ATestCharacter::MapItemOverlapEnd);
+	
 	//UISetting();
-
-	SettingPlayerState();
 }
 
 // Called every frame
@@ -259,10 +274,10 @@ void ATestCharacter::Tick(float DeltaTime)
 	}
 #endif
 	//DefaultRayCast(DeltaTime);
-	//TArray<FItemInformation> I = ItemSlot;
+	TArray<FItemInformation> I = ItemSlot;
 	//AGameModeBase* Ptr = GetWorld()->GetAuthGameMode();
 	//float ts = GetWorld()->GetDeltaSeconds();
-	//int a = 0;
+	int a = 0;
 }
 
 void ATestCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -337,7 +352,7 @@ void ATestCharacter::FireRayCast_Implementation() // => 메인 수정 필요 (24.07.30
 	}
 }
 
-void ATestCharacter::Drink_Implementation()					// => 메인에 이전 필요 (24.07.31 수정됨)
+void ATestCharacter::Drink_Implementation()					// => 메인에 이전 필요 (24.08.01 수정됨)
 {
 	// 음료 아이템이 없다면 return
 	if (false == IsItemIn[3])
@@ -354,10 +369,7 @@ void ATestCharacter::Drink_Implementation()					// => 메인에 이전 필요 (24.07.31
 
 	// 음료 아이템 삭제
 	DeleteItem(3);
-}
 
-void ATestCharacter::DrinkComplete_Implementation()			// => 메인에 이전 필요 (24.07.31 수정됨)
-{
 	// 실질적인 플레이어 HP 회복
 	ATestPlayerState* MyTestPlayerState = GetPlayerState<ATestPlayerState>();
 	if (nullptr == MyTestPlayerState)
@@ -369,12 +381,15 @@ void ATestCharacter::DrinkComplete_Implementation()			// => 메인에 이전 필요 (24
 #ifdef WITH_EDITOR
 	GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Red, FString(TEXT("HP recovered!")));
 #endif
+}
 
+void ATestCharacter::DrinkComplete_Implementation()			// => 메인에 이전 필요 (24.08.01 수정됨)
+{
 	// 이전 자세로 애니메이션 변경
 	ChangePosture(PrevPostureValue);
 }
 
-void ATestCharacter::BombSetStart_Implementation()			// => 메인에 이전 필요 (24.07.31 수정됨)
+void ATestCharacter::BombSetStart_Implementation()			// => 메인에 이전 필요 (24.08.01 수정됨)
 {
 	// 폭탄 아이템이 없다면 return
 	if (false == IsItemIn[4])
@@ -385,8 +400,10 @@ void ATestCharacter::BombSetStart_Implementation()			// => 메인에 이전 필요 (24.
 		return;
 	}
 
+	// 240801 AreaObject 추가로 해당 클래스 변경
 	// 폭탄 설치 가능한 Area가 아닐 경우 return
-	ATestArea* AreaObject = Cast<ATestArea>(GetMapItemData);
+	//ATestArea* AreaObject = Cast<ATestArea>(GetMapItemData);
+	AAreaObject* AreaObject = Cast<AAreaObject>(GetMapItemData);
 	if (nullptr == AreaObject)
 	{
 #ifdef WITH_EDITOR
@@ -406,11 +423,13 @@ void ATestCharacter::BombSetStart_Implementation()			// => 메인에 이전 필요 (24.
 	ChangePosture(EPlayerPosture::Bomb);
 }
 
-void ATestCharacter::BombSetTick_Implementation()		// => 메인에 이전 필요 (24.07.31 수정됨)
+void ATestCharacter::BombSetTick_Implementation()		// => 메인에 이전 필요 (24.08.01 수정됨)
 {
 	if (true == IsBombSetting)
 	{
-		ATestArea* AreaObject = Cast<ATestArea>(GetMapItemData);
+		// 240801 AreaObject 추가로 해당 클래스 변경
+		AAreaObject* AreaObject = Cast<AAreaObject>(GetMapItemData);
+		//ATestArea* AreaObject = Cast<ATestArea>(GetMapItemData);
 		if (nullptr == AreaObject)
 		{
 #ifdef WITH_EDITOR
@@ -433,13 +452,15 @@ void ATestCharacter::BombSetTick_Implementation()		// => 메인에 이전 필요 (24.07
 	}
 }
 
-void ATestCharacter::BombSetCancel_Implementation()		// => 메인에 이전 필요 (24.07.31 수정됨)
+void ATestCharacter::BombSetCancel_Implementation()		// => 메인에 이전 필요 (24.08.01 수정됨)
 {
 	if (true == IsBombSetting)
 	{
 		// 폭탄 설치 중단
 		IsBombSetting = false;
-		ATestArea* AreaObject = Cast<ATestArea>(GetMapItemData);
+		// 240801 AreaObject 추가로 해당 클래스 변경
+		AAreaObject* AreaObject = Cast<AAreaObject>(GetMapItemData);
+		//ATestArea* AreaObject = Cast<ATestArea>(GetMapItemData);
 		if (nullptr != AreaObject)
 		{
 			AreaObject->ResetBombTime();
@@ -450,11 +471,14 @@ void ATestCharacter::BombSetCancel_Implementation()		// => 메인에 이전 필요 (24.
 	}
 }
 
-void ATestCharacter::BombSetComplete_Implementation()	// => 메인에 이전 필요 (24.07.31 수정됨)
+void ATestCharacter::BombSetComplete_Implementation()	// => 메인에 이전 필요 (24.08.01 수정됨)
 {
 	// 폭탄 설치 완료
 	IsBombSetting = false;
-	ATestArea* AreaObject = Cast<ATestArea>(GetMapItemData);
+
+	// 240801 AreaObject 추가로 해당 클래스 변경
+	AAreaObject* AreaObject = Cast<AAreaObject>(GetMapItemData);
+	//ATestArea* AreaObject = Cast<ATestArea>(GetMapItemData);
 	if (nullptr != AreaObject)
 	{
 		AreaObject->InterAction();
@@ -646,7 +670,7 @@ void ATestCharacter::CheckItem() // => 메인 수정 필요 (24.07.30 DebugMessage 부�
 	}
 }
 
-void ATestCharacter::InteractObject_Implementation(AMapObjectBase* _MapObject)	// => 메인 이전 필요 (24.07.31 수정 중)
+void ATestCharacter::InteractObject_Implementation(AMapObjectBase* _MapObject)	// => 메인 이전 필요 (24.08.01 수정 중)
 {
 	// Door일 경우 : 상호작용은 Switch가 발동시키므로 return
 	ADoorObject* DoorObject = Cast<ADoorObject>(_MapObject);
@@ -656,19 +680,27 @@ void ATestCharacter::InteractObject_Implementation(AMapObjectBase* _MapObject)	/
 	}
 
 	// Area일 경우 : 상호작용은 플레이어쪽에서 처리해야 하므로 return
-	ATestArea* AreaObject = Cast<ATestArea>(_MapObject);
+	//ATestArea* AreaObject = Cast<ATestArea>(_MapObject);
+	//if (nullptr != AreaObject)
+	//{
+	//	return;
+	//}
+
+	// 240801 AreaObject 추가로 해당 내용 추가되었습니다
+	// Area일 경우 :상호작용은 플레이어쪽에서 처리해야 하므로 return
+	AAreaObject* AreaObject = Cast<AAreaObject>(_MapObject);
 	if (nullptr != AreaObject)
 	{
 		return;
 	}
 
-	// Bomb일 경우 : 인벤토리에 아이템 집어넣기, 맵에서 아이템을 삭제
-	ABomb* BombObject = Cast<ABomb>(_MapObject);
-	if (nullptr != BombObject)
-	{
-		PickUpItem();
-		return;
-	}
+	//// Bomb일 경우 : 인벤토리에 아이템 집어넣기, 맵에서 아이템을 삭제
+	//ABomb* BombObject = Cast<ABomb>(_MapObject);
+	//if (nullptr != BombObject)
+	//{
+	//	PickUpItem();
+	//	return;
+	//}
 
 	// 그 외 맵오브젝트(Switch 등)일 경우 : 상호작용 발동
 	_MapObject->InterAction();
@@ -941,17 +973,63 @@ void ATestCharacter::CharacterReload() // => 매인 적용.
 	*/
 }
 
-void ATestCharacter::MapItemOverlapStart(AActor* _OtherActor, UPrimitiveComponent* _Collision) // => 매인 적용.
+void ATestCharacter::MapItemOverlapStart(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)	// => 메인 수정 필요 (24.08.01 수정 중)
 {
-	GetMapItemData = _OtherActor;
+	GetMapItemData = OtherActor;
+
+	ATestPlayerController* MyController = Cast<ATestPlayerController>(GetController());
+	if (nullptr == MyController)
+	{
+		return;
+	}
+
+	ATestPlayHUD* PlayHUD = Cast<ATestPlayHUD>(MyController->GetHUD());
+	if (nullptr == PlayHUD)
+	{
+		return;
+	}
+
+	AAreaObject* AreaObject = Cast<AAreaObject>(GetMapItemData);
+	if (nullptr != AreaObject)
+	{
+		if (false == IsItemIn[4])
+		{
+			
+		}
+		else
+		{
+			// Area일 경우 => "5번키를 눌러 상호작용"
+			PlayHUD->UIOn(EUserWidgetType::Num5_Key);
+		}
+		return;
+	}
+	
+	// 그 외의 경우 => "E키를 눌러 상호작용"
+	PlayHUD->UIOn(EUserWidgetType::E_Key);
 }
 
-void ATestCharacter::MapItemOverlapEnd() // => 매인 적용.
+void ATestCharacter::MapItemOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)	// => 메인 수정 필요 (24.08.01 수정됨)
 {
 	if (nullptr != GetMapItemData)
 	{
 		GetMapItemData = nullptr;
 	}
+
+	ATestPlayerController* MyController = Cast<ATestPlayerController>(GetController());
+	if (nullptr == MyController)
+	{
+		return;
+	}
+
+	ATestPlayHUD* PlayHUD = Cast<ATestPlayHUD>(MyController->GetHUD());
+	if (nullptr == PlayHUD)
+	{
+		return;
+	}
+
+	// 켜져 있는 상호작용 관련 UI 모두 끄기
+	PlayHUD->UIOff(EUserWidgetType::Num5_Key);
+	PlayHUD->UIOff(EUserWidgetType::E_Key);
 }
 
 void ATestCharacter::CrouchCameraMove() // => 매인에 적용 필요 (24.07.29 수정됨) => 메인 적용.
