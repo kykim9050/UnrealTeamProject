@@ -3,15 +3,15 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Blueprint/UserWidget.h"
-#include "PlayerViewUserWidget.generated.h"
+#include "MainGameLevel/Monster/Base/BasicMonsterBase.h"
+#include "Mutant.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class UNREAL5_PORTFOLIO_API UPlayerViewUserWidget : public UUserWidget
+class UNREAL5_PORTFOLIO_API AMutant : public ABasicMonsterBase
 {
 	GENERATED_BODY()
-
+	
 };

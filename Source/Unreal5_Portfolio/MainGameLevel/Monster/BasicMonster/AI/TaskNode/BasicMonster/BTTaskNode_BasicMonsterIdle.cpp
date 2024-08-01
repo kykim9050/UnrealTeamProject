@@ -3,7 +3,7 @@
 
 #include "BTTaskNode_BasicMonsterIdle.h"
 #include "MainGameLevel/Monster/Base/BasicMonsterBase.h"
-#include "MainGameLevel/Monster/Data/BasicMonsterData.h"
+#include "MainGameLevel/Monster/Base/BasicMonsterData.h"
 
 #include "BehaviorTree/BlackboardComponent.h"
 

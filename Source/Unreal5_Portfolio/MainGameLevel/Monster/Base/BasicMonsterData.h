@@ -21,53 +21,6 @@ protected:
 	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
 public:
-	const FMonsterDataRow* GetBaseData() const
-	{
-		return BaseData;
-	}
-
-	float GetHp()
-	{
-		return Hp;
-	}
-
-	FVector GetOriginPos()
-	{
-		return OriginPos;
-	}
-
-	float GetPatrolRange()
-	{
-		return PatrolRange;
-	}
-
-	float GetAttackDamage()
-	{
-		return AttackDamage;
-	}
-
-	float GetAttackRange()
-	{
-		return AttackRange;
-	}
-
-public:
-	void SetBaseData(const FMonsterDataRow* Value)
-	{
-		BaseData = Value;
-	}
-
-	void SetHp(float Value)
-	{
-		Hp = Value;
-	}
-
-	void SetOriginPos(const FVector& Value)
-	{
-		OriginPos = Value;
-	}
-
-private:
 	// 기본 설정 Data
 	const FMonsterDataRow* BaseData;
 

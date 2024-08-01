@@ -3,7 +3,7 @@
 
 #include "BTTaskNode_BasicMonsterAttack.h"
 #include "MainGameLevel/Monster/Base/BasicMonsterBase.h"
-#include "MainGameLevel/Monster/Data/BasicMonsterData.h"
+#include "MainGameLevel/Monster/Base/BasicMonsterData.h"
 #include "MainGameLevel/Player/MainPlayerState.h"
 #include "MainGameLevel/Player/MainCharacter.h"
 
@@ -65,7 +65,7 @@ void UBTTaskNode_BasicMonsterAttack::TickTask(UBehaviorTreeComponent& OwnerComp,
 	// 공격 범위 체크
 	FVector LocationDiff = TargetPlayerLocation - MonsterLocation;
 	float Distance = LocationDiff.Size();
-	if (Distance <= MonsterData->GetAttackRange())
+	if (Distance <= MonsterData->AttackRange)
 	{
 		MonsterLocation.Z = 0.0f;
 		TargetPlayerLocation.Z = 0.0f;

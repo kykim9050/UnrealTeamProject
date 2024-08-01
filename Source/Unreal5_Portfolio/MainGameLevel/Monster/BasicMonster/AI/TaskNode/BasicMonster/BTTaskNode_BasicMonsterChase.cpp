@@ -4,7 +4,7 @@
 #include "BTTaskNode_BasicMonsterChase.h"
 #include "MainGameLevel/Monster/BasicMonster/AI/BasicMonsterAIController.h"
 #include "MainGameLevel/Monster/Base/BasicMonsterBase.h"
-#include "MainGameLevel/Monster/Data/BasicMonsterData.h"
+#include "MainGameLevel/Monster/Base/BasicMonsterData.h"
 
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Navigation/PathFollowingComponent.h"
@@ -29,7 +29,7 @@ EBTNodeResult::Type UBTTaskNode_BasicMonsterChase::ExecuteTask(UBehaviorTreeComp
 		return EBTNodeResult::Type::Aborted;
 	}
 
-	Monster->GetCharacterMovement()->MaxWalkSpeed = Monster->GetBaseData()->GetRunSpeed();
+	Monster->GetCharacterMovement()->MaxWalkSpeed = Monster->GetSettingData()->BaseData->RunSpeed;
 	Monster->ChangeRandomAnimation(EBasicMonsterAnim::Run);
 
 	return EBTNodeResult::Type::InProgress;
@@ -56,7 +56,7 @@ void UBTTaskNode_BasicMonsterChase::TickTask(UBehaviorTreeComponent& OwnerComp, 
 	UBasicMonsterData* MonsterData = GetValueAsObject<UBasicMonsterData>(OwnerComp, TEXT("MonsterData"));
 	FVector LocationDiff = TargetLocation - MonsterLocation;
 	float DiffLength = LocationDiff.Size();
-	if (DiffLength <= MonsterData->GetAttackRange())
+	if (DiffLength <= MonsterData->AttackRange)
 	{
 		StateChange(OwnerComp, EBasicMonsterState::Attack);
 		return;

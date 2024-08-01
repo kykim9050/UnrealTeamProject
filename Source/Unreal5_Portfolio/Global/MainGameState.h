@@ -122,6 +122,11 @@ public:
 		IsStageChange = _Value;
 	}
 
+	FORCEINLINE void QuestItemGet()
+	{
+		QuestItems[QuestItemsIdx++] = true;
+	}
+
 protected:
 	AMainGameState();
 
@@ -178,4 +183,9 @@ private:
 	/// </summary>
 	UPROPERTY()
 	TArray<bool> QuestItems = TArray<bool>();
+
+	/// <summary>
+	/// QuestItems¿« Idx
+	/// </summary>
+	int QuestItemsIdx = 0;
 };

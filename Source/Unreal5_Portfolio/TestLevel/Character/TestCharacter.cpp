@@ -86,18 +86,18 @@ ATestCharacter::ATestCharacter()
 	FPVItemSocketMesh->bCastDynamicShadow = false;
 	FPVItemSocketMesh->CastShadow = false;
 
-	// Map Item 검사 => 메인캐릭터 적용.
-	GetMapItemCollisonComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("GetMapItemCollisionComponent"));
-	GetMapItemCollisonComponent->SetupAttachment(RootComponent);
-	GetMapItemCollisonComponent->SetRelativeLocation(FVector(100.0, 0.0, -20.0f));
-	GetMapItemCollisonComponent->SetCollisionProfileName(FName("MapItemSearch"));
+	// Map Item 검사		// => 메인 수정 필요 (24.08.01 수정됨)
+	GetMapItemCollisionComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("GetMapItemCollisionComponent"));
+	GetMapItemCollisionComponent->SetupAttachment(RootComponent);
+	GetMapItemCollisionComponent->SetRelativeLocation(FVector(60.0, 0.0, -5.0f));
+	GetMapItemCollisionComponent->SetBoxExtent(FVector(55.0f, 50.0f, 100.0f));
+	GetMapItemCollisionComponent->SetCollisionProfileName(FName("MapItemSearch"));
 
 	UEnum* Enum = StaticEnum<EPlayerPosture>();
 
-	// = > 메인캐릭터 적용. [주석 부분 다르니 확인 요청.]
+	// Inventory (for UI Test)	// => 메인캐릭터 적용. [주석 부분 다르니 확인 요청.]
 	for (size_t i = 0; i < static_cast<size_t>(EPlayerPosture::Barehand); i++)
 	{
-		// Inventory (for UI Test)
 		FItemInformation NewSlot;
 		/*NewSlot.Name = "";
 		NewSlot.ReloadMaxNum = -1;
@@ -111,6 +111,7 @@ ATestCharacter::ATestCharacter()
 	HandAttackComponent = CreateDefaultSubobject<USphereComponent>(TEXT("Hand Attack Comp"));
 	HandAttackComponent->SetupAttachment(GetMesh());
 	HandAttackComponent->SetRelativeLocation({ 0.0f, 100.0f, 120.0f });
+	HandAttackComponent->SetCollisionProfileName(TEXT("NoCollision"));	// => 메인 수정 필요 (24.08.01 BeginPlay 함수에서 여기로 이동)
 
 	// MinimapIcon Component => 메인캐릭터 적용.
 	MinimapIconComponent = CreateDefaultSubobject<UTestMinimapIconComponent>(TEXT("MinimapPlayerIcon"));
@@ -191,25 +192,28 @@ void ATestCharacter::PostInitializeComponents()
 	}
 
 	Super::PostInitializeComponents();
-
 }
 
 // Called when the game starts or when spawned
-void ATestCharacter::BeginPlay()
+void ATestCharacter::BeginPlay()	// => 메인 수정 필요 (24.08.01 수정, 추가된 요소 있음)
 {
 	NetCheck();
 	Super::BeginPlay();
 
 	UMainGameBlueprintFunctionLibrary::PushActor(EObjectType::Player, this);
 
+	// PlayerState => 초기화
+	SettingPlayerState();
+
 	// 몽타주 변경에 필요한 세팅 추가 필요 (태환) // => 매인 적용.
 	PlayerAnimInst = Cast<UPlayerAnimInstance>(GetMesh()->GetAnimInstance());
 	FPVPlayerAnimInst = Cast<UPlayerAnimInstance>(FPVMesh->GetAnimInstance());
 
-	HandAttackComponent->SetCollisionProfileName(TEXT("NoCollision"));
-	//UISetting();
+	// GetMapItemCollisionComponent => MapItem과 Overlap될 시 실행할 함수 바인딩
+	GetMapItemCollisionComponent->OnComponentBeginOverlap.AddDynamic(this, &ATestCharacter::MapItemOverlapStart);
+	GetMapItemCollisionComponent->OnComponentEndOverlap.AddDynamic(this, &ATestCharacter::MapItemOverlapEnd);
 
-	SettingPlayerState();
+	//UISetting();
 }
 
 // Called every frame
@@ -337,7 +341,7 @@ void ATestCharacter::FireRayCast_Implementation() // => 메인 수정 필요 (24.07.30
 	}
 }
 
-void ATestCharacter::Drink_Implementation()					// => 메인에 이전 필요 (24.07.31 수정됨)
+void ATestCharacter::Drink_Implementation()					// => 메인에 이전 필요 (24.08.01 수정됨)
 {
 	// 음료 아이템이 없다면 return
 	if (false == IsItemIn[3])
@@ -354,10 +358,7 @@ void ATestCharacter::Drink_Implementation()					// => 메인에 이전 필요 (24.07.31
 
 	// 음료 아이템 삭제
 	DeleteItem(3);
-}
 
-void ATestCharacter::DrinkComplete_Implementation()			// => 메인에 이전 필요 (24.07.31 수정됨)
-{
 	// 실질적인 플레이어 HP 회복
 	ATestPlayerState* MyTestPlayerState = GetPlayerState<ATestPlayerState>();
 	if (nullptr == MyTestPlayerState)
@@ -369,7 +370,10 @@ void ATestCharacter::DrinkComplete_Implementation()			// => 메인에 이전 필요 (24
 #ifdef WITH_EDITOR
 	GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Red, FString(TEXT("HP recovered!")));
 #endif
+}
 
+void ATestCharacter::DrinkComplete_Implementation()			// => 메인에 이전 필요 (24.08.01 수정됨)
+{
 	// 이전 자세로 애니메이션 변경
 	ChangePosture(PrevPostureValue);
 }
@@ -941,16 +945,40 @@ void ATestCharacter::CharacterReload() // => 매인 적용.
 	*/
 }
 
-void ATestCharacter::MapItemOverlapStart(AActor* _OtherActor, UPrimitiveComponent* _Collision) // => 매인 적용.
+void ATestCharacter::MapItemOverlapStart(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)	// => 메인 수정 필요 (24.08.01 수정됨)
 {
-	GetMapItemData = _OtherActor;
+	GetMapItemData = OtherActor;
+
+	ATestPlayerController* MyController = Cast<ATestPlayerController>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
+	if (nullptr == MyController)
+	{
+		return;
+	}
+
+	ATestPlayHUD* PlayHUD = Cast<ATestPlayHUD>(MyController->GetHUD());
+	if (nullptr != PlayHUD)
+	{
+		PlayHUD->UIOn(EUserWidgetType::E_Key);
+	}
 }
 
-void ATestCharacter::MapItemOverlapEnd() // => 매인 적용.
+void ATestCharacter::MapItemOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)	// => 메인 수정 필요 (24.08.01 수정됨)
 {
 	if (nullptr != GetMapItemData)
 	{
 		GetMapItemData = nullptr;
+	}
+
+	ATestPlayerController* MyController = Cast<ATestPlayerController>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
+	if (nullptr == MyController)
+	{
+		return;
+	}
+
+	ATestPlayHUD* PlayHUD = Cast<ATestPlayHUD>(MyController->GetHUD());
+	if (nullptr != PlayHUD)
+	{
+		PlayHUD->UIOff(EUserWidgetType::E_Key);
 	}
 }
 

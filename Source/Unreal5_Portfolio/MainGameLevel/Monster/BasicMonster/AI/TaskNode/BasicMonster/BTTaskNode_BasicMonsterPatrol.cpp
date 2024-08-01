@@ -4,7 +4,7 @@
 #include "BTTaskNode_BasicMonsterPatrol.h"
 #include "MainGameLevel/Monster/BasicMonster/AI/BasicMonsterAIController.h"
 #include "MainGameLevel/Monster/Base/BasicMonsterBase.h"
-#include "MainGameLevel/Monster/Data/BasicMonsterData.h"
+#include "MainGameLevel/Monster/Base/BasicMonsterData.h"
 
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Navigation/PathFollowingComponent.h"
@@ -33,14 +33,14 @@ EBTNodeResult::Type UBTTaskNode_BasicMonsterPatrol::ExecuteTask(UBehaviorTreeCom
 
 	FNavLocation PatrolLocation(FVector::ZeroVector);
 	UNavigationSystemV1* NavSystem = UNavigationSystemV1::GetNavigationSystem(GetWorld());
-	bool IsFind = NavSystem->GetRandomReachablePointInRadius(MonsterData->GetOriginPos(), MonsterData->GetPatrolRange(), PatrolLocation);
+	bool IsFind = NavSystem->GetRandomReachablePointInRadius(MonsterData->OriginPos, MonsterData->PatrolRange, PatrolLocation);
 	if (false == IsFind)
 	{
 		return EBTNodeResult::Type::Failed;
 	}
 
 	SetValueAsVector(OwnerComp, TEXT("Destination"), PatrolLocation.Location);
-	Monster->GetCharacterMovement()->MaxWalkSpeed = Monster->GetBaseData()->GetWalkSpeed();
+	Monster->GetCharacterMovement()->MaxWalkSpeed = Monster->GetSettingData()->BaseData->WalkSpeed;
 	Monster->ChangeRandomAnimation(EBasicMonsterAnim::Walk);
 
 	return EBTNodeResult::Type::InProgress;
