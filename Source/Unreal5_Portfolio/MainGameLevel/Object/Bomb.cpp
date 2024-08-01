@@ -5,7 +5,7 @@
 #include "Global/ContentsLog.h"
 #include "Global/MainGameBlueprintFunctionLibrary.h"
 #include "Global/DataTable/MapObjDataRow.h"
-#include "MainGameLevel/Object/MapObjectBase.h"
+#include "MainGameLevel/Object/ItemBase.h"
 #include "Kismet/GameplayStatics.h"
 
 
@@ -28,7 +28,7 @@ void ABomb::SetInfo(FName _InfoName)
 		return;
 	}
 	const FMapObjDataRow* TableData = Inst->GetMapObjDataTable(_InfoName);
-	GetMeshComponent()->SetStaticMesh(TableData->GetMesh());
+	GetStaticMeshComponent()->SetStaticMesh(TableData->GetMesh());
 
 	InteractObjClass = TableData->GetInteractObjClass();
 }
@@ -44,14 +44,14 @@ void ABomb::Tick(float DeltaTime)
 	
 }
 
-void ABomb::InterAction()
-{
-	Super::InterAction();
-
-	if (BombState::Idle == CurBombState)
-	{
-		Destroy();
-	}
-}
+//void ABomb::InterAction()
+//{
+//	Super::InterAction();
+//
+//	if (BombState::Idle == CurBombState)
+//	{
+//		Destroy();
+//	}
+//}
 
 

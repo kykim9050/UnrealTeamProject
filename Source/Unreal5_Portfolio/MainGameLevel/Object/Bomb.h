@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "MainGameLevel/Object/MapObjectBase.h"
+#include "MainGameLevel/Object/ItemBase.h"
 #include "Bomb.generated.h"
 
 /**
@@ -18,7 +18,7 @@ enum class BombState
 
 
 UCLASS()
-class UNREAL5_PORTFOLIO_API ABomb : public AMapObjectBase
+class UNREAL5_PORTFOLIO_API ABomb : public AItemBase
 {
 	GENERATED_BODY()
 	
@@ -37,7 +37,7 @@ protected:
 	void BeginPlay() override;
 
 	void Tick(float DeltaTime) override;
-	void InterAction() override;
+	//void InterAction() override;
 
 private:
 	TSubclassOf<AActor> InteractObjClass = TSubclassOf<AActor>();
