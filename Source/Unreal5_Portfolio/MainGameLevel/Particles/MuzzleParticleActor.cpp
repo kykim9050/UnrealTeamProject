@@ -2,6 +2,7 @@
 
 
 #include "MainGameLevel/Particles/MuzzleParticleActor.h"
+#include "Kismet/GameplayStatics.h"
 #include "Particles/ParticleSystemComponent.h"
 
 // Sets default values
@@ -14,7 +15,9 @@ AMuzzleParticleActor::AMuzzleParticleActor()
 
 	MuzzleParticleComponent = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("MuzzleParticle"));
 	MuzzleParticleComponent->SetupAttachment(RootComponent);
+	
 	//MuzzleParticleComponent->SetIsReplicated(true);
+	//UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), MuzzleParticleComponent, GetTransform(), false, EPSCPoolMethod::None, false);
 }
 
 // Called when the game starts or when spawned
@@ -23,6 +26,8 @@ void AMuzzleParticleActor::BeginPlay()
 	Super::BeginPlay();
 	
 	CalLifeTime = 0.0f;
+	MuzzleParticleComponent->SetVisibleFlag(true);
+
 }
 
 // Called every frame
@@ -30,7 +35,7 @@ void AMuzzleParticleActor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	
-	DestroyTime(DeltaTime);
+	//DestroyTime(DeltaTime);
 }
 
 void AMuzzleParticleActor::DestroyTime(float _DeltaTime)

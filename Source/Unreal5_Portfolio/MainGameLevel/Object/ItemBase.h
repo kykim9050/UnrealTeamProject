@@ -18,6 +18,11 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	FORCEINLINE UStaticMeshComponent* GetStaticMeshComponent()
+	{
+		return StaticMeshComponent;
+	}
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
