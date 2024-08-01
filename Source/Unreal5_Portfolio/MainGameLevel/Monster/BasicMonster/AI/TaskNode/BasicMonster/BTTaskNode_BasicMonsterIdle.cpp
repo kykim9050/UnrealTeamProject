@@ -22,15 +22,15 @@ EBTNodeResult::Type UBTTaskNode_BasicMonsterIdle::ExecuteTask(UBehaviorTreeCompo
         return EBTNodeResult::Type::Aborted;
     }
 
-    UBasicMonsterData* MonsterData = GetValueAsObject<UBasicMonsterData>(OwnerComp, TEXT("MonsterData"));
+    UBasicMonsterData* MonsterData = Monster->GetSettingData();
     if (false == MonsterData->IsValidLowLevel())
     {
         LOG(MonsterLog, Fatal, TEXT("MonsterData Is Not Valid"));
         return EBTNodeResult::Type::Aborted;
     }
 
-    MonsterData->TimeCount = IdleTime;
     Monster->ChangeRandomAnimation(EBasicMonsterAnim::Idle);
+    MonsterData->TimeCount = IdleTime;
 
     return EBTNodeResult::Type::InProgress;
 }
@@ -38,20 +38,22 @@ EBTNodeResult::Type UBTTaskNode_BasicMonsterIdle::ExecuteTask(UBehaviorTreeCompo
 void UBTTaskNode_BasicMonsterIdle::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* pNodeMemory, float DeltaSeconds)
 {
     Super::TickTask(OwnerComp, pNodeMemory, DeltaSeconds);
+    
+    UBasicMonsterData* MonsterData = GetSelfActor<ABasicMonsterBase>(OwnerComp)->GetSettingData();
 
-    // TargetActor 존재시 Chase 상태로
+    // TargetActor 존재시 상태 변화
     AActor* TargetActor = GetValueAsObject<AActor>(OwnerComp, TEXT("TargetActor"));
     if (nullptr != TargetActor)
     {
-        StateChange(OwnerComp, EBasicMonsterState::Chase);
-        return;
-    }
-
-    UBasicMonsterData* MonsterData = GetValueAsObject<UBasicMonsterData>(OwnerComp, TEXT("MonsterData"));
-    if (false == MonsterData->IsValidLowLevel())
-    {
-        LOG(MonsterLog, Fatal, TEXT("MonsterData Is Not Valid"));
-        return;
+        switch (MonsterData->bScream)
+        {
+        case true:
+            StateChange(OwnerComp, EBasicMonsterState::Scream);
+            return;
+        case false:
+            StateChange(OwnerComp, EBasicMonsterState::Chase);
+            return;
+        }
     }
 
     // IdleTime 이후 Patrol 상태로

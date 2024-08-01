@@ -30,11 +30,12 @@ public:
 
 	// 스폰 위치
 	FVector OriginPos = FVector::ZeroVector;
-
 	float PatrolRange = 800.0f;
 
 	float AttackDamage = 34.0f;
 	float AttackRange = 200.0f;
+
+	bool bScream = false;
 
 public:
 	float TimeCount = 0.0f;

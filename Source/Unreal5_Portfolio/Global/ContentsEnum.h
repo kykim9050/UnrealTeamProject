@@ -90,12 +90,14 @@ enum class EBasicMonsterState : uint8
 {
 	Idle,
 	Patrol,
+	Scream,
 	Chase,
 	Fall,
 	Jump,
 	Climb,
 	ClimbEnd,
 	Attack,
+	JumpAttack,
 	Dead
 };
 
@@ -121,9 +123,11 @@ UENUM(BlueprintType)
 enum class EBasicMonsterAnim : uint8
 {
 	Idle		UMETA(DisplayName = "Idle"),
+	Scream		UMETA(DisplayName = "Scream"),
 	Walk		UMETA(DisplayName = "Walk"),
 	Run			UMETA(DisplayName = "Run"),
 	Attack		UMETA(DisplayName = "Attack"),
+	JumpAttack	UMETA(DisplayName = "JumpAttack"),
 	Dead		UMETA(DisplayName = "Dead"),
 	Climb		UMETA(DisplayName = "Climb"),
 	ClimbEnd	UMETA(DisplayName = "ClimbEnd")
