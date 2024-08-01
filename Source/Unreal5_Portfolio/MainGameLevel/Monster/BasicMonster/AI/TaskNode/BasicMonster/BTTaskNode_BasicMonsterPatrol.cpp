@@ -50,16 +50,24 @@ void UBTTaskNode_BasicMonsterPatrol::TickTask(UBehaviorTreeComponent& OwnerComp,
 {
 	Super::TickTask(OwnerComp, pNodeMemory, DeltaSeconds);
 
+	ABasicMonsterBase* Monster = GetSelfActor<ABasicMonsterBase>(OwnerComp);
+
 	// TargetActor 존재시 상태 변화
 	AActor* TargetActor = GetValueAsObject<AActor>(OwnerComp, TEXT("TargetActor"));
 	if (nullptr != TargetActor)
 	{
-		StateChange(OwnerComp, EBasicMonsterState::Chase);
-		return;
+		switch (Monster->GetSettingData()->bScream)
+		{
+		case true:
+			StateChange(OwnerComp, EBasicMonsterState::Scream);
+			return;
+		case false:
+			StateChange(OwnerComp, EBasicMonsterState::Chase);
+			return;
+		}
 	}
 
 	// 목적지 도달 시 Idle
-	ABasicMonsterBase* Monster = GetSelfActor<ABasicMonsterBase>(OwnerComp);
 	FVector PatrolLocation = GetValueAsVector(OwnerComp, TEXT("Destination"));
 	EPathFollowingRequestResult::Type IsMove = Monster->GetAIController()->MoveToLocation(PatrolLocation);
 	if (EPathFollowingRequestResult::Type::AlreadyAtGoal == IsMove)

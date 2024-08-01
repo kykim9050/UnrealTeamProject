@@ -12,6 +12,7 @@
 #include "Components/StaticMeshComponent.h"
 #include "Kismet/GameplayStatics.h"
 
+#include "Particles/ParticleSystemComponent.h"
 #include "Global/ContentsLog.h"
 
 // Sets default values
@@ -35,6 +36,9 @@ AKrakenProjectile::AKrakenProjectile()
 	ProjectileCollision->InitSphereRadius(ProjectileCollisionRadius);
 
 	ProjectileCollision->OnComponentBeginOverlap.AddDynamic(this, &AKrakenProjectile::BeginOverlap);
+
+	ParticleSystemComponent = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("ParticleSystemComponent"));
+	ParticleSystemComponent->SetupAttachment(ProjectileMesh);
 }
 
 // Called when the game starts or when spawned
@@ -43,6 +47,7 @@ void AKrakenProjectile::BeginPlay()
 	Super::BeginPlay();
 
 	ProjectileCollision->SetSphereRadius(ProjectileCollisionRadius);
+	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), DestroyParticle, GetActorLocation());
 }
 
 void AKrakenProjectile::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -65,6 +70,7 @@ void AKrakenProjectile::Attack(AActor* _OtherActor, UPrimitiveComponent* _Collis
 		}
 
 		HitPlayerState->AddDamage(Damage);
+		OnDead();
 	}
 }
 
@@ -87,11 +93,26 @@ void AKrakenProjectile::Damaged(float _Damage)
 void AKrakenProjectile::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	if (FVector::ZeroVector == ProjectileMovement->Velocity)
+	{
+		ParticleSystemComponent->SetActive(false);
+		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), GroundParticle, ParticleSystemComponent->GetComponentLocation());
+		ProjectileCollision->SetCollisionProfileName(FName("KrakenRockStop"));
+	}
+	else
+	{
+		FRotator Rotate;
+		Rotate.Roll = DeltaTime * RotateSpeed;
+		Rotate.Yaw = DeltaTime * RotateSpeed;
+		Rotate.Pitch = DeltaTime * RotateSpeed;
+		ProjectileMesh->AddLocalRotation(Rotate);
+	}
 }
 
 void AKrakenProjectile::SetDirection(FVector Direction)
 {
-	ProjectileMovement->Velocity = Direction.GetSafeNormal() * ProjectileMovement->InitialSpeed + GetActorUpVector() * UpSpeed;
+	ProjectileMovement->Velocity = Direction * ProjectileMovement->InitialSpeed + GetActorUpVector() * UpSpeed;
 }
 
 void AKrakenProjectile::BeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
@@ -101,13 +122,12 @@ void AKrakenProjectile::BeginOverlap(UPrimitiveComponent* OverlappedComponent, A
 
 void AKrakenProjectile::OnDead()
 {
+	ParticleSystemComponent->SetActive(false);
 	SetOnDead();
-
 	Destroy();
 }
 
 void AKrakenProjectile::SetOnDead_Implementation()
 {
-	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), RockParticle, GetActorTransform());
-	int a = 0;
+	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), DestroyParticle, GetActorTransform());
 }
