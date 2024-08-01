@@ -17,16 +17,35 @@ class UNREAL5_PORTFOLIO_API AAreaObject : public AMapObjectBase
 public:
 	void InterAction() override;
 
+	FORCEINLINE void ResetBombTime()
+	{
+		InstallBombTime = 3.0f;
+	}
+
+	FORCEINLINE float GetInstallBombTime() const
+	{
+		return InstallBombTime;
+	}
+
+	void InstallBomb(float _DeltaTime);
+
 protected:
 	AAreaObject();
 	
 	void BeginPlay() override;
 	void Tick(float DeltaTime) override;
 	
+	UFUNCTION(Reliable, NetMulticast)
 	void BombPlanting(FName _InfoName);
+	void BombPlanting_Implementation(FName _InfoName);
 
 private:
-	float BombInstallTime = 3.0f;
+	/// <summary>
+	/// ÆøÅº ¼³Ä¡ ½Ã°£
+	/// </summary>
+	float InstallBombTime = 3.0f;
+
+
 
 	class UStaticMeshComponent* BombMesh = nullptr;
 	class UBoxComponent* PlantingSpotCollision = nullptr;

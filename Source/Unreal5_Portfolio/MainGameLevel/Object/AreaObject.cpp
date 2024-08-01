@@ -14,7 +14,7 @@ AAreaObject::AAreaObject()
 	BombMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("BombMesh"));
 
 	PlantingSpotCollision->SetupAttachment(RootComponent);
-	BombMesh->SetupAttachment(RootComponent);
+	BombMesh->SetupAttachment(PlantingSpotCollision);
 }
 
 void AAreaObject::BeginPlay()
@@ -24,7 +24,8 @@ void AAreaObject::BeginPlay()
 	FName Name = FName(TEXT("Area"));
 	SetInfo(Name);
 
-	PlantingSpotCollision->SetRelativeLocation(FVector(450.0f, 0.0f, 225.0f));
+	PlantingSpotCollision->SetRelativeLocation(FVector(450.0f, 0.0f, 235.0f));
+	PlantingSpotCollision->SetCollisionProfileName(FName(TEXT("MapItem")));
 }
 
 void AAreaObject::Tick(float DeltaTime)
@@ -36,17 +37,16 @@ void AAreaObject::InterAction()
 {
 	Super::InterAction();
 
-	FName InfoName = FName(TEXT("Bomb"));
 
-	BombPlanting(InfoName);
-	//if (0.0f >= BombInstallTime)
-	//{
-	//	BombInstallTime = 3.0f;
-	//	BombPlanting();
-	//}
+	if (0.0f >= InstallBombTime)
+	{
+		InstallBombTime = 3.0f;
+		FName InfoName = FName(TEXT("Bomb"));
+		BombPlanting(InfoName);
+	}
 }
 
-void AAreaObject::BombPlanting(FName _InfoName)
+void AAreaObject::BombPlanting_Implementation(FName _InfoName)
 {
 	UMainGameInstance* Inst = UMainGameBlueprintFunctionLibrary::GetMainGameInstance(GetWorld());
 
@@ -58,4 +58,23 @@ void AAreaObject::BombPlanting(FName _InfoName)
 
 	const FMapObjDataRow* TableData = Inst->GetMapObjDataTable(_InfoName);
 	BombMesh->SetStaticMesh(TableData->GetMesh());
+	BombMesh->SetRelativeScale3D(FVector(0.01f, 0.01f, 0.01f));
+	//PlantingSpotCollision->SetActive(false);
+
+	if (true == HasAuthority())
+	{
+		AMainGameState* MainGameState = UMainGameBlueprintFunctionLibrary::GetMainGameState(GetWorld());
+
+		if (nullptr == MainGameState)
+		{
+			return;
+		}
+
+		MainGameState->SetPlantingBombComplete();
+	}
+}
+
+void AAreaObject::InstallBomb(float _DeltaTime)
+{
+	InstallBombTime -= _DeltaTime;
 }

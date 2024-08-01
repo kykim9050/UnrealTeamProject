@@ -96,8 +96,16 @@ void AKrakenProjectile::Tick(float DeltaTime)
 
 	if (FVector::ZeroVector == ProjectileMovement->Velocity)
 	{
-		ParticleSystemComponent->SetActive(false);
-		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), GroundParticle, ParticleSystemComponent->GetComponentLocation());
+		/*if (true == HasAuthority())
+		{*/
+			ParticleSystemComponent->SetActive(false);
+			if (false == IsParticleChange)
+			{
+				IsParticleChange = true;
+				UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), GroundParticle, ParticleSystemComponent->GetComponentLocation());
+			}
+		//}
+
 		ProjectileCollision->SetCollisionProfileName(FName("KrakenRockStop"));
 	}
 	else
@@ -106,7 +114,7 @@ void AKrakenProjectile::Tick(float DeltaTime)
 		Rotate.Roll = DeltaTime * RotateSpeed;
 		Rotate.Yaw = DeltaTime * RotateSpeed;
 		Rotate.Pitch = DeltaTime * RotateSpeed;
-		ProjectileMesh->AddLocalRotation(Rotate);
+		RootComponent->AddLocalRotation(Rotate);
 	}
 }
 

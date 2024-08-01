@@ -15,13 +15,13 @@ public:
 	// Sets default values for this actor's properties
 	AItemBase();
 
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
-
 	FORCEINLINE UStaticMeshComponent* GetStaticMeshComponent()
 	{
 		return StaticMeshComponent;
 	}
+
+	// Called every frame
+	virtual void Tick(float DeltaTime) override;
 
 protected:
 	// Called when the game starts or when spawned
