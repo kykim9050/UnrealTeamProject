@@ -90,12 +90,14 @@ enum class EBasicMonsterState : uint8
 {
 	Idle,
 	Patrol,
+	Scream,
 	Chase,
 	Fall,
 	Jump,
 	Climb,
 	ClimbEnd,
 	Attack,
+	JumpAttack,
 	Dead
 };
 
