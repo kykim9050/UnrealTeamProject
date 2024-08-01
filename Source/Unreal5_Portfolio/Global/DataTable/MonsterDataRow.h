@@ -60,7 +60,7 @@ public:
 		return TestAnimMontages;
 	}
 
-private:
+public:
 	// ∏ÛΩ∫≈Õ UClass
 	UPROPERTY(EditAnywhere, meta = (AllowprivateAccess = "true"))
 	TSubclassOf<AActor> MonsterUClass = TSubclassOf<AActor>();

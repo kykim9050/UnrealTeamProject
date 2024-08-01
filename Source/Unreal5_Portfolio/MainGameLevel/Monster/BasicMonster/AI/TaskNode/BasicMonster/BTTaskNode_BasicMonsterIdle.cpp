@@ -32,6 +32,8 @@ EBTNodeResult::Type UBTTaskNode_BasicMonsterIdle::ExecuteTask(UBehaviorTreeCompo
     MonsterData->TimeCount = IdleTime;
     Monster->ChangeRandomAnimation(EBasicMonsterAnim::Idle);
 
+    FTimerHandle;
+
     return EBTNodeResult::Type::InProgress;
 }
 
