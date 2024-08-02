@@ -59,7 +59,7 @@ void AAreaObject::BombPlanting_Implementation(FName _InfoName)
 	const FMapObjDataRow* TableData = Inst->GetMapObjDataTable(_InfoName);
 	BombMesh->SetStaticMesh(TableData->GetMesh());
 	BombMesh->SetRelativeScale3D(FVector(0.01f, 0.01f, 0.01f));
-	//PlantingSpotCollision->SetActive(false);
+	PlantingSpotCollision->SetCollisionProfileName(FName(TEXT("NoCollision")));
 
 	if (true == HasAuthority())
 	{
