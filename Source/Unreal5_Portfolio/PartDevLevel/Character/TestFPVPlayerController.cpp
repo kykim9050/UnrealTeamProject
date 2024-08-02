@@ -207,6 +207,8 @@ void ATestFPVPlayerController::FireTick(float _DeltaTime)
 	++Count;
 	PlayerMontagePlay();
 	GEngine->AddOnScreenDebugMessage(-1, 0.2f, FColor::Red, FString::Printf(TEXT("Tick Count : %d"), Count));
+
+	//MouseRotation();
 }
 
 void ATestFPVPlayerController::FireEnd()

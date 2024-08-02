@@ -18,7 +18,12 @@ class UNREAL5_PORTFOLIO_API UCharacterSelectionUserWidget : public UUserWidget
 	int SelectedCharacter = -1;
 
 public:
+	void NativeConstruct() override;
 
 	UFUNCTION(BlueprintCallable)
 	void SetSelectedCharacter(int _Num);
+
+private:
+	UPROPERTY()
+	TMap<int, FName> CharTypeName;
 };
