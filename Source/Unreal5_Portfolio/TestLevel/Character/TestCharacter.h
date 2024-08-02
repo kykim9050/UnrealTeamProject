@@ -140,8 +140,8 @@ public:
 	void InteractObject(AMapObjectBase* _MapObject);	// => 메인캐릭터로 이전해야 함 (24.07.29 추가됨)
 	void InteractObject_Implementation(AMapObjectBase* _MapObject);
 	UFUNCTION(Reliable, Server)
-	void PickUpItem();
-	void PickUpItem_Implementation();
+	void PickUpItem(AActor* _Item);						// => 메인 수정 필요 (24.08.02 인자 추가됨)
+	void PickUpItem_Implementation(AActor* _Item);
 	UFUNCTION(BlueprintCallable)
 	void ItemSetting(FName _TagName, int _SlotIndex);	// => 메인캐릭터로 이전해야 함 (24.07.30 추가됨)
 	UFUNCTION(Reliable, Server, BlueprintCallable)
