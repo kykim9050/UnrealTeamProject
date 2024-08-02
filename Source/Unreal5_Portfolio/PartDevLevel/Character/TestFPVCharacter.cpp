@@ -965,7 +965,7 @@ void ATestFPVCharacter::CharacterReload() // => 매인 적용.
 	*/
 }
 
-void ATestFPVCharacter::MapItemOverlapStart(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)	// => 메인 수정 필요 (24.08.01 수정 중)
+void ATestFPVCharacter::MapItemOverlapStart(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)	// => 메인 수정 필요 (24.08.02 AreaObject일 경우 조건 검사 부분 수정)
 {
 	GetMapItemData = OtherActor;
 
@@ -984,15 +984,8 @@ void ATestFPVCharacter::MapItemOverlapStart(UPrimitiveComponent* OverlappedComp,
 	AAreaObject* AreaObject = Cast<AAreaObject>(GetMapItemData);
 	if (nullptr != AreaObject)
 	{
-		if (false == IsItemIn[4])
-		{
-
-		}
-		else
-		{
-			// Area일 경우 => "5번키를 눌러 상호작용"
-			PlayHUD->UIOn(EUserWidgetType::Num5_Key);
-		}
+		// Area일 경우 => "5번키를 눌러 상호작용"
+		PlayHUD->UIOn(EUserWidgetType::Num5_Key);
 		return;
 	}
 

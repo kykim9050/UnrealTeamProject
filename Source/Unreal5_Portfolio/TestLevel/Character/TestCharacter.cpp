@@ -885,7 +885,8 @@ void ATestCharacter::DropItem_Implementation(int _SlotIndex) // => 메인 수정 필�
 	SpawnTrans.SetTranslation(GetActorLocation() + (GetActorForwardVector() * 100.0f) + (GetActorUpVector() * 50.0f));
 
 	// Spawn
-	AActor* DropItem = GetWorld()->SpawnActor<AActor>(ItemBase->GetItemUClass(), SpawnTrans);
+	AItemBase* DropItem = GetWorld()->SpawnActor<AItemBase>(ItemBase->GetItemUClass(), SpawnTrans);
+	//DropItem->GetStaticMeshComponent()->SetSimulatePhysics(true);
 
 	// 아이템을 앞으로 던지기 (미완)
 	//GetMesh()->SetSimulatePhysics(true);
@@ -984,7 +985,7 @@ void ATestCharacter::CharacterReload() // => 매인 적용.
 	*/
 }
 
-void ATestCharacter::MapItemOverlapStart(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)	// => 메인 수정 필요 (24.08.01 수정 중)
+void ATestCharacter::MapItemOverlapStart(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)	// => 메인 수정 필요 (24.08.02 AreaObject일 경우 조건 검사 부분 수정)
 {
 	GetMapItemData = OtherActor;
 
@@ -1005,6 +1006,7 @@ void ATestCharacter::MapItemOverlapStart(UPrimitiveComponent* OverlappedComp, AA
 	{
 		// Area일 경우 => "5번키를 눌러 상호작용"
 		PlayHUD->UIOn(EUserWidgetType::Num5_Key);
+		return;
 	}
 	
 	// 그 외의 경우 => "E키를 눌러 상호작용"
