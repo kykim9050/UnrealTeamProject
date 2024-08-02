@@ -162,6 +162,7 @@ void ATestFPVCharacter::HandAttackCollision(AActor* _OtherActor, UPrimitiveCompo
 	}
 }
 
+// 노티파이 호출 함수.
 void ATestFPVCharacter::ChangeHandAttackCollisionProfile(FName _Name) // => 매인 적용.
 {
 	HandAttackComponent->SetCollisionProfileName(_Name);
@@ -178,6 +179,8 @@ void ATestFPVCharacter::PostInitializeComponents()
 		{
 			return;
 		}
+
+		// FName을 가져오는 기능이 필요하다.
 
 		// 스켈레탈 메쉬 선택
 		USkeletalMesh* PlayerSkeletalMesh = MainGameInst->GetPlayerData(FName("Vanguard"))->GetPlayerSkeletalMesh();
@@ -276,7 +279,6 @@ void ATestFPVCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Ou
 
 	// Posture, Action
 	DOREPLIFETIME(ATestFPVCharacter, PostureValue);	// => 매인 적용.
-	DOREPLIFETIME(ATestFPVCharacter, PrevPostureValue);
 	DOREPLIFETIME(ATestFPVCharacter, LowerStateValue); // => 매인 적용.
 	DOREPLIFETIME(ATestFPVCharacter, DirValue);		// => 매인 적용.
 	DOREPLIFETIME(ATestFPVCharacter, IsFaint);			// 7/26 추가
@@ -373,6 +375,7 @@ void ATestFPVCharacter::Drink_Implementation()					// => 메인에 이전 필요 (24.08
 #endif
 }
 
+// 노티파이
 void ATestFPVCharacter::DrinkComplete_Implementation()			// => 메인에 이전 필요 (24.08.01 수정됨)
 {
 	// 이전 자세로 애니메이션 변경
@@ -466,7 +469,7 @@ void ATestFPVCharacter::BombSetComplete_Implementation()	// => 메인에 이전 필요 
 	// 폭탄 설치 완료
 	IsBombSetting = false;
 
-	// 240801 AreaObject 추가로 해당 클래스 변경
+	// 24-08-01 AreaObject 추가로 해당 클래스 변경
 	AAreaObject* AreaObject = Cast<AAreaObject>(GetMapItemData);
 	//ATestArea* AreaObject = Cast<ATestArea>(GetMapItemData);
 	if (nullptr != AreaObject)
@@ -484,86 +487,17 @@ void ATestFPVCharacter::BombSetComplete_Implementation()	// => 메인에 이전 필요 
 	ChangePosture(PrevPostureValue);
 }
 
-void ATestFPVCharacter::ChangeMontage_Implementation(bool _IsFireEnd) // => 매인 적용.
+void ATestFPVCharacter::ChangeMontage_Implementation(EPlayerUpperState _UpperState)
 {
-	if (_IsFireEnd == false)
-	{
-		switch (PostureValue)
-		{
-		case EPlayerPosture::Rifle1:
-			UpperStateValue = EPlayerUpperState::Rifle_Attack;
-			break;
-		case EPlayerPosture::Rifle2:
-			UpperStateValue = EPlayerUpperState::Rifle_Attack;
-			break;
-		case EPlayerPosture::Melee:
-			UpperStateValue = EPlayerUpperState::Melee;
-			break;
-		case EPlayerPosture::Drink:
-			UpperStateValue = EPlayerUpperState::Drink;
-			break;
-		case EPlayerPosture::Bomb:
-			UpperStateValue = EPlayerUpperState::Bomb;
-			break;
-		case EPlayerPosture::Barehand:
-			UpperStateValue = EPlayerUpperState::Barehand;
-			break;
-		case EPlayerPosture::SlotMax:
-			break;
-		default:
-			break;
-		}
-		PlayerAnimInst->ChangeAnimation(UpperStateValue);
-		FPVPlayerAnimInst->ChangeAnimation(UpperStateValue);
-		ClientChangeMontage(false);
-	}
-	else // FireEnd
-	{
-		UpperStateValue = EPlayerUpperState::Rifle_Idle;
-		PlayerAnimInst->ChangeAnimation(UpperStateValue);
-		FPVPlayerAnimInst->ChangeAnimation(UpperStateValue);
-		ClientChangeMontage(true);
-	}
+	PlayerAnimInst->ChangeAnimation(_UpperState);
+	FPVPlayerAnimInst->ChangeAnimation(_UpperState);
+	ClientChangeMontage(_UpperState);
 }
 
-void ATestFPVCharacter::ClientChangeMontage_Implementation(bool _IsFireEnd) // => 매인 적용.
+void ATestFPVCharacter::ClientChangeMontage_Implementation(EPlayerUpperState _UpperState)
 {
-	if (_IsFireEnd == false)
-	{
-		switch (PostureValue)
-		{
-		case EPlayerPosture::Rifle1:
-			UpperStateValue = EPlayerUpperState::Rifle_Attack;
-			break;
-		case EPlayerPosture::Rifle2:
-			UpperStateValue = EPlayerUpperState::Rifle_Attack;
-			break;
-		case EPlayerPosture::Melee:
-			UpperStateValue = EPlayerUpperState::Melee;
-			break;
-		case EPlayerPosture::Drink:
-			UpperStateValue = EPlayerUpperState::Drink;
-			break;
-		case EPlayerPosture::Bomb:
-			UpperStateValue = EPlayerUpperState::Bomb;
-			break;
-		case EPlayerPosture::Barehand:
-			UpperStateValue = EPlayerUpperState::Barehand;
-			break;
-		case EPlayerPosture::SlotMax:
-			break;
-		default:
-			break;
-		}
-		PlayerAnimInst->ChangeAnimation(UpperStateValue);
-		FPVPlayerAnimInst->ChangeAnimation(UpperStateValue);
-	}
-	else // FireEnd
-	{
-		UpperStateValue = EPlayerUpperState::Rifle_Idle;
-		PlayerAnimInst->ChangeAnimation(UpperStateValue);
-		FPVPlayerAnimInst->ChangeAnimation(UpperStateValue);
-	}
+	PlayerAnimInst->ChangeAnimation(_UpperState);
+	FPVPlayerAnimInst->ChangeAnimation(_UpperState);
 }
 
 void ATestFPVCharacter::ChangePosture_Implementation(EPlayerPosture _Type)	// => 메인으로 이전해야 함 (24.07.30 수정 중)
@@ -594,6 +528,8 @@ void ATestFPVCharacter::ChangePosture_Implementation(EPlayerPosture _Type)	// =>
 		PostureValue = _Type;
 		CurItemIndex = ItemSlotIndex;
 
+		// == 아이템 장착. ==
+
 		// 아이템 static mesh 세팅
 		ItemSocketMesh->SetStaticMesh(ItemSlot[CurItemIndex].MeshRes);
 		FPVItemSocketMesh->SetStaticMesh(ItemSlot[CurItemIndex].MeshRes);
@@ -614,13 +550,36 @@ void ATestFPVCharacter::ChangePosture_Implementation(EPlayerPosture _Type)	// =>
 	}
 }
 
+void ATestFPVCharacter::CrouchCameraMove() // => 매인에 적용 필요 (24.07.29 수정됨) => 메인 적용.
+{
+	//if (IsFPV)
+	if(PointOfView == EPlayerFPSTPSState::FPS)
+	{
+		switch (LowerStateValue)
+		{
+		case EPlayerLowerState::Idle:
+			SpringArmComponent->SetRelativeLocation(FPVCameraRelLoc_Crouch);
+			ChangeLowerState(EPlayerLowerState::Crouch);
+			break;
+		case EPlayerLowerState::Crouch:
+			SpringArmComponent->SetRelativeLocation(FPVCameraRelLoc);
+			ChangeLowerState(EPlayerLowerState::Idle);
+			break;
+		default:
+			break;
+		}
+	}
+}
+
 void ATestFPVCharacter::ChangeLowerState_Implementation(EPlayerLowerState _LowerState) // => 매인 적용.
 {
+	// L-Ctrl
 	LowerStateValue = _LowerState;
 }
 
 void ATestFPVCharacter::ChangePlayerDir_Implementation(EPlayerMoveDir _Dir) // => 매인 적용.
 {
+	// W A S D
 	DirValue = _Dir;
 }
 
@@ -742,41 +701,12 @@ void ATestFPVCharacter::PickUpItem_Implementation(AActor* _Item)	// => 메인 수정
 	{
 		ItemSetting(ItemStringToName, static_cast<int>(ItemType));
 	}
-	/*
-		// 게임 플레이 진행 단계 업데이트
-		if (EPlayerPosture::Rifle1 == ItemType
-			|| EPlayerPosture::Melee == ItemType
-			|| EPlayerPosture::Bomb == ItemType)
-		{
-			AMainGameState* CurGameState = UMainGameBlueprintFunctionLibrary::GetMainGameState(GetWorld());
-
-			if (nullptr == CurGameState)
-			{
-				UE_LOG(PlayerLog, Fatal, TEXT("GameState Is Nullptr"));
-				return;
-			}
-
-			switch (ItemType)
-			{
-			case EPlayerPosture::Rifle1:
-			case EPlayerPosture::Bomb:
-				CurGameState->AddArmoryWeaponNum(ItemType);
-				break;
-			case EPlayerPosture::Melee:
-				CurGameState->AddMeleeNum();
-				break;
-			default:
-				break;
-			}
-		}
-	}
-	*/
 
 	// Widget CallBack
 	ATestFPVPlayerController* Con = Cast<ATestFPVPlayerController>(GetController());
 	if (nullptr != Con)
 	{
-		Con->FGetItemToWidget_Test.Execute();
+		Con->FGetItemToWidget_Test_FPV.Execute();
 	}
 }
 
@@ -889,7 +819,8 @@ void ATestFPVCharacter::DeleteItem(int _Index)
 
 void ATestFPVCharacter::ChangePOV()	// => 메인캐릭터로 이전해야 함 (24.07.29 수정 중) => 메인 적용.
 {
-	if (IsFPV)	// 일인칭 -> 삼인칭
+	//if (IsFPV)	// 일인칭 -> 삼인칭
+	if (PointOfView == EPlayerFPSTPSState::FPS)
 	{
 		// SpringArm Component 위치 수정.
 		//SpringArmComponent->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
@@ -907,9 +838,10 @@ void ATestFPVCharacter::ChangePOV()	// => 메인캐릭터로 이전해야 함 (24.07.29 수�
 			FPVItemSocketMesh->SetOwnerNoSee(true);
 		}
 
-		IsFPV = false;
+		//IsFPV = false;
+		PointOfView = EPlayerFPSTPSState::TPS;
 	}
-	else	// 삼인칭 -> 일인칭
+	else if(PointOfView == EPlayerFPSTPSState::TPS)	// 삼인칭 -> 일인칭
 	{
 		// SpringArm Component 위치 수정.
 		//SpringArmComponent->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, FName("SpringArmSocket"));
@@ -937,7 +869,8 @@ void ATestFPVCharacter::ChangePOV()	// => 메인캐릭터로 이전해야 함 (24.07.29 수�
 			FPVItemSocketMesh->SetOwnerNoSee(false);
 		}
 
-		IsFPV = true;
+		//IsFPV = true;
+		PointOfView = EPlayerFPSTPSState::FPS;
 	}
 }
 
@@ -1017,21 +950,78 @@ void ATestFPVCharacter::MapItemOverlapEnd(UPrimitiveComponent* OverlappedCompone
 	PlayHUD->UIOff(EUserWidgetType::E_Key);
 }
 
-void ATestFPVCharacter::CrouchCameraMove() // => 매인에 적용 필요 (24.07.29 수정됨) => 메인 적용.
+
+
+void ATestFPVCharacter::AttackCheck()
 {
-	if (IsFPV)
+	// Mouse Left Button 
+
+	switch (PostureValue)
 	{
-		switch (LowerStateValue)
-		{
-		case EPlayerLowerState::Idle:
-			SpringArmComponent->SetRelativeLocation(FPVCameraRelLoc_Crouch);
-			break;
-		case EPlayerLowerState::Crouch:
-			SpringArmComponent->SetRelativeLocation(FPVCameraRelLoc);
-			break;
-		default:
-			break;
-		}
+	case EPlayerPosture::Rifle1:
+	case EPlayerPosture::Rifle2: // 총
+	{
+		FireRayCast();
+		ChangeMontage(EPlayerUpperState::Rifle_Attack);
+		break;
+	}
+	case EPlayerPosture::Melee: // 칼
+	{
+		ChangeMontage(EPlayerUpperState::Melee);
+		break;
+	}
+	case EPlayerPosture::Drink: // 음료
+	{
+		ChangeMontage(EPlayerUpperState::Drink);
+		break;
+	}
+	case EPlayerPosture::Bomb: // 폭탄
+	{
+		ChangeMontage(EPlayerUpperState::Bomb);
+		break;
+	}
+	case EPlayerPosture::Barehand: // 주먹
+	{
+		ChangeMontage(EPlayerUpperState::Barehand);
+		break;
+	}
+	default:
+		break;
+	}
+}
+
+void ATestFPVCharacter::AttackEndCheck()
+{
+	switch (PostureValue)
+	{
+	case EPlayerPosture::Rifle1:
+	case EPlayerPosture::Rifle2: // 총
+	{
+		ChangeMontage(EPlayerUpperState::Rifle_Idle);
+		break;
+	}
+	case EPlayerPosture::Melee: // 칼
+	{
+		ChangeMontage(EPlayerUpperState::Melee);
+		break;
+	}
+	case EPlayerPosture::Drink: // 음료
+	{
+		ChangeMontage(EPlayerUpperState::Drink);
+		break;
+	}
+	case EPlayerPosture::Bomb: // 폭탄
+	{
+		ChangeMontage(EPlayerUpperState::Bomb);
+		break;
+	}
+	case EPlayerPosture::Barehand: // 주먹
+	{
+		ChangeMontage(EPlayerUpperState::Barehand);
+		break;
+	}
+	default:
+		break;
 	}
 }
 

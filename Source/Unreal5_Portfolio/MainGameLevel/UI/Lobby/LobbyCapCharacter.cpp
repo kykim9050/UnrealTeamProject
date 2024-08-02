@@ -5,7 +5,10 @@
 
 #include "Global/MainGameBlueprintFunctionLibrary.h"
 #include "Global/MainGameInstance.h"
+#include "Global/ContentsLog.h"
 #include "Global/DataTable/PlayerDataRow.h"
+
+//#include
 
 // Sets default values
 ALobbyCapCharacter::ALobbyCapCharacter()
@@ -25,6 +28,7 @@ void ALobbyCapCharacter::BeginPlay()
 		UMainGameInstance* MainGameInst = UMainGameBlueprintFunctionLibrary::GetMainGameInstance(GetWorld());
 		if (nullptr == MainGameInst)
 		{
+			LOG(UILog, Fatal, "MainGameInstance is Null");
 			return;
 		}
 
@@ -50,5 +54,41 @@ void ALobbyCapCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+}
+
+void ALobbyCapCharacter::SetMyNumber(int _Num)
+{
+	MyNumber = _Num;
+}
+
+void ALobbyCapCharacter::SetMyMesh()
+{
+	UMainGameInstance* Inst = UMainGameBlueprintFunctionLibrary::GetMainGameInstance(GetWorld());
+	if (nullptr == Inst)
+	{
+		LOG(UILog, Fatal, "MainGameInstance is Null");
+		return;
+	}
+
+	FName MyCharacterType = Inst->GetUIToSelectCharacter();
+
+	if (GetWorld()->WorldType == EWorldType::Game
+		|| GetWorld()->WorldType == EWorldType::PIE)
+	{
+		// Ω∫ƒÃ∑π≈ª ∏ﬁΩ¨ º±≈√
+		USkeletalMesh* PlayerSkeletalMesh = Inst->GetPlayerData(MyCharacterType)->GetPlayerSkeletalMesh();
+		GetMesh()->SetSkeletalMesh(PlayerSkeletalMesh);
+
+		// ABP º±≈√
+		UClass* AnimInst = Cast<UClass>(Inst->GetPlayerData(MyCharacterType)->GetPlayerAnimInstance());
+		GetMesh()->SetAnimInstanceClass(AnimInst);
+	}
+}
+
+bool ALobbyCapCharacter::IsMyOrderCharacter()
+{
+	
+
+	return false;
 }
 

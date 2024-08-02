@@ -26,4 +26,16 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	UFUNCTION(BlueprintCallable)
+	void SetMyNumber(int _Num);
+
+	UFUNCTION(BlueprintCallable)
+	void SetMyMesh();
+
+	UFUNCTION(BlueprintCallable)
+	bool IsMyOrderCharacter();
+
+private:
+	UPROPERTY()
+	int MyNumber = -1; // 자기가 몇번 플레이어의 마네킹인지 
 };

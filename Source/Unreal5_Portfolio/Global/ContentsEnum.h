@@ -216,6 +216,13 @@ enum class EPlayerUpperState : uint8
 	Barehand,
 };
 
+UENUM(BlueprintType)
+enum class EPlayerFPSTPSState : uint8
+{
+	FPS	UMETA(DisplayName = "1ÀÎÄª"),
+	TPS	UMETA(DisplayName = "3ÀÎÄª"),
+};
+
 UCLASS()
 class UNREAL5_PORTFOLIO_API UContentsEnum : public UObject
 {

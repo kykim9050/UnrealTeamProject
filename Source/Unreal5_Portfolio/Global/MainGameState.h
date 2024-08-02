@@ -172,7 +172,7 @@ private:
 	/// 플레이어 최대 수
 	/// </summary>
 	UPROPERTY()
-	int MaxPlayerCount = 2;
+	int MaxPlayerCount = 4;
 
 	/// <summary>
 	/// 체크할 아이템 카운트 수

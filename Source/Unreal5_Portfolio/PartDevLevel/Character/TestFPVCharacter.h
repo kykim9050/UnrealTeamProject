@@ -72,7 +72,7 @@ public:
 	// Posture
 	UPROPERTY(Category = "Contents", Replicated, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	EPlayerPosture PostureValue = EPlayerPosture::Barehand;
-	UPROPERTY(Category = "Contents", Replicated, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(Category = "Contents", VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	EPlayerPosture PrevPostureValue = EPlayerPosture::Barehand;		// => 메인으로 이전 필요 (24.07.31 추가됨)
 
 	// LowerState (태환)
@@ -114,7 +114,8 @@ public:
 	const FVector CameraRelLoc = FVector(0.0f, 60.0f, 110.0f);			// => 메인캐릭터 이전 필요 (24.07.29 추가됨) => 메인 적용.
 	const FVector FPVCameraRelLoc = FVector(10.0f, 0.0f, 72.0f);		// => 메인 수정 필요 (24.08.02 수정됨)
 	const FVector FPVCameraRelLoc_Crouch = FVector(10.0f, 0.0f, 10.0f);	// => 메인캐릭터 이전 필요 (24.07.29 추가됨) => 메인 적용.
-	bool IsFPV = true;
+	//bool IsFPV = true;
+	EPlayerFPSTPSState PointOfView = EPlayerFPSTPSState::FPS;
 	UFUNCTION()
 	void ChangePOV();
 	UFUNCTION()
@@ -205,15 +206,15 @@ private:
 public:
 	// Fire
 	UFUNCTION(Reliable, Server, BlueprintCallable)
-	void FireRayCast();			// => 메인도 수정해야 함 (24.07.25 수정됨)
+	void FireRayCast();
 	void FireRayCast_Implementation();
 
 	// Drink
 	UFUNCTION(Reliable, Server, BlueprintCallable)
-	void Drink();				// => 메인에 이전 필요 (24.07.31 수정됨)
+	void Drink();
 	void Drink_Implementation();
 	UFUNCTION(Reliable, Server, BlueprintCallable)
-	void DrinkComplete();		// => 메인에 이전 필요 (24.07.31 수정됨)
+	void DrinkComplete();
 	void DrinkComplete_Implementation();
 
 	// Bomb Setting
@@ -234,17 +235,22 @@ public:
 
 	// 공격 시 서버 캐릭터 몽타주 변경 함수 (태환)
 	UFUNCTION(Reliable, Server)
-	void ChangeMontage(bool _IsFireEnd);
-	void ChangeMontage_Implementation(bool _IsFireEnd);
-
-	// 공격 시 클라이언트 캐릭터 몽타주 변경 함수 (태환)
+	void ChangeMontage(EPlayerUpperState _UpperState);
+	void ChangeMontage_Implementation(EPlayerUpperState _UpperState);
 	UFUNCTION(Reliable, NetMulticast)
-	void ClientChangeMontage(bool _IsFireEnd);
-	void ClientChangeMontage_Implementation(bool _IsFireEnd);
+	void ClientChangeMontage(EPlayerUpperState _UpperState);
+	void ClientChangeMontage_Implementation(EPlayerUpperState _UpperState);
+
 
 	// Crouch 카메라 이동
 	UFUNCTION()
 	void CrouchCameraMove();
+
+	UFUNCTION()
+	void AttackCheck();
+
+	UFUNCTION()
+	void AttackEndCheck();
 
 	UFUNCTION()
 	void NetCheck();

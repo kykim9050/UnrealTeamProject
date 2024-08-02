@@ -30,7 +30,7 @@ void ATestFPVPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
 
-	FGetItemToWidget_Test.BindUObject(this, &ATestFPVPlayerController::CallGetItem);
+	FGetItemToWidget_Test_FPV.BindUObject(this, &ATestFPVPlayerController::CallGetItem);
 }
 
 void ATestFPVPlayerController::SetupInputComponent()
@@ -79,14 +79,6 @@ void ATestFPVPlayerController::PlayerTick(float DeltaTime)
 {
 	Super::PlayerTick(DeltaTime);
 
-	ATestFPVCharacter* Ch = GetPawn<ATestFPVCharacter>();
-	if (nullptr == Ch)
-	{
-		return;
-	}
-
-	PlayerIsFaint = Ch->IsFaint;
-	PlayerIsBombSetting = Ch->IsBombSetting;
 }
 
 void ATestFPVPlayerController::MouseRotation(const FInputActionValue& Value)
@@ -98,11 +90,6 @@ void ATestFPVPlayerController::MouseRotation(const FInputActionValue& Value)
 
 void ATestFPVPlayerController::MoveFront(const FInputActionValue& Value)
 {
-	if (PlayerIsFaint == true || PlayerIsBombSetting == true)
-	{
-		return;
-	}
-
 	FVector Forward = GetPawn()->GetActorForwardVector();
 	GetPawn()->AddMovementInput(Forward);
 	ChangePlayerDir(EPlayerMoveDir::Forward);
@@ -110,27 +97,13 @@ void ATestFPVPlayerController::MoveFront(const FInputActionValue& Value)
 
 void ATestFPVPlayerController::MoveBack(const FInputActionValue& Value)
 {
-	// 메인 적용 필요
-	// 기절, 폭탄 설치 상태 이동 불가능
-	if (PlayerIsFaint == true || PlayerIsBombSetting == true)
-	{
-		return;
-	}
-
-	FVector Forward = GetPawn()->GetActorForwardVector();
-	GetPawn()->AddMovementInput(-Forward);
+	FVector Backward = GetPawn()->GetActorForwardVector();
+	GetPawn()->AddMovementInput(-Backward);
 	ChangePlayerDir(EPlayerMoveDir::Back);
 }
 
 void ATestFPVPlayerController::MoveRight(const FInputActionValue& Value)
 {
-	// 메인 적용 필요
-	// 기절, 폭탄 설치 상태 이동 불가능
-	if (PlayerIsFaint == true || PlayerIsBombSetting == true)
-	{
-		return;
-	}
-
 	FVector Rightward = GetPawn()->GetActorRightVector();
 	GetPawn()->AddMovementInput(Rightward);
 	ChangePlayerDir(EPlayerMoveDir::Right);
@@ -138,34 +111,20 @@ void ATestFPVPlayerController::MoveRight(const FInputActionValue& Value)
 
 void ATestFPVPlayerController::MoveLeft(const FInputActionValue& Value)
 {
-	// 메인 적용 필요
-	// 기절, 폭탄 설치 상태 이동 불가능
-	if (PlayerIsFaint == true || PlayerIsBombSetting == true)
-	{
-		return;
-	}
-
-	FVector Rightward = GetPawn()->GetActorRightVector();
-	GetPawn()->AddMovementInput(-Rightward);
+	FVector Leftward = GetPawn()->GetActorRightVector();
+	GetPawn()->AddMovementInput(-Leftward);
 	ChangePlayerDir(EPlayerMoveDir::Left);
 }
 
 void ATestFPVPlayerController::Crouch(const FInputActionValue& Value)
 {
 	ATestFPVCharacter* Ch = GetPawn<ATestFPVCharacter>();
-	switch (Ch->LowerStateValue)
+	if (nullptr == Ch)
 	{
-	case EPlayerLowerState::Idle:
-		Ch->CrouchCameraMove();
-		Ch->ChangeLowerState(EPlayerLowerState::Crouch);
-		break;
-	case EPlayerLowerState::Crouch:
-		Ch->CrouchCameraMove();
-		Ch->ChangeLowerState(EPlayerLowerState::Idle);
-		break;
-	default:
-		break;
+		return;
 	}
+
+	Ch->CrouchCameraMove();
 }
 
 //void ATestFPVPlayerController::Jump(const FInputActionValue& Value)
@@ -185,15 +144,15 @@ void ATestFPVPlayerController::Crouch(const FInputActionValue& Value)
 void ATestFPVPlayerController::FireStart(float _DeltaTime)
 {
 	ATestFPVCharacter* Ch = GetPawn<ATestFPVCharacter>();
-
-	if (Ch->CurItemIndex == 3 || Ch->CurItemIndex == 4)
+	if (nullptr == Ch)
 	{
 		return;
 	}
+	Ch->AttackCheck();
 
-	Ch->FireRayCast();
-	PlayerMontagePlay();
-	GEngine->AddOnScreenDebugMessage(-1, 0.2f, FColor::Red, TEXT("Start"));
+#ifdef WITH_EDITOR
+	GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Yellow, FString(TEXT("Attack Start")));
+#endif // WITH_EDITOR
 	GetWorld()->GetTimerManager().SetTimer(MyTimeHandle, FTimerDelegate::CreateLambda([&]()
 		{
 			FireTick(_DeltaTime);
@@ -203,24 +162,31 @@ void ATestFPVPlayerController::FireStart(float _DeltaTime)
 void ATestFPVPlayerController::FireTick(float _DeltaTime)
 {
 	ATestFPVCharacter* Ch = GetPawn<ATestFPVCharacter>();
-	Ch->FireRayCast();
-	++Count;
-	PlayerMontagePlay();
-	GEngine->AddOnScreenDebugMessage(-1, 0.2f, FColor::Red, FString::Printf(TEXT("Tick Count : %d"), Count));
-
-	//MouseRotation();
+	if (nullptr == Ch)
+	{
+		return;
+	}
+#ifdef WITH_EDITOR
+	GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Yellow, FString(TEXT("Attack Tick")));
+#endif // WITH_EDITOR
+	Ch->AttackCheck();
 }
 
 void ATestFPVPlayerController::FireEnd()
 {
+	GetWorld()->GetTimerManager().ClearTimer(MyTimeHandle);
+	
 	ATestFPVCharacter* Ch = GetPawn<ATestFPVCharacter>();
-	if (Ch->PostureValue == EPlayerPosture::Rifle1 || Ch->PostureValue == EPlayerPosture::Rifle2)
+	if (nullptr == Ch)
 	{
-		FireEndMontagePlay();
+		return;
 	}
 
-	GetWorld()->GetTimerManager().ClearTimer(MyTimeHandle);
-	GEngine->AddOnScreenDebugMessage(-1, 0.2f, FColor::Red, TEXT("End"));
+	Ch->AttackEndCheck();
+
+#ifdef WITH_EDITOR
+	GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Yellow, FString(TEXT("Attack End")));
+#endif // WITH_EDITOR
 }
 
 void ATestFPVPlayerController::Drink_Con()	// => 메인에 추후 이전해야 함 (24.07.29 추가 후 테스팅 중) => 메인 적용(주석)
@@ -272,11 +238,12 @@ void ATestFPVPlayerController::IAReload()
 	Ch->CharacterReload();
 }
 
-void ATestFPVPlayerController::ChangeLowerState(EPlayerLowerState _State)
-{
-	ATestFPVCharacter* Ch = GetPawn<ATestFPVCharacter>();
-	Ch->ChangeLowerState(_State);
-}
+// 캐릭터의 ChangeLowerState_Implementation을 사용하고 있으므로 여기서는 사용하지 않는 함수.
+//void ATestFPVPlayerController::ChangeLowerState(EPlayerLowerState _State)
+//{
+//	ATestFPVCharacter* Ch = GetPawn<ATestFPVCharacter>();
+//	Ch->ChangeLowerState(_State);
+//}
 
 void ATestFPVPlayerController::ChangePlayerDir(EPlayerMoveDir _Dir)
 {
@@ -293,8 +260,8 @@ void ATestFPVPlayerController::PlayerMontagePlay()
 		return;
 	}
 
-	ATestFPVCharacter* Ch = GetPawn<ATestFPVCharacter>();
-	Ch->ChangeMontage(false);
+	//ATestFPVCharacter* Ch = GetPawn<ATestFPVCharacter>();
+	//Ch->ChangeMontage(false);
 }
 
 void ATestFPVPlayerController::FireEndMontagePlay()
@@ -306,8 +273,8 @@ void ATestFPVPlayerController::FireEndMontagePlay()
 		return;
 	}
 
-	ATestFPVCharacter* Ch = GetPawn<ATestFPVCharacter>();
-	Ch->ChangeMontage(true);
+	//ATestFPVCharacter* Ch = GetPawn<ATestFPVCharacter>();
+	//Ch->ChangeMontage(true);
 }
 
 void ATestFPVPlayerController::SetFaint()
@@ -325,3 +292,28 @@ void ATestFPVPlayerController::CallGetItem()
 {
 	CallGetItemToWidget();
 }
+
+
+
+
+
+
+
+
+/*
+* ChangePOV (Client)
+* ChangePosture
+* ChangeMontage
+* ChangeAnimation
+* ChangeLowerState
+* ChangePlayerDir
+* ChangeIsFaint
+*/
+
+/*
+* EPlayerUpperState -> Mon
+* 
+* EPlayerPosture -> Seq
+* PlayerDir
+* PlayerLowerState
+*/
