@@ -39,10 +39,14 @@ public:
 		ReadyCount = _cnt;
 	}
 
+	UFUNCTION(BlueprintCallable)
+	void ListenServerOn();
+
 private:
 	UPROPERTY()
 	int PlayerCount = 0;
 
 	UPROPERTY()
 	int ReadyCount = 0;
+
 };
