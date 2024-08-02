@@ -48,18 +48,25 @@ void AReportObject::InterAction_Implementation()
 	if (true == HasAuthority())
 	{
 		AMainGameState* MainGameState = UMainGameBlueprintFunctionLibrary::GetMainGameState(GetWorld());
-		MainGameState->QuestItemGet();
-		int QuestItemNum = MainGameState->GetQuestItemsNum();
-
-		switch (QuestItemNum)
+		
+		if (nullptr == MainGameState)
 		{
-		case 1:
+			LOG(ObjectLog, Fatal, "if (nullptr == MainGameState)");
+			return;
+		}
+
+		MainGameState->QuestItemGet();
+		EGameStage CurStage = MainGameState->GetCurStage();
+
+		switch (CurStage)
+		{
+		case EGameStage::ObtainFirstSample:
 			MainGameState->SetCurStage(EGameStage::ObtainSecondSample);
 			break;
-		case 2:
+		case EGameStage::ObtainSecondSample:
 			MainGameState->SetCurStage(EGameStage::ObtainThirdSample);
 			break;
-		case 3:
+		case EGameStage::ObtainThirdSample:
 			MainGameState->SetCurStage(EGameStage::PlantingBomb);
 			break;
 		default:

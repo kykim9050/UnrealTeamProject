@@ -119,6 +119,8 @@ void AMainGameState::GameStateCheck_Implementation(AActor* _OtherActor)
 		case EGameStage::MoveToGatheringPoint:
 		{
 			CurStage = EGameStage::Defensing;
+			PlayerCount = 0;
+			SetIsStageChange(true);
 			break;
 		}
 		case EGameStage::Defensing:
