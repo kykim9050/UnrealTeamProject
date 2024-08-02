@@ -104,7 +104,7 @@ void ATriggerBoxBase::SetAllPlayersLocation_Implementation(const FVector& NewLoc
 						if (CameraComponent)
 						{
 							//CameraComponent->SetWorldRotation(LookAtRotation);
-							PlayerPawn->SetActorRotation(FRotator(90,0,0));
+							PlayerPawn->SetActorRotation(FRotator(0,90,0));
 						}
 					}
 
