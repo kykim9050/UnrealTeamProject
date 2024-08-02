@@ -93,6 +93,7 @@ void ATriggerBoxBase::SetAllPlayersLocation_Implementation(const FVector& NewLoc
 				if (PlayerIndex < PlayerLocations.Num())
 				{
 					PlayerPawn->SetActorLocation(PlayerLocations[PlayerIndex]);
+					PlayerController->SetControlRotation(FRotator(0.0f, 0.0f, 0.0f));
 
 					// 카메라가 바라볼 방향 설정 (Z축을 0으로 고정)
 					FVector CameraDirection = FVector(0.0f, 0.0f, 0.0f); // 원하는 방향 설정
