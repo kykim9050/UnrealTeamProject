@@ -51,7 +51,7 @@ void UBTTaskNode_MutantChase::TickTask(UBehaviorTreeComponent& _OwnerComp, uint8
 
 	// 범위 안에 있으면 공격상태로 변경
 	FVector LocationDiff = TargetLocation - MonsterLocation;
-	double DiffLength = LocationDiff.Size();
+	float DiffLength = LocationDiff.Size();
 	if (DiffLength <= MonsterData->AttackRange)
 	{
 		StateChange(_OwnerComp, ETestMonsterState::Attack);
