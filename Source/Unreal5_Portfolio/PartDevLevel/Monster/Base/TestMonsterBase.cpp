@@ -265,11 +265,16 @@ void ATestMonsterBase::SpawnRock()
 				{
 					FVector LaunchDirection = SpawnPos - GetActorLocation();
 					Rock->SetDirection(Direction);
-					LOG(MonsterLog, Log, TEXT("Rock Spawn"));
 				}
 			}
 		}
 	}
+}
+
+void ATestMonsterBase::SpawnParticle()
+{
+	FVector Scale = FVector(10.0f, 10.0, 1.0f);
+	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), SmashParticle, AttackComponent->GetComponentLocation(), FRotator::ZeroRotator, Scale);
 }
 
 void ATestMonsterBase::SetOnDead_Implementation()

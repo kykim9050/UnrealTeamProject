@@ -74,6 +74,8 @@ public:
 
 	void SpawnRock();
 
+	void SpawnParticle();
+
 protected:
 	UFUNCTION()
 	void OnAttackOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
@@ -136,6 +138,9 @@ private:
 
 	UPROPERTY(EditAnywhere, Category = "Particle", meta = (AllowPrivateAccess = true))
 	UParticleSystem* BloodParticle;
+
+	UPROPERTY(EditAnywhere, Category = "Particle", meta = (AllowPrivateAccess = true))
+	UParticleSystem* SmashParticle;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class UMotionWarpingComponent> MotionWarpComponent;
