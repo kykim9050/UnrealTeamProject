@@ -49,6 +49,22 @@ void AReportObject::InterAction_Implementation()
 	{
 		AMainGameState* MainGameState = UMainGameBlueprintFunctionLibrary::GetMainGameState(GetWorld());
 		MainGameState->QuestItemGet();
+		int QuestItemNum = MainGameState->GetQuestItemsNum();
+
+		switch (QuestItemNum)
+		{
+		case 1:
+			MainGameState->SetCurStage(EGameStage::ObtainSecondSample);
+			break;
+		case 2:
+			MainGameState->SetCurStage(EGameStage::ObtainThirdSample);
+			break;
+		case 3:
+			MainGameState->SetCurStage(EGameStage::PlantingBomb);
+			break;
+		default:
+			break;
+		}
 	}
 
 	Destroy();
