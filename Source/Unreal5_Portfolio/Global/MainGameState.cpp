@@ -147,7 +147,10 @@ void AMainGameState::GameStateCheck_Implementation(AActor* _OtherActor)
 		case EGameStage::PlantingBomb:
 			break;
 		case EGameStage::MoveToGatheringPoint:
+		{
+			CurStage = EGameStage::Defensing;
 			break;
+		}
 		case EGameStage::Defensing:
 			break;
 		case EGameStage::MissionClear:
