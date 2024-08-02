@@ -66,7 +66,11 @@ private:
 	UFUNCTION(Reliable, NetMulticast)
 	void SetOnDead();
 	void SetOnDead_Implementation();
+
 	void OnDead();
+
+	UFUNCTION()
+	void SpawnReportObject();
 
 protected:
 	UFUNCTION()
@@ -88,7 +92,6 @@ private:
 	UPROPERTY()
 	class UMainAnimInstance* MainAnimInst;
 
-private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
 	class USphereComponent* MeleeAttackComponent;
 

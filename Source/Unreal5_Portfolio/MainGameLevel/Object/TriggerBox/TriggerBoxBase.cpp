@@ -94,18 +94,19 @@ void ATriggerBoxBase::SetAllPlayersLocation_Implementation(const FVector& NewLoc
 				{
 					PlayerPawn->SetActorLocation(PlayerLocations[PlayerIndex]);
 
-					//// 카메라가 바라볼 방향 설정 (Z축을 0으로 고정)
-					//FVector CameraDirection = FVector(1.0f, 0.0f, 0.0f); // 원하는 방향 설정
-					//FRotator LookAtRotation = FRotationMatrix::MakeFromX(CameraDirection).Rotator();
+					// 카메라가 바라볼 방향 설정 (Z축을 0으로 고정)
+					FVector CameraDirection = FVector(0.0f, 0.0f, 0.0f); // 원하는 방향 설정
+					FRotator LookAtRotation = FRotationMatrix::MakeFromX(CameraDirection).Rotator();
 
-					//if (ACharacter* Character = Cast<ACharacter>(PlayerPawn))
-					//{
-					//	UCameraComponent* CameraComponent = Character->FindComponentByClass<UCameraComponent>();
-					//	if (CameraComponent)
-					//	{
-					//		CameraComponent->SetWorldRotation(LookAtRotation);
-					//	}
-					//}
+					if (ACharacter* Character = Cast<ACharacter>(PlayerPawn))
+					{
+						UCameraComponent* CameraComponent = Character->FindComponentByClass<UCameraComponent>();
+						if (CameraComponent)
+						{
+							//CameraComponent->SetWorldRotation(LookAtRotation);
+							PlayerPawn->SetActorRotation(FRotator(90,0,0));
+						}
+					}
 
 					PlayerIndex++;
 				}
