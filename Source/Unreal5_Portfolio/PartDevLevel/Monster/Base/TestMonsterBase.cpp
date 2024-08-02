@@ -229,7 +229,7 @@ void ATestMonsterBase::SetChasePlayer()
 	}
 
 	AIController->GetBlackboardComponent()->SetValueAsObject(TEXT("TargetActor"), PlayerGroup->Actors[MinIndex]);
-	AIController->GetBlackboardComponent()->SetValueAsEnum(TEXT("State"), static_cast<uint8>(EBasicMonsterState::Chase));
+	AIController->GetBlackboardComponent()->SetValueAsEnum(TEXT("State"), static_cast<uint8>(ETestMonsterState::Chase));
 }
 
 UMotionWarpingComponent* ATestMonsterBase::GetMotionWarpingComponent()
