@@ -50,7 +50,7 @@ void UBTTaskNode_BasicMutantScream::TickTask(UBehaviorTreeComponent& OwnerComp, 
 	FRotator NextRot = UKismetMathLibrary::FindLookAtRotation(MutantPos, TargetPos);
 	Mutant->SetActorRotation(NextRot);
 
-	// Scream 애니메이션 종료 후
+	// Scream Animation End
 	if (0.0f >= MutantData->TimeCount)
 	{
 		StateChange(OwnerComp, EBasicMonsterState::Chase);

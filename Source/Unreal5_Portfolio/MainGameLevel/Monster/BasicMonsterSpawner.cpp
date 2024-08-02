@@ -11,6 +11,8 @@
 #include "Components/BillboardComponent.h"
 #include "Components/BoxComponent.h"
 
+#include "TestLevel/Character/TestCharacter.h"
+
 // Sets default values
 ABasicMonsterSpawner::ABasicMonsterSpawner()
 {
@@ -78,7 +80,7 @@ void ABasicMonsterSpawner::SpawnBasicMonster()
 		int TypeIndex = MainInst->Random.RandRange(0, Size);
 		float SpawnRadius = MainInst->Random.FRandRange(0, MaxSpawnRadius);
 		FVector SpawnLocation = CurPos + MainInst->Random.GetUnitVector().GetSafeNormal2D() * SpawnRadius;
-		ABasicMonsterBase* NewMonster =  GetWorld()->SpawnActor<ABasicMonsterBase>(MonsterUClass[TypeIndex], SpawnLocation, FRotator::ZeroRotator);
+		ABasicMonsterBase* NewMonster = GetWorld()->SpawnActor<ABasicMonsterBase>(MonsterUClass[TypeIndex], SpawnLocation, FRotator::ZeroRotator);
 
 		if (nullptr != NewMonster && true == IsChasePlayer)
 		{
@@ -91,7 +93,7 @@ void ABasicMonsterSpawner::SpawnBasicMonster()
 
 void ABasicMonsterSpawner::TriggerBoxBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	AMainCharacter* Player = Cast<AMainCharacter>(OtherActor);
+	ATestCharacter* Player = Cast<ATestCharacter>(OtherActor);
 	if (nullptr == Player)
 	{
 		return;
@@ -99,5 +101,13 @@ void ABasicMonsterSpawner::TriggerBoxBeginOverlap(UPrimitiveComponent* Overlappe
 
 	TriggerIsActive = false;
 	TriggerBox->SetActive(TriggerIsActive);
-}
 
+	//AMainCharacter* Player = Cast<AMainCharacter>(OtherActor);
+	//if (nullptr == Player)
+	//{
+	//	return;
+	//}
+	//
+	//TriggerIsActive = false;
+	//TriggerBox->SetActive(TriggerIsActive);
+}

@@ -13,6 +13,9 @@
 
 #include "Global/ContentsLog.h"
 
+#include "TestLevel/Character/TestCharacter.h"
+#include "TestLevel/Character/TestPlayerState.h"
+
 EBTNodeResult::Type UBTTaskNode_BasicMonsterAttack::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
 {
 	Super::ExecuteTask(OwnerComp, NodeMemory);
@@ -41,16 +44,16 @@ void UBTTaskNode_BasicMonsterAttack::TickTask(UBehaviorTreeComponent& OwnerComp,
 {
 	Super::TickTask(OwnerComp, pNodeMemory, DeltaSeconds);
 
-	// 플레이어 체크
-	AMainCharacter* TargetPlayer = GetValueAsObject<AMainCharacter>(OwnerComp, TEXT("TargetActor"));
-	if (nullptr == TargetPlayer)
+	// Target Check
+	ATestCharacter* Target = GetValueAsObject<ATestCharacter>(OwnerComp, TEXT("TargetActor"));
+	if (nullptr == Target)
 	{
 		StateChange(OwnerComp, EBasicMonsterState::Idle);
 		return;
 	}
 
-	// 사망한 플레이어일시 Idle
-	AMainPlayerState* TargetPlayerState = Cast<AMainPlayerState>(TargetPlayer->GetPlayerState());
+	// Player Dead Check
+	ATestPlayerState* TargetPlayerState = Cast<ATestPlayerState>(Target->GetPlayerState());
 	if (0.0f >= TargetPlayerState->GetPlayerHp())
 	{
 		OwnerComp.GetBlackboardComponent()->SetValueAsObject(TEXT("TargetActor"), nullptr);
@@ -58,11 +61,28 @@ void UBTTaskNode_BasicMonsterAttack::TickTask(UBehaviorTreeComponent& OwnerComp,
 		return;
 	}
 
+	//// Target Check
+	//AMainCharacter* Target = GetValueAsObject<AMainCharacter>(OwnerComp, TEXT("TargetActor"));
+	//if (nullptr == Target)
+	//{
+	//	StateChange(OwnerComp, EBasicMonsterState::Idle);
+	//	return;
+	//}
+	//
+	//// Player Dead Check
+	//AMainPlayerState* TargetPlayerState = Cast<AMainPlayerState>(Target->GetPlayerState());
+	//if (0.0f >= TargetPlayerState->GetPlayerHp())
+	//{
+	//	OwnerComp.GetBlackboardComponent()->SetValueAsObject(TEXT("TargetActor"), nullptr);
+	//	StateChange(OwnerComp, EBasicMonsterState::Idle);
+	//	return;
+	//}
+
 	ABasicMonsterBase* Monster = GetSelfActor<ABasicMonsterBase>(OwnerComp);
 	UBasicMonsterData* MonsterData = Monster->GetSettingData();
 
 	FVector MonsterLocation = Monster->GetActorLocation();
-	FVector TargetPlayerLocation = TargetPlayer->GetActorLocation();
+	FVector TargetPlayerLocation = Target->GetActorLocation();
 	
 	if (0.0f >= MonsterData->TimeCount)
 	{
