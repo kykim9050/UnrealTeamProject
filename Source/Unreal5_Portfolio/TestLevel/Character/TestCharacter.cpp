@@ -4,6 +4,7 @@
 #include "TestCharacter.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
+#include "Camera/CameraShakeBase.h"
 #include "Engine/SkeletalMeshSocket.h"
 #include "Engine/StaticMeshSocket.h"
 #include "Global/MainGameBlueprintFunctionLibrary.h"
@@ -223,7 +224,7 @@ void ATestCharacter::BeginPlay()	// => 메인 수정 필요 (24.08.01 수정, 추가된 요�
 	// GetMapItemCollisionComponent => MapItem과 Overlap될 시 실행할 함수 바인딩
 	GetMapItemCollisionComponent->OnComponentBeginOverlap.AddDynamic(this, &ATestCharacter::MapItemOverlapStart);
 	GetMapItemCollisionComponent->OnComponentEndOverlap.AddDynamic(this, &ATestCharacter::MapItemOverlapEnd);
-	
+
 	//UISetting();
 }
 
@@ -274,10 +275,11 @@ void ATestCharacter::Tick(float DeltaTime)
 	}
 #endif
 	//DefaultRayCast(DeltaTime);
-	TArray<FItemInformation> I = ItemSlot;
+	//TArray<FItemInformation> I = ItemSlot;
 	//AGameModeBase* Ptr = GetWorld()->GetAuthGameMode();
 	//float ts = GetWorld()->GetDeltaSeconds();
-	int a = 0;
+	
+	//int a = 0;
 }
 
 void ATestCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const

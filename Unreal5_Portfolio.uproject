@@ -14,7 +14,8 @@
 				"UMG",
 				"AIModule",
 				"AnimGraphRuntime",
-				"Paper2D"
+				"Paper2D",
+				"GameplayCameras"
 			]
 		},
 		{
