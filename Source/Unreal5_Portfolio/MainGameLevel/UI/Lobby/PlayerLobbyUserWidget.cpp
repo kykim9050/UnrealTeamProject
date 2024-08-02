@@ -8,6 +8,9 @@
 #include "MainGameLevel/UI/Title/ServerBtnUserWidget.h"
 #include "MainGameLevel/LobbyGameMode.h"
 
+#include "Global/MainGameBlueprintFunctionLibrary.h"
+#include "Global/MainGameInstance.h"
+
 #include "Kismet/GameplayStatics.h"
 
 void UPlayerLobbyUserWidget::NativeConstruct()
@@ -79,12 +82,29 @@ void UPlayerLobbyUserWidget::OnStartBtn()
 	{
 		// 모두 준비 함
 		// 게임으로 이동
+		TravelToNext();
 	}
 	else
 	{
 		// 시작할 수 없음.
 		int a = 0;
 	}
+}
+
+void UPlayerLobbyUserWidget::TravelToNext()
+{
+	UMainGameInstance* Inst = UMainGameBlueprintFunctionLibrary::GetMainGameInstance(GetWorld());
+	if (nullptr != Inst && true == Inst->CurNetInfo.GetIsServer())
+	{
+		bool CanTravel = GetWorld()->ServerTravel("/Game/Resources/MainGameLevel/LandscapePreview");
+		//bool CanTravel = GetWorld()->ServerTravel("/Game/Resources/TestLevel/TestPlayLevel");
+	}
+}
+
+bool UPlayerLobbyUserWidget::IsServer()
+{
+	UMainGameInstance* Inst = UMainGameBlueprintFunctionLibrary::GetMainGameInstance(GetWorld());
+	return Inst->CurNetInfo.GetIsServer();
 }
 
 void UPlayerLobbyUserWidget::LobbyPlayerName(int _Order, FText _Name)

@@ -34,6 +34,8 @@ void ALobbyCharacter::BeginPlay()
 		lobby->SetPlayerCount(pc + 1);
 
 		MyOrder = pc; // 0, 1, 2, 3
+
+		//MyOrder에 따라 그 번호의 LobbyCapCharacter를 켜줘야 함. 
 	}
 }
 
