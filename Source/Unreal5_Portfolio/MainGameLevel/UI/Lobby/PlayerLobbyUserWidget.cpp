@@ -10,6 +10,7 @@
 
 #include "Global/MainGameBlueprintFunctionLibrary.h"
 #include "Global/MainGameInstance.h"
+#include "Global/ContentsLog.h"
 
 #include "Kismet/GameplayStatics.h"
 
@@ -67,6 +68,10 @@ void UPlayerLobbyUserWidget::StartbtnVisibility(bool _On)
 void UPlayerLobbyUserWidget::OnReadyBtn()
 {
 	ALobbyCharacter* MyLobbyCharacter = Cast<ALobbyCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+	if (nullptr == MyLobbyCharacter)
+	{
+		LOG(UILog, Fatal, "LobbyCharacter is Null. (Or NetMode : Need StandAlone)");
+	}
 	MyLobbyCharacter->ReadyClicked = true;
 }
 
