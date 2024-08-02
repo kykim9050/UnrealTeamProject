@@ -201,9 +201,10 @@ void ATestBossMonsterBase::SpawnReportObject()
 	}
 
 	FVector SpawnLocation = GetActorLocation();
+	SpawnLocation.Z -= 130;
 	FRotator SpawnRotation = FRotator::ZeroRotator;
 
-	AReportObject* ReportObject = GetWorld()->SpawnActor<AReportObject>();
+	AReportObject* ReportObject = GetWorld()->SpawnActor<AReportObject>(SpawnLocation, SpawnRotation);
 }
 
 void ATestBossMonsterBase::SetAttackCollision(bool Active)
