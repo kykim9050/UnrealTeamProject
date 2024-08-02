@@ -70,7 +70,10 @@ void AAreaObject::BombPlanting_Implementation(FName _InfoName)
 			return;
 		}
 
-		MainGameState->SetPlantingBombComplete();
+		if (EGameStage::PlantingBomb == MainGameState->GetCurStage())
+		{
+			MainGameState->SetCurStage(EGameStage::MoveToGatheringPoint);
+		}
 	}
 }
 
