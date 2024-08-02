@@ -109,7 +109,7 @@ public:
 
 	// POV
 	const FVector CameraRelLoc = FVector(0.0f, 60.0f, 110.0f);			// => 메인캐릭터 이전 필요 (24.07.29 추가됨) => 메인 적용.
-	const FVector FPVCameraRelLoc = FVector(0.0f, 0.0f, 72.0f);			// => 메인캐릭터 이전 필요 (24.07.29 추가됨) => 메인 적용.
+	const FVector FPVCameraRelLoc = FVector(10.0f, 0.0f, 72.0f);		// => 메인 수정 필요 (24.08.02 수정됨)
 	const FVector FPVCameraRelLoc_Crouch = FVector(10.0f, 0.0f, 10.0f);	// => 메인캐릭터 이전 필요 (24.07.29 추가됨) => 메인 적용.
 	bool IsFPV = true;
 	UFUNCTION()
