@@ -67,10 +67,10 @@ ATestCharacter::ATestCharacter()
 	CameraComponent->SetupAttachment(SpringArmComponent);
 	CameraComponent->SetProjectionMode(ECameraProjectionMode::Perspective);
 
-	// FPV Character Mesh => 메인캐릭터 이전 필요 (24.07.29 수정됨)
+	// FPV Character Mesh	// => 메인 수정 필요 (24.08.02 수정됨)
 	FPVMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("FirstPersonMesh"));
 	FPVMesh->SetupAttachment(CameraComponent);
-	FPVMesh->SetRelativeLocation(FVector(0.0f, 0.0f, -160.0f));
+	FPVMesh->SetRelativeLocation(FVector(-10.0f, 0.0f, -160.0f));
 	FPVMesh->SetOwnerNoSee(false);
 	FPVMesh->SetOnlyOwnerSee(true);
 	FPVMesh->bCastDynamicShadow = false;
@@ -847,7 +847,7 @@ void ATestCharacter::ItemSetting(FName _TagName, int _SlotIndex) // => 메인 수정
 	}
 }
 
-void ATestCharacter::DropItem_Implementation(int _SlotIndex) // => 메인 수정 필요 (24.07.30 DebugMessage 부분 수정됨)
+void ATestCharacter::DropItem_Implementation(int _SlotIndex) // => 메인 수정 필요 (24.08.02 수정됨)
 {
 	// DropItem 할 수 없는 경우 1: 맨손일 때
 	if (CurItemIndex == -1)
@@ -872,10 +872,12 @@ void ATestCharacter::DropItem_Implementation(int _SlotIndex) // => 메인 수정 필�
 	// UMainGameInstance* MainGameInst = UMainGameBlueprintFunctionLibrary::GetMainGameInstance(GetWorld()); << 매인에는 이렇게 적용됨.
 	UMainGameInstance* MainGameInst = GetWorld()->GetGameInstanceChecked<UMainGameInstance>();
 	const FItemDataRow* ItemBase = MainGameInst->GetItemData(ItemName);
-	FTransform BoneTrans = GetMesh()->GetBoneTransform(FName("RightHand"), ERelativeTransformSpace::RTS_World); // 메인 적용.(07/29)
+	//FTransform BoneTrans = GetMesh()->GetBoneTransform(FName("RightHand"), ERelativeTransformSpace::RTS_World);
+	FTransform SpawnTrans = GetActorTransform();
+	SpawnTrans.SetTranslation(GetActorLocation() + (GetActorForwardVector() * 100.0f) + (GetActorUpVector() * 50.0f));
 
 	// Spawn
-	AActor* DropItem = GetWorld()->SpawnActor<AActor>(ItemBase->GetItemUClass(), BoneTrans);
+	AActor* DropItem = GetWorld()->SpawnActor<AActor>(ItemBase->GetItemUClass(), SpawnTrans);
 
 	// 아이템을 앞으로 던지기 (미완)
 	//GetMesh()->SetSimulatePhysics(true);
