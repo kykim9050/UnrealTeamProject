@@ -3,3 +3,9 @@
 
 #include "MainGameLevel/UI/Lobby/CharacterSelectionUserWidget.h"
 
+void UCharacterSelectionUserWidget::SetSelectedCharacter(int _Num)
+{
+	SelectedCharacter = _Num;
+
+
+}

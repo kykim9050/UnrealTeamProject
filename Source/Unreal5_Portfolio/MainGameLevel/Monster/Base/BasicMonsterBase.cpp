@@ -21,6 +21,9 @@
 #include "Global/MainGameState.h"
 #include "Global/ContentsLog.h"
 
+#include "TestLevel/Character/TestCharacter.h"
+#include "TestLevel/Character/TestPlayerState.h"
+
 ABasicMonsterBase::ABasicMonsterBase()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
@@ -123,10 +126,10 @@ void ABasicMonsterBase::OnAttackOverlapEnd(UPrimitiveComponent* OverlappedComp, 
 	}
 
 	EBasicMonsterState MonsterState = static_cast<EBasicMonsterState>(BlackBoard->GetValueAsEnum(TEXT("CurState")));
-	AMainCharacter* HitCharacter = Cast<AMainCharacter>(OtherActor);
+	ATestCharacter* HitCharacter = Cast<ATestCharacter>(OtherActor);
 	if (nullptr != HitCharacter && EBasicMonsterState::Attack == MonsterState)
 	{
-		AMainPlayerState* HitPlayerState = Cast<AMainPlayerState>(HitCharacter->GetPlayerState());
+		ATestPlayerState* HitPlayerState = Cast<ATestPlayerState>(HitCharacter->GetPlayerState());
 		if (nullptr == HitPlayerState)
 		{
 			LOG(MonsterLog, Fatal, TEXT("HitPlayerState Is Not Valid"));
@@ -134,6 +137,25 @@ void ABasicMonsterBase::OnAttackOverlapEnd(UPrimitiveComponent* OverlappedComp, 
 
 		HitPlayerState->AddDamage(SettingData->AttackDamage);
 	}
+
+	//UBlackboardComponent* BlackBoard = UAIBlueprintHelperLibrary::GetBlackboard(this);
+	//if (nullptr == BlackBoard)
+	//{
+	//	return;
+	//}
+	//
+	//EBasicMonsterState MonsterState = static_cast<EBasicMonsterState>(BlackBoard->GetValueAsEnum(TEXT("CurState")));
+	//AMainCharacter* HitCharacter = Cast<AMainCharacter>(OtherActor);
+	//if (nullptr != HitCharacter && EBasicMonsterState::Attack == MonsterState)
+	//{
+	//	AMainPlayerState* HitPlayerState = Cast<AMainPlayerState>(HitCharacter->GetPlayerState());
+	//	if (nullptr == HitPlayerState)
+	//	{
+	//		LOG(MonsterLog, Fatal, TEXT("HitPlayerState Is Not Valid"));
+	//	}
+	//
+	//	HitPlayerState->AddDamage(SettingData->AttackDamage);
+	//}
 }
 
 void ABasicMonsterBase::ChangeRandomAnimation(uint8 Type)

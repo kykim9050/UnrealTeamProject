@@ -12,6 +12,21 @@
 
 
 
+int AMainGameState::GetQuestItemsNum()
+{
+	int Cnt = 0;
+
+	for (int i = 0; i < static_cast<int>(EQuestItem::Max); i++)
+	{
+		if (true == QuestItems[i])
+		{
+			++Cnt;
+		}
+	}
+
+	return Cnt;
+}
+
 AMainGameState::AMainGameState()
 {
 	int QuestItemsNum = static_cast<int>(EQuestItem::Max);
@@ -94,69 +109,20 @@ void AMainGameState::GameStateCheck_Implementation(AActor* _OtherActor)
 			break;
 		}
 		case EGameStage::ObtainFirstSample:
-		{
-			int QuestItemsNum = static_cast<int>(EQuestItem::Report1);
-
-			for (int i = 0; i < QuestItemsNum; i++)
-			{
-				if (false == QuestItems[i])
-				{
-					break;
-				}
-			}
-
-			PlayerCount = 0;
-			CurStage = EGameStage::ObtainSecondSample;
-			SetIsStageChange(true);
 			break;
-		}
 		case EGameStage::ObtainSecondSample:
-		{
-			int QuestItemsNum = static_cast<int>(EQuestItem::Report2);
-
-			for (int i = 0; i < QuestItemsNum; i++)
-			{
-				if (false == QuestItems[i])
-				{
-					break;
-				}
-			}
-
-			PlayerCount = 0;
-			CurStage = EGameStage::ObtainThirdSample;
-			SetIsStageChange(true);
 			break;
-		}
 		case EGameStage::ObtainThirdSample:
+			break;
+		case EGameStage::PlantingBomb:
+			break;
+		case EGameStage::MoveToGatheringPoint:
 		{
-			int QuestItemsNum = static_cast<int>(EQuestItem::Report3);
-
-			for (int i = 0; i < QuestItemsNum; i++)
-			{
-				if (false == QuestItems[i])
-				{
-					break;
-				}
-			}
-
+			CurStage = EGameStage::Defensing;
 			PlayerCount = 0;
-			CurStage = EGameStage::PlantingBomb;
 			SetIsStageChange(true);
 			break;
 		}
-		case EGameStage::PlantingBomb:
-		{
-			if (true == PlantingBombComplete)
-			{
-				PlayerCount = 0;
-				CurStage = EGameStage::MoveToGatheringPoint;
-				SetIsStageChange(true);
-				break;
-			}
-			break;
-		}
-		case EGameStage::MoveToGatheringPoint:
-			break;
 		case EGameStage::Defensing:
 			break;
 		case EGameStage::MissionClear:

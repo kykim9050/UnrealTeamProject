@@ -21,7 +21,7 @@ class UNREAL5_PORTFOLIO_API ABasicMonsterAIController : public AAIController
 public:
 	ABasicMonsterAIController();
 
-public:
+private:
 	UFUNCTION()
 	void PlayerDetect(AActor* Other, FAIStimulus const Stimulus);
 

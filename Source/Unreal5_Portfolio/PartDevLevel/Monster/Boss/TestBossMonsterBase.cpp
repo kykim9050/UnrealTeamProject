@@ -8,6 +8,8 @@
 #include "TestLevel/Character/TestPlayerState.h"
 #include "TestLevel/Character/TestCharacter.h"
 
+#include "MainGameLevel/Object/ReportObject.h"
+
 #include "GameFrameWork/CharacterMovementComponent.h"
 #include "Blueprint/AIBlueprintHelperLibrary.h"
 #include "BehaviorTree/BlackboardComponent.h"
@@ -186,6 +188,23 @@ void ATestBossMonsterBase::OnDead()
 
 	ATestBossMonsterAIControllerBase* AIController = GetController<ATestBossMonsterAIControllerBase>();
 	AIController->GetBrainComponent()->StopLogic("Dead");
+
+	SpawnReportObject();
+}
+
+void ATestBossMonsterBase::SpawnReportObject()
+{
+	UWorld* World = GetWorld();
+	if (nullptr == World)
+	{
+		LOG(MonsterLog, Error, "World is nullptr");
+	}
+
+	FVector SpawnLocation = GetActorLocation();
+	SpawnLocation.Z -= 130;
+	FRotator SpawnRotation = FRotator::ZeroRotator;
+
+	AReportObject* ReportObject = GetWorld()->SpawnActor<AReportObject>(SpawnLocation, SpawnRotation);
 }
 
 void ATestBossMonsterBase::SetAttackCollision(bool Active)

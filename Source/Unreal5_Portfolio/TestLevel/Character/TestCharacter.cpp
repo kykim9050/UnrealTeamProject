@@ -33,7 +33,6 @@
 #include "MainGameLevel/Particles/MuzzleParticleActor.h"
 #include "PartDevLevel/Monster/Kraken/KrakenProjectile.h"
 
-
 // Sets default values
 ATestCharacter::ATestCharacter()
 {
@@ -335,6 +334,14 @@ void ATestCharacter::FireRayCast_Implementation() // => 메인 수정 필요 (24.07.30
 		{
 			FString BoneName = Hit.BoneName.ToString();
 			UE_LOG(LogTemp, Warning, TEXT("Bone Name : %s"), *BoneName);
+			{
+				AKrakenProjectile* Rock = Cast<AKrakenProjectile>(Hit.GetActor()); // [Main] ABasicMonsterBase
+				if (nullptr != Rock)
+				{
+					Rock->Damaged(ItemSlot[CurItemIndex].Damage);
+					GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, FString::Printf(TEXT("%s got damage : %d"), *Rock->GetName(), ItemSlot[CurItemIndex].Damage));
+				}
+			}
 			{
 				ATestMonsterBase* Monster = Cast<ATestMonsterBase>(Hit.GetActor()); // [Main] ABasicMonsterBase
 				if (nullptr != Monster)

@@ -26,6 +26,12 @@ class UNREAL5_PORTFOLIO_API UPlayerLobbyUserWidget : public UUserWidget
 	UPROPERTY(meta = (BindWidget))
 	class UCharacterSelectionUserWidget* CharacterSelectionWindow;
 
+	UFUNCTION(BlueprintCallable)
+	void TravelToNext();
+
+	UFUNCTION(BlueprintCallable)
+	bool IsServer();
+
 public:
 	void NativeConstruct() override;
 

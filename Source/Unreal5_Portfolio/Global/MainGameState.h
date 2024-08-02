@@ -127,10 +127,7 @@ public:
 		QuestItems[QuestItemsIdx++] = true;
 	}
 
-	FORCEINLINE void SetPlantingBombComplete()
-	{
-		PlantingBombComplete = true;
-	}
+	int GetQuestItemsNum();
 
 protected:
 	AMainGameState();
@@ -193,9 +190,4 @@ private:
 	/// QuestItems의 Idx
 	/// </summary>
 	int QuestItemsIdx = 0;
-
-	/// <summary>
-	/// 폭탄이 설치 되었다면 활성화되는 값
-	/// </summary>
-	bool PlantingBombComplete = false;
 };
