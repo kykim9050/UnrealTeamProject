@@ -131,6 +131,9 @@ private:
 	UFUNCTION()
 	void CallGetItem(); // => 메인 적용(Delegate)
 
+	/*UPROPERTY()
+	FRandomStream Stream;*/
+
 protected: // => 메인 적용(Delegate)
 	UFUNCTION(BlueprintImplementableEvent, meta = (CallInEditor = true))
 	void ChangePostureToWidget(EPlayerPosture _Posture);
