@@ -366,7 +366,6 @@ void ATestCharacter::Drink_Implementation()					// => 메인에 이전 필요 (24.08.01
 
 	// 애니메이션 변경
 	ChangePosture(EPlayerPosture::Drink);
-	ChangeMontage(false);
 
 	// 음료 아이템 삭제
 	DeleteItem(3);
