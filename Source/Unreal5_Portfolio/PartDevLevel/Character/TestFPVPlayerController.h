@@ -8,7 +8,7 @@
 #include "GenericTeamAgentInterface.h"
 #include "TestFPVPlayerController.generated.h"
 
-DECLARE_DELEGATE(FDelegate_GetItem_Test);
+DECLARE_DELEGATE(FDelegate_GetItem_Test_FPV);
 
 /**
  * 
@@ -21,7 +21,7 @@ class UNREAL5_PORTFOLIO_API ATestFPVPlayerController : public APlayerController,
 public:
 	ATestFPVPlayerController();
 
-	FDelegate_GetItem_Test FGetItemToWidget_Test;
+	FDelegate_GetItem_Test_FPV FGetItemToWidget_Test_FPV;
 
 protected:
 	void BeginPlay() override;
@@ -96,8 +96,8 @@ public :
 	void IAReload();
 
 	// LowerStateChange 함수 (태환) => 메인 적용
-	UFUNCTION(BlueprintCallable)
-	void ChangeLowerState(EPlayerLowerState _State);
+	//UFUNCTION(BlueprintCallable)
+	//void ChangeLowerState(EPlayerLowerState _State);
 
 	// PlayerDirChange 함수 (태환) => 메인 적용
 	UFUNCTION(BlueprintCallable)
