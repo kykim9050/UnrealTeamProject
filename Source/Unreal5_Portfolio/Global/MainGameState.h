@@ -127,6 +127,8 @@ public:
 		QuestItems[QuestItemsIdx++] = true;
 	}
 
+	int GetQuestItemsNum();
+
 protected:
 	AMainGameState();
 
