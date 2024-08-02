@@ -9,7 +9,6 @@
 #include "MainGameLevel/Player/MainCharacter.h"
 
 #include "BehaviorTree/BlackboardComponent.h"
-#include "Kismet/KismetMathLibrary.h"
 
 #include "Global/ContentsLog.h"
 
@@ -35,7 +34,8 @@ EBTNodeResult::Type UBTTaskNode_BasicMonsterAttack::ExecuteTask(UBehaviorTreeCom
 	}
 
 	Monster->ChangeRandomAnimation(EBasicMonsterAnim::Attack);
-	MonsterData->TimeCount = Monster->GetAnimInstance()->GetKeyAnimMontage(EBasicMonsterAnim::Attack, Monster->GetAnimIndex())->GetPlayLength();
+	UAnimMontage* AttackMontage = Monster->GetAnimInstance()->GetKeyAnimMontage(EBasicMonsterAnim::Attack, Monster->GetAnimIndex());
+	MonsterData->TimeCount = AttackMontage->GetPlayLength();
 
 	return EBTNodeResult::Type::InProgress;
 }

@@ -22,6 +22,12 @@ EBTNodeResult::Type UBTTaskNode_BasicMutantChase::ExecuteTask(UBehaviorTreeCompo
 	}
 
 	UBasicMutantData* MutantData = Mutant->GetSettingData();
+	if (false == Mutant->IsValidLowLevel())
+	{
+		LOG(MonsterLog, Fatal, TEXT("MutantData Is Not Valid"));
+		return EBTNodeResult::Aborted;
+	}
+
 	Mutant->GetCharacterMovement()->MaxWalkSpeed = MutantData->BaseData->GetRunSpeed();
 	Mutant->ChangeRandomAnimation(EBasicMonsterAnim::Run);
 

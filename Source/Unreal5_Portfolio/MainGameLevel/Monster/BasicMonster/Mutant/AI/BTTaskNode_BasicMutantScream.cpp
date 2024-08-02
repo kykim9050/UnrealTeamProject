@@ -17,14 +17,14 @@ EBTNodeResult::Type UBTTaskNode_BasicMutantScream::ExecuteTask(UBehaviorTreeComp
 	ABasicMutant* Mutant = GetSelfActor<ABasicMutant>(OwnerComp);
 	if (false == Mutant->IsValidLowLevel())
 	{
-		LOG(MonsterLog, Fatal, TEXT("Monster Is Not Valid"));
+		LOG(MonsterLog, Fatal, TEXT("Mutant Is Not Valid"));
 		return EBTNodeResult::Aborted;
 	}
 
 	UBasicMutantData* MutantData = Mutant->GetSettingData();
 	if (false == Mutant->IsValidLowLevel())
 	{
-		LOG(MonsterLog, Fatal, TEXT("Monster Is Not Valid"));
+		LOG(MonsterLog, Fatal, TEXT("MutantData Is Not Valid"));
 		return EBTNodeResult::Aborted;
 	}
 
