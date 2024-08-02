@@ -67,10 +67,10 @@ ATestCharacter::ATestCharacter()
 	CameraComponent->SetupAttachment(SpringArmComponent);
 	CameraComponent->SetProjectionMode(ECameraProjectionMode::Perspective);
 
-	// FPV Character Mesh => 메인캐릭터 이전 필요 (24.07.29 수정됨)
+	// FPV Character Mesh	// => 메인 수정 필요 (24.08.02 수정됨)
 	FPVMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("FirstPersonMesh"));
 	FPVMesh->SetupAttachment(CameraComponent);
-	FPVMesh->SetRelativeLocation(FVector(0.0f, 0.0f, -160.0f));
+	FPVMesh->SetRelativeLocation(FVector(-10.0f, 0.0f, -160.0f));
 	FPVMesh->SetOwnerNoSee(false);
 	FPVMesh->SetOnlyOwnerSee(true);
 	FPVMesh->bCastDynamicShadow = false;
@@ -366,7 +366,6 @@ void ATestCharacter::Drink_Implementation()					// => 메인에 이전 필요 (24.08.01
 
 	// 애니메이션 변경
 	ChangePosture(EPlayerPosture::Drink);
-	ChangeMontage(false);
 
 	// 음료 아이템 삭제
 	DeleteItem(3);
@@ -647,7 +646,7 @@ void ATestCharacter::ChangeIsFaint_Implementation()
 	}
 }
 
-void ATestCharacter::CheckItem() // => 메인 수정 필요 (24.07.30 DebugMessage 부분 수정됨)
+void ATestCharacter::CheckItem()	// => 메인 수정 필요 (24.08.02 PickUpItem 인자 추가됨)
 {
 	// 맵에 아이템이 없을 경우.
 	if (nullptr == GetMapItemData)
@@ -667,7 +666,7 @@ void ATestCharacter::CheckItem() // => 메인 수정 필요 (24.07.30 DebugMessage 부�
 	else
 	{
 		// 2. 주울 수 있는 아이템일 경우
-		PickUpItem();
+		PickUpItem(GetMapItemData);
 	}
 }
 
@@ -707,13 +706,13 @@ void ATestCharacter::InteractObject_Implementation(AMapObjectBase* _MapObject)	/
 	_MapObject->InterAction();
 }
 
-void ATestCharacter::PickUpItem_Implementation() // => 메인 수정 필요 (24.07.30 수정됨)
+void ATestCharacter::PickUpItem_Implementation(AActor* _Item)	// => 메인 수정 필요 (24.08.02 인자 추가에 따라 TagName 가져오는 부분 수정됨)
 {
 	// Overlap된 아이템의 Tag 이름을 통해 FName을 가져온다.
 	FString TagName = "";
-	for (size_t i = 0; i < GetMapItemData->Tags.Num(); i++)
+	for (size_t i = 0; i < _Item->Tags.Num(); i++)
 	{
-		TagName = GetMapItemData->Tags[i].ToString();
+		TagName = _Item->Tags[i].ToString();
 	}
 	FName ItemStringToName = FName(*TagName);			// 아이템 이름
 
@@ -847,7 +846,7 @@ void ATestCharacter::ItemSetting(FName _TagName, int _SlotIndex) // => 메인 수정
 	}
 }
 
-void ATestCharacter::DropItem_Implementation(int _SlotIndex) // => 메인 수정 필요 (24.07.30 DebugMessage 부분 수정됨)
+void ATestCharacter::DropItem_Implementation(int _SlotIndex) // => 메인 수정 필요 (24.08.02 수정됨)
 {
 	// DropItem 할 수 없는 경우 1: 맨손일 때
 	if (CurItemIndex == -1)
@@ -872,10 +871,12 @@ void ATestCharacter::DropItem_Implementation(int _SlotIndex) // => 메인 수정 필�
 	// UMainGameInstance* MainGameInst = UMainGameBlueprintFunctionLibrary::GetMainGameInstance(GetWorld()); << 매인에는 이렇게 적용됨.
 	UMainGameInstance* MainGameInst = GetWorld()->GetGameInstanceChecked<UMainGameInstance>();
 	const FItemDataRow* ItemBase = MainGameInst->GetItemData(ItemName);
-	FTransform BoneTrans = GetMesh()->GetBoneTransform(FName("RightHand"), ERelativeTransformSpace::RTS_World); // 메인 적용.(07/29)
+	//FTransform BoneTrans = GetMesh()->GetBoneTransform(FName("RightHand"), ERelativeTransformSpace::RTS_World);
+	FTransform SpawnTrans = GetActorTransform();
+	SpawnTrans.SetTranslation(GetActorLocation() + (GetActorForwardVector() * 100.0f) + (GetActorUpVector() * 50.0f));
 
 	// Spawn
-	AActor* DropItem = GetWorld()->SpawnActor<AActor>(ItemBase->GetItemUClass(), BoneTrans);
+	AActor* DropItem = GetWorld()->SpawnActor<AActor>(ItemBase->GetItemUClass(), SpawnTrans);
 
 	// 아이템을 앞으로 던지기 (미완)
 	//GetMesh()->SetSimulatePhysics(true);
