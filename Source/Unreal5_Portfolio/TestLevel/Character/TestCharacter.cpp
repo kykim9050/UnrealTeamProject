@@ -1003,16 +1003,8 @@ void ATestCharacter::MapItemOverlapStart(UPrimitiveComponent* OverlappedComp, AA
 	AAreaObject* AreaObject = Cast<AAreaObject>(GetMapItemData);
 	if (nullptr != AreaObject)
 	{
-		if (false == IsItemIn[4])
-		{
-			
-		}
-		else
-		{
-			// Area일 경우 => "5번키를 눌러 상호작용"
-			PlayHUD->UIOn(EUserWidgetType::Num5_Key);
-		}
-		return;
+		// Area일 경우 => "5번키를 눌러 상호작용"
+		PlayHUD->UIOn(EUserWidgetType::Num5_Key);
 	}
 	
 	// 그 외의 경우 => "E키를 눌러 상호작용"
