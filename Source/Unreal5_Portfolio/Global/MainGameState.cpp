@@ -145,18 +145,12 @@ void AMainGameState::GameStateCheck_Implementation(AActor* _OtherActor)
 			break;
 		}
 		case EGameStage::PlantingBomb:
+			break;
+		case EGameStage::MoveToGatheringPoint:
 		{
-			if (true == PlantingBombComplete)
-			{
-				PlayerCount = 0;
-				CurStage = EGameStage::MoveToGatheringPoint;
-				SetIsStageChange(true);
-				break;
-			}
+			CurStage = EGameStage::Defensing;
 			break;
 		}
-		case EGameStage::MoveToGatheringPoint:
-			break;
 		case EGameStage::Defensing:
 			break;
 		case EGameStage::MissionClear:
