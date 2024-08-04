@@ -104,4 +104,7 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "Projectile")
 	FVector MuzzleOffset;
 
+	UPROPERTY()
+	class ATestPlayHUD* BossUHD;
+
 };

@@ -7,6 +7,7 @@
 
 #include "TestLevel/Character/TestPlayerState.h"
 #include "TestLevel/Character/TestCharacter.h"
+#include "TestLevel/UI/TestPlayHUD.h"
 
 #include "MainGameLevel/Object/ReportObject.h"
 
@@ -92,6 +93,16 @@ void ATestBossMonsterBase::BeginPlay()
 
 	MeleeAttackComponent->OnComponentEndOverlap.AddDynamic(this, &ATestBossMonsterBase::OnAttackOverlapEnd);
 	SetAttackCollision(false);
+
+	BossUHD = Cast<ATestPlayHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
+	if (nullptr == BossUHD)
+	{
+		LOG(MonsterLog, Fatal, "BossHUD is Bullptr");
+		return;
+	}
+
+	BossUHD->GetWidget(EUserWidgetType::BossHpbar);
+	BossUHD->UIOn(EUserWidgetType::BossHpbar);
 
 }
 
