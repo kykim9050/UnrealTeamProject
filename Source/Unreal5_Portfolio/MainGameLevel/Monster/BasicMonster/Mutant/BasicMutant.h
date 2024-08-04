@@ -26,6 +26,11 @@ public:
 		return MutantSettingData;
 	}
 	
+	UMotionWarpingComponent* GetMotionWarpingComponent() const
+	{
+		return MotionWarpingComponent;
+	}
+
 protected:
 	virtual void InitData(const FMonsterDataRow* BaseData) override;
 
@@ -34,6 +39,6 @@ private:
 	UBasicMutantData* MutantSettingData = nullptr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	UMotionWarpingComponent* MotionWarpComponent = nullptr;
+	UMotionWarpingComponent* MotionWarpingComponent = nullptr;
 
 };

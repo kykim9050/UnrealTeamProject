@@ -6,7 +6,7 @@
 
 ABasicMutant::ABasicMutant()
 {
-	MotionWarpComponent = CreateDefaultSubobject<UMotionWarpingComponent>(TEXT("MotionWarpingComponent"));
+	MotionWarpingComponent = CreateDefaultSubobject<UMotionWarpingComponent>(TEXT("MotionWarpingComponent"));
 }
 
 void ABasicMutant::InitData(const FMonsterDataRow* BaseData)
