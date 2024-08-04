@@ -62,6 +62,9 @@ protected:
 	virtual void Tick(float DeltaTime) override;
 	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
+	// Data
+	virtual void InitData(const FMonsterDataRow* BaseData) {};
+
 	// Attack
 	UFUNCTION()
 	void OnAttackOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);

@@ -4,10 +4,15 @@
 #include "MainGameLevel/Monster/BasicMonster/Zombie/BasicZombie.h"
 #include "MainGameLevel/Monster/BasicMonster/Zombie/BasicZombieData.h"
 
-void ABasicZombie::BeginPlay()
+
+void ABasicZombie::InitData(const FMonsterDataRow* BaseData)
 {
-	SettingData = NewObject<UBasicZombieData>(this);
-	SettingData->bScream = false;
-	
-	Super::BeginPlay();
+	Super::InitData(BaseData);
+
+	ZombieSettingData = NewObject<UBasicZombieData>(this);
+	ZombieSettingData->OriginPos = GetActorLocation();
+	ZombieSettingData->BaseData = BaseData;
+	ZombieSettingData->bScream = false;
+
+	SettingData = ZombieSettingData;
 }

@@ -66,14 +66,12 @@ void ABasicMonsterBase::BeginPlay()
 		return;
 	}
 
+	InitData(BaseData);
 	if (nullptr == SettingData)
 	{
 		LOG(MonsterLog, Fatal, TEXT("SettingData Is Null"));
 		return;
 	}
-
-	SettingData->OriginPos = GetActorLocation();
-	SettingData->BaseData = BaseData;
 
 	// 애니메이션 세팅
 	AnimInst = Cast<UMonsterRandomAnimInstance>(GetMesh()->GetAnimInstance());
