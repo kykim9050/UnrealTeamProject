@@ -73,16 +73,16 @@ void ALobbyCapCharacter::SetMyNumber(int _Num)
 	switch (MyNumber)
 	{
 	case 0:
-		SetActorLocation(FVector(100, -30, 40));
+		SetActorLocation(FVector(100, -30, 50));
 		break;
 	case 1:
-		SetActorLocation(FVector(120, 30, 0));
+		SetActorLocation(FVector(120, 30, 40));
 		break;
 	case 2:
-		SetActorLocation(FVector(120, -100, 0));
+		SetActorLocation(FVector(120, -100, 40));
 		break;
 	case 3:
-		SetActorLocation(FVector(130, 100, 0));
+		SetActorLocation(FVector(130, 100, 40));
 		break;
 	default:
 		break;

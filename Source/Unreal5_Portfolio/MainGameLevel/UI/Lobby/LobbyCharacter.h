@@ -52,6 +52,6 @@ private:
 	UPROPERTY()
 	bool SetWidgetNickName = false;
 
-	UPROPERTY(BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(Replicated, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	class ALobbyCapCharacter* MyMannequin = nullptr;
 };
