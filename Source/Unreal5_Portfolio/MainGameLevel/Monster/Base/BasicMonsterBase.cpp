@@ -123,16 +123,16 @@ void ABasicMonsterBase::OnAttackOverlapEnd(UPrimitiveComponent* OverlappedComp, 
 		return;
 	}
 
-	EBasicMonsterState MonsterState = static_cast<EBasicMonsterState>(BlackBoard->GetValueAsEnum(TEXT("CurState")));
 	ATestCharacter* HitCharacter = Cast<ATestCharacter>(OtherActor);
-	if (nullptr != HitCharacter && EBasicMonsterState::Attack == MonsterState)
+	if (nullptr != HitCharacter)
 	{
 		ATestPlayerState* HitPlayerState = Cast<ATestPlayerState>(HitCharacter->GetPlayerState());
 		if (nullptr == HitPlayerState)
 		{
 			LOG(MonsterLog, Fatal, TEXT("HitPlayerState Is Not Valid"));
+			return;
 		}
-
+		
 		HitPlayerState->AddDamage(SettingData->AttackDamage);
 	}
 
