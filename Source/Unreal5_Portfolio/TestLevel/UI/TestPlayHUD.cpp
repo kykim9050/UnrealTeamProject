@@ -38,4 +38,6 @@ void ATestPlayHUD::AllUISetting()
 			Widget->SetVisibility(ESlateVisibility::Collapsed);
 		}
 	}
+
+	AllTestPlayWidgets = AllWidgets;
 }
