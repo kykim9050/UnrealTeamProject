@@ -542,7 +542,7 @@ void ATestCharacter::ChangeMontage_Implementation(bool _IsFireEnd) // => 매인 적
 	}
 	else // FireEnd
 	{
-		UpperStateValue = EPlayerUpperState::Rifle1_Idle; // 수정 해야 함.
+		UpperStateValue = EPlayerUpperState::Rifle_Idle; // 수정 해야 함.
 		PlayerAnimInst->ChangeAnimation(UpperStateValue);
 		FPVPlayerAnimInst->ChangeAnimation(UpperStateValue);
 		ClientChangeMontage(true);
@@ -583,7 +583,7 @@ void ATestCharacter::ClientChangeMontage_Implementation(bool _IsFireEnd) // => �
 	}
 	else // FireEnd
 	{
-		UpperStateValue = EPlayerUpperState::Rifle2_Idle;
+		UpperStateValue = EPlayerUpperState::Rifle_Idle;
 		PlayerAnimInst->ChangeAnimation(UpperStateValue);
 		FPVPlayerAnimInst->ChangeAnimation(UpperStateValue);
 	}
@@ -734,7 +734,7 @@ void ATestCharacter::PickUpItem_Implementation(AActor* _Item)	// => 메인 수정 필
 
 	EPlayerUpperState ItemType = ItemData->GetType();		// 아이템 타입
 
-	if (ItemType == EPlayerUpperState::Rifle1_Idle)	// Rifle 아이템을 줍는 경우
+	if (ItemType == EPlayerUpperState::Rifle_Idle)	// Rifle 아이템을 줍는 경우
 	{
 		if (false == IsItemIn[static_cast<int>(EPlayerPosture::Rifle1)])
 		{
