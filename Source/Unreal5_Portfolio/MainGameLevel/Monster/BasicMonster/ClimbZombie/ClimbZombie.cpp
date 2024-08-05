@@ -16,7 +16,6 @@ void AClimbZombie::InitData(const FMonsterDataRow* BaseData)
 	ClimbZombieSettingData = NewObject<UClimbZombeData>(this);
 	ClimbZombieSettingData->OriginPos = GetActorLocation();
 	ClimbZombieSettingData->BaseData = BaseData;
-	ClimbZombieSettingData->ClimbSpeed = 75.0f;
 	ClimbZombieSettingData->bScream = false;
 
 	SettingData = ClimbZombieSettingData;
