@@ -5,8 +5,11 @@
 #include "MainGameLevel/LobbyGameMode.h"
 #include "MainGameLevel/UI/Lobby/MainLobbyHUD.h"
 #include "MainGameLevel/UI/Lobby/PlayerLobbyUserWidget.h"
+#include "MainGameLevel/UI/Lobby/LobbyCapCharacter.h"
 
 #include "Global/MainGameInstance.h"
+#include "Global/ContentsLog.h"
+#include "Global/MainGameBlueprintFunctionLibrary.h"
 
 #include "Blueprint/UserWidget.h"
 
@@ -23,9 +26,9 @@ ALobbyCharacter::ALobbyCharacter()
 // Called when the game starts or when spawned
 void ALobbyCharacter::BeginPlay()
 {
+	IsServerPtr = GetWorld()->GetAuthGameMode();
 	Super::BeginPlay();
 
-	IsServerPtr = GetWorld()->GetAuthGameMode();
 	if (nullptr != IsServerPtr)
 	{
 		// Server에 생긴 캐릭터라면 게임모드의 PlayerCount를 + 1
@@ -34,8 +37,11 @@ void ALobbyCharacter::BeginPlay()
 		lobby->SetPlayerCount(pc + 1);
 
 		MyOrder = pc; // 0, 1, 2, 3
-
-		//MyOrder에 따라 그 번호의 LobbyCapCharacter를 켜줘야 함. 
+	}
+	// 각 플레이어에 해당하는 마네킹은 BP에서 Spawn됨 
+	if(nullptr != MyMannequin)
+	{
+		MyMannequin->SetMyNumber(MyOrder);
 	}
 }
 
@@ -51,11 +57,15 @@ void ALobbyCharacter::Tick(float DeltaTime)
 		ReadyClicked = false;
 	}
 
-	if (false == SetWidgetNickName)
+	if (false == SetWidgetNickName) 
 	{
 		SetWidgetNickName = true;
 
-		UMainGameInstance* Inst = GetGameInstance<UMainGameInstance>();
+		UMainGameInstance* Inst = UMainGameBlueprintFunctionLibrary::GetMainGameInstance(GetWorld());
+		if (nullptr == Inst)
+		{
+			LOG(UILog, Fatal, "MainGameInstance is Null");
+		}
 
 		APlayerController* Con = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 		if (nullptr != Con)
@@ -64,6 +74,20 @@ void ALobbyCharacter::Tick(float DeltaTime)
 			Cast<UPlayerLobbyUserWidget>(MyHUD->GetWidget(EUserWidgetType::LobbyButton))->LobbyPlayerName(MyOrder, FText::FromString(Inst->GetMainNickName()));
 		}
 	}
+
+	UMainGameInstance* Inst = UMainGameBlueprintFunctionLibrary::GetMainGameInstance(GetWorld());
+	if (nullptr == Inst)
+	{
+		LOG(UILog, Fatal, "MainGameInstance is Null");
+	}
+
+	// 마네킹을 플레이어에서 직접 업데이트
+	if (nullptr != MyMannequin)
+	{
+		MyMannequin->SetEachMesh(MyChracterType);
+	}
+
+	int a = 0;
 }
 
 // Called to bind functionality to input
@@ -79,11 +103,23 @@ void ALobbyCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutL
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
 	DOREPLIFETIME(ALobbyCharacter, MyOrder);
+	DOREPLIFETIME(ALobbyCharacter, MyChracterType);
+	DOREPLIFETIME(ALobbyCharacter, MyMannequin);
 }
 
 
 void ALobbyCharacter::ClientReady_Implementation()
 {
 	ALobbyGameMode* lobby = Cast<ALobbyGameMode>(IsServerPtr);
+	if (nullptr == lobby)
+	{
+		return;
+	}
+
 	lobby->SetReadyCount(lobby->GetReadyCount() + 1);
+}
+
+void ALobbyCharacter::ClientChangedMesh_Implementation(FName _NewType)
+{
+	MyChracterType = _NewType;
 }
