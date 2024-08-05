@@ -8,6 +8,7 @@
 #include "MainGameLevel/Monster/Animation/MonsterRandomAnimInstance.h"
 
 #include "BehaviorTree/BlackboardComponent.h"
+#include "Kismet/KismetMathLibrary.h"
 #include "MotionWarpingComponent.h"
 
 #include "Global/ContentsLog.h"
@@ -39,6 +40,10 @@ EBTNodeResult::Type UBTTaskNode_BasicMutantJumpAttack::ExecuteTask(UBehaviorTree
 	FMotionWarpingTarget Target = {};
 	Target.Name = FName("JumpAttackTarget");
 	Target.Location = TargetActor->GetActorLocation();
+	Target.Rotation = TargetActor->GetActorRotation();
+
+	FRotator TurnRot = UKismetMathLibrary::FindLookAtRotation(Mutant->GetActorLocation(), Target.Location);
+	Mutant->SetActorRotation(TurnRot);
 
 	UMotionWarpingComponent* MotionWarpingComp = Mutant->GetMotionWarpingComponent();
 	if (nullptr == MotionWarpingComp)
@@ -77,8 +82,26 @@ void UBTTaskNode_BasicMutantJumpAttack::TickTask(UBehaviorTreeComponent& OwnerCo
 		}
 		else
 		{
-			StateChange(OwnerComp, EBasicMonsterState::Chase);
-			return;
+			FVector MutantLocation = Mutant->GetActorLocation();
+			FVector TargetLocation = TargetPlayer->GetActorLocation();
+
+			FVector LocationDiff = TargetLocation - MutantLocation;
+			float DiffLength = LocationDiff.Size();
+			if (DiffLength <= MutantData->AttackRange)
+			{
+				StateChange(OwnerComp, EBasicMonsterState::Attack);
+				return;
+			}
+			else if (DiffLength <= MutantData->JumpAttackMaxRange && DiffLength >= MutantData->JumpAttackMinRange)
+			{
+				StateChange(OwnerComp, EBasicMonsterState::JumpAttack);
+				return;
+			}
+			else
+			{
+				StateChange(OwnerComp, EBasicMonsterState::Chase);
+				return;
+			}
 		}
 	}
 

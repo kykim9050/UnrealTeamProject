@@ -59,7 +59,7 @@ void UBTTaskNode_BasicMutantChase::TickTask(UBehaviorTreeComponent& OwnerComp, u
 		StateChange(OwnerComp, EBasicMonsterState::Attack);
 		return;
 	}
-	else if (DiffLength <= MutantData->JumpAttackRange)
+	else if (DiffLength <= MutantData->JumpAttackMaxRange && DiffLength >= MutantData->JumpAttackMinRange)
 	{
 		StateChange(OwnerComp, EBasicMonsterState::JumpAttack);
 		return;
