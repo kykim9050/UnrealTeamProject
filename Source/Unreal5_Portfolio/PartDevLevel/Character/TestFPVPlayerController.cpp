@@ -222,20 +222,18 @@ void ATestFPVPlayerController::CheckItem_Con()	// => 메인으로 이전 필요 (24.07.2
 void ATestFPVPlayerController::ChangePosture_Con(EPlayerUpperState _Posture)
 {
 	ATestFPVCharacter* Ch = GetPawn<ATestFPVCharacter>();
-	//Ch->ChangePosture(_Posture);
 
 	if (EPlayerUpperState::Rifle_Idle == _Posture)
 	{
 		Ch->ChangeMontage(EPlayerUpperState::Rifle_Idle);
 
-		//Ch->ChangeMontage(_Posture);
-		//ChangePostureToWidget(0); // BP To Event ///////////////////////////////////////////////////
+		//ChangePostureToWidget(0); // BP To Event 
+		//ChangePostureToWidget(EPlayerUpperState::Rifle_Idle); // 아마?
 	}
 	else if (EPlayerUpperState::Melee_Idle == _Posture)
 	{
 		Ch->ChangeMontage(EPlayerUpperState::Melee_Idle);
 
-		//Ch->ChangeMontage(_Posture);
 		//ChangePostureToWidget(EPlayerPosture::Rifle2); // BP To Event
 		//ChangePostureToWidget(EPlayerUpperState::Rifle_Idle);
 	}
