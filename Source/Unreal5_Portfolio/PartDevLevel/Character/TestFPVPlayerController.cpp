@@ -215,6 +215,7 @@ void ATestFPVPlayerController::BombSetCancel_Con()	// => 메인에 추후 이전해야 함
 
 void ATestFPVPlayerController::CheckItem_Con()	// => 메인으로 이전 필요 (24.07.29 추가됨) => 메인 적용
 {
+	// E Key
 	ATestFPVCharacter* Ch = GetPawn<ATestFPVCharacter>();
 	Ch->CheckItem();
 }

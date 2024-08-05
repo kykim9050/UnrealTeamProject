@@ -184,6 +184,7 @@ void ATestFPVCharacter::PostInitializeComponents()
 		}
 
 		// FName을 가져오는 기능이 필요하다.
+		//FName PlayerID = MainGameInst->GetUIToSelectCharacter();
 
 		// 스켈레탈 메쉬 선택
 		USkeletalMesh* PlayerSkeletalMesh = MainGameInst->GetPlayerData(FName("TestPlayer"))->GetPlayerSkeletalMesh();
@@ -697,6 +698,8 @@ void ATestFPVCharacter::InteractObject_Implementation(AMapObjectBase* _MapObject
 
 void ATestFPVCharacter::PickUpItem_Implementation(AActor* _Item)	// => 메인 수정 필요 (24.08.02 인자 추가에 따라 TagName 가져오는 부분 수정됨)
 {
+	
+
 	//// Overlap된 아이템의 Tag 이름을 통해 FName을 가져온다.
 	//FString TagName = "";
 	//for (size_t i = 0; i < _Item->Tags.Num(); i++)
