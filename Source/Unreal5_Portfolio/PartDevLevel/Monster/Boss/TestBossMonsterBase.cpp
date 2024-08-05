@@ -9,6 +9,7 @@
 #include "TestLevel/Character/TestCharacter.h"
 #include "TestLevel/UI/TestPlayHUD.h"
 
+#include "MainGameLevel/UI/InGame/BossHpbarUserWidget.h"
 #include "MainGameLevel/Object/ReportObject.h"
 
 #include "GameFrameWork/CharacterMovementComponent.h"
@@ -23,6 +24,7 @@
 #include "Global/ContentsEnum.h"
 #include "Global/ContentsLog.h"
 #include "Global/Animation/MainAnimInstance.h"
+#include "Global/MainGameState.h"
 
 #include "Components/SphereComponent.h"
 #include "BrainComponent.h"
@@ -53,7 +55,12 @@ void ATestBossMonsterBase::BeginPlay()
 	//  몬스터 데이터 세팅
 	SettingBossData = NewObject<UBossData>(this);
 	SettingBossData->Data = MainGameInst->GetBossDataTable(BossDataName);
-	SettingBossData->HP = SettingBossData->Data->GetHP();
+	float MaxHp = SettingBossData->Data->GetHP();
+	SettingBossData->HP = MaxHp;
+	
+	//Test
+	Hp = MaxHp;
+	CurHp = Hp;
 
 	if (nullptr == SettingBossData->Data)
 	{
@@ -67,6 +74,26 @@ void ATestBossMonsterBase::BeginPlay()
 	{
 		MainAnimInst->PushAnimation(Montage.Key, Montage.Value);
 	}
+
+	// 몬스터 체력 UHD
+	APlayerController* PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+	if (nullptr == PlayerController)
+	{
+		LOG(MonsterLog, Fatal, "PlayerController is null");
+	}
+
+	ATestPlayHUD* BossUHD = Cast<ATestPlayHUD>(PlayerController->GetHUD());
+	if (nullptr == BossUHD)
+	{
+		LOG(MonsterLog, Fatal, "BossHUD is Bullptr");
+		return;
+	}
+
+	Cast<UBossHpbarUserWidget>(BossUHD->GetWidget(EUserWidgetType::BossHpbar))->SetBossName(FText::FromString(FString("Heart")));
+
+	Cast<UBossHpbarUserWidget>(BossUHD->GetWidget(EUserWidgetType::BossHpbar))->SetHp(Hp, SettingBossData->Data->GetHP());
+
+	BossUHD->UIOn(EUserWidgetType::BossHpbar);
 
 	// 클라이언트일 경우
 	ATestBossMonsterAIControllerBase* AIController = GetController<ATestBossMonsterAIControllerBase>();
@@ -93,13 +120,7 @@ void ATestBossMonsterBase::BeginPlay()
 
 	MeleeAttackComponent->OnComponentEndOverlap.AddDynamic(this, &ATestBossMonsterBase::OnAttackOverlapEnd);
 	SetAttackCollision(false);
-
-	BossUHD = Cast<ATestPlayHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
-	if (nullptr == BossUHD)
-	{
-		LOG(MonsterLog, Fatal, "BossHUD is Bullptr");
-		return;
-	}
+}
 
 	//BossUHD->GetWidget(EUserWidgetType::BossHpbar);
 	//BossUHD->UIOn(EUserWidgetType::BossHpbar);
@@ -111,6 +132,20 @@ void ATestBossMonsterBase::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	MainAnimInst->ChangeAnimation(AniValue);
+
+	if (CurHp != Hp)
+	{
+		CurHp = Hp;
+		BossHP_HUDCheck();
+	}
+}
+
+void ATestBossMonsterBase::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	APlayerController* PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+	ATestPlayHUD* BossUHD = Cast<ATestPlayHUD>(PlayerController->GetHUD());
+
+	BossUHD->UIOff(EUserWidgetType::BossHpbar);
 }
 
 // Called to bind functionality to input
@@ -124,6 +159,7 @@ void ATestBossMonsterBase::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>&
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 	DOREPLIFETIME(ATestBossMonsterBase, AniValue);
+	DOREPLIFETIME(ATestBossMonsterBase, Hp);
 }
 
 void ATestBossMonsterBase::ChangeAniValue(uint8 _Type)
@@ -171,12 +207,17 @@ void ATestBossMonsterBase::Damaged(float Damage)
 		return;
 	}
 
-	SettingBossData->HP -= Damage;
+	//SettingBossData->HP -= Damage;
+	Hp -= Damage;
 
-	if (0.0f >= SettingBossData->HP)
+	if (0.0f >= /*SettingBossData->HP*/Hp)
 	{
+		//SettingBossData->HP = 0;
+		Hp = 0.0f;
 		OnDead();
 	}
+
+	//BossHP_HUDCheck();
 }
 
 void ATestBossMonsterBase::SetOnDead_Implementation()
@@ -190,6 +231,23 @@ void ATestBossMonsterBase::SetOnDead_Implementation()
 	GetCharacterMovement()->SetActive(false);
 
 	SetLifeSpan(5.0f);
+}
+
+void ATestBossMonsterBase::BossHP_HUDCheck_Implementation()
+{
+	APlayerController* PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+	if (nullptr == PlayerController)
+	{
+		LOG(MonsterLog, Fatal, "PlayerController is null");
+	}
+	ATestPlayHUD* BossUHD = Cast<ATestPlayHUD>(PlayerController->GetHUD());
+	if (nullptr == BossUHD)
+	{
+		LOG(MonsterLog, Fatal, "BossHUD is Bullptr");
+		return;
+	}
+
+	Cast<UBossHpbarUserWidget>(BossUHD->GetWidget(EUserWidgetType::BossHpbar))->SetHp(/*SettingBossData->HP*/Hp, SettingBossData->Data->GetHP());
 }
 
 void ATestBossMonsterBase::OnDead()

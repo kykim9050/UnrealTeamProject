@@ -85,7 +85,8 @@ public :
 
 	// Posture
 	UFUNCTION(BlueprintCallable)
-	void ChangePosture_Con(EPlayerPosture _Posture);	// => 메인 수정 필요 (24.07.30 플레이어 함수와의 혼동을 방지하지 위해 이름 수정됨) => 메인 적용
+	void ChangePosture_Con(EPlayerUpperState _Posture);
+	//void ChangePosture_Con(EPlayerPosture _Posture);	// => 메인 수정 필요 (24.07.30 플레이어 함수와의 혼동을 방지하지 위해 이름 수정됨) => 메인 적용
 
 	// POV
 	UFUNCTION(BlueprintCallable)

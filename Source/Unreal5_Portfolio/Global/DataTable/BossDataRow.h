@@ -141,6 +141,7 @@ protected:
 public:
 	const FBossDataRow* Data = nullptr;
 
+	UPROPERTY(Replicated)
 	float HP = 0.0f;
 
 protected:

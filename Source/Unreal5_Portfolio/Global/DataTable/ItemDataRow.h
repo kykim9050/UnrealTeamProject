@@ -18,7 +18,7 @@ public:
 	/// 아이템 타입 반환
 	/// </summary>
 	/// <returns></returns>
-	EPlayerPosture GetType() const
+	EPlayerUpperState GetType() const
 	{
 		return Type;
 	}
@@ -102,7 +102,7 @@ private:
 	/// 아이템 종류
 	/// </summary>
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowprivateAccess = "true"))
-	EPlayerPosture Type = EPlayerPosture::Barehand;
+	EPlayerUpperState Type = EPlayerUpperState::UArm_Idle;
 
 	/// <summary>
 	/// 아이템 이름
