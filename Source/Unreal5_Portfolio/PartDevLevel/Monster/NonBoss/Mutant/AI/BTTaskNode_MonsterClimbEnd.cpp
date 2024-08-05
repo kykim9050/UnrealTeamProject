@@ -30,7 +30,7 @@ EBTNodeResult::Type UBTTaskNode_MonsterClimbEnd::ExecuteTask(UBehaviorTreeCompon
 
 	Monster->ChangeRandomAnimation(ETestMonsterAnim::ClimbEnd);
 	UTestMonsterDataBase* MonsterData = GetValueAsObject<UTestMonsterDataBase>(_OwnerComp, TEXT("MonsterData"));
-	MonsterData->ClimbTime = Monster->GetAnimInstance()->GetKeyAnimMontage(ETestMonsterAnim::ClimbEnd, Monster->GetAniIndex())->GetPlayLength();
+	MonsterData->AnimationTime = Monster->GetAnimInstance()->GetKeyAnimMontage(ETestMonsterAnim::ClimbEnd, Monster->GetAniIndex())->GetPlayLength();
 	return EBTNodeResult::InProgress;
 }
 
@@ -47,12 +47,12 @@ void UBTTaskNode_MonsterClimbEnd::TickTask(UBehaviorTreeComponent& _OwnerComp, u
 		return;
 	}
 
-	if (0.0f >= MonsterData->ClimbTime)
+	if (0.0f >= MonsterData->AnimationTime)
 	{
 		Monster->GetCharacterMovement()->SetMovementMode(MOVE_NavWalking);
 		StateChange(_OwnerComp, ETestMonsterState::Chase);
 		return;
 	}
 
-	MonsterData->ClimbTime -= _DeltaSeconds;
+	MonsterData->AnimationTime -= _DeltaSeconds;
 }

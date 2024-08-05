@@ -2,12 +2,21 @@
 
 
 #include "MainGameLevel/Monster/BasicMonster/Mutant/BasicMutant.h"
+#include "MotionWarpingComponent.h"
 
-void ABasicMutant::BeginPlay()
+ABasicMutant::ABasicMutant()
 {
+	MotionWarpingComponent = CreateDefaultSubobject<UMotionWarpingComponent>(TEXT("MotionWarpingComponent"));
+}
+
+void ABasicMutant::InitData(const FMonsterDataRow* BaseData)
+{
+	Super::InitData(BaseData);
+
 	MutantSettingData = NewObject<UBasicMutantData>(this);
+	MutantSettingData->OriginPos = GetActorLocation();
+	MutantSettingData->BaseData = BaseData;
 	MutantSettingData->bScream = true;
 
 	SettingData = MutantSettingData;
-	Super::BeginPlay();
 }

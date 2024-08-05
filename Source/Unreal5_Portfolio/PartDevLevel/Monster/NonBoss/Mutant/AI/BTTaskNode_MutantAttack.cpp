@@ -29,13 +29,14 @@ EBTNodeResult::Type UBTTaskNode_MutantAttack::ExecuteTask(UBehaviorTreeComponent
 	UTestMonsterDataBase* MonsterData = GetValueAsObject<UTestMonsterDataBase>(_OwnerComp, TEXT("MonsterData"));
 	MonsterData->AnimationTime = Monster->GetAnimInstance()->GetKeyAnimMontage(ETestMonsterAnim::Attack, Monster->GetAniIndex())->GetPlayLength();
 
-	AActor* Target = Cast<AActor>(_OwnerComp.GetBlackboardComponent()->GetValueAsObject(TEXT("TargetActor")));
+	AActor* Target = GetValueAsObject<AActor>(_OwnerComp, TEXT("TargetActor"));
 	if (nullptr == Target)
 	{
 		StateChange(_OwnerComp, ETestMonsterState::Idle);
 		return EBTNodeResult::Failed;
 	}
 
+	MonsterData->AttackDamage = MonsterData->NormalAttackDamage;
 	Monster->ChangeRandomAnimation(ETestMonsterAnim::Attack);
 	return EBTNodeResult::InProgress;
 }
@@ -73,8 +74,8 @@ void UBTTaskNode_MutantAttack::TickTask(UBehaviorTreeComponent& _OwnerComp, uint
 		if (0.0f >= TargetPlayerState->GetPlayerHp())
 		{
 			StateChange(_OwnerComp, ETestMonsterState::Idle);
-			_OwnerComp.GetBlackboardComponent()->SetValueAsObject(TEXT("TargetActor"), nullptr);
-			_OwnerComp.GetBlackboardComponent()->SetValueAsBool(TEXT("CanSeePlayer"), false);
+			SetValueAsObject(_OwnerComp, TEXT("TargetActor"), nullptr);
+			SetValueAsBool(_OwnerComp, TEXT("CanSeePlayer"), false);
 			return;
 		}
 		else

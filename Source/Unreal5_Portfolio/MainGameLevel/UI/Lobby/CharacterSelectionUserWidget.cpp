@@ -2,10 +2,13 @@
 
 
 #include "MainGameLevel/UI/Lobby/CharacterSelectionUserWidget.h"
+#include "MainGameLevel/UI/Lobby/LobbyCharacter.h"
 
 #include "Global/MainGameBlueprintFunctionLibrary.h"
 #include "Global/MainGameInstance.h"
 #include "Global/ContentsLog.h"
+
+#include "Kismet/GameplayStatics.h"
 
 void UCharacterSelectionUserWidget::NativeConstruct()
 {
@@ -30,4 +33,12 @@ void UCharacterSelectionUserWidget::SetSelectedCharacter(int _Num)
 	}
 
 	Inst->SetUIToSelectCharacter(CharTypeName[_Num]);
+
+	ALobbyCharacter* MyChar = Cast<ALobbyCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+	if (nullptr == MyChar)
+	{
+		LOG(UILog, Fatal, "ALobbyCharacter is Null");
+	}
+	//MyChar->MyChracterType = CharTypeName[_Num];
+	MyChar->ClientChangedMesh(CharTypeName[_Num]);
 }

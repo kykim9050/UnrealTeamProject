@@ -3,15 +3,18 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Animation/AnimNotifies/AnimNotifyState.h"
+#include "Animation/AnimNotifies/AnimNotify.h"
 #include "BasicMutantJumpAttackNotify.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class UNREAL5_PORTFOLIO_API UBasicMutantJumpAttackNotify : public UAnimNotifyState
+class UNREAL5_PORTFOLIO_API UBasicMutantJumpAttackNotify : public UAnimNotify
 {
 	GENERATED_BODY()
+
+public:
+	virtual void Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation) override;
 	
 };

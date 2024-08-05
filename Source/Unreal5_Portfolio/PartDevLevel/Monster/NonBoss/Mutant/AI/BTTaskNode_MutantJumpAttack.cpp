@@ -28,7 +28,7 @@ EBTNodeResult::Type UBTTaskNode_MutantJumpAttack::ExecuteTask(UBehaviorTreeCompo
 	UTestMonsterDataBase* MonsterData = GetValueAsObject<UTestMonsterDataBase>(_OwnerComp, TEXT("MonsterData"));
 	MonsterData->AnimationTime = Monster->GetAnimInstance()->GetKeyAnimMontage(ETestMonsterAnim::JumpAttack, Monster->GetAniIndex())->GetPlayLength();
 
-	AActor* Target = Cast<AActor>(_OwnerComp.GetBlackboardComponent()->GetValueAsObject(TEXT("TargetActor")));
+	AActor* Target = GetValueAsObject<AActor>(_OwnerComp, (TEXT("TargetActor")));
 	if (nullptr == Target)
 	{
 		StateChange(_OwnerComp, ETestMonsterState::Idle);
@@ -36,7 +36,7 @@ EBTNodeResult::Type UBTTaskNode_MutantJumpAttack::ExecuteTask(UBehaviorTreeCompo
 	}
 
 	Monster->ChangeRandomAnimation(ETestMonsterAnim::JumpAttack);
-	//Monster->GetCharacterMovement()->Launch(TargetToMy * MonsterData->JumpSpeed);
+	MonsterData->AttackDamage = MonsterData->JumpAttackDamage;
 
 	return EBTNodeResult::InProgress;
 }
@@ -59,18 +59,12 @@ void UBTTaskNode_MutantJumpAttack::TickTask(UBehaviorTreeComponent& _OwnerComp, 
 		AActor* TargetActor = GetValueAsObject<AActor>(_OwnerComp, TEXT("TargetActor"));
 		ATestCharacter* TargetPlayer = Cast<ATestCharacter>(TargetActor);
 		ATestPlayerState* TargetPlayerState = Cast<ATestPlayerState>(TargetPlayer->GetPlayerState());
-		
-		if (ETestMonsterState::JumpAttack != static_cast<ETestMonsterState>(GetCurState(_OwnerComp)))
-		{
-			FinishLatentTask(_OwnerComp, EBTNodeResult::Failed);
-			return;
-		}
 
 		if (0.0f >= TargetPlayerState->GetPlayerHp())
 		{
 			StateChange(_OwnerComp, ETestMonsterState::Idle);
-			_OwnerComp.GetBlackboardComponent()->SetValueAsObject(TEXT("TargetActor"), nullptr);
-			_OwnerComp.GetBlackboardComponent()->SetValueAsBool(TEXT("CanSeePlayer"), false);
+			SetValueAsObject(_OwnerComp, TEXT("TargetActor"), nullptr);
+			SetValueAsBool(_OwnerComp, TEXT("CanSeePlayer"), false);
 			return;
 		}
 		else

@@ -39,7 +39,7 @@ void UBTTaskNode_MonsterClimb::TickTask(UBehaviorTreeComponent& OwnerComp, uint8
 
 	ATestMonsterBase* Monster = GetActor<ATestMonsterBase>(OwnerComp);
 	ATestMonsterBaseAIController* Controller = Cast<ATestMonsterBaseAIController>(Monster->GetController());
-	FVector Dest = Controller->GetBlackboardComponent()->GetValueAsVector("DestinationLocation");
+	FVector Dest = GetValueAsVector(OwnerComp, TEXT("DestinationLocation"));
 	FVector CurPos = Monster->GetActorLocation();
 
 	if (CurPos.Z >= Dest.Z - (Monster->GetCapsuleComponent()->GetUnscaledCapsuleHalfHeight() * 1.5f))

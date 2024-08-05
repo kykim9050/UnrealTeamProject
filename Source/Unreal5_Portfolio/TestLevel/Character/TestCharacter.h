@@ -118,10 +118,10 @@ public:
 	void CharacterReload();
 
 	// Inventory => 메인캐릭터로 이전해야 함 (PickUpItem 함수에 필요)
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	TArray<FItemInformation> ItemSlot;
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	TArray<bool> IsItemIn;
+	UPROPERTY(Replicated, VisibleAnywhere, BlueprintReadOnly)
+	TArray<FItemInformation> ItemSlot;		// => 메인 수정 필요 (24.08.05 수정됨)
+	UPROPERTY(Replicated, VisibleAnywhere, BlueprintReadOnly)
+	TArray<bool> IsItemIn;						// => 메인 수정 필요 (24.08.05 수정됨)
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	int CurItemIndex = -1;
 

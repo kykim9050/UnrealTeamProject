@@ -28,6 +28,7 @@
 #include "TestLevel/UI/TestPlayHUD.h"
 #include "TestLevel/UI/TestHpBarUserWidget.h"
 #include "MainGameLevel/UI/InGame/HeadNameWidgetComponent.h"
+#include "MainGameLevel/Object/ItemBase.h"
 #include "MainGameLevel/Object/AreaObject.h"
 #include "MainGameLevel/Object/DoorObject.h"
 #include "MainGameLevel/Particles/MuzzleParticleActor.h"
@@ -268,7 +269,7 @@ void ATestFPVCharacter::Tick(float DeltaTime)
 #endif
 	//DefaultRayCast(DeltaTime);
 	TArray<FFPVItemInformation> I = ItemSlot;
-	//AGameModeBase* Ptr = GetWorld()->GetAuthGameMode();
+	AGameModeBase* Ptr = GetWorld()->GetAuthGameMode();
 	//float ts = GetWorld()->GetDeltaSeconds();
 	int a = 0;
 }
@@ -278,11 +279,15 @@ void ATestFPVCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Ou
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
 	// Posture, Action
-	DOREPLIFETIME(ATestFPVCharacter, PostureValue);	// => 매인 적용.
-	DOREPLIFETIME(ATestFPVCharacter, LowerStateValue); // => 매인 적용.
-	DOREPLIFETIME(ATestFPVCharacter, DirValue);		// => 매인 적용.
+	DOREPLIFETIME(ATestFPVCharacter, PostureValue);		// => 매인 적용.
+	DOREPLIFETIME(ATestFPVCharacter, LowerStateValue);	// => 매인 적용.
+	DOREPLIFETIME(ATestFPVCharacter, DirValue);			// => 매인 적용.
 	DOREPLIFETIME(ATestFPVCharacter, IsFaint);			// 7/26 추가
 	DOREPLIFETIME(ATestFPVCharacter, IsBombSetting);	// => 메인에 이전 필요 (24.07.29 추가됨)
+
+	// Inventory
+	DOREPLIFETIME(ATestFPVCharacter, ItemSlot);		// => 메인 이전 필요 (24.08.05 추가됨)
+	DOREPLIFETIME(ATestFPVCharacter, IsItemIn);		// => 메인 이전 필요 (24.08.05 추가됨)
 
 	// Item
 	DOREPLIFETIME(ATestFPVCharacter, RayCastToItemName);
@@ -796,7 +801,9 @@ void ATestFPVCharacter::DropItem_Implementation(int _SlotIndex) // => 메인 수정 
 	SpawnTrans.SetTranslation(GetActorLocation() + (GetActorForwardVector() * 100.0f) + (GetActorUpVector() * 50.0f));
 
 	// Spawn
-	AActor* DropItem = GetWorld()->SpawnActor<AActor>(ItemBase->GetItemUClass(), SpawnTrans);
+	AActor* DropActor = GetWorld()->SpawnActor<AActor>(ItemBase->GetItemUClass(), SpawnTrans);
+	AItemBase* DropItem = Cast<AItemBase>(DropActor);
+	DropItem->GetStaticMeshComponent()->SetSimulatePhysics(true);
 
 	// 아이템을 앞으로 던지기 (미완)
 	//GetMesh()->SetSimulatePhysics(true);

@@ -66,14 +66,12 @@ void ABasicMonsterBase::BeginPlay()
 		return;
 	}
 
+	InitData(BaseData);
 	if (nullptr == SettingData)
 	{
 		LOG(MonsterLog, Fatal, TEXT("SettingData Is Null"));
 		return;
 	}
-
-	SettingData->OriginPos = GetActorLocation();
-	SettingData->BaseData = BaseData;
 
 	// 애니메이션 세팅
 	AnimInst = Cast<UMonsterRandomAnimInstance>(GetMesh()->GetAnimInstance());
@@ -125,16 +123,16 @@ void ABasicMonsterBase::OnAttackOverlapEnd(UPrimitiveComponent* OverlappedComp, 
 		return;
 	}
 
-	EBasicMonsterState MonsterState = static_cast<EBasicMonsterState>(BlackBoard->GetValueAsEnum(TEXT("CurState")));
 	ATestCharacter* HitCharacter = Cast<ATestCharacter>(OtherActor);
-	if (nullptr != HitCharacter && EBasicMonsterState::Attack == MonsterState)
+	if (nullptr != HitCharacter)
 	{
 		ATestPlayerState* HitPlayerState = Cast<ATestPlayerState>(HitCharacter->GetPlayerState());
 		if (nullptr == HitPlayerState)
 		{
 			LOG(MonsterLog, Fatal, TEXT("HitPlayerState Is Not Valid"));
+			return;
 		}
-
+		
 		HitPlayerState->AddDamage(SettingData->AttackDamage);
 	}
 
@@ -195,6 +193,13 @@ void ABasicMonsterBase::SetChasePlayer()
 		return;
 	}
 
+	UMainGameInstance* MainGameInstance = UMainGameBlueprintFunctionLibrary::GetMainGameInstance(GetWorld());
+	if (nullptr == MainGameInstance)
+	{
+		LOG(MonsterLog, Fatal, TEXT("MainGameInstance Is Nullptr"));
+		return;
+	}
+
 	AMainGameState* MainGameState = UMainGameBlueprintFunctionLibrary::GetMainGameState(GetWorld());
 	if (nullptr == MainGameState)
 	{
@@ -210,23 +215,9 @@ void ABasicMonsterBase::SetChasePlayer()
 	}
 
 	// Find Player
-	int MinIndex = -1;
-	float MinDistance = FLT_MAX;
-	
-	FVector MonsterLocation = GetActorLocation();
-	for (int32 i = 0; i < PlayerGroup->Actors.Num(); i++)
-	{
-		FVector PlayerLocation = PlayerGroup->Actors[i]->GetActorLocation();
-		float Diff = (MonsterLocation - PlayerLocation).Size();
+	int32 PlayerIndex = MainGameInstance->Random.RandRange(0, PlayerGroup->Actors.Num() - 1);
 
-		if (Diff < MinDistance)
-		{
-			MinDistance = Diff;
-			MinIndex = i;
-		}
-	}
-
-	AIController->GetBlackboardComponent()->SetValueAsObject(TEXT("TargetActor"), PlayerGroup->Actors[MinIndex]);
+	AIController->GetBlackboardComponent()->SetValueAsObject(TEXT("TargetActor"), PlayerGroup->Actors[PlayerIndex]);
 	AIController->GetBlackboardComponent()->SetValueAsEnum(TEXT("State"), static_cast<uint8>(EBasicMonsterState::Chase));
 }
 
