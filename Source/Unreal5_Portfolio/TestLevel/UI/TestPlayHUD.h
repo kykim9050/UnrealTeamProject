@@ -19,4 +19,7 @@ class UNREAL5_PORTFOLIO_API ATestPlayHUD : public AMainParentHUD
 protected:
 	void BeginPlay() override;
 	void AllUISetting() override;
+
+	UPROPERTY(BlueprintReadOnly)
+	TMap<EUserWidgetType, UUserWidget*> AllTestPlayWidgets;
 };
