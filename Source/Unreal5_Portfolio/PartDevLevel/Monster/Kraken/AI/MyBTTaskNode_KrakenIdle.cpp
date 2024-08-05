@@ -79,7 +79,7 @@ void UMyBTTaskNode_KrakenIdle::TickTask(UBehaviorTreeComponent& OwnerComp, uint8
 			}
 		}
 
-		OwnerComp.GetBlackboardComponent()->SetValueAsObject(TEXT("TargetActor"), TargetPlayer);
+		SetValueAsObject(OwnerComp, TEXT("TargetActor"), TargetPlayer);
 		StateChange(OwnerComp, ETestMonsterState::Rotate);
 		return;
 	}

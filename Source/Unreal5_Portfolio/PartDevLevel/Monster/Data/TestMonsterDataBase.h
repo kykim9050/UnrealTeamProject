@@ -44,20 +44,17 @@ public:
 
 	float Max_PatrolRange = 800.0f;
 
-	float AttackTime = 0.0f;
-
-	float ClimbTime = 0.0f;
-	float ClimbTotal = 0.0f;
 
 	FVector DestLoc = FVector::ZeroVector;
-	float ClimbEndUpTime = 0.0f;
 
 	float AnimationTime = 0.0f;
 	float JumpSpeed = 30.0f;
+
+	float NormalAttackDamage = 34.0f;
 	float JumpAttackDamage = 50.0f;
 	float JumpAttackBoundary = 500.0f;
 
-	bool IsChange = false;
+	float ClimbEndUpTime = 0.0f;
 
 	FRotator DestRotate = FRotator::ZeroRotator;
 	FRotator MyRotate = FRotator::ZeroRotator;
