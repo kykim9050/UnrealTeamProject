@@ -225,12 +225,13 @@ UENUM(BlueprintType)
 enum class EPlayerUpperState : uint8
 {
 	UArm_Idle,
+	
+	Rifle_Idle,
 	Melee_Idle,
-	Rifle1_Idle,
-	Rifle2_Idle,
+	
 	Melee_Attack,
 	Rifle_Attack,
-	Melee,
+	
 	Drink,
 	Bomb,
 	Barehand,
