@@ -60,6 +60,15 @@ enum class EPlayerPosture : uint8
 };
 
 UENUM(BlueprintType)
+enum class EItemType : uint8
+{
+	Rifle,
+	Melee,
+	Drink,
+	Bomb
+};
+
+UENUM(BlueprintType)
 enum class ETestMonsterState : uint8
 {
 	Idle,
