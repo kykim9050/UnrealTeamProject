@@ -750,7 +750,7 @@ void ATestFPVCharacter::ItemSetting(FName _TagName, EPlayerUpperState _SlotIndex
 	UMainGameInstance* Inst = GetGameInstance<UMainGameInstance>();
 	const FItemDataRow* ItemData = Inst->GetItemData(_TagName);
 	//EPlayerPosture ItemType = static_cast<EPlayerPosture>(_SlotIndex);
-	int SlotIndex = StaticCast<int>(_SlotIndex);
+	int SlotIndex = static_cast<int>(_SlotIndex);
 
 	// 이미 인벤토리에 같은 이름을 가진 아이템이 있을 경우.
 	if (ItemSlot[SlotIndex].Name == _TagName)
@@ -883,7 +883,7 @@ void ATestFPVCharacter::ChangePOV()	// => 메인캐릭터로 이전해야 함 (24.07.29 수�
 		FPVMesh->SetOwnerNoSee(true);
 
 		// Item Mesh
-		for (int i = 0; i < StaticCast<int>(EPlayerUpperState::Barehand); i++)
+		for (int i = 0; i < static_cast<int>(EPlayerUpperState::Barehand); i++)
 		{
 			ItemSocketMesh->SetOwnerNoSee(false);
 			FPVItemSocketMesh->SetOwnerNoSee(true);
@@ -914,7 +914,7 @@ void ATestFPVCharacter::ChangePOV()	// => 메인캐릭터로 이전해야 함 (24.07.29 수�
 		FPVMesh->SetOwnerNoSee(false);
 
 		// Item Mesh
-		for (int i = 0; i < StaticCast<int>(EPlayerUpperState::Barehand); i++)
+		for (int i = 0; i < static_cast<int>(EPlayerUpperState::Barehand); i++)
 		{
 			ItemSocketMesh->SetOwnerNoSee(true);
 			FPVItemSocketMesh->SetOwnerNoSee(false);
@@ -1012,10 +1012,7 @@ void ATestFPVCharacter::AttackCheck()
 	case EPlayerUpperState::UArm_Idle:
 		ChangeMontage(EPlayerUpperState::Barehand);
 		break;
-	case EPlayerUpperState::Rifle1_Idle:
-		ChangeMontage(EPlayerUpperState::Rifle_Attack);
-		break;
-	case EPlayerUpperState::Rifle2_Idle:
+	case EPlayerUpperState::Rifle_Idle:
 		ChangeMontage(EPlayerUpperState::Rifle_Attack);
 		break;
 	case EPlayerUpperState::Melee_Idle:
@@ -1028,7 +1025,14 @@ void ATestFPVCharacter::AttackCheck()
 
 void ATestFPVCharacter::AttackEndCheck()
 {
-	//ChangeMontage(UpperStateValue);
+	//ChangeMontage(IdleDefault);
+
+	UAnimMontage* GetCurMontage = GetCurrentMontage();
+	FName xx = GetCurMontage->GetFName();
+
+	//PlayerAnimInst->GetKeyAnimMontage();
+
+	int a = 0;
 }
 
 void ATestFPVCharacter::NetCheck() // => 매인 적용.
