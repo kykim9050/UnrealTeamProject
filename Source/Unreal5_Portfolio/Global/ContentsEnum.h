@@ -65,7 +65,8 @@ enum class EItemType : uint8
 	Rifle,
 	Melee,
 	Drink,
-	Bomb
+	Bomb,
+	None
 };
 
 UENUM(BlueprintType)

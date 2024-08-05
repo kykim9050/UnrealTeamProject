@@ -44,5 +44,5 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	class UStaticMeshComponent* StaticMeshComponent = nullptr;
 
-	FItemDataRow* ItemData;
+	const FItemDataRow* ItemData = nullptr;
 };

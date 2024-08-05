@@ -3,6 +3,8 @@
 
 #include "MainGameLevel/Object/ItemBase.h"
 #include "Components/CapsuleComponent.h"
+#include <Global/MainGameInstance.h>
+#include "Global/ContentsLog.h"
 
 // Sets default values
 AItemBase::AItemBase()
@@ -26,6 +28,12 @@ void AItemBase::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	UMainGameInstance* Inst = GetGameInstance<UMainGameInstance>();
+	ItemData = Inst->GetItemData(*ItemDataName);
+	if (nullptr == ItemData)
+	{
+		LOG(ObjectLog, Fatal, "ItemData is null.");
+	}
 }
 
 // Called every frame

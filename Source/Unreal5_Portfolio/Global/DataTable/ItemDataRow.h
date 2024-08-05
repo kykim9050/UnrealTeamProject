@@ -102,7 +102,7 @@ private:
 	/// 아이템 종류
 	/// </summary>
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowprivateAccess = "true"))
-	EItemType ItemType = EItemType::Rifle;
+	EItemType ItemType = EItemType::None;
 
 	/// <summary>
 	/// 아이템 종류
