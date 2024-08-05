@@ -67,6 +67,10 @@ private:
 	void SetOnDead();
 	void SetOnDead_Implementation();
 
+	UFUNCTION(Reliable, NetMulticast)
+	void BossHP_HUDCheck();
+	void BossHP_HUDCheck_Implementation();
+
 	void OnDead();
 
 	UFUNCTION()
@@ -89,6 +93,10 @@ private:
 	UPROPERTY(Replicated)
 	uint8 AniValue;
 
+	UPROPERTY(Replicated)
+	float Hp;
+	float CurHp;
+
 	UPROPERTY()
 	class UMainAnimInstance* MainAnimInst;
 
@@ -104,7 +112,6 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "Projectile")
 	FVector MuzzleOffset;
 
-	UPROPERTY()
-	class ATestPlayHUD* BossUHD;
+
 
 };
