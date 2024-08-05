@@ -99,3 +99,19 @@ void AMainParentHUD::UISwitch(EUserWidgetType _Type)
 		UIOn(_Type);
 	}
 }
+
+void AMainParentHUD::AllUIOff()
+{
+	for (auto ui : AllWidgets)
+	{
+		ui.Value->SetVisibility(ESlateVisibility::Collapsed);
+	}
+}
+
+void AMainParentHUD::AllUIOn()
+{
+	for (auto ui : AllWidgets)
+	{
+		ui.Value->SetVisibility(ESlateVisibility::Visible);
+	}
+}

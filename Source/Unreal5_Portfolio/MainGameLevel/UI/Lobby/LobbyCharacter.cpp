@@ -39,7 +39,10 @@ void ALobbyCharacter::BeginPlay()
 		MyOrder = pc; // 0, 1, 2, 3
 	}
 	// 각 플레이어에 해당하는 마네킹은 BP에서 Spawn됨 
-	MyMannequin->SetMyNumber(MyOrder);
+	if(nullptr != MyMannequin)
+	{
+		MyMannequin->SetMyNumber(MyOrder);
+	}
 }
 
 // Called every frame
@@ -79,7 +82,10 @@ void ALobbyCharacter::Tick(float DeltaTime)
 	}
 
 	// 마네킹을 플레이어에서 직접 업데이트
-	MyMannequin->SetEachMesh(MyChracterType);
+	if (nullptr != MyMannequin)
+	{
+		MyMannequin->SetEachMesh(MyChracterType);
+	}
 
 	int a = 0;
 }
@@ -98,6 +104,7 @@ void ALobbyCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutL
 
 	DOREPLIFETIME(ALobbyCharacter, MyOrder);
 	DOREPLIFETIME(ALobbyCharacter, MyChracterType);
+	DOREPLIFETIME(ALobbyCharacter, MyMannequin);
 }
 
 
