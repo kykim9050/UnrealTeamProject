@@ -3,6 +3,7 @@
 
 #include "PartDevLevel/Character/TestFPVCharacter.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "Camera/CameraComponent.h"
 #include "Engine/SkeletalMeshSocket.h"
 #include "Engine/StaticMeshSocket.h"
@@ -13,6 +14,7 @@
 #include "PartDevLevel/Character/TestFPVPlayerController.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "Kismet/GameplayStatics.h"
+#include "Kismet/KismetMathLibrary.h"
 
 #include "Global/DataTable/ItemDataRow.h"
 
@@ -94,10 +96,10 @@ ATestFPVCharacter::ATestFPVCharacter()
 	GetMapItemCollisionComponent->SetBoxExtent(FVector(55.0f, 50.0f, 100.0f));
 	GetMapItemCollisionComponent->SetCollisionProfileName(FName("MapItemSearch"));
 
-	UEnum* Enum = StaticEnum<EPlayerPosture>();
+	//UEnum* Enum = StaticEnum<EPlayerPosture>();
 
 	// Inventory (for UI Test)	// => 메인캐릭터 적용. [주석 부분 다르니 확인 요청.]
-	for (size_t i = 0; i < static_cast<size_t>(EPlayerPosture::Barehand); i++)
+	for (size_t i = 0; i < static_cast<size_t>(EPlayerUpperState::Barehand); i++)
 	{
 		FFPVItemInformation NewSlot;
 		/*NewSlot.Name = "";
@@ -184,15 +186,15 @@ void ATestFPVCharacter::PostInitializeComponents()
 		// FName을 가져오는 기능이 필요하다.
 
 		// 스켈레탈 메쉬 선택
-		USkeletalMesh* PlayerSkeletalMesh = MainGameInst->GetPlayerData(FName("Vanguard"))->GetPlayerSkeletalMesh();
+		USkeletalMesh* PlayerSkeletalMesh = MainGameInst->GetPlayerData(FName("TestPlayer"))->GetPlayerSkeletalMesh();
 		GetMesh()->SetSkeletalMesh(PlayerSkeletalMesh);
 
 		// 팔 메쉬 선택 (메인 추가 필요)
-		USkeletalMesh* FPVSkeletalMesh = MainGameInst->GetPlayerData(FName("Vanguard"))->GetPlayerFPVPlayerSkeletalMesh();
+		USkeletalMesh* FPVSkeletalMesh = MainGameInst->GetPlayerData(FName("TestPlayer"))->GetPlayerFPVPlayerSkeletalMesh();
 		FPVMesh->SetSkeletalMesh(FPVSkeletalMesh);
 
 		// ABP 선택
-		UClass* AnimInst = Cast<UClass>(MainGameInst->GetPlayerData(FName("Vanguard"))->GetPlayerAnimInstance());
+		UClass* AnimInst = Cast<UClass>(MainGameInst->GetPlayerData(FName("TestPlayer"))->GetPlayerAnimInstance());
 		GetMesh()->SetAnimInstanceClass(AnimInst);
 	}
 
@@ -218,7 +220,10 @@ void ATestFPVCharacter::BeginPlay()	// => 메인 수정 필요 (24.08.01 수정, 추가된 
 	GetMapItemCollisionComponent->OnComponentBeginOverlap.AddDynamic(this, &ATestFPVCharacter::MapItemOverlapStart);
 	GetMapItemCollisionComponent->OnComponentEndOverlap.AddDynamic(this, &ATestFPVCharacter::MapItemOverlapEnd);
 
-	//UISetting();
+
+	//double MyVelocity = UKismetMathLibrary::VSizeXY(GetVelocity());
+	//UCharacterMovementComponent* MyMovementComponent = GetCharacterMovement();
+	//MyMovementComponent->IsFalling();
 }
 
 // Called every frame
@@ -278,8 +283,7 @@ void ATestFPVCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Ou
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
-	// Posture, Action
-	DOREPLIFETIME(ATestFPVCharacter, PostureValue);		// => 매인 적용.
+	// AnimInstance
 	DOREPLIFETIME(ATestFPVCharacter, LowerStateValue);	// => 매인 적용.
 	DOREPLIFETIME(ATestFPVCharacter, DirValue);			// => 매인 적용.
 	DOREPLIFETIME(ATestFPVCharacter, IsFaint);			// 7/26 추가
@@ -290,7 +294,7 @@ void ATestFPVCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Ou
 	DOREPLIFETIME(ATestFPVCharacter, IsItemIn);		// => 메인 이전 필요 (24.08.05 추가됨)
 
 	// Item
-	DOREPLIFETIME(ATestFPVCharacter, RayCastToItemName);
+	//DOREPLIFETIME(ATestFPVCharacter, RayCastToItemName); // 사용 안함.
 
 	// Server?
 	DOREPLIFETIME(ATestFPVCharacter, Token); // => 매인 적용.
@@ -350,41 +354,44 @@ void ATestFPVCharacter::FireRayCast_Implementation() // => 메인 수정 필요 (24.07
 	}
 }
 
-void ATestFPVCharacter::Drink_Implementation()					// => 메인에 이전 필요 (24.08.01 수정됨)
+void ATestFPVCharacter::Drink()
 {
+	ChangeMontage(EPlayerUpperState::Drink);
+
 	// 음료 아이템이 없다면 return
-	if (false == IsItemIn[3])
-	{
-#ifdef WITH_EDITOR
-		GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Yellow, FString::Printf(TEXT("The item slot is empty. (Index : %d)"), 4));
-#endif
-		return;
-	}
+//	if (false == IsItemIn[3])
+//	{
+//#ifdef WITH_EDITOR
+//		GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Yellow, FString::Printf(TEXT("The item slot is empty. (Index : %d)"), 4));
+//#endif
+//		return;
+//	}
 
 	// 애니메이션 변경
-	ChangePosture(EPlayerPosture::Drink);
+	//ChangePosture(EPlayerPosture::Drink);
 
-	// 음료 아이템 삭제
-	DeleteItem(3);
-
-	// 실질적인 플레이어 HP 회복
-	ATestPlayerState* MyTestPlayerState = GetPlayerState<ATestPlayerState>();
-	if (nullptr == MyTestPlayerState)
-	{
-		return;
-	}
-	MyTestPlayerState->HealHp();
-
-#ifdef WITH_EDITOR
-	GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Red, FString(TEXT("HP recovered!")));
-#endif
+//	// 음료 아이템 삭제
+//	DeleteItem(3);
+//
+//	// 실질적인 플레이어 HP 회복
+//	ATestPlayerState* MyTestPlayerState = GetPlayerState<ATestPlayerState>();
+//	if (nullptr == MyTestPlayerState)
+//	{
+//		return;
+//	}
+//	MyTestPlayerState->HealHp();
+//
+//#ifdef WITH_EDITOR
+//	GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Red, FString(TEXT("HP recovered!")));
+//#endif
 }
 
 // 노티파이
 void ATestFPVCharacter::DrinkComplete_Implementation()			// => 메인에 이전 필요 (24.08.01 수정됨)
 {
 	// 이전 자세로 애니메이션 변경
-	ChangePosture(PrevPostureValue);
+	//ChangePosture(PrevPostureValue);
+	ChangeMontage(IdleDefault);
 }
 
 void ATestFPVCharacter::BombSetStart_Implementation()			// => 메인에 이전 필요 (24.08.01 수정됨)
@@ -418,7 +425,8 @@ void ATestFPVCharacter::BombSetStart_Implementation()			// => 메인에 이전 필요 (
 #endif
 
 	// 애니메이션 변경
-	ChangePosture(EPlayerPosture::Bomb);
+	//ChangePosture(EPlayerPosture::Bomb);
+	ChangeMontage(EPlayerUpperState::Bomb);
 }
 
 void ATestFPVCharacter::BombSetTick_Implementation()		// => 메인에 이전 필요 (24.08.01 수정됨)
@@ -465,7 +473,8 @@ void ATestFPVCharacter::BombSetCancel_Implementation()		// => 메인에 이전 필요 (
 		}
 
 		// 이전 자세로 애니메이션 변경
-		ChangePosture(PrevPostureValue);
+		//ChangePosture(PrevPostureValue);
+		ChangeMontage(IdleDefault);
 	}
 }
 
@@ -489,7 +498,8 @@ void ATestFPVCharacter::BombSetComplete_Implementation()	// => 메인에 이전 필요 
 	DeleteItem(4);
 
 	// 이전 자세로 애니메이션 변경
-	ChangePosture(PrevPostureValue);
+	//ChangePosture(PrevPostureValue);
+	ChangeMontage(IdleDefault);
 }
 
 void ATestFPVCharacter::ChangeMontage_Implementation(EPlayerUpperState _UpperState)
@@ -505,58 +515,70 @@ void ATestFPVCharacter::ClientChangeMontage_Implementation(EPlayerUpperState _Up
 	FPVPlayerAnimInst->ChangeAnimation(_UpperState);
 }
 
-void ATestFPVCharacter::ChangePosture_Implementation(EPlayerPosture _Type)	// => 메인으로 이전해야 함 (24.07.30 수정 중)
-{
-	if (_Type == EPlayerPosture::Barehand)
-	{
-		// 1. Barehand => 맨손 자세로 변경
-		PrevPostureValue = PostureValue;
-		PostureValue = _Type;
-		CurItemIndex = -1;
+//void ATestFPVCharacter::ChangePosture_Implementation(EPlayerPosture _Type)	// => 메인으로 이전해야 함 (24.07.30 수정 중)
+//{
+//	PostureValue = _Type;
 
-		// 아이템 메시 visibility 끄기
-		ItemSocketMesh->SetVisibility(false);
-		FPVItemSocketMesh->SetVisibility(false);
-	}
-	else
-	{
-		// 2. Rifle1, Rifle2, Melee, Drink, Bomb => 아이템을 든 자세로 변경
-		int ItemSlotIndex = static_cast<int>(_Type);
-		if (IsItemIn[ItemSlotIndex] == false)
-		{
-#ifdef WITH_EDITOR
-			GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Yellow, FString::Printf(TEXT("The item slot is empty. (Index : %d)"), ItemSlotIndex + 1));
-#endif // WITH_EDITOR
-			return;
-		}
-		PrevPostureValue = PostureValue;
-		PostureValue = _Type;
-		CurItemIndex = ItemSlotIndex;
-
-		// == 아이템 장착. ==
-
-		// 아이템 static mesh 세팅
-		ItemSocketMesh->SetStaticMesh(ItemSlot[CurItemIndex].MeshRes);
-		FPVItemSocketMesh->SetStaticMesh(ItemSlot[CurItemIndex].MeshRes);
-
-		// 아이템 메시 transform 세팅
-		ItemSocketMesh->SetRelativeLocation(ItemSlot[CurItemIndex].RelLoc);
-		FPVItemSocketMesh->SetRelativeLocation(ItemSlot[CurItemIndex].RelLoc);
-
-		ItemSocketMesh->SetRelativeRotation(ItemSlot[CurItemIndex].RelRot);
-		FPVItemSocketMesh->SetRelativeRotation(ItemSlot[CurItemIndex].RelRot);
-
-		ItemSocketMesh->SetRelativeScale3D(ItemSlot[CurItemIndex].RelScale);
-		FPVItemSocketMesh->SetRelativeScale3D(ItemSlot[CurItemIndex].RelScale);
-
-		// 아이템 메시 visibility 켜기
-		ItemSocketMesh->SetVisibility(true);
-		FPVItemSocketMesh->SetVisibility(true);
-	}
-}
+//	if (_Type == EPlayerPosture::Barehand)
+//	{
+//		// 1. Barehand => 맨손 자세로 변경
+//		
+//		// 이전 PostureValue를 저장.
+//		PrevPostureValue = PostureValue;
+//
+//		// Anim Instance 값 설정.
+//		PostureValue = _Type;
+//		
+//		// == 아이템 장착. ==
+//		CurItemIndex = 5;
+//
+//		// 아이템 메시 visibility 끄기
+//		ItemSocketMesh->SetVisibility(false);
+//		FPVItemSocketMesh->SetVisibility(false);
+//	}
+//	else
+//	{
+//		// 2. Rifle1, Rifle2, Melee, Drink, Bomb => 아이템을 든 자세로 변경
+//		int ItemSlotIndex = static_cast<int>(_Type);
+//		if (IsItemIn[ItemSlotIndex] == false)
+//		{
+//#ifdef WITH_EDITOR
+//			GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Yellow, FString::Printf(TEXT("The item slot is empty. (Index : %d)"), ItemSlotIndex + 1));
+//#endif // WITH_EDITOR
+//			return;
+//		}
+//		// 이전 PostureValue를 저장.
+//		PrevPostureValue = PostureValue;
+//
+//		// Anim Instance 값 설정.
+//		PostureValue = _Type;
+//		
+//		// == 아이템 장착. ==
+//		CurItemIndex = ItemSlotIndex;
+//
+//		// 아이템 static mesh 세팅
+//		ItemSocketMesh->SetStaticMesh(ItemSlot[CurItemIndex].MeshRes);
+//		FPVItemSocketMesh->SetStaticMesh(ItemSlot[CurItemIndex].MeshRes);
+//
+//		// 아이템 메시 transform 세팅
+//		ItemSocketMesh->SetRelativeLocation(ItemSlot[CurItemIndex].RelLoc);
+//		FPVItemSocketMesh->SetRelativeLocation(ItemSlot[CurItemIndex].RelLoc);
+//
+//		ItemSocketMesh->SetRelativeRotation(ItemSlot[CurItemIndex].RelRot);
+//		FPVItemSocketMesh->SetRelativeRotation(ItemSlot[CurItemIndex].RelRot);
+//
+//		ItemSocketMesh->SetRelativeScale3D(ItemSlot[CurItemIndex].RelScale);
+//		FPVItemSocketMesh->SetRelativeScale3D(ItemSlot[CurItemIndex].RelScale);
+//
+//		// 아이템 메시 visibility 켜기
+//		ItemSocketMesh->SetVisibility(true);
+//		FPVItemSocketMesh->SetVisibility(true);
+//	}
+//}
 
 void ATestFPVCharacter::CrouchCameraMove() // => 매인에 적용 필요 (24.07.29 수정됨) => 메인 적용.
 {
+	// Controller의 Crouch 함수에서 호출.
 	//if (IsFPV)
 	if(PointOfView == EPlayerFPSTPSState::FPS)
 	{
@@ -662,79 +684,87 @@ void ATestFPVCharacter::InteractObject_Implementation(AMapObjectBase* _MapObject
 
 void ATestFPVCharacter::PickUpItem_Implementation(AActor* _Item)	// => 메인 수정 필요 (24.08.02 인자 추가에 따라 TagName 가져오는 부분 수정됨)
 {
-	// Overlap된 아이템의 Tag 이름을 통해 FName을 가져온다.
-	FString TagName = "";
-	for (size_t i = 0; i < _Item->Tags.Num(); i++)
-	{
-		TagName = _Item->Tags[i].ToString();
-	}
-	FName ItemStringToName = FName(*TagName);			// 아이템 이름
+	//// Overlap된 아이템의 Tag 이름을 통해 FName을 가져온다.
+	//FString TagName = "";
+	//for (size_t i = 0; i < _Item->Tags.Num(); i++)
+	//{
+	//	TagName = _Item->Tags[i].ToString();
+	//}
+	//FName ItemStringToName = FName(*TagName);			// 아이템 이름
 
-	UMainGameInstance* Inst = GetGameInstance<UMainGameInstance>();
-	const FItemDataRow* ItemData = Inst->GetItemData(ItemStringToName);
+	//UMainGameInstance* Inst = GetGameInstance<UMainGameInstance>();
+	//const FItemDataRow* ItemData = Inst->GetItemData(ItemStringToName);
 
-	EPlayerPosture ItemType = ItemData->GetType();		// 아이템 타입
+	////EPlayerPosture ItemType = ItemData->GetType();		// 아이템 타입
+	//EPlayerUpperState ItemType = ItemData->GetType();		// 아이템 타입
 
-	if (ItemType == EPlayerPosture::Rifle1)	// Rifle 아이템을 줍는 경우
-	{
-		if (false == IsItemIn[static_cast<int>(EPlayerPosture::Rifle1)])
-		{
-			// 1번 슬롯이 비어있는 경우 => 1번 슬롯
-			ItemSetting(ItemStringToName, 0);
-		}
-		else if (true == IsItemIn[static_cast<int>(EPlayerPosture::Rifle1)] && false == IsItemIn[static_cast<int>(EPlayerPosture::Rifle2)])
-		{
-			// 1번 슬롯은 비어있지 않고, 2번 슬롯만 비어있는 경우 => 2번 슬롯
-			ItemSetting(ItemStringToName, 1);
-		}
-		else
-		{
-			// 1번 슬롯도 2번 슬롯도 비어있지 않을 경우
-			if (PostureValue == EPlayerPosture::Rifle1 || PostureValue == EPlayerPosture::Rifle2)
-			{
-				// 아이템을 줍기 직전에 1번 또는 2번 아이템을 손에 들고 있었다면 => 각각 1번 또는 2번 슬롯
-				ItemSetting(ItemStringToName, static_cast<int>(PostureValue));
-			}
-			else
-			{
-				// 아이템을 줍기 직전에 맨손이거나, 3번 아이템을 손에 들고 있었다면 => 1번 슬롯
-				ItemSetting(ItemStringToName, 0);
-			}
-		}
-	}
-	else	// Rifle이 아닌 아이템을 줍는 경우
-	{
-		ItemSetting(ItemStringToName, static_cast<int>(ItemType));
-	}
+	//switch (ItemType)
+	//{
+	//case EPlayerUpperState::UArm_Idle:
+	//	break;
+	//case EPlayerUpperState::Rifle_Idle:
+	//	break;
+	//case EPlayerUpperState::Melee_Idle:
+	//	break;
+	//default:
+	//	break;
+	//}
 
-	// Widget CallBack
-	ATestFPVPlayerController* Con = Cast<ATestFPVPlayerController>(GetController());
-	if (nullptr != Con)
-	{
-		Con->FGetItemToWidget_Test_FPV.Execute();
-	}
+	//if (ItemType == EPlayerUpperState::Rifle_Idle)	// Rifle 아이템을 줍는 경우
+	//{
+	//	if (false == IsItemIn[0])
+	//	{
+	//		ItemSetting(ItemStringToName, EPlayerUpperState::Rifle_Idle);
+	//	}
+	//	else if (false == IsItemIn[1])
+	//	{
+	//		// 1번 슬롯은 비어있지 않고, 2번 슬롯만 비어있는 경우 => 2번 슬롯
+	//		ItemSetting(ItemStringToName, EPlayerUpperState::Rifle_Idle);
+	//	}
+	//	else if(true == IsItemIn[0] && false == IsItemIn[0])
+	//	{
+	//		if (true)
+	//		{
+
+	//		}
+	//		
+	//	}
+	//}
+	//else	// Rifle이 아닌 아이템을 줍는 경우
+	//{
+	//	ItemSetting(ItemStringToName, ItemType);
+	//}
+
+	//// Widget CallBack
+	//ATestFPVPlayerController* Con = Cast<ATestFPVPlayerController>(GetController());
+	//if (nullptr != Con)
+	//{
+	//	Con->FGetItemToWidget_Test_FPV.Execute();
+	//}
 }
 
-void ATestFPVCharacter::ItemSetting(FName _TagName, int _SlotIndex) // => 메인 수정 필요 (24.07.31 수정됨)
+//void ATestFPVCharacter::ItemSetting(FName _TagName, int _SlotIndex)
+void ATestFPVCharacter::ItemSetting(FName _TagName, EPlayerUpperState _SlotIndex)
 {
 	// ItemName에 맞는 아이템 정보를 DT에서 가져온다.
 	UMainGameInstance* Inst = GetGameInstance<UMainGameInstance>();
 	const FItemDataRow* ItemData = Inst->GetItemData(_TagName);
-	EPlayerPosture ItemType = static_cast<EPlayerPosture>(_SlotIndex);
+	//EPlayerPosture ItemType = static_cast<EPlayerPosture>(_SlotIndex);
+	int SlotIndex = StaticCast<int>(_SlotIndex);
 
 	// 이미 인벤토리에 같은 이름을 가진 아이템이 있을 경우.
-	if (ItemSlot[_SlotIndex].Name == _TagName)
+	if (ItemSlot[SlotIndex].Name == _TagName)
 	{
 #ifdef WITH_EDITOR
-		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, FString::Printf(TEXT("The same item is already in inventory. (Index : %d)"), _SlotIndex + 1));
+		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, FString::Printf(TEXT("The same item is already in inventory. (Index : %d)"), SlotIndex + 1));
 #endif // WITH_EDITOR
 		return;
 	}
 
 	// 이미 인벤토리에 같은 타입의 아이템이 있을 경우.
-	if (IsItemIn[_SlotIndex] == true)
+	if (IsItemIn[SlotIndex] == true)
 	{
-		DropItem(_SlotIndex);
+		DropItem(SlotIndex);
 	}
 
 	// Data Table에 있는 아이템 정보 가져오기.
@@ -746,29 +776,40 @@ void ATestFPVCharacter::ItemSetting(FName _TagName, int _SlotIndex) // => 메인 �
 	FVector ItemRelScale = ItemData->GetRelScale();		// 스태틱 메시 컴포넌트 상대적 크기
 
 	// 인벤토리에 아이템 넣기.
-	IsItemIn[_SlotIndex] = true;
+	IsItemIn[SlotIndex] = true;
 
-	ItemSlot[_SlotIndex].Name = _TagName;
-	ItemSlot[_SlotIndex].ReloadMaxNum = ItemReloadNum;
-	ItemSlot[_SlotIndex].ReloadLeftNum = ItemReloadNum;
-	ItemSlot[_SlotIndex].Damage = ItemDamage;
-	ItemSlot[_SlotIndex].MeshRes = ItemMeshRes;
-	ItemSlot[_SlotIndex].RelLoc = ItemRelLoc;
-	ItemSlot[_SlotIndex].RelRot = ItemRelRot;
-	ItemSlot[_SlotIndex].RelScale = ItemRelScale;
+	ItemSlot[SlotIndex].Name = _TagName;
+	ItemSlot[SlotIndex].ReloadMaxNum = ItemReloadNum;
+	ItemSlot[SlotIndex].ReloadLeftNum = ItemReloadNum;
+	ItemSlot[SlotIndex].Damage = ItemDamage;
+	ItemSlot[SlotIndex].MeshRes = ItemMeshRes;
+	ItemSlot[SlotIndex].RelLoc = ItemRelLoc;
+	ItemSlot[SlotIndex].RelRot = ItemRelRot;
+	ItemSlot[SlotIndex].RelScale = ItemRelScale;
 
 #ifdef WITH_EDITOR
-	GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, FString::Printf(TEXT("Picked up new item! (Index : %d)"), _SlotIndex + 1));
+	GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, FString::Printf(TEXT("Picked up new item! (Index : %d)"), SlotIndex + 1));
 #endif // WITH_EDITOR
 
 	// Map에 있는 아이템 삭제.
 	GetMapItemData->Destroy();
 
 	// 아이템 Type에 따른 애니메이션 자세 변화. (ItemType이 Rifle1, Rifle2, Melee일 경우만)
-	if (ItemType == EPlayerPosture::Rifle1 || ItemType == EPlayerPosture::Rifle2 || ItemType == EPlayerPosture::Melee)
-	{
-		ChangePosture(ItemType);
-	}
+
+	//// 아이템 Type에 따른 애니메이션 자세 변화. (ItemType이 Rifle1, Rifle2, Melee일 경우만)
+	//if (_SlotIndex == EPlayerUpperState::Rifle1_Idle)
+	//{
+	//	//ChangePosture(ItemType);
+	//	ChangeMontage(EPlayerUpperState::Rifle1_Idle);
+	//}
+	//else if (_SlotIndex == EPlayerUpperState::Rifle2_Idle)
+	//{
+	//	ChangeMontage(EPlayerUpperState::Rifle2_Idle);
+	//}
+	//else if (_SlotIndex == EPlayerUpperState::Melee_Idle)
+	//{
+	//	ChangeMontage(EPlayerUpperState::Melee_Idle);
+	//}
 }
 
 void ATestFPVCharacter::DropItem_Implementation(int _SlotIndex) // => 메인 수정 필요 (24.08.02 수정됨)
@@ -814,7 +855,8 @@ void ATestFPVCharacter::DropItem_Implementation(int _SlotIndex) // => 메인 수정 
 	DeleteItem(CurItemIndex);
 
 	// 자세를 맨손으로 변경
-	ChangePosture(EPlayerPosture::Barehand);
+	//ChangePosture(EPlayerPosture::Barehand);
+	ChangeMontage(EPlayerUpperState::Barehand);
 }
 
 void ATestFPVCharacter::DeleteItem(int _Index)
@@ -839,7 +881,7 @@ void ATestFPVCharacter::ChangePOV()	// => 메인캐릭터로 이전해야 함 (24.07.29 수�
 		FPVMesh->SetOwnerNoSee(true);
 
 		// Item Mesh
-		for (int i = 0; i < int(EPlayerPosture::Barehand); i++)
+		for (int i = 0; i < StaticCast<int>(EPlayerUpperState::Barehand); i++)
 		{
 			ItemSocketMesh->SetOwnerNoSee(false);
 			FPVItemSocketMesh->SetOwnerNoSee(true);
@@ -870,7 +912,7 @@ void ATestFPVCharacter::ChangePOV()	// => 메인캐릭터로 이전해야 함 (24.07.29 수�
 		FPVMesh->SetOwnerNoSee(false);
 
 		// Item Mesh
-		for (int i = 0; i < int(EPlayerPosture::Barehand); i++)
+		for (int i = 0; i < StaticCast<int>(EPlayerUpperState::Barehand); i++)
 		{
 			ItemSocketMesh->SetOwnerNoSee(true);
 			FPVItemSocketMesh->SetOwnerNoSee(false);
@@ -963,35 +1005,20 @@ void ATestFPVCharacter::AttackCheck()
 {
 	// Mouse Left Button 
 
-	switch (PostureValue)
+	switch (IdleDefault)
 	{
-	case EPlayerPosture::Rifle1:
-	case EPlayerPosture::Rifle2: // 총
-	{
-		FireRayCast();
-		ChangeMontage(EPlayerUpperState::Rifle_Attack);
-		break;
-	}
-	case EPlayerPosture::Melee: // 칼
-	{
-		ChangeMontage(EPlayerUpperState::Melee);
-		break;
-	}
-	case EPlayerPosture::Drink: // 음료
-	{
-		ChangeMontage(EPlayerUpperState::Drink);
-		break;
-	}
-	case EPlayerPosture::Bomb: // 폭탄
-	{
-		ChangeMontage(EPlayerUpperState::Bomb);
-		break;
-	}
-	case EPlayerPosture::Barehand: // 주먹
-	{
+	case EPlayerUpperState::UArm_Idle:
 		ChangeMontage(EPlayerUpperState::Barehand);
 		break;
-	}
+	case EPlayerUpperState::Rifle1_Idle:
+		ChangeMontage(EPlayerUpperState::Rifle_Attack);
+		break;
+	case EPlayerUpperState::Rifle2_Idle:
+		ChangeMontage(EPlayerUpperState::Rifle_Attack);
+		break;
+	case EPlayerUpperState::Melee_Idle:
+		ChangeMontage(EPlayerUpperState::Melee_Attack);
+		break;
 	default:
 		break;
 	}
@@ -999,37 +1026,7 @@ void ATestFPVCharacter::AttackCheck()
 
 void ATestFPVCharacter::AttackEndCheck()
 {
-	switch (PostureValue)
-	{
-	case EPlayerPosture::Rifle1:
-	case EPlayerPosture::Rifle2: // 총
-	{
-		ChangeMontage(EPlayerUpperState::Rifle_Idle);
-		break;
-	}
-	case EPlayerPosture::Melee: // 칼
-	{
-		ChangeMontage(EPlayerUpperState::Melee);
-		break;
-	}
-	case EPlayerPosture::Drink: // 음료
-	{
-		ChangeMontage(EPlayerUpperState::Drink);
-		break;
-	}
-	case EPlayerPosture::Bomb: // 폭탄
-	{
-		ChangeMontage(EPlayerUpperState::Bomb);
-		break;
-	}
-	case EPlayerPosture::Barehand: // 주먹
-	{
-		ChangeMontage(EPlayerUpperState::Barehand);
-		break;
-	}
-	default:
-		break;
-	}
+	//ChangeMontage(UpperStateValue);
 }
 
 void ATestFPVCharacter::NetCheck() // => 매인 적용.

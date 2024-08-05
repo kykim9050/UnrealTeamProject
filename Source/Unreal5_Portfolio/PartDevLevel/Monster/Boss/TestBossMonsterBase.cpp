@@ -122,6 +122,11 @@ void ATestBossMonsterBase::BeginPlay()
 	SetAttackCollision(false);
 }
 
+	//BossUHD->GetWidget(EUserWidgetType::BossHpbar);
+	//BossUHD->UIOn(EUserWidgetType::BossHpbar);
+
+}
+
 // Called every frame
 void ATestBossMonsterBase::Tick(float DeltaTime)
 {

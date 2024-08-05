@@ -69,19 +69,9 @@ public:
 	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	class UBoxComponent* GetMapItemCollisionComponent = nullptr;	// => 메인 수정 필요 (24.08.01 오타 수정됨)
 
-	// Posture
-	UPROPERTY(Category = "Contents", Replicated, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	EPlayerPosture PostureValue = EPlayerPosture::Barehand;
-	UPROPERTY(Category = "Contents", VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	EPlayerPosture PrevPostureValue = EPlayerPosture::Barehand;		// => 메인으로 이전 필요 (24.07.31 추가됨)
-
 	// LowerState (태환)
 	UPROPERTY(Category = "Contents", Replicated, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	EPlayerLowerState LowerStateValue = EPlayerLowerState::Idle;
-
-	// UpperState
-	UPROPERTY(Category = "Contents", Replicated, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	EPlayerUpperState UpperStateValue = EPlayerUpperState::Rifle_Idle;
 
 	// Dir
 	UPROPERTY(Category = "Contents", Replicated, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
@@ -90,10 +80,6 @@ public:
 	// 7/26 추가 기절상태
 	UPROPERTY(Category = "Contents", Replicated, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	bool IsFaint = false;
-
-	UFUNCTION(Reliable, Server)
-	void ChangePosture(EPlayerPosture _Type);
-	void ChangePosture_Implementation(EPlayerPosture _Type);
 
 	// LowerStateChange 함수 (태환)
 	UFUNCTION(Reliable, Server)
@@ -132,8 +118,8 @@ public:
 	// Item
 	UPROPERTY(Category = "Contents", VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	AActor* GetMapItemData = nullptr;	// 맵에 있는 무기 Data
-	UPROPERTY(Category = "Contents", Replicated, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	FString RayCastToItemName = "";
+	//UPROPERTY(Category = "Contents", Replicated, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	//FString RayCastToItemName = "";
 	UFUNCTION(BlueprintCallable)
 	void MapItemOverlapStart(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);	// => 메인 수정 필요 (24.08.01 수정됨)
 	UFUNCTION(BlueprintCallable)
@@ -147,7 +133,8 @@ public:
 	void PickUpItem(AActor* _Item);						// => 메인 수정 필요 (24.08.02 인자 추가됨)
 	void PickUpItem_Implementation(AActor* _Item);
 	UFUNCTION(BlueprintCallable)
-	void ItemSetting(FName _TagName, int _SlotIndex);	// => 메인캐릭터로 이전해야 함 (24.07.30 추가됨)
+	void ItemSetting(FName _TagName, EPlayerUpperState _SlotIndex);
+	//void ItemSetting(FName _TagName, int _SlotIndex);	// => 메인캐릭터로 이전해야 함 (24.07.30 추가됨)
 	UFUNCTION(Reliable, Server, BlueprintCallable)
 	void DropItem(int _SlotIndex);						// => 메인캐릭터로 이전해야 함 (24.07.30 수정됨)
 	void DropItem_Implementation(int _SlotIndex);
@@ -210,9 +197,8 @@ public:
 	void FireRayCast_Implementation();
 
 	// Drink
-	UFUNCTION(Reliable, Server, BlueprintCallable)
+	UFUNCTION(BlueprintCallable)
 	void Drink();
-	void Drink_Implementation();
 	UFUNCTION(Reliable, Server, BlueprintCallable)
 	void DrinkComplete();
 	void DrinkComplete_Implementation();
@@ -265,4 +251,7 @@ public:
 
 	UPROPERTY(Category = "TPSNet", Replicated, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	int Token = -1;
+
+	UPROPERTY()
+	EPlayerUpperState IdleDefault = EPlayerUpperState::UArm_Idle;
 };

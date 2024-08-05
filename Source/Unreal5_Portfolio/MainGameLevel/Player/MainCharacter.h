@@ -44,7 +44,7 @@ public :
 
 	// 상체 정보
 	UPROPERTY(Category = "Contents", Replicated, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	EPlayerUpperState UpperStateValue = EPlayerUpperState::Rifle_Idle;
+	EPlayerUpperState UpperStateValue = EPlayerUpperState::UArm_Idle;
 	
 	// 플레이어 자세 유형
 	UPROPERTY(Category = "Contents", Replicated, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))

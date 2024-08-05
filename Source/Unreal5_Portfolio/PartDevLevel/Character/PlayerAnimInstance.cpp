@@ -4,13 +4,15 @@
 #include "PartDevLevel/Character/PlayerAnimInstance.h"
 #include "TestLevel/Character/TestCharacter.h"
 #include "MainGameLevel/Player/MainCharacter.h"
+#include "PartDevLevel/Character/TestFPVCharacter.h"
 #include "Global/MainGameBlueprintFunctionLibrary.h"
 
 void UPlayerAnimInstance::NativeBeginPlay()
 {
 	Super::NativeBeginPlay();
-	OwnerPlayer = Cast<ATestCharacter>(GetOwningActor());
+	//OwnerPlayer = Cast<ATestCharacter>(GetOwningActor());
 	//OwnerPlayer = Cast<AMainCharacter>(GetOwningActor()); // Main - kjb
+	OwnerPlayer = Cast<ATestFPVCharacter>(GetOwningActor());
 
 	// MainGameInst의 PlayerData에 저장된 Montages를 PlayerUpperMontages로 Add
 	MainGameInst = UMainGameBlueprintFunctionLibrary::GetMainGameInstance(GetWorld());
@@ -30,9 +32,9 @@ void UPlayerAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 		return;
 	}
 
-	PlayerPosture = OwnerPlayer->PostureValue;
+	//PlayerPosture = OwnerPlayer->PostureValue;
 	PlayerLowerState = OwnerPlayer->LowerStateValue;
-	PlayerUppperState = OwnerPlayer->UpperStateValue;
+	//PlayerUppperState = OwnerPlayer->[UpperStateValue];
 	PlayerDir = OwnerPlayer->DirValue;
 	PlayerIsFaint = OwnerPlayer->IsFaint;
 	PlayerIsBombSetting = OwnerPlayer->IsBombSetting;

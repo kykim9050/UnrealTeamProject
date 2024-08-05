@@ -270,35 +270,35 @@ void AMainCharacter::PickUpItem_Implementation()
 
 	FName ItemStringToName = FName(*TagName);
 
-	{
-		// 버리기 키가 없을 때를 가정.
-		if (false == IsItemIn[static_cast<int>(EPlayerPosture::Rifle1)])
-		{
-			// 1번 슬롯이 비어있는 경우.
-			ItemSetting(ItemStringToName, false);
-		}
-		else if (true == IsItemIn[static_cast<int>(EPlayerPosture::Rifle1)] && false == IsItemIn[static_cast<int>(EPlayerPosture::Rifle2)])
-		{
-			// 1번 슬롯이 있고 2번 슬롯이 비어있는 경우.
-			ItemSetting(ItemStringToName, true);
-		}
-		else
-		{
-			// 1, 2번 슬롯이 비어있지 않는 경우.
-			if (PostureValue == EPlayerPosture::Rifle1)
-			{
-				DropItem();
-				DeleteItem(static_cast<int>(EPlayerPosture::Rifle1));
-				ItemSetting(ItemStringToName, false);
-			}
-			else if (PostureValue == EPlayerPosture::Rifle2)
-			{
-				DropItem();
-				DeleteItem(static_cast<int>(EPlayerPosture::Rifle2));
-				ItemSetting(ItemStringToName, true);
-			}
-		}
-	}
+	//{
+	//	// 버리기 키가 없을 때를 가정.
+	//	if (false == IsItemIn[static_cast<int>(EPlayerPosture::Rifle1)])
+	//	{
+	//		// 1번 슬롯이 비어있는 경우.
+	//		ItemSetting(ItemStringToName, false);
+	//	}
+	//	else if (true == IsItemIn[static_cast<int>(EPlayerPosture::Rifle1)] && false == IsItemIn[static_cast<int>(EPlayerPosture::Rifle2)])
+	//	{
+	//		// 1번 슬롯이 있고 2번 슬롯이 비어있는 경우.
+	//		ItemSetting(ItemStringToName, true);
+	//	}
+	//	else
+	//	{
+	//		// 1, 2번 슬롯이 비어있지 않는 경우.
+	//		if (PostureValue == EPlayerPosture::Rifle1)
+	//		{
+	//			DropItem();
+	//			DeleteItem(static_cast<int>(EPlayerPosture::Rifle1));
+	//			ItemSetting(ItemStringToName, false);
+	//		}
+	//		else if (PostureValue == EPlayerPosture::Rifle2)
+	//		{
+	//			DropItem();
+	//			DeleteItem(static_cast<int>(EPlayerPosture::Rifle2));
+	//			ItemSetting(ItemStringToName, true);
+	//		}
+	//	}
+	//}
 
 	// 주은 무기 삭제.
 	GetMapItemData->Destroy();
@@ -316,7 +316,7 @@ void AMainCharacter::ItemSetting(FName _TagName, bool _InNextSlotToItem)
 	// ItemName에 맞는 아이템 정보를 DT에서 가져온다.
 	UMainGameInstance* Inst = GetGameInstance<UMainGameInstance>();
 	const FItemDataRow* ItemData = Inst->GetItemData(_TagName);
-	EPlayerPosture ItemType = ItemData->GetType();
+	EPlayerUpperState ItemType = ItemData->GetType();
 
 	// Data Table에 있는 아이템 정보 가져오기.
 	int ItemReloadNum = ItemData->GetReloadNum();		// 무기 장전 단위 (30, 40)	// -1일 경우 총기류 무기가 아님
@@ -454,7 +454,7 @@ void AMainCharacter::ChangeMontage_Implementation(bool _IsFireEnd)
 			UpperStateValue = EPlayerUpperState::Rifle_Attack;
 			break;
 		case EPlayerPosture::Melee:
-			UpperStateValue = EPlayerUpperState::Melee;
+			UpperStateValue = EPlayerUpperState::Melee_Attack;
 			break;
 		case EPlayerPosture::Drink:
 			UpperStateValue = EPlayerUpperState::Drink;
@@ -477,7 +477,7 @@ void AMainCharacter::ChangeMontage_Implementation(bool _IsFireEnd)
 	}
 	else
 	{
-		UpperStateValue = EPlayerUpperState::Rifle_Idle;
+		UpperStateValue = EPlayerUpperState::Rifle1_Idle;
 		PlayerAnimInst->ChangeAnimation(UpperStateValue);
 		FPVPlayerAnimInst->ChangeAnimation(UpperStateValue);
 		
@@ -498,7 +498,7 @@ void AMainCharacter::ClientChangeMontage_Implementation(bool _IsFireEnd)
 			UpperStateValue = EPlayerUpperState::Rifle_Attack;
 			break;
 		case EPlayerPosture::Melee:
-			UpperStateValue = EPlayerUpperState::Melee;
+			UpperStateValue = EPlayerUpperState::Melee_Attack;
 			break;
 		case EPlayerPosture::Drink:
 			UpperStateValue = EPlayerUpperState::Drink;
@@ -519,7 +519,7 @@ void AMainCharacter::ClientChangeMontage_Implementation(bool _IsFireEnd)
 	}
 	else // FireEnd
 	{
-		UpperStateValue = EPlayerUpperState::Rifle_Idle;
+		UpperStateValue = EPlayerUpperState::Rifle2_Idle;
 		PlayerAnimInst->ChangeAnimation(UpperStateValue);
 		FPVPlayerAnimInst->ChangeAnimation(UpperStateValue);
 	}
