@@ -135,6 +135,14 @@ void ATestBossMonsterBase::Tick(float DeltaTime)
 	}
 }
 
+void ATestBossMonsterBase::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	APlayerController* PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+	ATestPlayHUD* BossUHD = Cast<ATestPlayHUD>(PlayerController->GetHUD());
+
+	BossUHD->UIOff(EUserWidgetType::BossHpbar);
+}
+
 // Called to bind functionality to input
 void ATestBossMonsterBase::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
@@ -217,7 +225,7 @@ void ATestBossMonsterBase::SetOnDead_Implementation()
 	MeleeAttackComponent->SetCollisionObjectType(ECC_GameTraceChannel5);
 	GetCharacterMovement()->SetActive(false);
 
-	//SetLifeSpan(5.0f);
+	SetLifeSpan(5.0f);
 }
 
 void ATestBossMonsterBase::BossHP_HUDCheck_Implementation()

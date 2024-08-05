@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "Components/TimeLineComponent.h"
+#include "TimerManager.h"
 #include "Global/DataTable/BossDataRow.h"
 
 #include "TestBossMonsterBase.generated.h"
@@ -24,6 +25,8 @@ protected:
 
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
@@ -111,7 +114,5 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Projectile")
 	FVector MuzzleOffset;
-
-
 
 };
