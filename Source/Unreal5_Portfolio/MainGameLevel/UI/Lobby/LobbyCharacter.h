@@ -33,16 +33,25 @@ public:
 	void ClientReady();
 	void ClientReady_Implementation();
 
+	UFUNCTION(Reliable, Server)
+	void ClientChangedMesh(FName _NewType); // 클라에서 자신의 타입을 보내주기 위한 파라미터
+	void ClientChangedMesh_Implementation(FName _NewType);
+
 	UPROPERTY()
 	bool ReadyClicked = false;
 
 	UPROPERTY(Replicated, BlueprintReadOnly)
 	int MyOrder = -1; // 나의 들어온 순서 및 번호 (0 ~ 3)
 
+	UPROPERTY(Replicated, BlueprintReadOnly)
+	FName MyChracterType; // 캐릭터 메시 타입
 private:
 	UPROPERTY()
 	AGameModeBase* IsServerPtr = nullptr; // nullptr이면 client
 
 	UPROPERTY()
 	bool SetWidgetNickName = false;
+
+	UPROPERTY(BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	class ALobbyCapCharacter* MyMannequin = nullptr;
 };
