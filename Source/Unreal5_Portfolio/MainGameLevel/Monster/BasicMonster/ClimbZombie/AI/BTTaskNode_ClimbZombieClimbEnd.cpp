@@ -8,6 +8,7 @@
 #include "MainGameLevel/Monster/Animation/MonsterRandomAnimInstance.h"
 
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Components/CapsuleComponent.h"
 #include "MotionWarpingComponent.h"
 
 #include "Global/ContentsLog.h"
@@ -46,10 +47,11 @@ EBTNodeResult::Type UBTTaskNode_ClimbZombieClimbEnd::ExecuteTask(UBehaviorTreeCo
 	MotionWarpComp->AddOrUpdateWarpTarget(Target);
 
 	ClimbZombie->GetAIController()->StopMovement();
+	ClimbZombie->GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	ClimbZombie->ChangeRandomAnimation(EBasicMonsterAnim::ClimbEnd);
 	UMonsterRandomAnimInstance* AnimInst = ClimbZombie->GetAnimInstance();
 	ClimbZombieData->TimeCount = AnimInst->GetKeyAnimMontage(EBasicMonsterAnim::ClimbEnd, ClimbZombie->GetAnimIndex())->GetPlayLength();
-
+	
 	return EBTNodeResult::InProgress;
 }
 
@@ -63,6 +65,7 @@ void UBTTaskNode_ClimbZombieClimbEnd::TickTask(UBehaviorTreeComponent& OwnerComp
 	if (0.0f >= ClimbZombieData->TimeCount)
 	{
 		ClimbZombie->GetCharacterMovement()->SetMovementMode(MOVE_NavWalking);
+		ClimbZombie->GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 		StateChange(OwnerComp, EBasicMonsterState::Chase);
 		return;
 	}
