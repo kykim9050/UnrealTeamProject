@@ -114,18 +114,6 @@ void ATriggerBoxBase::SetAllPlayersLocation_Implementation(const FVector& NewLoc
 			}
 		}
 	}
-
-	//// 모든 플레이어의 위치를 특정 지점으로 설정
-	//for (FConstPlayerControllerIterator PlayerIt = GetWorld()->GetPlayerControllerIterator(); PlayerIt; ++PlayerIt)
-	//{
-	//	if (APlayerController* PlayerController = PlayerIt->Get())
-	//	{
-	//		if (APawn* PlayerPawn = PlayerController->GetPawn())
-	//		{
-	//			PlayerPawn->SetActorLocation(NewLocation);
-	//		}
-	//	}
-	//}
 }
 
 void ATriggerBoxBase::PlayCinematicSequence_Implementation()
