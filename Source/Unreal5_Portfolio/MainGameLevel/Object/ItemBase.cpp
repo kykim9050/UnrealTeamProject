@@ -17,6 +17,7 @@ AItemBase::AItemBase()
 
 	StaticMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMeshComponent"));
 	StaticMeshComponent->SetupAttachment(RootComponent);
+	StaticMeshComponent->SetIsReplicated(true);
 	StaticMeshComponent->bHiddenInSceneCapture = true;
 }
 

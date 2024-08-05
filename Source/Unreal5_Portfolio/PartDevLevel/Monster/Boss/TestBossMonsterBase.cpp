@@ -120,6 +120,9 @@ void ATestBossMonsterBase::BeginPlay()
 
 	MeleeAttackComponent->OnComponentEndOverlap.AddDynamic(this, &ATestBossMonsterBase::OnAttackOverlapEnd);
 	SetAttackCollision(false);
+
+	//BossUHD->GetWidget(EUserWidgetType::BossHpbar);
+	//BossUHD->UIOn(EUserWidgetType::BossHpbar);
 }
 
 // Called every frame
