@@ -24,8 +24,9 @@ public:
 	void ChangeAnimation(EPlayerUpperState _Posture);
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	class ATestCharacter* OwnerPlayer = nullptr;
+	//class ATestCharacter* OwnerPlayer = nullptr;
 	//class AMainCharacter* OwnerPlayer = nullptr; // main - kjb
+	class ATestFPVCharacter* OwnerPlayer = nullptr; // TestPlayer - kjb
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	EPlayerPosture PlayerPosture = EPlayerPosture::Barehand;
@@ -34,7 +35,7 @@ public:
 	EPlayerLowerState PlayerLowerState = EPlayerLowerState::Idle;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-	EPlayerUpperState PlayerUppperState = EPlayerUpperState::Rifle_Idle;
+	EPlayerUpperState PlayerUppperState = EPlayerUpperState::UArm_Idle;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	EPlayerMoveDir PlayerDir = EPlayerMoveDir::Forward;

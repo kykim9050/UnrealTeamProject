@@ -91,7 +91,7 @@ ATestCharacter::ATestCharacter()
 	GetMapItemCollisionComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("GetMapItemCollisionComponent"));
 	GetMapItemCollisionComponent->SetupAttachment(RootComponent);
 	GetMapItemCollisionComponent->SetRelativeLocation(FVector(60.0, 0.0, -5.0f));
-	GetMapItemCollisionComponent->SetBoxExtent(FVector(55.0f, 50.0f, 100.0f));
+	GetMapItemCollisionComponent->SetBoxExtent(FVector(60.0f, 30.0f, 100.0f));
 	GetMapItemCollisionComponent->SetCollisionProfileName(FName("MapItemSearch"));
 
 	UEnum* Enum = StaticEnum<EPlayerPosture>();
@@ -520,7 +520,7 @@ void ATestCharacter::ChangeMontage_Implementation(bool _IsFireEnd) // => 매인 적
 			UpperStateValue = EPlayerUpperState::Rifle_Attack;
 			break;
 		case EPlayerPosture::Melee:
-			UpperStateValue = EPlayerUpperState::Melee;
+			UpperStateValue = EPlayerUpperState::Melee_Idle;
 			break;
 		case EPlayerPosture::Drink:
 			UpperStateValue = EPlayerUpperState::Drink;
@@ -542,7 +542,7 @@ void ATestCharacter::ChangeMontage_Implementation(bool _IsFireEnd) // => 매인 적
 	}
 	else // FireEnd
 	{
-		UpperStateValue = EPlayerUpperState::Rifle_Idle;
+		UpperStateValue = EPlayerUpperState::Rifle1_Idle; // 수정 해야 함.
 		PlayerAnimInst->ChangeAnimation(UpperStateValue);
 		FPVPlayerAnimInst->ChangeAnimation(UpperStateValue);
 		ClientChangeMontage(true);
@@ -562,7 +562,7 @@ void ATestCharacter::ClientChangeMontage_Implementation(bool _IsFireEnd) // => �
 			UpperStateValue = EPlayerUpperState::Rifle_Attack;
 			break;
 		case EPlayerPosture::Melee:
-			UpperStateValue = EPlayerUpperState::Melee;
+			UpperStateValue = EPlayerUpperState::Melee_Attack;
 			break;
 		case EPlayerPosture::Drink:
 			UpperStateValue = EPlayerUpperState::Drink;
@@ -583,7 +583,7 @@ void ATestCharacter::ClientChangeMontage_Implementation(bool _IsFireEnd) // => �
 	}
 	else // FireEnd
 	{
-		UpperStateValue = EPlayerUpperState::Rifle_Idle;
+		UpperStateValue = EPlayerUpperState::Rifle2_Idle;
 		PlayerAnimInst->ChangeAnimation(UpperStateValue);
 		FPVPlayerAnimInst->ChangeAnimation(UpperStateValue);
 	}
@@ -732,9 +732,9 @@ void ATestCharacter::PickUpItem_Implementation(AActor* _Item)	// => 메인 수정 필
 	UMainGameInstance* Inst = GetGameInstance<UMainGameInstance>();
 	const FItemDataRow* ItemData = Inst->GetItemData(ItemStringToName);
 
-	EPlayerPosture ItemType = ItemData->GetType();		// 아이템 타입
+	EPlayerUpperState ItemType = ItemData->GetType();		// 아이템 타입
 
-	if (ItemType == EPlayerPosture::Rifle1)	// Rifle 아이템을 줍는 경우
+	if (ItemType == EPlayerUpperState::Rifle1_Idle)	// Rifle 아이템을 줍는 경우
 	{
 		if (false == IsItemIn[static_cast<int>(EPlayerPosture::Rifle1)])
 		{

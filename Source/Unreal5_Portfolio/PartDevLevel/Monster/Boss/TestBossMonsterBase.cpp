@@ -120,6 +120,9 @@ void ATestBossMonsterBase::BeginPlay()
 
 	MeleeAttackComponent->OnComponentEndOverlap.AddDynamic(this, &ATestBossMonsterBase::OnAttackOverlapEnd);
 	SetAttackCollision(false);
+
+	//BossUHD->GetWidget(EUserWidgetType::BossHpbar);
+	//BossUHD->UIOn(EUserWidgetType::BossHpbar);
 }
 
 // Called every frame
@@ -133,6 +136,14 @@ void ATestBossMonsterBase::Tick(float DeltaTime)
 		CurHp = Hp;
 		BossHP_HUDCheck();
 	}
+}
+
+void ATestBossMonsterBase::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	APlayerController* PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+	ATestPlayHUD* BossUHD = Cast<ATestPlayHUD>(PlayerController->GetHUD());
+
+	BossUHD->UIOff(EUserWidgetType::BossHpbar);
 }
 
 // Called to bind functionality to input
@@ -217,7 +228,7 @@ void ATestBossMonsterBase::SetOnDead_Implementation()
 	MeleeAttackComponent->SetCollisionObjectType(ECC_GameTraceChannel5);
 	GetCharacterMovement()->SetActive(false);
 
-	//SetLifeSpan(5.0f);
+	SetLifeSpan(5.0f);
 }
 
 void ATestBossMonsterBase::BossHP_HUDCheck_Implementation()
