@@ -15,6 +15,6 @@ class UNREAL5_PORTFOLIO_API UClimbZombeData : public UBasicMonsterData
 	GENERATED_BODY()
 
 public:
-	float ClimbSpeed = 50.0f;
+	float ClimbSpeed = 75.0f;
 	
 };
