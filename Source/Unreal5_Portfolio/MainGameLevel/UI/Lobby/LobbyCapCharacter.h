@@ -26,6 +26,8 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+
 	UFUNCTION(BlueprintCallable)
 	void SetMyNumber(int _Num);
 
@@ -33,9 +35,13 @@ public:
 	void SetMyMesh();
 
 	UFUNCTION(BlueprintCallable)
-	bool IsMyOrderCharacter();
+	void SetEachMesh(FName _TypeName); // 로비 디폴트 캐릭터에서 호출
+
 
 private:
-	UPROPERTY()
+	UPROPERTY(Replicated)
 	int MyNumber = -1; // 자기가 몇번 플레이어의 마네킹인지 
+
+	UPROPERTY()
+	FName MyLocalType; // 타입 비교용 변수
 };

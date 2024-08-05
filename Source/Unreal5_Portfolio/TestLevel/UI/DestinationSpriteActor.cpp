@@ -3,8 +3,8 @@
 
 #include "TestLevel/UI/DestinationSpriteActor.h"
 #include "PaperSpriteComponent.h"
-#include "Kismet/KismetMathLibrary.h"
 #include "PaperSprite.h"
+#include "Kismet/KismetMathLibrary.h"
 #include "Global/ContentsLog.h"
 
 // Sets default values
