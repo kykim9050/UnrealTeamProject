@@ -72,4 +72,14 @@ public:
 		_OwnerComp.GetBlackboardComponent()->SetValueAsVector(_Name, _Value);
 	}
 
+	FORCEINLINE bool GetValueAsBool(UBehaviorTreeComponent& _OwnerComp, FName _Name)
+	{
+		return _OwnerComp.GetBlackboardComponent()->GetValueAsBool(_Name);
+	}
+
+	FORCEINLINE void SetValueAsBool(UBehaviorTreeComponent& _OwnerComp, FName _Name, bool _Value)
+	{
+		_OwnerComp.GetBlackboardComponent()->SetValueAsBool(_Name, _Value);
+	}
+
 };

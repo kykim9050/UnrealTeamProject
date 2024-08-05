@@ -32,7 +32,7 @@ EBTNodeResult::Type UBTTaskNode_KrakenAttack::ExecuteTask(UBehaviorTreeComponent
 	}
 
 	UTestMonsterDataBase* MonsterData = GetValueAsObject<UTestMonsterDataBase>(OwnerComp, TEXT("MonsterData"));
-	AActor* Target = Cast<AActor>(OwnerComp.GetBlackboardComponent()->GetValueAsObject(TEXT("TargetActor")));
+	AActor* Target = GetValueAsObject<AActor>(OwnerComp, TEXT("TargetActor"));
 	ETestMonsterAnim NextAnim;
 
 	FVector MonsterLocation = Monster->GetActorLocation();
@@ -57,8 +57,6 @@ EBTNodeResult::Type UBTTaskNode_KrakenAttack::ExecuteTask(UBehaviorTreeComponent
 
 	Monster->ChangeRandomAnimation(NextAnim);
 	Monster->SetActorRotation(Rotate);
-	MonsterData->DestRotate = Rotate;
-	MonsterData->MyRotate = Monster->GetActorRotation();
 	MonsterData->AnimationTime = Monster->GetAnimInstance()->GetKeyAnimMontage(NextAnim, Monster->GetAniIndex())->GetPlayLength();
 
 	return EBTNodeResult::Type::InProgress;
@@ -71,12 +69,6 @@ void UBTTaskNode_KrakenAttack::TickTask(UBehaviorTreeComponent& OwnerComp, uint8
 
 	UTestMonsterDataBase* MonsterData = GetValueAsObject<UTestMonsterDataBase>(OwnerComp, TEXT("MonsterData"));
 	ATestMonsterBase* Monster = GetActor<ATestMonsterBase>(OwnerComp);
-
-	/*float Time = MonsterData->AnimationTime;
-	float Alpha = FMath::Clamp(MonsterData->AnimationTime, 0.0f, MonsterData->AnimationTime);
-	FRotator TurnRotate = FMath::Lerp(MonsterData->MyRotate, MonsterData->DestRotate, Alpha * (1.0f / Time));
-
-	Monster->SetActorRotation(TurnRotate);*/
 
 	if (0.0f >= MonsterData->AnimationTime)
 	{
