@@ -59,8 +59,8 @@ void ATestFPVPlayerController::SetupInputComponent()
 			//EnhancedInputComponent->BindAction(InputData->Actions[6], ETriggerEvent::Started, this, &ATestPlayerController::FireStart);
 			//EnhancedInputComponent->BindAction(InputData->Actions[6], ETriggerEvent::Triggered, this, &ATestPlayerController::FireTick);
 			//EnhancedInputComponent->BindAction(InputData->Actions[6], ETriggerEvent::Completed, this, &ATestPlayerController::FireEnd);
-			EnhancedInputComponent->BindAction(InputData->Actions[7], ETriggerEvent::Triggered, this, &ATestFPVPlayerController::ChangePosture_Con, static_cast<EPlayerUpperState>(EPlayerUpperState::Rifle1_Idle));	// => 메인 수정 필요 (24.07.30 플레이어 함수와의 혼동을 방지하지 위해 이름 수정됨)
-			EnhancedInputComponent->BindAction(InputData->Actions[8], ETriggerEvent::Triggered, this, &ATestFPVPlayerController::ChangePosture_Con, static_cast<EPlayerUpperState>(EPlayerUpperState::Rifle2_Idle));	// => 메인 수정 필요 (24.07.30 플레이어 함수와의 혼동을 방지하지 위해 이름 수정됨)
+			EnhancedInputComponent->BindAction(InputData->Actions[7], ETriggerEvent::Triggered, this, &ATestFPVPlayerController::ChangePosture_Con, static_cast<EPlayerUpperState>(EPlayerUpperState::Rifle_Idle));	// => 메인 수정 필요 (24.07.30 플레이어 함수와의 혼동을 방지하지 위해 이름 수정됨)
+			EnhancedInputComponent->BindAction(InputData->Actions[8], ETriggerEvent::Triggered, this, &ATestFPVPlayerController::ChangePosture_Con, static_cast<EPlayerUpperState>(EPlayerUpperState::Rifle_Idle));	// => 메인 수정 필요 (24.07.30 플레이어 함수와의 혼동을 방지하지 위해 이름 수정됨)
 			EnhancedInputComponent->BindAction(InputData->Actions[9], ETriggerEvent::Triggered, this, &ATestFPVPlayerController::ChangePosture_Con, static_cast<EPlayerUpperState>(EPlayerUpperState::Melee_Idle));	// => 메인 수정 필요 (24.07.30 플레이어 함수와의 혼동을 방지하지 위해 이름 수정됨)
 			EnhancedInputComponent->BindAction(InputData->Actions[10], ETriggerEvent::Triggered, this, &ATestFPVPlayerController::Drink_Con);			// => 메인 수정 필요 (24.07.30 해당 키에 연동된 함수 변경됨)
 			EnhancedInputComponent->BindAction(InputData->Actions[11], ETriggerEvent::Started, this, &ATestFPVPlayerController::BombSetStart_Con);		// => 메인 수정 필요 (24.07.30 해당 키에 연동된 함수 변경됨)
@@ -224,18 +224,20 @@ void ATestFPVPlayerController::ChangePosture_Con(EPlayerUpperState _Posture)
 	ATestFPVCharacter* Ch = GetPawn<ATestFPVCharacter>();
 	//Ch->ChangePosture(_Posture);
 
-	if (EPlayerUpperState::Rifle1_Idle == _Posture || EPlayerUpperState::Rifle2_Idle == _Posture)
+	if (EPlayerUpperState::Rifle_Idle == _Posture)
 	{
-		
-		Ch->ChangeMontage(EPlayerUpperState::Rifle1_Idle);
+		Ch->ChangeMontage(EPlayerUpperState::Rifle_Idle);
 
 		//Ch->ChangeMontage(_Posture);
 		//ChangePostureToWidget(0); // BP To Event ///////////////////////////////////////////////////
 	}
-	else if (EPlayerUpperState::Rifle_Attack == _Posture)
+	else if (EPlayerUpperState::Melee_Idle == _Posture)
 	{
+		Ch->ChangeMontage(EPlayerUpperState::Melee_Idle);
+
 		//Ch->ChangeMontage(_Posture);
 		//ChangePostureToWidget(EPlayerPosture::Rifle2); // BP To Event
+		//ChangePostureToWidget(EPlayerUpperState::Rifle_Idle);
 	}
 }
 
@@ -264,31 +266,31 @@ void ATestFPVPlayerController::ChangePlayerDir(EPlayerMoveDir _Dir)
 	Ch->ChangePlayerDir(_Dir);
 }
 
-void ATestFPVPlayerController::PlayerMontagePlay()
-{
-	// 메인 적용 필요
-	// 기절, 폭탄 설치 상태 몽타주 실행 불가능
-	if (PlayerIsFaint == true || PlayerIsBombSetting == true)
-	{
-		return;
-	}
+//void ATestFPVPlayerController::PlayerMontagePlay()
+//{
+//	// 메인 적용 필요
+//	// 기절, 폭탄 설치 상태 몽타주 실행 불가능
+//	if (PlayerIsFaint == true || PlayerIsBombSetting == true)
+//	{
+//		return;
+//	}
+//
+//	//ATestFPVCharacter* Ch = GetPawn<ATestFPVCharacter>();
+//	//Ch->ChangeMontage(false);
+//}
 
-	//ATestFPVCharacter* Ch = GetPawn<ATestFPVCharacter>();
-	//Ch->ChangeMontage(false);
-}
-
-void ATestFPVPlayerController::FireEndMontagePlay()
-{
-	// 메인 적용 필요
-	// 기절, 폭탄 설치 상태 몽타주 실행 불가능
-	if (PlayerIsFaint == true || PlayerIsBombSetting == true)
-	{
-		return;
-	}
-
-	//ATestFPVCharacter* Ch = GetPawn<ATestFPVCharacter>();
-	//Ch->ChangeMontage(true);
-}
+//void ATestFPVPlayerController::FireEndMontagePlay()
+//{
+//	// 메인 적용 필요
+//	// 기절, 폭탄 설치 상태 몽타주 실행 불가능
+//	if (PlayerIsFaint == true || PlayerIsBombSetting == true)
+//	{
+//		return;
+//	}
+//
+//	//ATestFPVCharacter* Ch = GetPawn<ATestFPVCharacter>();
+//	//Ch->ChangeMontage(true);
+//}
 
 void ATestFPVPlayerController::SetFaint()
 {
