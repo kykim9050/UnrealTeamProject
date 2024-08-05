@@ -41,4 +41,10 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void UISwitch(EUserWidgetType _Type);
+
+	UFUNCTION(BlueprintCallable)
+	void AllUIOff();
+
+	UFUNCTION(BlueprintCallable)
+	void AllUIOn();
 };
