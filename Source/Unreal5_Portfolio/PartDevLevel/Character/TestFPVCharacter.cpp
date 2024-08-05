@@ -518,7 +518,6 @@ void ATestFPVCharacter::ClientChangeMontage_Implementation(EPlayerUpperState _Up
 //void ATestFPVCharacter::ChangePosture_Implementation(EPlayerPosture _Type)	// => 메인으로 이전해야 함 (24.07.30 수정 중)
 //{
 //	PostureValue = _Type;
-
 //	if (_Type == EPlayerPosture::Barehand)
 //	{
 //		// 1. Barehand => 맨손 자세로 변경
@@ -1002,7 +1001,6 @@ void ATestFPVCharacter::MapItemOverlapEnd(UPrimitiveComponent* OverlappedCompone
 }
 
 
-
 void ATestFPVCharacter::AttackCheck()
 {
 	// Mouse Left Button 
@@ -1025,14 +1023,20 @@ void ATestFPVCharacter::AttackCheck()
 
 void ATestFPVCharacter::AttackEndCheck()
 {
-	//ChangeMontage(IdleDefault);
-
 	UAnimMontage* GetCurMontage = GetCurrentMontage();
-	FName xx = GetCurMontage->GetFName();
+	FName GetCurMontageName = GetCurMontage->GetFName();
+	// E_Fire_Stand_Montage
+	// E_BareHand_Attack_Montage
 
-	//PlayerAnimInst->GetKeyAnimMontage();
-
-	int a = 0;
+	if ("E_Fire_Stand_Montage" == GetCurMontageName || "E_BareHand_Attack_Montage" == GetCurMontageName)
+	{
+		// 노티파이 신호 조건?
+		return;
+	}
+	else
+	{
+		ChangeMontage(IdleDefault);
+	}
 }
 
 void ATestFPVCharacter::NetCheck() // => 매인 적용.
