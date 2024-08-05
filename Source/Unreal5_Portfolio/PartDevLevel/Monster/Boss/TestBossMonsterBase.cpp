@@ -101,8 +101,8 @@ void ATestBossMonsterBase::BeginPlay()
 		return;
 	}
 
-	//BossUHD->GetWidget(EUserWidgetType::BossHpbar);
-	//BossUHD->UIOn(EUserWidgetType::BossHpbar);
+	BossUHD->GetWidget(EUserWidgetType::BossHpbar);
+	BossUHD->UIOn(EUserWidgetType::BossHpbar);
 
 }
 
