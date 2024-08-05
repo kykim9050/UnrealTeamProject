@@ -595,6 +595,20 @@ void ATestFPVCharacter::CrouchCameraMove() // => 매인에 적용 필요 (24.07.29 수정
 			break;
 		}
 	}
+	else if(PointOfView == EPlayerFPSTPSState::TPS)
+	{
+		switch (LowerStateValue)
+		{
+		case EPlayerLowerState::Idle:
+			ChangeLowerState(EPlayerLowerState::Crouch);
+			break;
+		case EPlayerLowerState::Crouch:
+			ChangeLowerState(EPlayerLowerState::Idle);
+			break;
+		default:
+			break;
+		}
+	}
 }
 
 void ATestFPVCharacter::ChangeLowerState_Implementation(EPlayerLowerState _LowerState) // => 매인 적용.
