@@ -105,12 +105,12 @@ public :
 	void ChangePlayerDir(EPlayerMoveDir _Dir);
 
 	// 공격 몽타주 변경 함수  => 메인 적용
-	UFUNCTION(BlueprintCallable)
-	void PlayerMontagePlay();
+	//UFUNCTION(BlueprintCallable)
+	//void PlayerMontagePlay();
 
 	// 공격 종료 몽타주 변경 함수  => 메인 적용
-	UFUNCTION(BlueprintCallable)
-	void FireEndMontagePlay();
+	//UFUNCTION(BlueprintCallable)
+	//void FireEndMontagePlay();
 
 	//테스트용
 	UFUNCTION(BlueprintCallable)
