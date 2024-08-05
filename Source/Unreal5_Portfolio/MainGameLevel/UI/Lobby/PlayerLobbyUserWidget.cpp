@@ -6,6 +6,7 @@
 #include "MainGameLevel/UI/Lobby/PlayerViewUserWidget.h"
 #include "MainGameLevel/UI/Lobby/CharacterSelectionUserWidget.h"
 #include "MainGameLevel/UI/Title/ServerBtnUserWidget.h"
+#include "MainGameLevel/UI/Lobby/MainLobbyHUD.h"
 #include "MainGameLevel/LobbyGameMode.h"
 
 #include "Global/MainGameBlueprintFunctionLibrary.h"
@@ -73,25 +74,43 @@ void UPlayerLobbyUserWidget::OnReadyBtn()
 		LOG(UILog, Fatal, "LobbyCharacter is Null. (Or NetMode : Need StandAlone)");
 	}
 	MyLobbyCharacter->ReadyClicked = true;
+	B_Ready->SetIsEnabled(false);
 }
 
 void UPlayerLobbyUserWidget::OnStartBtn()
 {
 	AGameModeBase* IsServer = GetWorld()->GetAuthGameMode();
+	if (IsServer == nullptr)
+	{
+		LOG(UILog, Fatal, "This is ServerButton but AGameModeBase is Null.");
+	}
 	ALobbyGameMode* lobby = Cast<ALobbyGameMode>(IsServer);
 
 	int RCount = lobby->GetReadyCount();
 	int PCount = lobby->GetPlayerCount();
 
+	//APlayerController* Con = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+	//AMainLobbyHUD* lobbyHUD = nullptr;
+	//if (nullptr != Con)
+	//{
+	//	lobbyHUD = Cast<AMainLobbyHUD>(Con->GetHUD());
+	//	if (nullptr == lobbyHUD)
+	//	{
+	//		LOG(UILog, Fatal, "lobbyHUD is Null.");
+	//	}
+	//}
+
 	if (RCount == PCount - 1)
 	{
 		// 모두 준비 함
+		//lobbyHUD->UIOff(EUserWidgetType::CantStart);
 		// 게임으로 이동
 		TravelToNext();
 	}
 	else
 	{
 		// 시작할 수 없음.
+		//lobbyHUD->UIOn(EUserWidgetType::CantStart);
 		int a = 0;
 	}
 }
