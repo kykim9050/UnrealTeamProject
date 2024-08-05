@@ -201,6 +201,7 @@ enum class EUserWidgetType : uint8
 
 	// Lobby
 	LobbyButton,
+	CantStart,
 };
 
 
