@@ -25,7 +25,7 @@ EBTNodeResult::Type UBTTaskNode_MonsterAttack::ExecuteTask(UBehaviorTreeComponen
 
 	UTestMonsterDataBase* MonsterData = GetValueAsObject<UTestMonsterDataBase>(_OwnerComp, TEXT("MonsterData"));
 	Monster->ChangeRandomAnimation(ETestMonsterAnim::Attack);
-	MonsterData->AttackTime = Monster->GetAnimInstance()->GetKeyAnimMontage(ETestMonsterAnim::Attack, Monster->GetAniIndex())->GetPlayLength();
+	MonsterData->AnimationTime = Monster->GetAnimInstance()->GetKeyAnimMontage(ETestMonsterAnim::Attack, Monster->GetAniIndex())->GetPlayLength();
 
 	return EBTNodeResult::Type::InProgress;
 }
@@ -45,7 +45,7 @@ void UBTTaskNode_MonsterAttack::TickTask(UBehaviorTreeComponent& _OwnerComp, uin
 	FRotator TurnRot = UKismetMathLibrary::FindLookAtRotation(MonsterLocation, TargetLocation);
 	Monster->SetActorRotation(TurnRot);
 
-	if (0.0f >= MonsterData->AttackTime)
+	if (0.0f >= MonsterData->AnimationTime)
 	{
 		ATestCharacter* TargetPlayer = Cast<ATestCharacter>(TargetActor);
 		ATestPlayerState* TargetPlayerState = Cast<ATestPlayerState>(TargetPlayer->GetPlayerState());
@@ -63,16 +63,16 @@ void UBTTaskNode_MonsterAttack::TickTask(UBehaviorTreeComponent& _OwnerComp, uin
 			float Dist = LocationDiff.Size();
 			if (MonsterData->AttackRange >= Dist)
 			{
-				MonsterData->AttackTime = Monster->GetAnimInstance()->GetKeyAnimMontage(ETestMonsterAnim::Attack, Monster->GetAniIndex())->GetPlayLength();
+				MonsterData->AnimationTime = Monster->GetAnimInstance()->GetKeyAnimMontage(ETestMonsterAnim::Attack, Monster->GetAniIndex())->GetPlayLength();
 			}
 			else
 			{
-				MonsterData->AttackTime = 0.0f;
+				MonsterData->AnimationTime = 0.0f;
 				StateChange(_OwnerComp, ETestMonsterState::Chase);
 				return;
 			}
 		}
 	}
 
-	MonsterData->AttackTime -= _DeltaSeconds;
+	MonsterData->AnimationTime -= _DeltaSeconds;
 }

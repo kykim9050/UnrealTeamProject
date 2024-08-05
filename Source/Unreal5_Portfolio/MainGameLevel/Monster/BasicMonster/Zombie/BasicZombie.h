@@ -24,7 +24,7 @@ public:
 		return ZombieSettingData;
 	}
 
-private:
+protected:
 	UPROPERTY()
 	UBasicZombieData* ZombieSettingData = nullptr;
 

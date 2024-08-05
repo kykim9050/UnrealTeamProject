@@ -274,11 +274,11 @@ void ATestCharacter::Tick(float DeltaTime)
 	}
 #endif
 	//DefaultRayCast(DeltaTime);
-	//TArray<FItemInformation> I = ItemSlot;
-	//AGameModeBase* Ptr = GetWorld()->GetAuthGameMode();
+	TArray<FItemInformation> I = ItemSlot;
+	AGameModeBase* Ptr = GetWorld()->GetAuthGameMode();
 	//float ts = GetWorld()->GetDeltaSeconds();
 	
-	//int a = 0;
+	int a = 0;
 }
 
 void ATestCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -292,6 +292,10 @@ void ATestCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLi
 	DOREPLIFETIME(ATestCharacter, DirValue);		// => 매인 적용.
 	DOREPLIFETIME(ATestCharacter, IsFaint);			// 7/26 추가
 	DOREPLIFETIME(ATestCharacter, IsBombSetting);	// => 메인에 이전 필요 (24.07.29 추가됨)
+
+	// Inventory
+	DOREPLIFETIME(ATestCharacter, ItemSlot);		// => 메인 이전 필요 (24.08.05 추가됨)
+	DOREPLIFETIME(ATestCharacter, IsItemIn);		// => 메인 이전 필요 (24.08.05 추가됨)
 
 	// Item
 	DOREPLIFETIME(ATestCharacter, RayCastToItemName);

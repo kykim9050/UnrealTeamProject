@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+	// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "TestLevel/UI/DestinationSpriteActor.h"
@@ -31,8 +31,8 @@ ADestinationSpriteActor::ADestinationSpriteActor()
 
 void ADestinationSpriteActor::SetDestinationValue(FVector _value)
 {
-	SetActorLocation(_value);
-	SetActorScale3D(FVector(4.f, 1.f, 4.f));
+	SetActorLocation(_value);	
+	SetActorScale3D(FVector(8.f, 1.f, 8.f));
 }
 
 // Called when the game starts or when spawned

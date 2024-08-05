@@ -15,6 +15,7 @@ class UNREAL5_PORTFOLIO_API UBasicMutantData : public UBasicMonsterData
 	GENERATED_BODY()
 	
 public:
-	float JumpAttackRange = 1000.0f;
+	float JumpAttackMinRange = 800.0f;
+	float JumpAttackMaxRange = 1000.0f;
 
 };
