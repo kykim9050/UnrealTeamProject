@@ -4,9 +4,11 @@
 #include "MainGameLevel/Monster/BasicMonster/ClimbZombie/AI/BTTaskNode_ClimbZombieClimbEnd.h"
 #include "MainGameLevel/Monster/BasicMonster/ClimbZombie/ClimbZombie.h"
 #include "MainGameLevel/Monster/BasicMonster/ClimbZombie/ClimbZombeData.h"
+#include "MainGameLevel/Monster/BasicMonster/AI/BasicMonsterAIController.h"
 #include "MainGameLevel/Monster/Animation/MonsterRandomAnimInstance.h"
 
 #include "GameFramework/CharacterMovementComponent.h"
+#include "MotionWarpingComponent.h"
 
 #include "Global/ContentsLog.h"
 
@@ -28,6 +30,22 @@ EBTNodeResult::Type UBTTaskNode_ClimbZombieClimbEnd::ExecuteTask(UBehaviorTreeCo
 		return EBTNodeResult::Aborted;
 	}
 
+	FVector Destination = GetValueAsVector(OwnerComp, TEXT("Destination"));
+
+	FMotionWarpingTarget Target = {};
+	Target.Name = FName("ClimbDestination");
+	Target.Location = Destination;
+
+	UMotionWarpingComponent* MotionWarpComp = ClimbZombie->GetMotionWarpingComponent();
+	if (nullptr == MotionWarpComp)
+	{
+		LOG(MonsterLog, Fatal, TEXT("MotionWarpComp Is Not Valid"));
+		return EBTNodeResult::Aborted;
+	}
+
+	MotionWarpComp->AddOrUpdateWarpTarget(Target);
+
+	ClimbZombie->GetAIController()->StopMovement();
 	ClimbZombie->ChangeRandomAnimation(EBasicMonsterAnim::ClimbEnd);
 	UMonsterRandomAnimInstance* AnimInst = ClimbZombie->GetAnimInstance();
 	ClimbZombieData->TimeCount = AnimInst->GetKeyAnimMontage(EBasicMonsterAnim::ClimbEnd, ClimbZombie->GetAnimIndex())->GetPlayLength();
