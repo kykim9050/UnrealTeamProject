@@ -477,7 +477,7 @@ void AMainCharacter::ChangeMontage_Implementation(bool _IsFireEnd)
 	}
 	else
 	{
-		UpperStateValue = EPlayerUpperState::Rifle1_Idle;
+		UpperStateValue = EPlayerUpperState::Rifle_Idle;
 		PlayerAnimInst->ChangeAnimation(UpperStateValue);
 		FPVPlayerAnimInst->ChangeAnimation(UpperStateValue);
 		
@@ -519,7 +519,7 @@ void AMainCharacter::ClientChangeMontage_Implementation(bool _IsFireEnd)
 	}
 	else // FireEnd
 	{
-		UpperStateValue = EPlayerUpperState::Rifle2_Idle;
+		UpperStateValue = EPlayerUpperState::Rifle_Idle;
 		PlayerAnimInst->ChangeAnimation(UpperStateValue);
 		FPVPlayerAnimInst->ChangeAnimation(UpperStateValue);
 	}
