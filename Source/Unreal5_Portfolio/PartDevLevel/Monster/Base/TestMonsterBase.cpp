@@ -76,7 +76,7 @@ void ATestMonsterBase::BeginPlay()
 	//  몬스터 데이터 세팅
 	SettingData = NewObject<UTestMonsterDataBase>(this);
 	SettingData->BaseData = BaseData;
-	SettingData->AttackDamage = 34.0f;
+	SettingData->AttackDamage = SettingData->NormalAttackDamage;
 	SettingData->AttackRange = BaseData->GetAttackRange();
 	SettingData->OriginPos = GetActorLocation();
 
