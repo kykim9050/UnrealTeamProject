@@ -186,9 +186,9 @@ private:
 
 	// 몽타주 변경에 사용 중 (태환)
 	UPROPERTY()
-	class UPlayerAnimInstance* PlayerAnimInst;
+	class UPlayerAnimInstance* PlayerAnimInst = nullptr;
 	UPROPERTY()
-	class UPlayerAnimInstance* FPVPlayerAnimInst;
+	class UPlayerAnimInstance* FPVPlayerAnimInst = nullptr;
 
 public:
 	// Fire
