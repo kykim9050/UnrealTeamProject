@@ -78,7 +78,7 @@ public:
 
 	// UpperState
 	UPROPERTY(Category = "Contents", Replicated, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	EPlayerUpperState UpperStateValue = EPlayerUpperState::Rifle_Idle;
+	EPlayerUpperState UpperStateValue = EPlayerUpperState::UArm_Idle;
 
 	// Dir
 	UPROPERTY(Category = "Contents", Replicated, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
