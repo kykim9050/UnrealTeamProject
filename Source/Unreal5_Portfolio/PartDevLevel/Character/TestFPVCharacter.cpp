@@ -812,7 +812,7 @@ void ATestFPVCharacter::ItemSetting(FName _TagName, EPlayerUpperState _SlotIndex
 	//}
 }
 
-void ATestFPVCharacter::DropItem_Implementation(int _SlotIndex) // => 메인 수정 필요 (24.08.02 수정됨)
+void ATestFPVCharacter::DropItem_Implementation(int _SlotIndex) // => 메인 수정 필요 (24.08.05 Spawn 부분 수정됨)
 {
 	// DropItem 할 수 없는 경우 1: 맨손일 때
 	if (CurItemIndex == -1)

@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Global/DataTable/ItemDataRow.h"
 #include "ItemBase.generated.h"
 
 UCLASS()
@@ -20,6 +21,11 @@ public:
 		return StaticMeshComponent;
 	}
 
+	FORCEINLINE const FItemDataRow* GetItemData()
+	{
+		return ItemData;
+	}
+
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
@@ -27,10 +33,16 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+
 private:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	FString ItemDataName;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	class UCapsuleComponent* CapsuleComponent = nullptr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	class UStaticMeshComponent* StaticMeshComponent = nullptr;
+
+	FItemDataRow* ItemData;
 };
