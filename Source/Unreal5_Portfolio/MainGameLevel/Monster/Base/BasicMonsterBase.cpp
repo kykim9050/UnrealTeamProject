@@ -193,6 +193,13 @@ void ABasicMonsterBase::SetChasePlayer()
 		return;
 	}
 
+	UMainGameInstance* MainGameInstance = UMainGameBlueprintFunctionLibrary::GetMainGameInstance(GetWorld());
+	if (nullptr == MainGameInstance)
+	{
+		LOG(MonsterLog, Fatal, TEXT("MainGameInstance Is Nullptr"));
+		return;
+	}
+
 	AMainGameState* MainGameState = UMainGameBlueprintFunctionLibrary::GetMainGameState(GetWorld());
 	if (nullptr == MainGameState)
 	{
@@ -208,23 +215,9 @@ void ABasicMonsterBase::SetChasePlayer()
 	}
 
 	// Find Player
-	int MinIndex = -1;
-	float MinDistance = FLT_MAX;
-	
-	FVector MonsterLocation = GetActorLocation();
-	for (int32 i = 0; i < PlayerGroup->Actors.Num(); i++)
-	{
-		FVector PlayerLocation = PlayerGroup->Actors[i]->GetActorLocation();
-		float Diff = (MonsterLocation - PlayerLocation).Size();
+	int32 PlayerIndex = MainGameInstance->Random.RandRange(0, PlayerGroup->Actors.Num() - 1);
 
-		if (Diff < MinDistance)
-		{
-			MinDistance = Diff;
-			MinIndex = i;
-		}
-	}
-
-	AIController->GetBlackboardComponent()->SetValueAsObject(TEXT("TargetActor"), PlayerGroup->Actors[MinIndex]);
+	AIController->GetBlackboardComponent()->SetValueAsObject(TEXT("TargetActor"), PlayerGroup->Actors[PlayerIndex]);
 	AIController->GetBlackboardComponent()->SetValueAsEnum(TEXT("State"), static_cast<uint8>(EBasicMonsterState::Chase));
 }
 
