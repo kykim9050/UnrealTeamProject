@@ -29,7 +29,7 @@ EBTNodeResult::Type UBTTaskNode_KrakenRotate::ExecuteTask(UBehaviorTreeComponent
 	}
 
 	UTestMonsterDataBase* MonsterData = GetValueAsObject<UTestMonsterDataBase>(_OwnerComp, TEXT("MonsterData"));
-	AActor* Target = Cast<AActor>(_OwnerComp.GetBlackboardComponent()->GetValueAsObject(TEXT("TargetActor")));
+	AActor* Target = GetValueAsObject<AActor>(_OwnerComp, TEXT("TargetActor"));
 	ETestMonsterAnim NextAnim;
 
 	FVector MonsterLocation = Monster->GetActorLocation();
@@ -69,7 +69,7 @@ void UBTTaskNode_KrakenRotate::TickTask(UBehaviorTreeComponent& _OwnerComp, uint
 	UTestMonsterDataBase* MonsterData = GetValueAsObject<UTestMonsterDataBase>(_OwnerComp, TEXT("MonsterData"));
 	ATestMonsterBase* Monster = GetActor<ATestMonsterBase>(_OwnerComp);
 
-	AActor* Target = Cast<AActor>(_OwnerComp.GetBlackboardComponent()->GetValueAsObject(TEXT("TargetActor")));
+	AActor* Target = GetValueAsObject<AActor>(_OwnerComp, TEXT("TargetActor"));
 	FVector TargetLocation = Target->GetActorLocation();
 	FVector MonsterLocation = Monster->GetActorLocation();
 	FVector MonsterToTarget = MonsterLocation - TargetLocation;

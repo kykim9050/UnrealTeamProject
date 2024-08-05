@@ -29,7 +29,7 @@ EBTNodeResult::Type UBTTaskNode_KrakenChase::ExecuteTask(UBehaviorTreeComponent&
 		return EBTNodeResult::Type::Aborted;
 	}
 
-	AActor* Target = Cast<AActor>(OwnerComp.GetBlackboardComponent()->GetValueAsObject(TEXT("TargetActor")));
+	AActor* Target = GetValueAsObject<AActor>(OwnerComp, TEXT("TargetActor"));
 	if (nullptr == Target)
 	{
 		StateChange(OwnerComp, ETestMonsterState::Idle);
@@ -52,7 +52,7 @@ void UBTTaskNode_KrakenChase::TickTask(UBehaviorTreeComponent& OwnerComp, uint8*
 
 	EPathFollowingRequestResult::Type IsMove = Monster->GetAIController()->MoveToLocation(MonsterData->DestLoc);
 
-	AActor* Target = Cast<AActor>(OwnerComp.GetBlackboardComponent()->GetValueAsObject(TEXT("TargetActor")));
+	AActor* Target = GetValueAsObject<AActor>(OwnerComp, TEXT("TargetActor"));
 	FVector LocationDiff = Target->GetActorLocation() - Monster->GetActorLocation();
 	double DiffLength = LocationDiff.Size();
 	if (DiffLength <= MonsterData->AttackRange)
