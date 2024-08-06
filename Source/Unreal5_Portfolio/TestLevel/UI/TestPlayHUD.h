@@ -20,6 +20,8 @@ protected:
 	void BeginPlay() override;
 	void AllUISetting() override;
 
+	void AllUIOn() override;
+
 	UPROPERTY(BlueprintReadOnly)
 	TMap<EUserWidgetType, UUserWidget*> AllTestPlayWidgets;
 };
