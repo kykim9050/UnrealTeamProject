@@ -43,7 +43,7 @@ void ASwitchObject::InterAction()
 			return;
 		}
 
-		// 해당 클래스 형으로 다운캐스팅하기
+		// 해당 클래스 형으로 업캐스팅하기
 		AMapObjectBase* InteractObj = Cast<AMapObjectBase>(OtherActor);
 
 		if (nullptr == InteractObj)

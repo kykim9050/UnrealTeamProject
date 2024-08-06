@@ -13,5 +13,12 @@ UCLASS()
 class UNREAL5_PORTFOLIO_API ABossMonsterAIController : public AAIController
 {
 	GENERATED_BODY()
+
+protected:
+	void OnPossess(APawn* InPawn) override;
+
+private:
+	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = true))
+	UBehaviorTree* BehaviorTree = nullptr;
 	
 };

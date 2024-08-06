@@ -3,17 +3,20 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Character.h"
+#include "MainGameLevel/Monster/Base/MonsterBase.h"
+#include "Components/TimeLineComponent.h"
 #include "BossMonsterBase.generated.h"
 
+class UCurveFloat;
+class USphereComponent;
 class UBossMonsterData;
 class UMainAnimInstance;
+class UMaterialInstanceDynamic;
 class ABossMonsterAIController;
-
 struct FBossMonsterDataRow;
 
 UCLASS()
-class UNREAL5_PORTFOLIO_API ABossMonsterBase : public ACharacter
+class UNREAL5_PORTFOLIO_API ABossMonsterBase : public AMonsterBase
 {
 	GENERATED_BODY()
 
@@ -44,7 +47,32 @@ protected:
 
 	// Data
 	virtual void InitData(const FBossMonsterDataRow* BaseData) {};
-	
+
+private:
+	// Dissolve Effect
+	UPROPERTY()
+	FTimeline DeadTimeLine;
+
+	UPROPERTY(EditAnywhere, Category = "DeadTimeLine")
+	UCurveFloat* DeadDissolveCurve;
+
+	FOnTimelineFloat DeadDissolveCallBack;
+	FOnTimelineEvent DeadTimelineFinish;
+
+	TArray<UMaterialInstanceDynamic*> DynamicMaterials;
+
+protected:
+	UPROPERTY()
+	UBossMonsterData* SettingData = nullptr;
+
+private:
+	// Data
+	UPROPERTY(EditAnywhere, Category = "Data", meta = (AllowPrivateAccess = "true"))
+	FName BaseDataName;
+
+	UPROPERTY()
+	ABossMonsterAIController* AIController = nullptr;
+
 public:
 	// 애니메이션
 	void ChangeAnimation(uint8 Type);
@@ -62,17 +90,8 @@ private:
 	UPROPERTY()
 	UMainAnimInstance* AnimInst = nullptr;
 
-protected:
-	UPROPERTY()
-	UBossMonsterData* SettingData = nullptr;
-
 private:
-	// Data
-	UPROPERTY(EditAnywhere, Category = "Data", meta = (AllowPrivateAccess = "true"))
-	FName BaseDataName;
-
-	UPROPERTY()
-	ABossMonsterAIController* AIController = nullptr;
-
+	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = true))
+	USphereComponent* AttackComponent = nullptr;
 
 };
