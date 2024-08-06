@@ -792,7 +792,7 @@ void ATestFPVCharacter::DropItem(int _SlotIndex)	// => 메인 수정 필요 (24.08.06 
 		return;
 	}
 	
-	// 떨어트릴 아이템을 액터로 생성하여 Spawn
+	// 떨어트릴 아이템을 스폰
 	FName ItemName = ItemSlot[_SlotIndex].Name;
 	FTransform SpawnTrans = GetActorTransform();
 	SpawnTrans.SetTranslation(GetActorLocation() + (GetActorForwardVector() * 100.0f) + (GetActorUpVector() * 50.0f));
@@ -819,14 +819,17 @@ void ATestFPVCharacter::DropItem(int _SlotIndex)	// => 메인 수정 필요 (24.08.06 
 
 void ATestFPVCharacter::DestroyItem_Implementation(AItemBase* _Item)	// => 메인 이전 필요 (24.08.06 추가됨)
 {
+	// 필드에서 아이템 Destroy
 	_Item->Destroy();
 }
 
 void ATestFPVCharacter::SpawnItem_Implementation(FName _ItemName, FTransform _SpawnTrans)	// => 메인 이전 필요 (24.08.06 추가됨)
 {
+	// 스폰할 아이템 정보 가져오기
 	UMainGameInstance* MainGameInst = UMainGameBlueprintFunctionLibrary::GetMainGameInstance(GetWorld());
 	const FItemDataRow* ItemData = MainGameInst->GetItemData(_ItemName);
 
+	// 필드에 아이템 Spawn
 	AItemBase* DropItem = GetWorld()->SpawnActor<AItemBase>(ItemData->GetItemUClass(), _SpawnTrans);
 	UStaticMeshComponent* DropItemMeshComp = Cast<AItemBase>(DropItem)->GetStaticMeshComponent();
 	DropItemMeshComp->SetSimulatePhysics(true);
