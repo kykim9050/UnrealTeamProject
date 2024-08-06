@@ -3,6 +3,7 @@
 
 #include "PartDevLevel/Character/UAnimNotifyState_HandAttack.h"
 #include "TestLevel/Character/TestCharacter.h"
+#include "ParentsCharacter.h"
 
 void UUAnimNotifyState_HandAttack::NotifyBegin(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation, float TotalDuration, const FAnimNotifyEventReference& EventReference)
 {
@@ -15,6 +16,14 @@ void UUAnimNotifyState_HandAttack::NotifyBegin(USkeletalMeshComponent* MeshComp,
 	}
 
 	PlayCharacter->ChangeHandAttackCollisionProfile(TEXT("PlayerHandAttack"));
+
+	AParentsCharacter* ParentsPlayer = MeshComp->GetOwner<AParentsCharacter>();
+	if (nullptr == ParentsPlayer)
+	{
+		return;
+	}
+
+	ParentsPlayer->ChangeHandAttackCollisionProfile(TEXT("PlayerHandAttack"));
 }
 
 void UUAnimNotifyState_HandAttack::NotifyTick(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation, float FrameDeltaTime, const FAnimNotifyEventReference& EventReference)
@@ -33,4 +42,12 @@ void UUAnimNotifyState_HandAttack::NotifyEnd(USkeletalMeshComponent* MeshComp, U
 	}
 
 	PlayCharacter->ChangeHandAttackCollisionProfile(TEXT("NoCollision"));
+
+	AParentsCharacter* ParentsPlayer = MeshComp->GetOwner<AParentsCharacter>();
+	if (nullptr == ParentsPlayer)
+	{
+		return;
+	}
+
+	ParentsPlayer->ChangeHandAttackCollisionProfile(TEXT("NoCollision"));
 }
