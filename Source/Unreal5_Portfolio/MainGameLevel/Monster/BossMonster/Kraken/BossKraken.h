@@ -29,4 +29,9 @@ private:
 	UPROPERTY()
 	UBossKrakenData* BossKrakenSettingData = nullptr;
 
+private:
+	// Effect
+	UPROPERTY(EditAnywhere, Category = "Particle", meta = (AllowPrivateAccess = true))
+	UParticleSystem* SmashParticle = nullptr;
+
 };
