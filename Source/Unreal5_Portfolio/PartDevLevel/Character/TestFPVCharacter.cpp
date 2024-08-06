@@ -303,11 +303,9 @@ void ATestFPVCharacter::Tick(float DeltaTime)
 	// Debugging
 	//DefaultRayCast(DeltaTime);
 	//float ts = GetWorld()->GetDeltaSeconds();
-	AGameModeBase* Ptr = GetWorld()->GetAuthGameMode();
 	//TArray<FFPVItemInformation> I = ItemSlot;
 	//int c = CurItemIndex;
-	bool v1 = ItemSocketMesh->IsVisible();
-	bool v2 = FPVItemSocketMesh->IsVisible();
+	//AGameModeBase* Ptr = GetWorld()->GetAuthGameMode();
 	int a = 0;
 }
 
@@ -539,36 +537,43 @@ void ATestFPVCharacter::ClientChangeMontage_Implementation(EPlayerUpperState _Up
 
 void ATestFPVCharacter::SettingItemSocket(int _InputKey)		// => 메인에 이전 필요 (24.08.06 추가됨)
 {
-	AGameModeBase* Ptr = GetWorld()->GetAuthGameMode();
-
 	if (-1 == _InputKey)
 	{
 		// ItemSocket의 visibility 끄기
-		ItemSocketMesh->SetVisibility(false);
-		FPVItemSocketMesh->SetVisibility(false);
+		SetItemSocketVisibility(false);
 		return;
 	}
 
-	// static mesh 세팅
-	ItemSocketMesh->SetStaticMesh(ItemSlot[_InputKey].MeshRes);
-	FPVItemSocketMesh->SetStaticMesh(ItemSlot[_InputKey].MeshRes);
+	UStaticMesh* ItemMeshRes = ItemSlot[_InputKey].MeshRes;
+	FVector ItemRelLoc = ItemSlot[_InputKey].RelLoc;
+	FRotator ItemRelRot = ItemSlot[_InputKey].RelRot;
+	FVector ItemRelScale = ItemSlot[_InputKey].RelScale;
 
-	// transform 세팅
-	ItemSocketMesh->SetRelativeLocation(ItemSlot[_InputKey].RelLoc);
-	FPVItemSocketMesh->SetRelativeLocation(ItemSlot[_InputKey].RelLoc);
-
-	ItemSocketMesh->SetRelativeRotation(ItemSlot[_InputKey].RelRot);
-	FPVItemSocketMesh->SetRelativeRotation(ItemSlot[_InputKey].RelRot);
-
-	ItemSocketMesh->SetRelativeScale3D(ItemSlot[_InputKey].RelScale);
-	FPVItemSocketMesh->SetRelativeScale3D(ItemSlot[_InputKey].RelScale);
+	// ItemSocket의 static mesh 세팅
+	SetItemSocketMesh(ItemMeshRes, ItemRelLoc, ItemRelRot, ItemRelScale);
 
 	// ItemSocket의 visibility 켜기
-	ItemSocketMesh->SetVisibility(true);
-	FPVItemSocketMesh->SetVisibility(true);
+	SetItemSocketVisibility(true);
 }
 
-void ATestFPVCharacter::SetItemSocketVisibility(bool _Visibility)
+void ATestFPVCharacter::SetItemSocketMesh_Implementation(UStaticMesh* _ItemMeshRes, FVector _ItemRelLoc, FRotator _ItemRelRot, FVector _ItemRelScale)
+{
+	// static mesh 세팅
+	ItemSocketMesh->SetStaticMesh(_ItemMeshRes);
+	FPVItemSocketMesh->SetStaticMesh(_ItemMeshRes);
+
+	// transform 세팅
+	ItemSocketMesh->SetRelativeLocation(_ItemRelLoc);
+	FPVItemSocketMesh->SetRelativeLocation(_ItemRelLoc);
+
+	ItemSocketMesh->SetRelativeRotation(_ItemRelRot);
+	FPVItemSocketMesh->SetRelativeRotation(_ItemRelRot);
+
+	ItemSocketMesh->SetRelativeScale3D(_ItemRelScale);
+	FPVItemSocketMesh->SetRelativeScale3D(_ItemRelScale);
+}
+
+void ATestFPVCharacter::SetItemSocketVisibility_Implementation(bool _Visibility)
 {
 	ItemSocketMesh->SetVisibility(_Visibility);
 	FPVItemSocketMesh->SetVisibility(_Visibility);
