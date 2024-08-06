@@ -3,18 +3,19 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "MainGameLevel/Monster/BasicMonster/AI/TaskNode/BTTaskNodeBase_Monster.h"
-#include "BTTaskNode_BasicMonsterPatrol.generated.h"
+#include "MainGameLevel/Monster/Base/BTTaskNodeBase_Monster.h"
+#include "BTTaskNode_BasicMonsterAttack.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class UNREAL5_PORTFOLIO_API UBTTaskNode_BasicMonsterPatrol : public UBTTaskNodeBase_BasicMonster
+class UNREAL5_PORTFOLIO_API UBTTaskNode_BasicMonsterAttack : public UBTTaskNodeBase_Monster
 {
 	GENERATED_BODY()
 
 public:
 	EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) override;
 	void TickTask(UBehaviorTreeComponent& OwnerComp, uint8* pNodeMemory, float DeltaSeconds) override;
+	
 };

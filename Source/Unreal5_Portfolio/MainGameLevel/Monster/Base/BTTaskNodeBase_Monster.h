@@ -10,12 +10,12 @@
  * 
  */
 UCLASS()
-class UNREAL5_PORTFOLIO_API UBTTaskNodeBase_BasicMonster : public UBTTaskNode
+class UNREAL5_PORTFOLIO_API UBTTaskNodeBase_Monster : public UBTTaskNode
 {
 	GENERATED_BODY()
 
 public:
-	UBTTaskNodeBase_BasicMonster();
+	UBTTaskNodeBase_Monster();
 
 public:
 	// State
