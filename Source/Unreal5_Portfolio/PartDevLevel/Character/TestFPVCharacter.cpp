@@ -221,6 +221,13 @@ void ATestFPVCharacter::Tick(float DeltaTime)
 	//int c = CurItemIndex;
 	//AGameModeBase* Ptr = GetWorld()->GetAuthGameMode();
 	int a = 0;
+
+	// IdleDefault Ãâ·Â.
+	{
+		UEnum* Enum = StaticEnum<EPlayerUpperState>();
+		FName Name = Enum->GetNameByValue(static_cast<int64>(IdleDefault));
+		UMainGameBlueprintFunctionLibrary::DebugTextPrint(GetWorld(), FString(TEXT("IdleDefault = ")) + Name.ToString());
+	}
 }
 
 void ATestFPVCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
