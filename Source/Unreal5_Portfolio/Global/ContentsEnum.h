@@ -235,6 +235,11 @@ enum class EPlayerUpperState : uint8
 	
 	Drink,
 	Bomb,
+
+	MoveForward,
+	MoveBack,
+	MoveLeft,
+	MoveRight,
 };
 
 UENUM(BlueprintType)
