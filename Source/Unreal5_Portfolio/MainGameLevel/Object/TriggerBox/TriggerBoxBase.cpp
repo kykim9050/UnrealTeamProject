@@ -45,9 +45,6 @@ void ATriggerBoxBase::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutL
 
 void ATriggerBoxBase::OnOverlapBegin(AActor* OverlappedActor, AActor* OtherActor)
 {
-	APlayerController* UIPlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
-	Cast<AMainGameHUD>(UIPlayerController->GetHUD())->AllUIOff();
-
 	if (false == HasAuthority())
 	{
 		LOG(ObjectLog, Error, "서버가 아닙니다.");
@@ -67,6 +64,7 @@ void ATriggerBoxBase::OnOverlapBegin(AActor* OverlappedActor, AActor* OtherActor
 		if (APlayerController* PlayerController = PlayerIt->Get())
 		{
 			DisablePlayerInput(PlayerController);
+			DisablePlayerHUD(PlayerController);
 		}
 	}
 
@@ -135,15 +133,13 @@ void ATriggerBoxBase::PlayCinematicSequence_Implementation()
 
 void ATriggerBoxBase::OnSequenceFinished()
 {
-	APlayerController* UIPlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
-	Cast<AMainGameHUD>(UIPlayerController->GetHUD())->AllUIOn();
-
-	// 모든 플레이어의 입력을 다시 활성화
+	// 모든 플레이어의 입력을 다시 활성화 및 HUD ON
 	for (FConstPlayerControllerIterator PlayerIt = GetWorld()->GetPlayerControllerIterator(); PlayerIt; ++PlayerIt)
 	{
 		if (APlayerController* PlayerController = PlayerIt->Get())
 		{
 			EnablePlayerInput(PlayerController);
+			EnablePlayerHUD(PlayerController);
 		}
 	}
 
@@ -165,5 +161,23 @@ void ATriggerBoxBase::EnablePlayerInput_Implementation(APlayerController* Player
 	{
 		PlayerController->GetPawn()->EnableInput(PlayerController);
 		PlayerController->EnableInput(PlayerController);
+	}
+}
+
+void ATriggerBoxBase::EnablePlayerHUD_Implementation(APlayerController* PlayerController)
+{
+	if (PlayerController && PlayerController->GetPawn())
+	{
+		PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+		Cast<AMainGameHUD>(PlayerController->GetHUD())->AllUIOn();
+	}	
+}
+
+void ATriggerBoxBase::DisablePlayerHUD_Implementation(APlayerController* PlayerController)
+{
+	if (PlayerController && PlayerController->GetPawn())
+	{
+		PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+		Cast<AMainGameHUD>(PlayerController->GetHUD())->AllUIOff();
 	}
 }
