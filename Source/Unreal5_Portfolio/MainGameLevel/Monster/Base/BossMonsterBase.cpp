@@ -4,6 +4,7 @@
 #include "MainGameLevel/Monster/Base/BossMonsterBase.h"
 #include "MainGameLevel/Monster/BossMonster/AI/BossMonsterAIController.h"
 
+#include "Components/SphereComponent.h"
 #include "Net/UnrealNetwork.h"
 
 #include "Global/MainGameBlueprintFunctionLibrary.h"
@@ -15,6 +16,11 @@
 ABossMonsterBase::ABossMonsterBase()
 {
 	PrimaryActorTick.bCanEverTick = true;
+
+	// Attack Component
+	AttackComponent = CreateDefaultSubobject<USphereComponent>(TEXT("Attack Component"));
+	AttackComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	AttackComponent->SetupAttachment(RootComponent);
 
 }
 

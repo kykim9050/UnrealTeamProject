@@ -158,6 +158,7 @@ enum class EBossMonsterState : uint8
 	Chase,
 	MeleeAttack,
 	RangedAttack,
+	KrakenRotate,
 	Dead
 };
 

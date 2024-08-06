@@ -26,4 +26,6 @@ public:
 	UPROPERTY(Replicated)
 	float Hp = 0.0f;
 
+	float TimeCount = 0.0f;
+
 };

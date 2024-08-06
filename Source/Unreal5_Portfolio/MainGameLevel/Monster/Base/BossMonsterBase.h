@@ -91,7 +91,7 @@ private:
 	UMainAnimInstance* AnimInst = nullptr;
 
 private:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
-	USphereComponent* AttackComponent;
+	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = true))
+	USphereComponent* AttackComponent = nullptr;
 
 };
