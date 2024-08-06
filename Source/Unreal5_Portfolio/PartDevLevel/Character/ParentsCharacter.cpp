@@ -32,3 +32,9 @@ void AParentsCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 
 }
 
+
+
+void AParentsCharacter::AnimationEnd()
+{
+
+}

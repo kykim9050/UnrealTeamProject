@@ -196,6 +196,11 @@ void ATestFPVCharacter::PostInitializeComponents()
 	Super::PostInitializeComponents();
 }
 
+void ATestFPVCharacter::AnimationEnd() 
+{
+	ChangeMontage(IdleDefault);
+}
+
 // Called when the game starts or when spawned
 void ATestFPVCharacter::BeginPlay()	// => 메인 수정 필요 (24.08.01 수정, 추가된 요소 있음)
 {
@@ -219,6 +224,33 @@ void ATestFPVCharacter::BeginPlay()	// => 메인 수정 필요 (24.08.01 수정, 추가된 
 	//double MyVelocity = UKismetMathLibrary::VSizeXY(GetVelocity());
 	//UCharacterMovementComponent* MyMovementComponent = GetCharacterMovement();
 	//MyMovementComponent->IsFalling();
+
+	ChangeMontage(EPlayerUpperState::UArm_Idle);
+
+	// Call Back
+	/*PlayerAnimInst->SetEndCallBack(EPlayerUpperState::Rifle_Attack,
+		[=, this](uint8 _Type, UAnimMontage* _Mon)
+		{
+			AttackEndCheck();
+		});
+
+	PlayerAnimInst->SetEndCallBack(EPlayerUpperState::Melee_Attack,
+		[=, this](uint8 _Type, UAnimMontage* _Mon)
+		{
+			AttackEndCheck();
+		});
+
+	PlayerAnimInst->SetEndCallBack(EPlayerUpperState::UArm_Attack,
+		[=, this](uint8 _Type, UAnimMontage* _Mon)
+		{
+			AttackEndCheck();
+		});
+
+	PlayerAnimInst->SetEndCallBack(EPlayerUpperState::Drink,
+		[=, this](uint8 _Type, UAnimMontage* _Mon)
+		{
+			AttackEndCheck();
+		});*/
 }
 
 // Called every frame
@@ -994,6 +1026,8 @@ void ATestFPVCharacter::AttackCheck()
 
 void ATestFPVCharacter::AttackEndCheck()
 {
+	ChangeMontage(IdleDefault);
+
 	//UAnimMontage* GetCurMontage = GetCurrentMontage();
 	//FName GetCurMontageName = GetCurMontage->GetFName();
 	//// E_Fire_Stand_Montage

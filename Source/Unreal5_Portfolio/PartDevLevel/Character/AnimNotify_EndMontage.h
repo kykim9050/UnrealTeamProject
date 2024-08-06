@@ -14,4 +14,9 @@ class UNREAL5_PORTFOLIO_API UAnimNotify_EndMontage : public UAnimNotify
 {
 	GENERATED_BODY()
 	
+	UAnimNotify_EndMontage();
+
+	// bShouldFireInEditor
+
+	void Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation) override;
 };
