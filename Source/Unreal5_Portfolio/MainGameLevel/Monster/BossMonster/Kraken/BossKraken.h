@@ -6,6 +6,8 @@
 #include "MainGameLevel/Monster/Base/BossMonsterBase.h"
 #include "BossKraken.generated.h"
 
+class UBossKrakenData;
+
 /**
  * 
  */
@@ -13,5 +15,18 @@ UCLASS()
 class UNREAL5_PORTFOLIO_API ABossKraken : public ABossMonsterBase
 {
 	GENERATED_BODY()
+
+public:
+	UBossKrakenData* GetSettingData() const
+	{
+		return BossKrakenSettingData;
+	}
+
+protected:
+	virtual void InitData(const FBossMonsterDataRow* BaseData);
 	
+private:
+	UPROPERTY()
+	UBossKrakenData* BossKrakenSettingData = nullptr;
+
 };
