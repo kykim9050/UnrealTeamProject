@@ -16,4 +16,7 @@ class UNREAL5_PORTFOLIO_API AMainGameHUD : public AMainParentHUD
 protected:
 	void BeginPlay() override;
 	void AllUISetting() override;
+
+public:
+	void AllUIOn() override;
 };

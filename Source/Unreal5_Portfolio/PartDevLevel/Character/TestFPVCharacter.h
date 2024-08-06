@@ -226,6 +226,10 @@ public:
 	void ClientChangeMontage(EPlayerUpperState _UpperState);
 	void ClientChangeMontage_Implementation(EPlayerUpperState _UpperState);
 
+	UFUNCTION(Reliable, Server)
+	void SetStaticMesh(FName _ItemName);
+	void SetStaticMesh_Implementation(FName _ItemName);
+
 	// Crouch 카메라 이동
 	UFUNCTION()
 	void CrouchCameraMove();

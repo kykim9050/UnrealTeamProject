@@ -22,7 +22,10 @@ public:
 
 private:
 	UPROPERTY()
-	class ATestPlayHUD* CurHUD;
+	class ATestPlayHUD* CurTestHUD;
+
+	UPROPERTY()
+	class AMainGameHUD* CurMainHUD;
 
 	UPROPERTY()
 	bool IsChanged = false;

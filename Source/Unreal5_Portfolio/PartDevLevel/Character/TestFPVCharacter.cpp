@@ -387,8 +387,6 @@ void ATestFPVCharacter::Drink()
 // 노티파이
 void ATestFPVCharacter::DrinkComplete_Implementation()			// => 메인에 이전 필요 (24.08.01 수정됨)
 {
-	// 이전 자세로 애니메이션 변경
-	//ChangePosture(PrevPostureValue);
 	ChangeMontage(IdleDefault);
 }
 
@@ -503,6 +501,63 @@ void ATestFPVCharacter::ClientChangeMontage_Implementation(EPlayerUpperState _Up
 {
 	PlayerAnimInst->ChangeAnimation(_UpperState);
 	FPVPlayerAnimInst->ChangeAnimation(_UpperState);
+}
+
+void ATestFPVCharacter::SetStaticMesh_Implementation(FName _ItemName)
+{
+	// test
+	{
+		UMainGameInstance* Inst = GetGameInstance<UMainGameInstance>();
+		const FItemDataRow* ItemData = Inst->GetItemData(_ItemName);
+
+		int ItemReloadNum = ItemData->GetReloadNum();
+		int ItemDamage = ItemData->GetDamage();
+		UStaticMesh* ItemMeshRes = ItemData->GetResMesh();
+		FVector ItemRelLoc = ItemData->GetRelLoc();
+		FRotator ItemRelRot = ItemData->GetRelRot();
+		FVector ItemRelScale = ItemData->GetRelScale();
+
+		if (_ItemName == "SniperRifle")
+		{
+			ItemSlot[0].Name = _ItemName;
+			ItemSlot[0].ReloadMaxNum = ItemReloadNum;
+			ItemSlot[0].ReloadLeftNum = ItemReloadNum;
+			ItemSlot[0].Damage = ItemDamage;
+			ItemSlot[0].MeshRes = ItemMeshRes;
+			ItemSlot[0].RelLoc = ItemRelLoc;
+			ItemSlot[0].RelRot = ItemRelRot;
+			ItemSlot[0].RelScale = ItemRelScale;
+		}
+		else if (_ItemName == "Katana")
+		{
+			ItemSlot[1].Name = _ItemName;
+			ItemSlot[1].ReloadMaxNum = ItemReloadNum;
+			ItemSlot[1].ReloadLeftNum = ItemReloadNum;
+			ItemSlot[1].Damage = ItemDamage;
+			ItemSlot[1].MeshRes = ItemMeshRes;
+			ItemSlot[1].RelLoc = ItemRelLoc;
+			ItemSlot[1].RelRot = ItemRelRot;
+			ItemSlot[1].RelScale = ItemRelScale;
+		}
+	}
+
+	//아이템 static mesh 세팅
+	ItemSocketMesh->SetStaticMesh(ItemSlot[0].MeshRes);
+	FPVItemSocketMesh->SetStaticMesh(ItemSlot[0].MeshRes);
+
+	// 아이템 메시 transform 세팅
+	ItemSocketMesh->SetRelativeLocation(ItemSlot[0].RelLoc);
+	FPVItemSocketMesh->SetRelativeLocation(ItemSlot[0].RelLoc);
+
+	ItemSocketMesh->SetRelativeRotation(ItemSlot[0].RelRot);
+	FPVItemSocketMesh->SetRelativeRotation(ItemSlot[0].RelRot);
+
+	ItemSocketMesh->SetRelativeScale3D(ItemSlot[0].RelScale);
+	FPVItemSocketMesh->SetRelativeScale3D(ItemSlot[0].RelScale);
+
+	// 아이템 메시 visibility 켜기
+	ItemSocketMesh->SetVisibility(true);
+	FPVItemSocketMesh->SetVisibility(true);
 }
 
 //void ATestFPVCharacter::ChangePosture_Implementation(EPlayerPosture _Type)	// => 메인으로 이전해야 함 (24.07.30 수정 중)
@@ -763,7 +818,7 @@ void ATestFPVCharacter::DropItem_Implementation(int _SlotIndex)	// => 메인 수정 
 
 	// 애니메이션 업데이트
 	//ChangePosture(EPlayerPosture::Barehand);
-	ChangeMontage(EPlayerUpperState::Barehand);
+	ChangeMontage(EPlayerUpperState::UArm_Attack);
 }
 
 void ATestFPVCharacter::DeleteItem(int _Index)		// => 메인 수정 필요 (24.08.06 수정됨)
@@ -787,7 +842,7 @@ void ATestFPVCharacter::ChangePOV()	// => 메인캐릭터로 이전해야 함 (24.07.29 수�
 		FPVMesh->SetOwnerNoSee(true);
 
 		// Item Mesh
-		for (int i = 0; i < static_cast<int>(EPlayerUpperState::Barehand); i++)
+		for (int i = 0; i < static_cast<int>(EPlayerUpperState::UArm_Attack); i++)
 		{
 			ItemSocketMesh->SetOwnerNoSee(false);
 			FPVItemSocketMesh->SetOwnerNoSee(true);
@@ -818,7 +873,7 @@ void ATestFPVCharacter::ChangePOV()	// => 메인캐릭터로 이전해야 함 (24.07.29 수�
 		FPVMesh->SetOwnerNoSee(false);
 
 		// Item Mesh
-		for (int i = 0; i < static_cast<int>(EPlayerUpperState::Barehand); i++)
+		for (int i = 0; i < static_cast<int>(EPlayerUpperState::UArm_Attack); i++)
 		{
 			ItemSocketMesh->SetOwnerNoSee(true);
 			FPVItemSocketMesh->SetOwnerNoSee(false);
@@ -913,7 +968,7 @@ void ATestFPVCharacter::AttackCheck()
 	switch (IdleDefault)
 	{
 	case EPlayerUpperState::UArm_Idle:
-		ChangeMontage(EPlayerUpperState::Barehand);
+		ChangeMontage(EPlayerUpperState::UArm_Attack);
 		break;
 	case EPlayerUpperState::Rifle_Idle:
 		ChangeMontage(EPlayerUpperState::Rifle_Attack);

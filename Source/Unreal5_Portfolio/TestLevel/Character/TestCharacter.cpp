@@ -529,7 +529,7 @@ void ATestCharacter::ChangeMontage_Implementation(bool _IsFireEnd) // => ¸ÅÀÎ Àû
 			UpperStateValue = EPlayerUpperState::Bomb;
 			break;
 		case EPlayerPosture::Barehand:
-			UpperStateValue = EPlayerUpperState::Barehand;
+			UpperStateValue = EPlayerUpperState::UArm_Attack;
 			break;
 		case EPlayerPosture::SlotMax:
 			break;
@@ -571,7 +571,7 @@ void ATestCharacter::ClientChangeMontage_Implementation(bool _IsFireEnd) // => ¸
 			UpperStateValue = EPlayerUpperState::Bomb;
 			break;
 		case EPlayerPosture::Barehand:
-			UpperStateValue = EPlayerUpperState::Barehand;
+			UpperStateValue = EPlayerUpperState::UArm_Attack;
 			break;
 		case EPlayerPosture::SlotMax:
 			break;

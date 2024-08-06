@@ -3,6 +3,7 @@
 
 #include "PartDevLevel/UI/HUD/WeaponSlot_UserWidget.h"
 #include "TestLevel/UI/TestPlayHUD.h"
+#include "MainGameLevel/UI/InGame/MainGameHUD.h"
 #include "Global/ContentsLog.h"
 
 #include "kismet/GameplayStatics.h"
@@ -17,10 +18,14 @@ void UWeaponSlot_UserWidget::NativeConstruct()
 		LOG(UILog, Fatal, "Controller is Null");
 	}
 
-	CurHUD = Cast<ATestPlayHUD>(MyController->GetHUD());
-	if (nullptr == CurHUD)
+	CurTestHUD = Cast<ATestPlayHUD>(MyController->GetHUD());
+	if (nullptr == CurTestHUD)
 	{
-		LOG(UILog, Fatal, "HUD is Null");
+		CurMainHUD = Cast<AMainGameHUD>(MyController->GetHUD());
+		if (nullptr == CurMainHUD)
+		{
+			LOG(UILog, Fatal, "HUD is Null");
+		}
 	}
 }
 
@@ -29,12 +34,26 @@ void UWeaponSlot_UserWidget::UpdateReloadComment(int _bullet) // MouseLeftCall À
 	if (_bullet > 0 && true == IsChanged)
 	{
 		IsChanged = false;
-		CurHUD->UIOff(EUserWidgetType::ReloadComment);
+		if (nullptr != CurTestHUD)
+		{
+			CurTestHUD->UIOff(EUserWidgetType::ReloadComment);
+		}
+		else if (nullptr != CurMainHUD)
+		{
+			CurMainHUD->UIOff(EUserWidgetType::ReloadComment);
+		}
 	}
 	else if (_bullet == 0)
 	{
 		IsChanged = true;
-		CurHUD->UIOn(EUserWidgetType::ReloadComment);
+		if (nullptr != CurTestHUD)
+		{
+			CurTestHUD->UIOn(EUserWidgetType::ReloadComment);
+		}
+		else if (nullptr != CurMainHUD)
+		{
+			CurMainHUD->UIOn(EUserWidgetType::ReloadComment);
+		}
 	}
 }
 
