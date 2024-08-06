@@ -28,7 +28,7 @@ void UMainAnimInstance::ChangeAnimation(uint8 Key)
 	}
 }
 
-void UMainAnimInstance::PushAnimation(uint8 Key, UAnimMontage* Montage)
+void UMainAnimInstance::PushAnimation(uint8 Key, UAnimMontage* Montage, TFunction<void(uint8, UAnimMontage*)> _CallBack)
 {
 	if (true == AnimMontages.Contains(Key))
 	{
@@ -36,5 +36,22 @@ void UMainAnimInstance::PushAnimation(uint8 Key, UAnimMontage* Montage)
 	}
 
 	AnimMontages.Add(Key, Montage);
+
+	if (nullptr != _CallBack)
+	{
+		UAnimCallBack* NewCallBack = NewObject<UAnimCallBack>(this);
+		NewCallBack->CallBack = _CallBack;
+		AnimCallBack.Add(Key, NewCallBack);
+	}
+}
+
+void UMainAnimInstance::SetEndCallBack(uint8 Key, TFunction<void(uint8, UAnimMontage*)> _CallBack)
+{
+	if (nullptr != _CallBack)
+	{
+		UAnimCallBack* NewCallBack = NewObject<UAnimCallBack>(this);
+		NewCallBack->CallBack = _CallBack;
+		AnimCallBack.Add(Key, NewCallBack);
+	}
 }
 
