@@ -19,6 +19,9 @@ class UNREAL5_PORTFOLIO_API UHeadNameUserWidget : public UUserWidget
 
 public:
 	void NativeConstruct() override;
+	void NativeTick(const FGeometry& _MyGeometry, float _InDeltaTime) override;
 
+	UFUNCTION()
+	void SetNameText(FText _Nickname);
 private: 
 };

@@ -23,4 +23,12 @@ public:
 	UFUNCTION()
 	void BilboardRotate(FVector _WorldLocation);
 
+	UFUNCTION()
+	void SetHeadNameRelativeLocation(FVector _Loc);
+
+	UFUNCTION()
+	void SetHeadNameRelativeRotation(FVector _Rot);
+
+	UFUNCTION()
+	void SetHeadNameWidgetText(FText _Name);
 };

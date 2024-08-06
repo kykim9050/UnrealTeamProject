@@ -2,4 +2,11 @@
 
 
 #include "MainGameLevel/Monster/Base/BossMonsterData.h"
+#include "Net/UnrealNetwork.h"
 
+void UBossMonsterData::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(UBossMonsterData, Hp);
+}

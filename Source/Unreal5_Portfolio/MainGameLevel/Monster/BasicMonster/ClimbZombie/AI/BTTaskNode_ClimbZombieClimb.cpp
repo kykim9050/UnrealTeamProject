@@ -2,8 +2,9 @@
 
 
 #include "MainGameLevel/Monster/BasicMonster/ClimbZombie/AI/BTTaskNode_ClimbZombieClimb.h"
-#include "MainGameLevel/Monster/BasicMonster/ClimbZombie/ClimbZombie.h"
 #include "MainGameLevel/Monster/BasicMonster/AI/BasicMonsterAIController.h"
+#include "MainGameLevel/Monster/BasicMonster/ClimbZombie/ClimbZombeData.h"
+#include "MainGameLevel/Monster/BasicMonster/ClimbZombie/ClimbZombie.h"
 
 #include "GameFramework/CharacterMovementComponent.h"
 

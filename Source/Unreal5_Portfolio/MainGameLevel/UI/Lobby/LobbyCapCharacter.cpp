@@ -3,6 +3,7 @@
 
 #include "MainGameLevel/UI/Lobby/LobbyCapCharacter.h"
 #include "MainGameLevel/UI/Lobby/LobbyCharacter.h"
+#include "MainGameLevel/UI/InGame/HeadNameWidgetComponent.h"
 
 #include "Global/MainGameBlueprintFunctionLibrary.h"
 #include "Global/MainGameInstance.h"
@@ -20,6 +21,12 @@ ALobbyCapCharacter::ALobbyCapCharacter()
 	PrimaryActorTick.bCanEverTick = true;
 
 	bReplicates = true;
+
+	HeadNameComponent = CreateDefaultSubobject<UHeadNameWidgetComponent>(TEXT("HeadNameWidgetComponent"));
+	HeadNameComponent->SetupAttachment(RootComponent);
+	HeadNameComponent->SetOwnerNoSee(true);
+	//HeadNameComponent->SetOwnerPlayer(this);
+	HeadNameComponent->bHiddenInSceneCapture = true;
 }
 
 // Called when the game starts or when spawned
@@ -39,17 +46,26 @@ void ALobbyCapCharacter::BeginPlay()
 	GetMesh()->SetSkeletalMesh(PlayerSkeletalMesh);
 	GetMesh()->SetIsReplicated(true);
 
-
 	// ABP 선택
 	UClass* AnimInst = Cast<UClass>(MainGameInst->GetPlayerData(FName("TestPlayer"))->GetPlayerAnimInstance());
 	GetMesh()->SetAnimInstanceClass(AnimInst);
 	GetMesh()->SetIsReplicated(true);
+
+	HeadNameComponent->SetHeadNameRelativeLocation(FVector(0, 0, 100));
+	HeadNameComponent->SetHeadNameRelativeRotation(FVector(0, 0, 180));
 }
 
 // Called every frame
 void ALobbyCapCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	// HeadNameComponent가 항상 '나'를 향하도록 회전
+	//if (nullptr != HeadNameComponent)
+	//{
+	//	HeadNameComponent->BilboardRotate(GetActorLocation());
+	//}
+
 }
 
 // Called to bind functionality to input
@@ -145,6 +161,14 @@ void ALobbyCapCharacter::SetEachMesh(FName _TypeName)
 	UClass* AnimInst = Cast<UClass>(Inst->GetPlayerData(_TypeName)->GetPlayerAnimInstance());
 	GetMesh()->SetAnimInstanceClass(AnimInst);
 	GetMesh()->SetIsReplicated(true);
+}
+
+void ALobbyCapCharacter::SetHeadNameText(FText _Name)
+{
+	if(nullptr != HeadNameComponent)
+	{
+		HeadNameComponent->SetHeadNameWidgetText(_Name);
+	}
 }
 
 

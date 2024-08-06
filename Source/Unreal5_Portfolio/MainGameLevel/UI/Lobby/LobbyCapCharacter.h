@@ -37,8 +37,12 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void SetEachMesh(FName _TypeName); // 로비 디폴트 캐릭터에서 호출
 
-
+	UFUNCTION(BlueprintCallable)
+	void SetHeadNameText(FText _Name);
 private:
+	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	class UHeadNameWidgetComponent* HeadNameComponent = nullptr;
+
 	UPROPERTY(Replicated)
 	int MyNumber = -1; // 자기가 몇번 플레이어의 마네킹인지 
 

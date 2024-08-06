@@ -2,10 +2,10 @@
 
 
 #include "MainGameLevel/UI/Lobby/LobbyCharacter.h"
-#include "MainGameLevel/LobbyGameMode.h"
 #include "MainGameLevel/UI/Lobby/MainLobbyHUD.h"
 #include "MainGameLevel/UI/Lobby/PlayerLobbyUserWidget.h"
 #include "MainGameLevel/UI/Lobby/LobbyCapCharacter.h"
+#include "MainGameLevel/LobbyGameMode.h"
 
 #include "Global/MainGameInstance.h"
 #include "Global/ContentsLog.h"
@@ -20,7 +20,6 @@ ALobbyCharacter::ALobbyCharacter()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
 }
 
 // Called when the game starts or when spawned
@@ -29,6 +28,7 @@ void ALobbyCharacter::BeginPlay()
 	IsServerPtr = GetWorld()->GetAuthGameMode();
 	Super::BeginPlay();
 
+	// 서버가 플레이어 수를 세고 내 번호를 지정.
 	if (nullptr != IsServerPtr)
 	{
 		// Server에 생긴 캐릭터라면 게임모드의 PlayerCount를 + 1
@@ -38,11 +38,20 @@ void ALobbyCharacter::BeginPlay()
 
 		MyOrder = pc; // 0, 1, 2, 3
 	}
-	// 각 플레이어에 해당하는 마네킹은 BP에서 Spawn됨 
+	// 나의 마네킹에 내 번호를 알려줌. (각 플레이어에 해당하는 마네킹은 BP에서 Spawn됨 => Super::BeginPlay 내에서 실행됨)
 	if(nullptr != MyMannequin)
 	{
 		MyMannequin->SetMyNumber(MyOrder);
 	}
+
+	// Instance에 저장돼있는 닉네임 모두가 알 수 있도록 하는 작업. 
+	UMainGameInstance* Inst = UMainGameBlueprintFunctionLibrary::GetMainGameInstance(GetWorld());
+	if (nullptr == Inst)
+	{
+		LOG(UILog, Fatal, "MainGameInstance is Null");
+	}
+	FText InstName = FText::FromString(Inst->GetMainNickName());
+	SendNicknames(InstName);
 }
 
 // Called every frame
@@ -57,37 +66,18 @@ void ALobbyCharacter::Tick(float DeltaTime)
 		ReadyClicked = false;
 	}
 
-	if (false == SetWidgetNickName) 
-	{
-		SetWidgetNickName = true;
-
-		UMainGameInstance* Inst = UMainGameBlueprintFunctionLibrary::GetMainGameInstance(GetWorld());
-		if (nullptr == Inst)
-		{
-			LOG(UILog, Fatal, "MainGameInstance is Null");
-		}
-
-		APlayerController* Con = UGameplayStatics::GetPlayerController(GetWorld(), 0);
-		if (nullptr != Con)
-		{
-			AMainLobbyHUD* MyHUD = Cast<AMainLobbyHUD>(Con->GetHUD());		
-			Cast<UPlayerLobbyUserWidget>(MyHUD->GetWidget(EUserWidgetType::LobbyButton))->LobbyPlayerName(MyOrder, FText::FromString(Inst->GetMainNickName()));
-		}
-	}
-
 	UMainGameInstance* Inst = UMainGameBlueprintFunctionLibrary::GetMainGameInstance(GetWorld());
 	if (nullptr == Inst)
 	{
 		LOG(UILog, Fatal, "MainGameInstance is Null");
 	}
 
-	// 마네킹을 플레이어에서 직접 업데이트
+	// 마네킹을 플레이어에서 직접 업데이트 (메시, 닉네임)
 	if (nullptr != MyMannequin)
 	{
 		MyMannequin->SetEachMesh(MyChracterType);
+		MyMannequin->SetHeadNameText(MyNickName);
 	}
-
-	int a = 0;
 }
 
 // Called to bind functionality to input
@@ -105,6 +95,7 @@ void ALobbyCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutL
 	DOREPLIFETIME(ALobbyCharacter, MyOrder);
 	DOREPLIFETIME(ALobbyCharacter, MyChracterType);
 	DOREPLIFETIME(ALobbyCharacter, MyMannequin);
+	DOREPLIFETIME(ALobbyCharacter, MyNickName);
 }
 
 
@@ -122,4 +113,9 @@ void ALobbyCharacter::ClientReady_Implementation()
 void ALobbyCharacter::ClientChangedMesh_Implementation(FName _NewType)
 {
 	MyChracterType = _NewType;
+}
+
+void ALobbyCharacter::SendNicknames_Implementation(const FText& _Nickname)
+{
+	MyNickName = _Nickname;
 }
