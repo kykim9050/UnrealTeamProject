@@ -112,9 +112,12 @@ void AParentsCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 
 }
 
-
-
 void AParentsCharacter::AnimationEnd()
 {
 
+}
+
+void AParentsCharacter::ChangeHandAttackCollisionProfile(FName _Name)
+{
+	HandAttackComponent->SetCollisionProfileName(_Name);
 }

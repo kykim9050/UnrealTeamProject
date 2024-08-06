@@ -15,6 +15,7 @@ public:
 	// Sets default values for this character's properties
 	AParentsCharacter();
 
+	// Call Notify
 	virtual void AnimationEnd();
 
 protected:
@@ -68,4 +69,6 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+
+	void ChangeHandAttackCollisionProfile(FName _Name);
 };
