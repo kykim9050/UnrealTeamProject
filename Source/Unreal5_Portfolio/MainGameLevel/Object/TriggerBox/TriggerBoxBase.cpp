@@ -3,6 +3,7 @@
 
 #include "MainGameLevel/Object/TriggerBox/TriggerBoxBase.h"
 #include "Engine/World.h"
+#include "GameFramework/PlayerController.h"
 #include "GameFramework/Character.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
@@ -11,7 +12,7 @@
 #include "LevelSequence.h"
 #include "LevelSequenceActor.h"
 #include "LevelSequencePlayer.h"
-#include "MainGameLevel/UI/MainParentHUD.h"
+#include "MainGameLevel/UI/InGame/MainGameHUD.h"
 
 
 #include "Global/ContentsLog.h"
@@ -44,10 +45,6 @@ void ATriggerBoxBase::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutL
 
 void ATriggerBoxBase::OnOverlapBegin(AActor* OverlappedActor, AActor* OtherActor)
 {
-
-	APlayerController* UIPlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
-	Cast<AMainParentHUD>(UIPlayerController->GetHUD())->AllUIOff();
-
 	if (false == HasAuthority())
 	{
 		LOG(ObjectLog, Error, "서버가 아닙니다.");
@@ -67,6 +64,7 @@ void ATriggerBoxBase::OnOverlapBegin(AActor* OverlappedActor, AActor* OtherActor
 		if (APlayerController* PlayerController = PlayerIt->Get())
 		{
 			DisablePlayerInput(PlayerController);
+			DisablePlayerHUD(PlayerController);
 		}
 	}
 
@@ -97,22 +95,9 @@ void ATriggerBoxBase::SetAllPlayersLocation_Implementation(const FVector& NewLoc
 				// 플레이어를 박스 주변에 배치
 				if (PlayerIndex < PlayerLocations.Num())
 				{
+					// 플레이어 컨트롤러 회전
 					PlayerPawn->SetActorLocation(PlayerLocations[PlayerIndex]);
 					PlayerController->SetControlRotation(FRotator(0.0f, 0.0f, 0.0f));
-
-					// 카메라가 바라볼 방향 설정 (Z축을 0으로 고정)
-					FVector CameraDirection = FVector(0.0f, 0.0f, 0.0f); // 원하는 방향 설정
-					FRotator LookAtRotation = FRotationMatrix::MakeFromX(CameraDirection).Rotator();
-
-					if (ACharacter* Character = Cast<ACharacter>(PlayerPawn))
-					{
-						UCameraComponent* CameraComponent = Character->FindComponentByClass<UCameraComponent>();
-						if (CameraComponent)
-						{
-							//CameraComponent->SetWorldRotation(LookAtRotation);
-							//PlayerPawn->SetActorRotation(FRotator(0,90,0));
-						}
-					}
 
 					PlayerIndex++;
 				}
@@ -148,12 +133,13 @@ void ATriggerBoxBase::PlayCinematicSequence_Implementation()
 
 void ATriggerBoxBase::OnSequenceFinished()
 {
-	// 모든 플레이어의 입력을 다시 활성화
+	// 모든 플레이어의 입력을 다시 활성화 및 HUD ON
 	for (FConstPlayerControllerIterator PlayerIt = GetWorld()->GetPlayerControllerIterator(); PlayerIt; ++PlayerIt)
 	{
 		if (APlayerController* PlayerController = PlayerIt->Get())
 		{
 			EnablePlayerInput(PlayerController);
+			EnablePlayerHUD(PlayerController);
 		}
 	}
 
@@ -175,5 +161,23 @@ void ATriggerBoxBase::EnablePlayerInput_Implementation(APlayerController* Player
 	{
 		PlayerController->GetPawn()->EnableInput(PlayerController);
 		PlayerController->EnableInput(PlayerController);
+	}
+}
+
+void ATriggerBoxBase::EnablePlayerHUD_Implementation(APlayerController* PlayerController)
+{
+	if (PlayerController && PlayerController->GetPawn())
+	{
+		PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+		Cast<AMainGameHUD>(PlayerController->GetHUD())->AllUIOn();
+	}	
+}
+
+void ATriggerBoxBase::DisablePlayerHUD_Implementation(APlayerController* PlayerController)
+{
+	if (PlayerController && PlayerController->GetPawn())
+	{
+		PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+		Cast<AMainGameHUD>(PlayerController->GetHUD())->AllUIOff();
 	}
 }

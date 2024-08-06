@@ -43,3 +43,7 @@ void AItemBase::Tick(float DeltaTime)
 
 }
 
+//void AItemBase::DestroyItem_Implementation()
+//{
+//	this->Destroy();
+//}

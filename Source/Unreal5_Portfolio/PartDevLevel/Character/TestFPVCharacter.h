@@ -6,17 +6,22 @@
 #include "GameFramework/Character.h"
 #include "Net/UnrealNetwork.h"
 #include "Global/ContentsEnum.h"
+#include "ParentsCharacter.h"
 #include "TestFPVCharacter.generated.h"
 
 // For Character Part's Testing : First person point of view 
 
-// Inventory (for UI Test) => 메인캐릭터로 이전해야 함 (PickUpItem 함수에 필요)
+// Inventory				// => 메인캐릭터로 이전해야 함
 USTRUCT(BlueprintType)
 struct FFPVItemInformation
 {
 	GENERATED_USTRUCT_BODY();
 
 public:
+	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))	// => 메인 이전 필요 (24.08.06 추가됨)
+	bool IsItemIn = false;	// 인벤토리 칸에 아이템이 들어 있는지 여부
+
+	// ItemName
 	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	FName Name = "";
 
@@ -41,7 +46,7 @@ public:
 
 
 UCLASS()
-class UNREAL5_PORTFOLIO_API ATestFPVCharacter : public ACharacter
+class UNREAL5_PORTFOLIO_API ATestFPVCharacter : public AParentsCharacter
 {
 	GENERATED_BODY()
 
@@ -108,10 +113,10 @@ public:
 	void CharacterReload();
 
 	// Inventory => 메인캐릭터로 이전해야 함 (PickUpItem 함수에 필요)
-	UPROPERTY(Replicated, VisibleAnywhere, BlueprintReadOnly)
-	TArray<FFPVItemInformation> ItemSlot;		// => 메인 수정 필요 (24.08.05 수정됨)
-	UPROPERTY(Replicated, VisibleAnywhere, BlueprintReadOnly)
-	TArray<bool> IsItemIn;						// => 메인 수정 필요 (24.08.05 수정됨)
+	UPROPERTY(/*Replicated, */VisibleAnywhere, BlueprintReadOnly)
+	TArray<FFPVItemInformation> ItemSlot;							// => 메인 수정 필요 (24.08.06 수정됨)
+	//UPROPERTY(Replicated, VisibleAnywhere, BlueprintReadOnly)		// => 메인에서 삭제 필요 (24.08.06 삭제됨)
+	//TArray<bool> IsItemIn;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	int CurItemIndex = -1;
 
@@ -125,21 +130,26 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void MapItemOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);	// => 메인 수정 필요 (24.08.01 수정됨)
 	UFUNCTION(BlueprintCallable)
-	void CheckItem();									// => 메인캐릭터로 이전해야 함 (24.07.29 추가됨)
+	void CheckItem();										// => 메인캐릭터로 이전해야 함 (24.07.29 추가됨)
 	UFUNCTION(Reliable, Server)
-	void InteractObject(AMapObjectBase* _MapObject);	// => 메인캐릭터로 이전해야 함 (24.07.29 추가됨)
+	void InteractObject(AMapObjectBase* _MapObject);		// => 메인캐릭터로 이전해야 함 (24.07.29 추가됨)
 	void InteractObject_Implementation(AMapObjectBase* _MapObject);
+	UFUNCTION(/*Reliable, Server, */BlueprintCallable)
+	void PickUpItem(AItemBase* _Item);						// => 메인 수정 필요 (24.08.06 수정됨)
+	//void PickUpItem_Implementation(AItemBase* _Item);
+	//UFUNCTION(BlueprintCallable)
+	//void ItemSetting(FName _TagName, EPlayerUpperState _SlotIndex);	// => 메인 삭제 필요 (24.08.06 삭제됨)
+	UFUNCTION(/*Reliable, Server, */BlueprintCallable)
+	void DropItem(int _SlotIndex);							// => 메인 수정 필요 (24.08.06 수정됨)
+	//void DropItem_Implementation(int _SlotIndex);
 	UFUNCTION(Reliable, Server)
-	void PickUpItem(AActor* _Item);						// => 메인 수정 필요 (24.08.02 인자 추가됨)
-	void PickUpItem_Implementation(AActor* _Item);
+	void DestroyItem(AItemBase* _Item);						// => 메인 이전 필요 (24.08.06 추가됨)
+	void DestroyItem_Implementation(AItemBase* _Item);
+	UFUNCTION(Reliable, Server)
+	void SpawnItem(FName _ItemName, FTransform _SpawnTrans);			// => 메인 이전 필요 (24.08.06 추가됨)
+	void SpawnItem_Implementation(FName _ItemName, FTransform _SpawnTrans);
 	UFUNCTION(BlueprintCallable)
-	void ItemSetting(FName _TagName, EPlayerUpperState _SlotIndex);
-	//void ItemSetting(FName _TagName, int _SlotIndex);	// => 메인캐릭터로 이전해야 함 (24.07.30 추가됨)
-	UFUNCTION(Reliable, Server, BlueprintCallable)
-	void DropItem(int _SlotIndex);						// => 메인캐릭터로 이전해야 함 (24.07.30 수정됨)
-	void DropItem_Implementation(int _SlotIndex);
-	UFUNCTION(BlueprintCallable)
-	void DeleteItem(int _Index);						// => 메인캐릭터로 이전해야 함 (24.07.29 추가됨)
+	void DeleteItemInfo(int _Index);						// => 메인 수정 필요 (24.08.06 함수 이름 수정됨)
 
 	// Collision
 	//UFUNCTION(BlueprintCallable)
@@ -173,11 +183,9 @@ protected:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+	virtual void AnimationEnd() override;
 
-	// Item
-	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-	bool PickUp = false;
+	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
 private:
 	// 근접 공격에 사용 중 (태환)
@@ -234,6 +242,10 @@ public:
 	// Crouch 카메라 이동
 	UFUNCTION()
 	void CrouchCameraMove();
+
+	// Animation
+	UFUNCTION()
+	void ItemToCheckAnimation();
 
 	UFUNCTION()
 	void AttackCheck();

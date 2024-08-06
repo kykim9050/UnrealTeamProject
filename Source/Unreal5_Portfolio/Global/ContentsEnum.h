@@ -186,6 +186,7 @@ enum class EUserWidgetType : uint8
 	BossHpbar,
 	E_Key,
 	Num5_Key,
+	Quest,
 	SlotEmpty,
 	NotAreaComment,
 	AnyInteractionComment,

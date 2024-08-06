@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "Engine/TriggerBox.h"
-#include "GameFramework/PlayerController.h"
 #include "TriggerBoxBase.generated.h"
 
 /**
@@ -50,6 +49,16 @@ protected:
     UFUNCTION(Reliable, NetMulticast)
     void EnablePlayerInput(APlayerController* PlayerController);
     void EnablePlayerInput_Implementation(APlayerController* PlayerController);
+
+    // PlayerUI ON
+    UFUNCTION(Reliable, NetMulticast)
+    void EnablePlayerHUD(APlayerController* PlayerController);
+    void EnablePlayerHUD_Implementation(APlayerController* PlayerController);
+
+    // PlayerUI OFF
+    UFUNCTION(Reliable, NetMulticast)
+    void DisablePlayerHUD(APlayerController* PlayerController);
+    void DisablePlayerHUD_Implementation(APlayerController* PlayerController);
 
 protected:
     UPROPERTY(Replicated)
