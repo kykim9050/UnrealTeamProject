@@ -57,7 +57,7 @@ void UMainAnimInstance::PushAnimation(uint8 Key, UAnimMontage* Montage, TFunctio
 	}
 }
 
-void UMainAnimInstance::SetEndCallBack(uint8 Key, TFunction<void(uint8, UAnimMontage*)> _CallBack)
+void UMainAnimInstance::SetEndCallBackPush(uint8 Key, TFunction<void(uint8, UAnimMontage*)> _CallBack)
 {
 	if (nullptr != _CallBack)
 	{

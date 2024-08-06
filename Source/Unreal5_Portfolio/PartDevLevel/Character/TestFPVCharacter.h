@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "Net/UnrealNetwork.h"
 #include "Global/ContentsEnum.h"
+#include "ParentsCharacter.h"
 #include "TestFPVCharacter.generated.h"
 
 // For Character Part's Testing : First person point of view 
@@ -45,7 +46,7 @@ public:
 
 
 UCLASS()
-class UNREAL5_PORTFOLIO_API ATestFPVCharacter : public ACharacter
+class UNREAL5_PORTFOLIO_API ATestFPVCharacter : public AParentsCharacter
 {
 	GENERATED_BODY()
 
@@ -181,6 +182,8 @@ protected:
 	virtual void BeginPlay() override;
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+	virtual void AnimationEnd() override;
 
 	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
