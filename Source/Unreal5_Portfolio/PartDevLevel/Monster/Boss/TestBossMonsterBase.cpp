@@ -7,10 +7,10 @@
 
 #include "TestLevel/Character/TestPlayerState.h"
 #include "TestLevel/Character/TestCharacter.h"
-#include "TestLevel/UI/TestPlayHUD.h"
 
 #include "MainGameLevel/UI/InGame/BossHpbarUserWidget.h"
 #include "MainGameLevel/Object/ReportObject.h"
+#include "MainGameLevel/UI/InGame/MainGameHUD.h"
 
 #include "GameFrameWork/CharacterMovementComponent.h"
 #include "Blueprint/AIBlueprintHelperLibrary.h"
@@ -82,7 +82,7 @@ void ATestBossMonsterBase::BeginPlay()
 		LOG(MonsterLog, Fatal, "PlayerController is null");
 	}
 
-	ATestPlayHUD* BossUHD = Cast<ATestPlayHUD>(PlayerController->GetHUD());
+	AMainGameHUD* BossUHD = Cast<AMainGameHUD>(PlayerController->GetHUD());
 	if (nullptr == BossUHD)
 	{
 		LOG(MonsterLog, Fatal, "BossHUD is Bullptr");
@@ -141,7 +141,7 @@ void ATestBossMonsterBase::Tick(float DeltaTime)
 void ATestBossMonsterBase::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
 	APlayerController* PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
-	ATestPlayHUD* BossUHD = Cast<ATestPlayHUD>(PlayerController->GetHUD());
+	AMainGameHUD* BossUHD = Cast<AMainGameHUD>(PlayerController->GetHUD());
 
 	BossUHD->UIOff(EUserWidgetType::BossHpbar);
 }
@@ -238,7 +238,7 @@ void ATestBossMonsterBase::BossHP_HUDCheck_Implementation()
 	{
 		LOG(MonsterLog, Fatal, "PlayerController is null");
 	}
-	ATestPlayHUD* BossUHD = Cast<ATestPlayHUD>(PlayerController->GetHUD());
+	AMainGameHUD* BossUHD = Cast<AMainGameHUD>(PlayerController->GetHUD());
 	if (nullptr == BossUHD)
 	{
 		LOG(MonsterLog, Fatal, "BossHUD is Bullptr");
