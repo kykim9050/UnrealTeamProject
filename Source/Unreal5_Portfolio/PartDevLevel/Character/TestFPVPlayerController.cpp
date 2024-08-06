@@ -224,20 +224,18 @@ void ATestFPVPlayerController::ChangePosture_Con(int _InputKey)
 {
 	ATestFPVCharacter* Ch = GetPawn<ATestFPVCharacter>();
 
-	if (_InputKey == 0 || _InputKey == 1) // ÃÑ
+	if (_InputKey == 0) // ÃÑ
 	{
 		Ch->ChangeMontage(EPlayerUpperState::Rifle_Idle);
 		Ch->IdleDefault = EPlayerUpperState::Rifle_Idle;
-		Ch->SetStaticMesh(FName("SniperRifle"));
 
 		//ChangePostureToWidget(0); // BP To Event 
 		//ChangePostureToWidget(EPlayerUpperState::Rifle_Idle); // ¾Æ¸¶?
 	}
-	else if (_InputKey == 2) // Ä®
+	else if (_InputKey == 1) // Ä®
 	{
 		Ch->ChangeMontage(EPlayerUpperState::Melee_Idle);
 		Ch->IdleDefault = EPlayerUpperState::Melee_Idle;
-		Ch->SetStaticMesh(FName("Katana"));
 
 		//ChangePostureToWidget(EPlayerPosture::Rifle2); // BP To Event
 		//ChangePostureToWidget(EPlayerUpperState::Rifle_Idle);
@@ -247,6 +245,8 @@ void ATestFPVPlayerController::ChangePosture_Con(int _InputKey)
 		Ch->ChangeMontage(EPlayerUpperState::UArm_Idle);
 		Ch->IdleDefault = EPlayerUpperState::UArm_Idle;
 	}
+
+	Ch->SettingItemSocket(_InputKey);
 }
 
 void ATestFPVPlayerController::ChangePOV_Con()

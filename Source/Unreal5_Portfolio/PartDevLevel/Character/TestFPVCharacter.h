@@ -227,25 +227,27 @@ public:
 	void BombSetComplete();		// => 메인에 이전 필요 (24.07.31 수정됨)
 	void BombSetComplete_Implementation();
 
-	// 공격 시 서버 캐릭터 몽타주 변경 함수 (태환)
-	UFUNCTION(Reliable, Server)
+	// Animation, Montage
+	UFUNCTION(Reliable, Server)				// 공격 시 서버 캐릭터 몽타주 변경 함수 (태환)
 	void ChangeMontage(EPlayerUpperState _UpperState);
 	void ChangeMontage_Implementation(EPlayerUpperState _UpperState);
-	UFUNCTION(Reliable, NetMulticast)
+	UFUNCTION(Reliable, NetMulticast)		// 공격 시 서버 캐릭터 몽타주 변경 함수 (태환)
 	void ClientChangeMontage(EPlayerUpperState _UpperState);
 	void ClientChangeMontage_Implementation(EPlayerUpperState _UpperState);
 
-	UFUNCTION(Reliable, Server)
-	void SetStaticMesh(FName _ItemName);
-	void SetStaticMesh_Implementation(FName _ItemName);
+	UFUNCTION(/*Reliable, Server*/)
+	void SettingItemSocket(int _InputKey);	// => 메인에 이전 필요 (24.08.06 추가됨)
+	//void SettingItemSocket_Implementation(int _InputKey);
+	UFUNCTION(/*Reliable, Server*/)
+	void SetItemSocketVisibility(bool _Visibility);
+	//void SetItemSocketVisibility_Implementation(bool _Visibility);
+
+	UFUNCTION()
+	void ItemToCheckAnimation();
 
 	// Crouch 카메라 이동
 	UFUNCTION()
 	void CrouchCameraMove();
-
-	// Animation
-	UFUNCTION()
-	void ItemToCheckAnimation();
 
 	UFUNCTION()
 	void AttackCheck();
