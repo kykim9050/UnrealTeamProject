@@ -983,20 +983,20 @@ void ATestFPVCharacter::AttackCheck()
 
 void ATestFPVCharacter::AttackEndCheck()
 {
-	UAnimMontage* GetCurMontage = GetCurrentMontage();
-	FName GetCurMontageName = GetCurMontage->GetFName();
-	// E_Fire_Stand_Montage
-	// E_BareHand_Attack_Montage
+	//UAnimMontage* GetCurMontage = GetCurrentMontage();
+	//FName GetCurMontageName = GetCurMontage->GetFName();
+	//// E_Fire_Stand_Montage
+	//// E_BareHand_Attack_Montage
 
-	if ("E_Fire_Stand_Montage" == GetCurMontageName || "E_BareHand_Attack_Montage" == GetCurMontageName)
-	{
-		// 노티파이 신호 조건?
-		return;
-	}
-	else
-	{
-		ChangeMontage(IdleDefault);
-	}
+	//if ("E_Fire_Stand_Montage" == GetCurMontageName || "E_BareHand_Attack_Montage" == GetCurMontageName)
+	//{
+	//	// 노티파이 신호 조건?
+	//	return;
+	//}
+	//else
+	//{
+	//	ChangeMontage(IdleDefault);
+	//}
 }
 
 void ATestFPVCharacter::NetCheck() // => 매인 적용.
