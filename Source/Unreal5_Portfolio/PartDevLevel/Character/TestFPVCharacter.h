@@ -238,9 +238,12 @@ public:
 	UFUNCTION(/*Reliable, Server*/)
 	void SettingItemSocket(int _InputKey);	// => 메인에 이전 필요 (24.08.06 추가됨)
 	//void SettingItemSocket_Implementation(int _InputKey);
-	UFUNCTION(/*Reliable, Server*/)
+	UFUNCTION(Reliable, Server)
+	void SetItemSocketMesh(UStaticMesh* _ItemMeshRes, FVector _ItemRelLoc, FRotator _ItemRelRot, FVector _ItemRelScale);
+	void SetItemSocketMesh_Implementation(UStaticMesh* _ItemMeshRes, FVector _ItemRelLoc, FRotator _ItemRelRot, FVector _ItemRelScale);
+	UFUNCTION(Reliable, Server)
 	void SetItemSocketVisibility(bool _Visibility);
-	//void SetItemSocketVisibility_Implementation(bool _Visibility);
+	void SetItemSocketVisibility_Implementation(bool _Visibility);
 
 	UFUNCTION()
 	void ItemToCheckAnimation();
