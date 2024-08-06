@@ -304,8 +304,10 @@ void ATestFPVCharacter::Tick(float DeltaTime)
 	//DefaultRayCast(DeltaTime);
 	//float ts = GetWorld()->GetDeltaSeconds();
 	AGameModeBase* Ptr = GetWorld()->GetAuthGameMode();
-	TArray<FFPVItemInformation> I = ItemSlot;
-	int c = CurItemIndex;
+	//TArray<FFPVItemInformation> I = ItemSlot;
+	//int c = CurItemIndex;
+	bool v1 = ItemSocketMesh->IsVisible();
+	bool v2 = FPVItemSocketMesh->IsVisible();
 	int a = 0;
 }
 
@@ -320,8 +322,8 @@ void ATestFPVCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Ou
 	DOREPLIFETIME(ATestFPVCharacter, IsBombSetting);	// => 메인에 이전 필요 (24.07.29 추가됨)
 
 	// Inventory
-	//DOREPLIFETIME(ATestFPVCharacter, ItemSlot);		// => 메인 삭제 필요 (24.08.06 추가됨)
-	//DOREPLIFETIME(ATestFPVCharacter, IsItemIn);		// => 메인 삭제 필요 (24.08.06 추가됨)
+	//DOREPLIFETIME(ATestFPVCharacter, ItemSlot);		// => 메인 삭제 필요 (24.08.06 삭제됨)
+	//DOREPLIFETIME(ATestFPVCharacter, IsItemIn);		// => 메인 삭제 필요 (24.08.06 삭제됨)
 
 	// Item
 	//DOREPLIFETIME(ATestFPVCharacter, RayCastToItemName); // 사용 안함.
@@ -535,61 +537,41 @@ void ATestFPVCharacter::ClientChangeMontage_Implementation(EPlayerUpperState _Up
 	FPVPlayerAnimInst->ChangeAnimation(_UpperState);
 }
 
-void ATestFPVCharacter::SetStaticMesh_Implementation(FName _ItemName)
+void ATestFPVCharacter::SettingItemSocket(int _InputKey)		// => 메인에 이전 필요 (24.08.06 추가됨)
 {
-	// test
+	AGameModeBase* Ptr = GetWorld()->GetAuthGameMode();
+
+	if (-1 == _InputKey)
 	{
-		UMainGameInstance* Inst = GetGameInstance<UMainGameInstance>();
-		const FItemDataRow* ItemData = Inst->GetItemData(_ItemName);
-
-		int ItemReloadNum = ItemData->GetReloadNum();
-		int ItemDamage = ItemData->GetDamage();
-		UStaticMesh* ItemMeshRes = ItemData->GetResMesh();
-		FVector ItemRelLoc = ItemData->GetRelLoc();
-		FRotator ItemRelRot = ItemData->GetRelRot();
-		FVector ItemRelScale = ItemData->GetRelScale();
-
-		if (_ItemName == "SniperRifle")
-		{
-			ItemSlot[0].Name = _ItemName;
-			ItemSlot[0].ReloadMaxNum = ItemReloadNum;
-			ItemSlot[0].ReloadLeftNum = ItemReloadNum;
-			ItemSlot[0].Damage = ItemDamage;
-			ItemSlot[0].MeshRes = ItemMeshRes;
-			ItemSlot[0].RelLoc = ItemRelLoc;
-			ItemSlot[0].RelRot = ItemRelRot;
-			ItemSlot[0].RelScale = ItemRelScale;
-		}
-		else if (_ItemName == "Katana")
-		{
-			ItemSlot[1].Name = _ItemName;
-			ItemSlot[1].ReloadMaxNum = ItemReloadNum;
-			ItemSlot[1].ReloadLeftNum = ItemReloadNum;
-			ItemSlot[1].Damage = ItemDamage;
-			ItemSlot[1].MeshRes = ItemMeshRes;
-			ItemSlot[1].RelLoc = ItemRelLoc;
-			ItemSlot[1].RelRot = ItemRelRot;
-			ItemSlot[1].RelScale = ItemRelScale;
-		}
+		// ItemSocket의 visibility 끄기
+		ItemSocketMesh->SetVisibility(false);
+		FPVItemSocketMesh->SetVisibility(false);
+		return;
 	}
 
-	//아이템 static mesh 세팅
-	ItemSocketMesh->SetStaticMesh(ItemSlot[0].MeshRes);
-	FPVItemSocketMesh->SetStaticMesh(ItemSlot[0].MeshRes);
+	// static mesh 세팅
+	ItemSocketMesh->SetStaticMesh(ItemSlot[_InputKey].MeshRes);
+	FPVItemSocketMesh->SetStaticMesh(ItemSlot[_InputKey].MeshRes);
 
-	// 아이템 메시 transform 세팅
-	ItemSocketMesh->SetRelativeLocation(ItemSlot[0].RelLoc);
-	FPVItemSocketMesh->SetRelativeLocation(ItemSlot[0].RelLoc);
+	// transform 세팅
+	ItemSocketMesh->SetRelativeLocation(ItemSlot[_InputKey].RelLoc);
+	FPVItemSocketMesh->SetRelativeLocation(ItemSlot[_InputKey].RelLoc);
 
-	ItemSocketMesh->SetRelativeRotation(ItemSlot[0].RelRot);
-	FPVItemSocketMesh->SetRelativeRotation(ItemSlot[0].RelRot);
+	ItemSocketMesh->SetRelativeRotation(ItemSlot[_InputKey].RelRot);
+	FPVItemSocketMesh->SetRelativeRotation(ItemSlot[_InputKey].RelRot);
 
-	ItemSocketMesh->SetRelativeScale3D(ItemSlot[0].RelScale);
-	FPVItemSocketMesh->SetRelativeScale3D(ItemSlot[0].RelScale);
+	ItemSocketMesh->SetRelativeScale3D(ItemSlot[_InputKey].RelScale);
+	FPVItemSocketMesh->SetRelativeScale3D(ItemSlot[_InputKey].RelScale);
 
-	// 아이템 메시 visibility 켜기
+	// ItemSocket의 visibility 켜기
 	ItemSocketMesh->SetVisibility(true);
 	FPVItemSocketMesh->SetVisibility(true);
+}
+
+void ATestFPVCharacter::SetItemSocketVisibility(bool _Visibility)
+{
+	ItemSocketMesh->SetVisibility(_Visibility);
+	FPVItemSocketMesh->SetVisibility(_Visibility);
 }
 
 //void ATestFPVCharacter::ChangePosture_Implementation(EPlayerPosture _Type)	// => 메인으로 이전해야 함 (24.07.30 수정 중)
