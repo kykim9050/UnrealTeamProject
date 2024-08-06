@@ -55,6 +55,8 @@ public:
 		return AnimMontages[Key];
 	}
 
+	uint8 GetAnimationKey(class UAnimMontage* _AnimMontage);
+
 private:
 	UPROPERTY()
 	TMap<uint8, UAnimMontage*> AnimMontages;

@@ -24,6 +24,18 @@ void UMainAnimInstance::ChangeAnimation(uint8 Key)
 
 	if (CurMontage != NextMontage)
 	{
+		uint8 PrevKey = GetAnimationKey(CurMontage);
+
+		if (true == AnimCallBack.Contains(PrevKey))
+		{
+			UAnimCallBack* CallBackObject = AnimCallBack[PrevKey];
+
+			if (nullptr != CallBackObject)
+			{
+				CallBackObject->CallBack(PrevKey, CurMontage);
+			}
+		}
+
 		Montage_Play(NextMontage);
 	}
 }
@@ -53,5 +65,18 @@ void UMainAnimInstance::SetEndCallBack(uint8 Key, TFunction<void(uint8, UAnimMon
 		NewCallBack->CallBack = _CallBack;
 		AnimCallBack.Add(Key, NewCallBack);
 	}
+}
+
+uint8 UMainAnimInstance::GetAnimationKey(class UAnimMontage* _AnimMontage)
+{
+	for (TPair<uint8, class UAnimMontage*> Pair : AnimMontages)
+	{
+		if (Pair.Value == _AnimMontage)
+		{
+			return Pair.Key;
+		}
+	}
+
+	return -1;
 }
 
