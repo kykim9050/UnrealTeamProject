@@ -143,6 +143,11 @@ void ATestBossMonsterBase::EndPlay(const EEndPlayReason::Type EndPlayReason)
 	APlayerController* PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 	AMainGameHUD* BossUHD = Cast<AMainGameHUD>(PlayerController->GetHUD());
 
+	if (nullptr == BossUHD)
+	{
+		return;
+	}
+
 	BossUHD->UIOff(EUserWidgetType::BossHpbar);
 }
 
