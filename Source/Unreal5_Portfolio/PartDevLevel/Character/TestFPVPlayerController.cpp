@@ -150,43 +150,43 @@ void ATestFPVPlayerController::FireStart(float _DeltaTime)
 	}
 	Ch->AttackCheck();
 
-#ifdef WITH_EDITOR
-	GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Yellow, FString(TEXT("Attack Start")));
-#endif // WITH_EDITOR
-	GetWorld()->GetTimerManager().SetTimer(MyTimeHandle, FTimerDelegate::CreateLambda([&]()
-		{
-			FireTick(_DeltaTime);
-		}), 0.2f, true);
+//#ifdef WITH_EDITOR
+//	GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Yellow, FString(TEXT("Attack Start")));
+//#endif // WITH_EDITOR
+//	GetWorld()->GetTimerManager().SetTimer(MyTimeHandle, FTimerDelegate::CreateLambda([&]()
+//		{
+//			FireTick(_DeltaTime);
+//		}), 0.2f, true);
 }
 
 void ATestFPVPlayerController::FireTick(float _DeltaTime)
 {
-	ATestFPVCharacter* Ch = GetPawn<ATestFPVCharacter>();
-	if (nullptr == Ch)
-	{
-		return;
-	}
-#ifdef WITH_EDITOR
-	GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Yellow, FString(TEXT("Attack Tick")));
-#endif // WITH_EDITOR
-	Ch->AttackCheck();
+//	ATestFPVCharacter* Ch = GetPawn<ATestFPVCharacter>();
+//	if (nullptr == Ch)
+//	{
+//		return;
+//	}
+//#ifdef WITH_EDITOR
+//	GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Yellow, FString(TEXT("Attack Tick")));
+//#endif // WITH_EDITOR
+//	Ch->AttackCheck();
 }
 
 void ATestFPVPlayerController::FireEnd()
 {
-	GetWorld()->GetTimerManager().ClearTimer(MyTimeHandle);
-	
-	ATestFPVCharacter* Ch = GetPawn<ATestFPVCharacter>();
-	if (nullptr == Ch)
-	{
-		return;
-	}
-
-	Ch->AttackEndCheck();
-
-#ifdef WITH_EDITOR
-	GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Yellow, FString(TEXT("Attack End")));
-#endif // WITH_EDITOR
+//	GetWorld()->GetTimerManager().ClearTimer(MyTimeHandle);
+//	
+//	ATestFPVCharacter* Ch = GetPawn<ATestFPVCharacter>();
+//	if (nullptr == Ch)
+//	{
+//		return;
+//	}
+//
+//	Ch->AttackEndCheck();
+//
+//#ifdef WITH_EDITOR
+//	GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Yellow, FString(TEXT("Attack End")));
+//#endif // WITH_EDITOR
 }
 
 void ATestFPVPlayerController::Drink_Con()	// => 메인에 추후 이전해야 함 (24.07.29 추가 후 테스팅 중) => 메인 적용(주석)
@@ -228,7 +228,6 @@ void ATestFPVPlayerController::ChangePosture_Con(int _InputKey)
 	{
 		Ch->ChangeMontage(EPlayerUpperState::Rifle_Idle);
 		Ch->IdleDefault = EPlayerUpperState::Rifle_Idle;
-
 		//ChangePostureToWidget(0); // BP To Event 
 		//ChangePostureToWidget(EPlayerUpperState::Rifle_Idle); // 아마?
 	}
