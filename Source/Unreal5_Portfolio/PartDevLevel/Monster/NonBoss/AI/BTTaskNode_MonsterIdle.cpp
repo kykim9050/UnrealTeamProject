@@ -38,7 +38,7 @@ void UBTTaskNode_MonsterIdle::TickTask(UBehaviorTreeComponent& _OwnerComp, uint8
     if (true == CanSee)
     {
         ATestMonsterBase* Monster = GetActor<ATestMonsterBase>(_OwnerComp);
-        ETestMonsterType MonsterType = Monster->GetBaseData()->GetMonsterType();
+        ETestMonsterType MonsterType = Monster->GetBaseData()->MonsterType;
         ETestMonsterState NextState;
         switch (MonsterType)
         {

@@ -18,47 +18,6 @@ struct FMonsterDataRow : public FTableRowBase
 	GENERATED_BODY()
 	
 public:
-	TSubclassOf<AActor> GetMonsterUClass() const
-	{
-		return MonsterUClass;
-	}
-
-	float GetWalkSpeed() const
-	{
-		return WalkSpeed;
-	}
-
-	float GetRunSpeed() const
-	{
-		return RunSpeed;
-	}
-
-	float GetAttackRange() const
-	{
-		return AttackRange;
-	}
-
-	TMap<EBasicMonsterAnim, FAnimMontageGroup> GetAllAnimMontage() const
-	{
-		return AllAnimMontages;
-	}
-
-	// Test
-	ETestMonsterType GetMonsterType() const
-	{
-		return MonsterType;
-	}
-
-	TMap<ETestMonsterAnim, FAnimMontageGroup> GetTestAnimMontage() const
-	{
-		return TestAnimMontages;
-	}
-
-public:
-	// 몬스터 UClass
-	UPROPERTY(EditAnywhere, meta = (AllowprivateAccess = "true"))
-	TSubclassOf<AActor> MonsterUClass = TSubclassOf<AActor>();
-
 	// 걷기 속도
 	UPROPERTY(EditAnywhere, meta = (AllowprivateAccess = "true"))
 	float WalkSpeed = 300.0f;

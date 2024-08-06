@@ -26,7 +26,6 @@
 
 ABasicMonsterBase::ABasicMonsterBase()
 {
- 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
 	// Attack Component
@@ -81,8 +80,7 @@ void ABasicMonsterBase::BeginPlay()
 		return;
 	}
 
-	TMap<EBasicMonsterAnim, FAnimMontageGroup> AllAnimMontages = BaseData->GetAllAnimMontage();
-	for (TPair<EBasicMonsterAnim, FAnimMontageGroup> AnimMontageGroup : AllAnimMontages)
+	for (TPair<EBasicMonsterAnim, FAnimMontageGroup> AnimMontageGroup : BaseData->AllAnimMontages)
 	{
 		AnimInst->PushAnimation(AnimMontageGroup.Key, AnimMontageGroup.Value);
 	}	

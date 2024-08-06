@@ -136,7 +136,7 @@ void ATriggerBoxBase::PlayCinematicSequence_Implementation()
 void ATriggerBoxBase::OnSequenceFinished()
 {
 	APlayerController* UIPlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
-	//Cast<AMainGameHUD>(UIPlayerController->GetHUD())->AllUIOn();
+	Cast<AMainGameHUD>(UIPlayerController->GetHUD())->AllUIOn();
 
 	// 모든 플레이어의 입력을 다시 활성화
 	for (FConstPlayerControllerIterator PlayerIt = GetWorld()->GetPlayerControllerIterator(); PlayerIt; ++PlayerIt)
