@@ -18,6 +18,15 @@ public:
 	/// 아이템 타입 반환
 	/// </summary>
 	/// <returns></returns>
+	EItemType GetItemType() const
+	{
+		return ItemType;
+	}
+
+	/// <summary>
+	/// 아이템 타입 반환
+	/// </summary>
+	/// <returns></returns>
 	EPlayerUpperState GetType() const
 	{
 		return Type;
