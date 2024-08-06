@@ -3,12 +3,10 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Character.h"
-
+#include "MainGameLevel/Monster/Base/MonsterBase.h"
 #include "MainGameLevel/Monster/Base/BasicMonsterData.h"
 #include "Global/DataTable/MonsterDataRow.h"
 #include "Components/TimeLineComponent.h"
-
 #include "BasicMonsterBase.generated.h"
 
 class UCurveFloat;
@@ -18,7 +16,7 @@ class UMonsterRandomAnimInstance;
 class ABasicMonsterAIController;
 
 UCLASS()
-class UNREAL5_PORTFOLIO_API ABasicMonsterBase : public ACharacter
+class UNREAL5_PORTFOLIO_API ABasicMonsterBase : public AMonsterBase
 {
 	GENERATED_BODY()
 

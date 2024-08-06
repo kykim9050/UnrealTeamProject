@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Character.h"
+#include "MainGameLevel/Monster/Base/MonsterBase.h"
 #include "Components/TimeLineComponent.h"
 #include "BossMonsterBase.generated.h"
 
@@ -16,7 +16,7 @@ class ABossMonsterAIController;
 struct FBossMonsterDataRow;
 
 UCLASS()
-class UNREAL5_PORTFOLIO_API ABossMonsterBase : public ACharacter
+class UNREAL5_PORTFOLIO_API ABossMonsterBase : public AMonsterBase
 {
 	GENERATED_BODY()
 
