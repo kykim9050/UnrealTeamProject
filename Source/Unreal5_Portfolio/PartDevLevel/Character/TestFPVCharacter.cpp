@@ -288,7 +288,7 @@ void ATestFPVCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Ou
 	DOREPLIFETIME(ATestFPVCharacter, IsBombSetting);	// => 메인에 이전 필요 (24.07.29 추가됨)
 
 	// Inventory
-	DOREPLIFETIME(ATestFPVCharacter, ItemSlot);			// => 메인 이전 필요 (24.08.05 추가됨)
+	//DOREPLIFETIME(ATestFPVCharacter, ItemSlot);		// => 메인 삭제 필요 (24.08.06 추가됨)
 	//DOREPLIFETIME(ATestFPVCharacter, IsItemIn);		// => 메인 삭제 필요 (24.08.06 추가됨)
 
 	// Item
@@ -725,7 +725,7 @@ void ATestFPVCharacter::InteractObject_Implementation(AMapObjectBase* _MapObject
 	_MapObject->InterAction();
 }
 
-void ATestFPVCharacter::PickUpItem_Implementation(AItemBase* _Item)	// => 메인 수정 필요 (24.08.06 수정됨)
+void ATestFPVCharacter::PickUpItem(AItemBase* _Item)	// => 메인 수정 필요 (24.08.06 수정됨)
 {
 	const FItemDataRow* ItemData = _Item->GetItemData();
 
@@ -764,7 +764,7 @@ void ATestFPVCharacter::PickUpItem_Implementation(AItemBase* _Item)	// => 메인 �
 #endif // WITH_EDITOR
 
 	// 필드에 존재하는 아이템 액터 삭제
-	_Item->Destroy();
+	DestroyItem(_Item);
 
 	// 애니메이션 업데이트
 	ItemToCheckAnimation();
@@ -793,12 +793,12 @@ void ATestFPVCharacter::DropItem_Implementation(int _SlotIndex)	// => 메인 수정 
 	// 떨어트릴 아이템을 Actor로 생성
 	UMainGameInstance* MainGameInst = UMainGameBlueprintFunctionLibrary::GetMainGameInstance(GetWorld());	// 매인에는 이렇게 적용됨.
 	//UMainGameInstance* MainGameInst = GetWorld()->GetGameInstanceChecked<UMainGameInstance>();
-	const FItemDataRow* ItemBase = MainGameInst->GetItemData(ItemSlot[_SlotIndex].Name);
+	const FItemDataRow* ItemData = MainGameInst->GetItemData(ItemSlot[_SlotIndex].Name);
 	FTransform SpawnTrans = GetActorTransform();
 	SpawnTrans.SetTranslation(GetActorLocation() + (GetActorForwardVector() * 100.0f) + (GetActorUpVector() * 50.0f));
 
 	// Spawn
-	AActor* DropItem = GetWorld()->SpawnActor<AActor>(ItemBase->GetItemUClass(), SpawnTrans);
+	AActor* DropItem = GetWorld()->SpawnActor<AActor>(ItemData->GetItemUClass(), SpawnTrans);
 	UStaticMeshComponent* DropItemMeshComp = Cast<AItemBase>(DropItem)->GetStaticMeshComponent();
 	DropItemMeshComp->SetSimulatePhysics(true);
 	//bool r = DropItemMeshComp->IsSimulatingPhysics();
@@ -819,6 +819,11 @@ void ATestFPVCharacter::DropItem_Implementation(int _SlotIndex)	// => 메인 수정 
 	// 애니메이션 업데이트
 	//ChangePosture(EPlayerPosture::Barehand);
 	ChangeMontage(EPlayerUpperState::UArm_Attack);
+}
+
+void ATestFPVCharacter::DestroyItem_Implementation(AItemBase* _Item)
+{
+	_Item->Destroy();
 }
 
 void ATestFPVCharacter::DeleteItem(int _Index)		// => 메인 수정 필요 (24.08.06 수정됨)

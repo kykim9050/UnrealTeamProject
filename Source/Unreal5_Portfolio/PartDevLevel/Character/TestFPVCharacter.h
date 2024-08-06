@@ -10,7 +10,7 @@
 
 // For Character Part's Testing : First person point of view 
 
-// Inventory (for UI Test) => 메인캐릭터로 이전해야 함 (PickUpItem 함수에 필요)
+// Inventory				// => 메인캐릭터로 이전해야 함
 USTRUCT(BlueprintType)
 struct FFPVItemInformation
 {
@@ -112,8 +112,8 @@ public:
 	void CharacterReload();
 
 	// Inventory => 메인캐릭터로 이전해야 함 (PickUpItem 함수에 필요)
-	UPROPERTY(Replicated, VisibleAnywhere, BlueprintReadOnly)		// => 메인 수정 필요 (24.08.05 수정됨)
-	TArray<FFPVItemInformation> ItemSlot;
+	UPROPERTY(/*Replicated, */VisibleAnywhere, BlueprintReadOnly)
+	TArray<FFPVItemInformation> ItemSlot;							// => 메인 수정 필요 (24.08.06 수정됨)
 	//UPROPERTY(Replicated, VisibleAnywhere, BlueprintReadOnly)		// => 메인에서 삭제 필요 (24.08.06 삭제됨)
 	//TArray<bool> IsItemIn;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
@@ -133,11 +133,14 @@ public:
 	UFUNCTION(Reliable, Server)
 	void InteractObject(AMapObjectBase* _MapObject);		// => 메인캐릭터로 이전해야 함 (24.07.29 추가됨)
 	void InteractObject_Implementation(AMapObjectBase* _MapObject);
-	UFUNCTION(Reliable, Server)
-	void PickUpItem(AItemBase* _Item);						// => 메인 수정 필요 (24.08.02 인자 추가됨)
-	void PickUpItem_Implementation(AItemBase* _Item);
+	UFUNCTION(BlueprintCallable)
+	void PickUpItem(AItemBase* _Item);						// => 메인 수정 필요 (24.08.06 수정됨)
+	//void PickUpItem_Implementation(AItemBase* _Item);
 	//UFUNCTION(BlueprintCallable)
 	//void ItemSetting(FName _TagName, EPlayerUpperState _SlotIndex);	// => 메인 삭제 필요 (24.08.06 삭제됨)
+	UFUNCTION(Reliable, Server)
+	void DestroyItem(AItemBase* _Item);
+	void DestroyItem_Implementation(AItemBase* _Item);
 	UFUNCTION(Reliable, Server, BlueprintCallable)
 	void DropItem(int _SlotIndex);							// => 메인캐릭터로 이전해야 함 (24.07.30 수정됨)
 	void DropItem_Implementation(int _SlotIndex);
