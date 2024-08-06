@@ -37,7 +37,7 @@ EBTNodeResult::Type UBTTaskNode_MonsterPatrol::ExecuteTask(UBehaviorTreeComponen
 	}
 	
 	SetValueAsVector(_OwnerComp, "DestinationLocation", PatrolLocation.Location);
-	Monster->GetCharacterMovement()->MaxWalkSpeed = Monster->GetBaseData()->GetWalkSpeed();
+	Monster->GetCharacterMovement()->MaxWalkSpeed = Monster->GetBaseData()->WalkSpeed;
 	Monster->ChangeRandomAnimation(ETestMonsterAnim::Walk);
 
 	return EBTNodeResult::Type::InProgress;
@@ -54,7 +54,7 @@ void UBTTaskNode_MonsterPatrol::TickTask(UBehaviorTreeComponent& _OwnerComp, uin
 	bool CanSee = GetValueAsBool(_OwnerComp, TEXT("CanSeePlayer"));
 	if (true == CanSee)
 	{
-		ETestMonsterType MonsterType = Monster->GetBaseData()->GetMonsterType();
+		ETestMonsterType MonsterType = Monster->GetBaseData()->MonsterType;
 		ETestMonsterState NextState;
 		switch (MonsterType)
 		{

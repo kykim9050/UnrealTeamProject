@@ -67,8 +67,7 @@ void ATestMonsterBase::BeginPlay()
 		return;
 	}
 
-	TMap<ETestMonsterAnim, FAnimMontageGroup> AllAnimMontages = BaseData->GetTestAnimMontage();
-	for (TPair<ETestMonsterAnim, FAnimMontageGroup> AnimMontageGroup : AllAnimMontages)
+	for (TPair<ETestMonsterAnim, FAnimMontageGroup> AnimMontageGroup : BaseData->TestAnimMontages)
 	{
 		AnimInst->PushAnimation(AnimMontageGroup.Key, AnimMontageGroup.Value);
 	}
@@ -77,7 +76,7 @@ void ATestMonsterBase::BeginPlay()
 	SettingData = NewObject<UTestMonsterDataBase>(this);
 	SettingData->BaseData = BaseData;
 	SettingData->AttackDamage = SettingData->NormalAttackDamage;
-	SettingData->AttackRange = BaseData->GetAttackRange();
+	SettingData->AttackRange = BaseData->AttackRange;
 	SettingData->OriginPos = GetActorLocation();
 
 	// 클라이언트일 경우
