@@ -468,7 +468,7 @@ void ATestFPVCharacter::BombSetCancel_Implementation()		// => 메인에 이전 필요 (
 	}
 }
 
-void ATestFPVCharacter::BombSetComplete_Implementation()	// => 메인에 이전 필요 (24.08.01 수정됨)
+void ATestFPVCharacter::BombSetComplete_Implementation()	// => 메인 수정 필요 (24.08.06 인벤토리에서 아이템 삭제하는 부분 수정됨)
 {
 	// 폭탄 설치 완료
 	IsBombSetting = false;
@@ -482,8 +482,8 @@ void ATestFPVCharacter::BombSetComplete_Implementation()	// => 메인에 이전 필요 
 	GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, FString(TEXT("Bomb setting completed!")));
 #endif // WITH_EDITOR
 
-	// 폭탄 아이템 삭제
-	DeleteItem(4);
+	// 인벤토리에서 폭탄 아이템 삭제
+	DeleteItemInfo(static_cast<int>(EItemType::Bomb));
 
 	// 이전 자세로 애니메이션 변경
 	//ChangePosture(PrevPostureValue);
@@ -770,8 +770,10 @@ void ATestFPVCharacter::PickUpItem(AItemBase* _Item)	// => 메인 수정 필요 (24.08
 	ItemToCheckAnimation();
 }
 
-void ATestFPVCharacter::DropItem_Implementation(int _SlotIndex)	// => 메인 수정 필요 (24.08.06 수정됨)
+void ATestFPVCharacter::DropItem(int _SlotIndex)	// => 메인 수정 필요 (24.08.06 수정됨)
 {
+	CurItemIndex = 0;	// Testing
+
 	// DropItem 할 수 없는 경우 1 : 맨손일 때
 	if (CurItemIndex == -1)
 	{
@@ -789,44 +791,48 @@ void ATestFPVCharacter::DropItem_Implementation(int _SlotIndex)	// => 메인 수정 
 #endif // WITH_EDITOR
 		return;
 	}
-
-	// 떨어트릴 아이템을 Actor로 생성
-	UMainGameInstance* MainGameInst = UMainGameBlueprintFunctionLibrary::GetMainGameInstance(GetWorld());	// 매인에는 이렇게 적용됨.
-	//UMainGameInstance* MainGameInst = GetWorld()->GetGameInstanceChecked<UMainGameInstance>();
-	const FItemDataRow* ItemData = MainGameInst->GetItemData(ItemSlot[_SlotIndex].Name);
+	
+	// 떨어트릴 아이템을 액터로 생성하여 Spawn
+	FName ItemName = ItemSlot[_SlotIndex].Name;
 	FTransform SpawnTrans = GetActorTransform();
 	SpawnTrans.SetTranslation(GetActorLocation() + (GetActorForwardVector() * 100.0f) + (GetActorUpVector() * 50.0f));
 
-	// Spawn
-	AActor* DropItem = GetWorld()->SpawnActor<AActor>(ItemData->GetItemUClass(), SpawnTrans);
-	UStaticMeshComponent* DropItemMeshComp = Cast<AItemBase>(DropItem)->GetStaticMeshComponent();
-	DropItemMeshComp->SetSimulatePhysics(true);
-	//bool r = DropItemMeshComp->IsSimulatingPhysics();
-	//int a = 0;
+	SpawnItem(ItemName, SpawnTrans);
 
-	// 아이템 앞으로 던지기 (미완)
+	// 아이템 앞으로 던지기 (수정 중)
 	//GetMesh()->SetSimulatePhysics(true);
-	FVector ImpulseVector = GetActorForwardVector() * 1000.0f;
-	GetMesh()->AddImpulse(ImpulseVector, FName("RightHand"), false);
+	//FVector ImpulseVector = GetActorForwardVector() * 1000.0f;
+	//GetMesh()->AddImpulse(ImpulseVector, FName("RightHand"), false);
 
 	// 인벤토리에서 버린 아이템 정보 삭제
-	DeleteItem(_SlotIndex);
+	DeleteItemInfo(_SlotIndex);
 
 #ifdef WITH_EDITOR
 	GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, FString::Printf(TEXT("Drop the item. (Index : %d)"), _SlotIndex + 1));
 #endif // WITH_EDITOR
 
 	// 애니메이션 업데이트
+	ItemToCheckAnimation();
 	//ChangePosture(EPlayerPosture::Barehand);
-	ChangeMontage(EPlayerUpperState::UArm_Attack);
+	//ChangeMontage(EPlayerUpperState::UArm_Attack);
 }
 
-void ATestFPVCharacter::DestroyItem_Implementation(AItemBase* _Item)
+void ATestFPVCharacter::DestroyItem_Implementation(AItemBase* _Item)	// => 메인 이전 필요 (24.08.06 추가됨)
 {
 	_Item->Destroy();
 }
 
-void ATestFPVCharacter::DeleteItem(int _Index)		// => 메인 수정 필요 (24.08.06 수정됨)
+void ATestFPVCharacter::SpawnItem_Implementation(FName _ItemName, FTransform _SpawnTrans)	// => 메인 이전 필요 (24.08.06 추가됨)
+{
+	UMainGameInstance* MainGameInst = UMainGameBlueprintFunctionLibrary::GetMainGameInstance(GetWorld());
+	const FItemDataRow* ItemData = MainGameInst->GetItemData(_ItemName);
+
+	AItemBase* DropItem = GetWorld()->SpawnActor<AItemBase>(ItemData->GetItemUClass(), _SpawnTrans);
+	UStaticMeshComponent* DropItemMeshComp = Cast<AItemBase>(DropItem)->GetStaticMeshComponent();
+	DropItemMeshComp->SetSimulatePhysics(true);
+}
+
+void ATestFPVCharacter::DeleteItemInfo(int _Index)		// => 메인 수정 필요 (24.08.06 수정됨)
 {
 	FFPVItemInformation NewSlot;
 	ItemSlot[_Index] = NewSlot;

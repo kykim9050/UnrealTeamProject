@@ -133,19 +133,22 @@ public:
 	UFUNCTION(Reliable, Server)
 	void InteractObject(AMapObjectBase* _MapObject);		// => 메인캐릭터로 이전해야 함 (24.07.29 추가됨)
 	void InteractObject_Implementation(AMapObjectBase* _MapObject);
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(/*Reliable, Server, */BlueprintCallable)
 	void PickUpItem(AItemBase* _Item);						// => 메인 수정 필요 (24.08.06 수정됨)
 	//void PickUpItem_Implementation(AItemBase* _Item);
 	//UFUNCTION(BlueprintCallable)
 	//void ItemSetting(FName _TagName, EPlayerUpperState _SlotIndex);	// => 메인 삭제 필요 (24.08.06 삭제됨)
+	UFUNCTION(/*Reliable, Server, */BlueprintCallable)
+	void DropItem(int _SlotIndex);							// => 메인 수정 필요 (24.08.06 수정됨)
+	//void DropItem_Implementation(int _SlotIndex);
 	UFUNCTION(Reliable, Server)
-	void DestroyItem(AItemBase* _Item);
+	void DestroyItem(AItemBase* _Item);						// => 메인 이전 필요 (24.08.06 추가됨)
 	void DestroyItem_Implementation(AItemBase* _Item);
-	UFUNCTION(Reliable, Server, BlueprintCallable)
-	void DropItem(int _SlotIndex);							// => 메인캐릭터로 이전해야 함 (24.07.30 수정됨)
-	void DropItem_Implementation(int _SlotIndex);
+	UFUNCTION(Reliable, Server)
+	void SpawnItem(FName _ItemName, FTransform _SpawnTrans);			// => 메인 이전 필요 (24.08.06 추가됨)
+	void SpawnItem_Implementation(FName _ItemName, FTransform _SpawnTrans);
 	UFUNCTION(BlueprintCallable)
-	void DeleteItem(int _Index);							// => 메인캐릭터로 이전해야 함 (24.07.29 추가됨)
+	void DeleteItemInfo(int _Index);						// => 메인 수정 필요 (24.08.06 함수 이름 수정됨)
 
 	// Collision
 	//UFUNCTION(BlueprintCallable)
