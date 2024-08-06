@@ -78,12 +78,6 @@ void ATestFPVCharacter::HandAttackCollision(AActor* _OtherActor, UPrimitiveCompo
 	}
 }
 
-// 노티파이 호출 함수.
-void ATestFPVCharacter::ChangeHandAttackCollisionProfile(FName _Name) // => 매인 적용.
-{
-	HandAttackComponent->SetCollisionProfileName(_Name);
-}
-
 // 메인 플레이어 추가 필요 코드 (태환) 07/24 => 매인 적용.
 void ATestFPVCharacter::PostInitializeComponents()
 {
@@ -117,6 +111,7 @@ void ATestFPVCharacter::PostInitializeComponents()
 
 void ATestFPVCharacter::AnimationEnd() 
 {
+	// 동기화 이슈 발생.
 	ChangeMontage(IdleDefault);
 }
 
@@ -370,7 +365,6 @@ void ATestFPVCharacter::BombSetStart_Implementation()			// => 메인 수정 필요 (24
 #endif
 
 	// 애니메이션 변경
-	//ChangePosture(EPlayerPosture::Bomb);
 	ChangeMontage(EPlayerUpperState::Bomb);
 }
 
@@ -414,7 +408,6 @@ void ATestFPVCharacter::BombSetCancel_Implementation()		// => 메인에 이전 필요 (
 		}
 
 		// 이전 자세로 애니메이션 변경
-		//ChangePosture(PrevPostureValue);
 		ChangeMontage(IdleDefault);
 	}
 }
