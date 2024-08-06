@@ -228,3 +228,4 @@ private:
 	UPROPERTY()
 	FString MainNickname = "MyNickName";
 };
+
