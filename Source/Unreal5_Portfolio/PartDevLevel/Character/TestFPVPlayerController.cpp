@@ -59,14 +59,14 @@ void ATestFPVPlayerController::SetupInputComponent()
 			//EnhancedInputComponent->BindAction(InputData->Actions[6], ETriggerEvent::Started, this, &ATestPlayerController::FireStart);
 			//EnhancedInputComponent->BindAction(InputData->Actions[6], ETriggerEvent::Triggered, this, &ATestPlayerController::FireTick);
 			//EnhancedInputComponent->BindAction(InputData->Actions[6], ETriggerEvent::Completed, this, &ATestPlayerController::FireEnd);
-			EnhancedInputComponent->BindAction(InputData->Actions[7], ETriggerEvent::Triggered, this, &ATestFPVPlayerController::ChangePosture_Con, static_cast<EPlayerUpperState>(EPlayerUpperState::Rifle_Idle));	// => 메인 수정 필요 (24.07.30 플레이어 함수와의 혼동을 방지하지 위해 이름 수정됨)
-			EnhancedInputComponent->BindAction(InputData->Actions[8], ETriggerEvent::Triggered, this, &ATestFPVPlayerController::ChangePosture_Con, static_cast<EPlayerUpperState>(EPlayerUpperState::Rifle_Idle));	// => 메인 수정 필요 (24.07.30 플레이어 함수와의 혼동을 방지하지 위해 이름 수정됨)
-			EnhancedInputComponent->BindAction(InputData->Actions[9], ETriggerEvent::Triggered, this, &ATestFPVPlayerController::ChangePosture_Con, static_cast<EPlayerUpperState>(EPlayerUpperState::Melee_Idle));	// => 메인 수정 필요 (24.07.30 플레이어 함수와의 혼동을 방지하지 위해 이름 수정됨)
+			EnhancedInputComponent->BindAction(InputData->Actions[7], ETriggerEvent::Triggered, this, &ATestFPVPlayerController::ChangePosture_Con, 0);	// => 메인 수정 필요 (24.07.30 플레이어 함수와의 혼동을 방지하지 위해 이름 수정됨)
+			EnhancedInputComponent->BindAction(InputData->Actions[8], ETriggerEvent::Triggered, this, &ATestFPVPlayerController::ChangePosture_Con, 1);	// => 메인 수정 필요 (24.07.30 플레이어 함수와의 혼동을 방지하지 위해 이름 수정됨)
+			EnhancedInputComponent->BindAction(InputData->Actions[9], ETriggerEvent::Triggered, this, &ATestFPVPlayerController::ChangePosture_Con, 2);	// => 메인 수정 필요 (24.07.30 플레이어 함수와의 혼동을 방지하지 위해 이름 수정됨)
 			EnhancedInputComponent->BindAction(InputData->Actions[10], ETriggerEvent::Triggered, this, &ATestFPVPlayerController::Drink_Con);			// => 메인 수정 필요 (24.07.30 해당 키에 연동된 함수 변경됨)
 			EnhancedInputComponent->BindAction(InputData->Actions[11], ETriggerEvent::Started, this, &ATestFPVPlayerController::BombSetStart_Con);		// => 메인 수정 필요 (24.07.30 해당 키에 연동된 함수 변경됨)
 			EnhancedInputComponent->BindAction(InputData->Actions[11], ETriggerEvent::Triggered, this, &ATestFPVPlayerController::BombSetTick_Con);	// => 메인 이전 필요 (24.07.31 추가됨)
 			EnhancedInputComponent->BindAction(InputData->Actions[11], ETriggerEvent::Completed, this, &ATestFPVPlayerController::BombSetCancel_Con);	// => 메인 수정 필요 (24.07.30 해당 키에 연동된 함수 변경됨)
-			EnhancedInputComponent->BindAction(InputData->Actions[20], ETriggerEvent::Triggered, this, &ATestFPVPlayerController::ChangePosture_Con, static_cast<EPlayerUpperState>(EPlayerUpperState::Barehand));	// => 메인 수정 필요 (24.07.30 해당 함수에 연동된 키 변경됨) ('0' -> 'X')
+			EnhancedInputComponent->BindAction(InputData->Actions[20], ETriggerEvent::Triggered, this, &ATestFPVPlayerController::ChangePosture_Con, -1);	// => 메인 수정 필요 (24.07.30 해당 함수에 연동된 키 변경됨) ('0' -> 'X')
 			EnhancedInputComponent->BindAction(InputData->Actions[13], ETriggerEvent::Triggered, this, &ATestFPVPlayerController::CheckItem_Con);		// => 메인 수정 필요 (24.07.29 해당 키에 연동된 함수 변경됨) (PickUpItem -> CheckItem)
 			EnhancedInputComponent->BindAction(InputData->Actions[14], ETriggerEvent::Triggered, this, &ATestFPVPlayerController::ChangePOV_Con);		// => 메인 수정 필요 (24.07.30 플레이어 함수와의 혼동을 방지하지 위해 이름 수정됨)
 			EnhancedInputComponent->BindAction(InputData->Actions[15], ETriggerEvent::Started, this, &ATestFPVPlayerController::Crouch);
@@ -220,23 +220,32 @@ void ATestFPVPlayerController::CheckItem_Con()	// => 메인으로 이전 필요 (24.07.2
 	Ch->CheckItem();
 }
 
-void ATestFPVPlayerController::ChangePosture_Con(EPlayerUpperState _Posture)
+void ATestFPVPlayerController::ChangePosture_Con(int _InputKey)
 {
 	ATestFPVCharacter* Ch = GetPawn<ATestFPVCharacter>();
 
-	if (EPlayerUpperState::Rifle_Idle == _Posture)
+	if (_InputKey == 0 || _InputKey == 1) // 총
 	{
 		Ch->ChangeMontage(EPlayerUpperState::Rifle_Idle);
+		Ch->IdleDefault = EPlayerUpperState::Rifle_Idle;
+		Ch->SetStaticMesh(FName("SniperRifle"));
 
 		//ChangePostureToWidget(0); // BP To Event 
 		//ChangePostureToWidget(EPlayerUpperState::Rifle_Idle); // 아마?
 	}
-	else if (EPlayerUpperState::Melee_Idle == _Posture)
+	else if (_InputKey == 2) // 칼
 	{
 		Ch->ChangeMontage(EPlayerUpperState::Melee_Idle);
+		Ch->IdleDefault = EPlayerUpperState::Melee_Idle;
+		Ch->SetStaticMesh(FName("Katana"));
 
 		//ChangePostureToWidget(EPlayerPosture::Rifle2); // BP To Event
 		//ChangePostureToWidget(EPlayerUpperState::Rifle_Idle);
+	}
+	else if (_InputKey == -1) // 주먹
+	{
+		Ch->ChangeMontage(EPlayerUpperState::UArm_Idle);
+		Ch->IdleDefault = EPlayerUpperState::UArm_Idle;
 	}
 }
 

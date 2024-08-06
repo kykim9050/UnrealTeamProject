@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "Engine/TriggerBox.h"
-#include "GameFramework/PlayerController.h"
 #include "TriggerBoxBase.generated.h"
 
 /**

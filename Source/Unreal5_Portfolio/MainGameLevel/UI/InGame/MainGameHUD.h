@@ -17,5 +17,6 @@ protected:
 	void BeginPlay() override;
 	void AllUISetting() override;
 
+public:
 	void AllUIOn() override;
 };
