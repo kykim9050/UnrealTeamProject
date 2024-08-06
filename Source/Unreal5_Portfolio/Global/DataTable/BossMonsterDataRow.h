@@ -3,17 +3,18 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "UObject/NoExportTypes.h"
+#include "Engine/DataTable.h"
 #include "Global/ContentsEnum.h"
-#include "BossMontserDataRow.generated.h"
+#include "BossMonsterDataRow.generated.h"
 
 class UAnimMontage;
 
 /**
  * 
  */
-UCLASS()
-class UNREAL5_PORTFOLIO_API UBossMontserDataRow : public UObject
+USTRUCT(BlueprintType)
+
+struct FBossMonsterDataRow : public FTableRowBase
 {
 	GENERATED_BODY()
 	
@@ -48,6 +49,6 @@ public:
 
 	// ¸ùÅ¸ÁÖ
 	UPROPERTY(EditAnywhere, meta = (AllowprivateAccess = "true"))
-	TMap<EBossMonsterAnim, UAnimMontage*> AnimMontages;
+	TMap<EBossMonsterAnim, class UAnimMontage*> AnimMontages;
 
 };

@@ -5,11 +5,13 @@
 #include "Global/DataTable/PlayerDataRow.h"
 #include "Global/DataTable/NetDataRow.h"
 #include "Global/DataTable/MonsterDataRow.h"
+#include "Global/DataTable/BossMonsterDataRow.h"
 #include "Global/DataTable/ItemDataRow.h"
-#include "Global/DataTable/BossDataRow.h"
 #include "Global/DataTable/GlobalObjectRow.h"
 #include "Global/DataTable/MapObjDataRow.h"
 #include "Global/DataTable/QuestDataRow.h"
+
+#include "Global/DataTable/BossDataRow.h"
 
 UMainGameInstance::UMainGameInstance()
 {
@@ -121,6 +123,24 @@ const FMonsterDataRow* UMainGameInstance::GetMonsterData(FName _Name)
 	}
 
 	FMonsterDataRow* Data = MonsterDataTable->FindRow<FMonsterDataRow>(_Name, nullptr);
+
+	if (nullptr == Data)
+	{
+		UE_LOG(MonsterLog, Error, TEXT("%S(%u)> %s Name Data Is Nullptr"), __FUNCTION__, __LINE__, *_Name.ToString());
+		return nullptr;
+	}
+
+	return Data;
+}
+
+const FBossMonsterDataRow* UMainGameInstance::GetBossMonsterData(FName _Name)
+{
+	if (nullptr == BossMonsterDataTable)
+	{
+		UE_LOG(MonsterLog, Fatal, TEXT("%S(%u)> if (nullptr == MonsterDataTable)"), __FUNCTION__, __LINE__);
+	}
+
+	FBossMonsterDataRow* Data = BossMonsterDataTable->FindRow<FBossMonsterDataRow>(_Name, nullptr);
 
 	if (nullptr == Data)
 	{
