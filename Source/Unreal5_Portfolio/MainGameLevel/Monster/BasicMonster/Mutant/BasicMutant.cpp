@@ -2,6 +2,7 @@
 
 
 #include "MainGameLevel/Monster/BasicMonster/Mutant/BasicMutant.h"
+#include "MainGameLevel/Monster/BasicMonster/Mutant/BasicMutantData.h"
 #include "MotionWarpingComponent.h"
 
 ABasicMutant::ABasicMutant()

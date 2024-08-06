@@ -4,9 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
-
 #include "Global/DataTable/MonsterDataRow.h"
-
 #include "BasicMonsterData.generated.h"
 
 /**

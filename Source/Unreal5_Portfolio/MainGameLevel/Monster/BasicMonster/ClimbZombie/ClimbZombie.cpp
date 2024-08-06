@@ -2,6 +2,7 @@
 
 
 #include "MainGameLevel/Monster/BasicMonster/ClimbZombie/ClimbZombie.h"
+#include "MainGameLevel/Monster/BasicMonster/ClimbZombie/ClimbZombeData.h"
 #include "MotionWarpingComponent.h"
 
 AClimbZombie::AClimbZombie()

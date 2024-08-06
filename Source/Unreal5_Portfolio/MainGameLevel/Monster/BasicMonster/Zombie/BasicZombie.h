@@ -4,8 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "MainGameLevel/Monster/Base/BasicMonsterBase.h"
-#include "MainGameLevel/Monster/BasicMonster/Zombie/BasicZombieData.h"
 #include "BasicZombie.generated.h"
+
+class UBasicZombieData;
 
 /**
  * 
