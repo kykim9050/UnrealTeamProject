@@ -54,26 +54,6 @@ public:
 	// Sets default values for this character's properties
 	ATestFPVCharacter();
 
-	// Components
-	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-	class USpringArmComponent* SpringArmComponent = nullptr;
-	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-	class UCameraComponent* CameraComponent = nullptr;
-	UPROPERTY(Category = "Contents", VisibleDefaultsOnly)
-	USkeletalMeshComponent* FPVMesh = nullptr;						// => 메인캐릭터로 이전해야 함 (새로 추가됨)
-	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-	class UStaticMeshComponent* RidingMesh = nullptr;				// => 메인캐릭터로 이전해야 함 (새로 추가됨) [뭐하는 Component?] [탈것 테스팅용 (성우님 요청)]
-	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-	class UStaticMeshComponent* ItemSocketMesh = nullptr;			// => 메인캐릭터로 이전해야 함 (새로 추가됨)
-	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-	class UStaticMeshComponent* FPVItemSocketMesh = nullptr;		// => 메인캐릭터로 이전해야 함 (새로 추가됨)
-	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-	class UTestMinimapIconComponent* MinimapIconComponent = nullptr;
-	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-	class UHeadNameWidgetComponent* HeadNameComponent = nullptr;	// => 메인으로 이전 필요 (24.07.30 추가됨)
-	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-	class UBoxComponent* GetMapItemCollisionComponent = nullptr;	// => 메인 수정 필요 (24.08.01 오타 수정됨)
-
 	// LowerState (태환)
 	UPROPERTY(Category = "Contents", Replicated, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	EPlayerLowerState LowerStateValue = EPlayerLowerState::Idle;
@@ -188,9 +168,6 @@ protected:
 	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
 private:
-	// 근접 공격에 사용 중 (태환)
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-	class USphereComponent* HandAttackComponent = nullptr;
 
 	// 몽타주 변경에 사용 중 (태환)
 	UPROPERTY()
