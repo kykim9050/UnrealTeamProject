@@ -683,6 +683,27 @@ void ATestFPVCharacter::ChangeLowerState_Implementation(EPlayerLowerState _Lower
 
 void ATestFPVCharacter::ChangePlayerDir_Implementation(EPlayerMoveDir _Dir) // => 매인 적용.
 {
+	if (IdleDefault == EPlayerUpperState::UArm_Idle)
+	{
+		switch (_Dir)
+		{
+		case EPlayerMoveDir::Forward:
+			ChangeMontage(EPlayerUpperState::MoveForward);
+			break;
+		case EPlayerMoveDir::Back:
+			ChangeMontage(EPlayerUpperState::MoveBack);
+			break;
+		case EPlayerMoveDir::Left:
+			ChangeMontage(EPlayerUpperState::MoveLeft);
+			break;
+		case EPlayerMoveDir::Right:
+			ChangeMontage(EPlayerUpperState::MoveRight);
+			break;
+		default:
+			break;
+		}
+	}
+
 	// W A S D
 	DirValue = _Dir;
 }
@@ -1016,7 +1037,7 @@ void ATestFPVCharacter::AttackCheck()
 
 void ATestFPVCharacter::AttackEndCheck()
 {
-	ChangeMontage(IdleDefault);
+	//ChangeMontage(IdleDefault);
 
 	//UAnimMontage* GetCurMontage = GetCurrentMontage();
 	//FName GetCurMontageName = GetCurMontage->GetFName();
