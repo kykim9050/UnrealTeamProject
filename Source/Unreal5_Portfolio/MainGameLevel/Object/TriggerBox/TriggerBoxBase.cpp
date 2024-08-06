@@ -11,6 +11,7 @@
 #include "LevelSequence.h"
 #include "LevelSequenceActor.h"
 #include "LevelSequencePlayer.h"
+#include "MainGameLevel/UI/MainParentHUD.h"
 
 
 #include "Global/ContentsLog.h"
@@ -43,6 +44,10 @@ void ATriggerBoxBase::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutL
 
 void ATriggerBoxBase::OnOverlapBegin(AActor* OverlappedActor, AActor* OtherActor)
 {
+
+	APlayerController* UIPlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+	Cast<AMainParentHUD>(UIPlayerController->GetHUD())->AllUIOff();
+
 	if (false == HasAuthority())
 	{
 		LOG(ObjectLog, Error, "서버가 아닙니다.");
