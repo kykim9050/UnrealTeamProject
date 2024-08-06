@@ -28,7 +28,7 @@ EBTNodeResult::Type UBTTaskNode_BasicMutantChase::ExecuteTask(UBehaviorTreeCompo
 		return EBTNodeResult::Aborted;
 	}
 
-	Mutant->GetCharacterMovement()->MaxWalkSpeed = MutantData->BaseData->GetRunSpeed();
+	Mutant->GetCharacterMovement()->MaxWalkSpeed = MutantData->BaseData->RunSpeed;
 	Mutant->ChangeRandomAnimation(EBasicMonsterAnim::Run);
 
 	return EBTNodeResult::InProgress;

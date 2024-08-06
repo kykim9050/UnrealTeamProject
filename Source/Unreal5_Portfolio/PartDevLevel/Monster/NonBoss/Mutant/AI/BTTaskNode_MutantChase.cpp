@@ -24,7 +24,7 @@ EBTNodeResult::Type UBTTaskNode_MutantChase::ExecuteTask(UBehaviorTreeComponent&
 
 	UTestMonsterDataBase* MonsterData = GetValueAsObject<UTestMonsterDataBase>(_OwnerComp, TEXT("MonsterData"));
 	Monster->GetCharacterMovement()->MovementMode = EMovementMode::MOVE_NavWalking;
-	Monster->GetCharacterMovement()->MaxWalkSpeed = Monster->GetBaseData()->GetRunSpeed();
+	Monster->GetCharacterMovement()->MaxWalkSpeed = Monster->GetBaseData()->RunSpeed;
 	Monster->ChangeRandomAnimation(ETestMonsterAnim::Run);
 
 	return EBTNodeResult::Type::InProgress;
