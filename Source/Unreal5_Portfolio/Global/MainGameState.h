@@ -197,6 +197,6 @@ private:
 	/// <summary>
 	/// EndingTriggerBox의 위치, 회전값 변수
 	/// </summary>
-	FVector EndingTriggerBoxPos = FVector(0.0f, 0.0f, 0.0f);
+	FVector EndingTriggerBoxPos = FVector(-8820.0f, 87310.0f, -6980.0f);
 	FRotator EndingTriggerBoxRot = FRotator(0.0f, 0.0f, 0.0f);
 };
