@@ -56,6 +56,12 @@ public:
 		return AnimMontages;
 	}
 
+	template<typename EnumType>
+	UAnimMontage* GetKeyAnimMontage(EnumType Key)
+	{
+		GetKeyAnimMontage(static_cast<uint8>(Key));
+	}
+
 	UAnimMontage* GetKeyAnimMontage(uint8 Key)
 	{
 		return AnimMontages[Key];

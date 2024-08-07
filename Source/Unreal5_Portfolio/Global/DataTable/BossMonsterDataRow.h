@@ -24,7 +24,7 @@ public:
 	float MeleeAttackDamage = 20.0f;
 
 	// 근접 공격 범위
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowprivateAccess = "true"))
+	UPROPERTY(EditAnywhere, meta = (AllowprivateAccess = "true"))
 	float MeleeAttackRange = 200.0f;
 
 	// 투사체 공격력
