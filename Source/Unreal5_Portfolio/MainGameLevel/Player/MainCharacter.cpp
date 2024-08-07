@@ -17,6 +17,7 @@
 #include "PartDevLevel/Monster/Boss/TestBossMonsterBase.h"
 #include "MainGameLevel/Object/MapObjectBase.h"
 #include "MainGameLevel/Object/Bomb.h"
+#include "MainGameLevel/Object/AreaObject.h"
 #include "MainGameLevel/UI/Title/MainTitleHUD.h"
 #include "PartDevLevel/UI/GetItem/GetItem_UserWidget.h"
 #include <Kismet/KismetSystemLibrary.h>
@@ -637,23 +638,92 @@ void AMainCharacter::InteractObject_Implementation(AMapObjectBase* _MapObject)
 void AMainCharacter::BombSetStart_Implementation()
 {
 	// 폭탄 아이템 체크
+	if (false == ItemSlot[static_cast<int>(EItemType::Bomb)].IsItemIn)
+	{
+		return;
+	}
+
+	// 폭탄 설치 가능한 Area 체크
+	AAreaObject* AreaObject = Cast<AAreaObject>(GetMapItemData);
+	if (nullptr == AreaObject)
+	{
+		return;
+	}
+
+	// 폭탄 설치 가능.
+	IsBombSetting = true;
+	AreaObject->ResetBombTime();
+	ChangeMontage(EPlayerUpperState::Bomb);
 }
 
 void AMainCharacter::BombSetTick_Implementation()
 {
+	if (true == IsBombSetting)
+	{
+		// 폭탄 설치 가능한 Area 체크
+		AAreaObject* AreaObject = Cast<AAreaObject>(GetMapItemData);
+		if (nullptr == AreaObject)
+		{
+			return;
+		}
+
+		// 설치 시간 카운트가 끝났을 경우
+		if (0 >= AreaObject->GetInstallBombTime())
+		{
+			BombSetEnd();
+		}
+
+		// 설치 시간 카운팅
+		AreaObject->InstallBomb(GetWorld()->GetDeltaSeconds());
+	}
 }
 
 void AMainCharacter::BombSetCancel_Implementation()
 {
+	if (true == IsBombSetting)
+	{
+		IsBombSetting = false;
+		AAreaObject* AreaObject = Cast<AAreaObject>(GetMapItemData);
+		if (nullptr != AreaObject)
+		{
+			AreaObject->ResetBombTime();
+		}
+
+		// 이전 자세로 애니메이션 변경
+		ChangeMontage(IdleDefault);
+	}
 }
 
 void AMainCharacter::BombSetEnd_Implementation()
 {
+	if (true == IsBombSetting)
+	{
+		// 폭탄 설치 완료
+		IsBombSetting = false;
+
+		AAreaObject* AreaObject = Cast<AAreaObject>(GetMapItemData);
+		if (nullptr != AreaObject)
+		{
+			AreaObject->InterAction();
+		}
+
+		// 인벤토리에서 폭탄 아이템 삭제
+		DeleteItemInfo(static_cast<int>(EItemType::Bomb));
+
+		// 이전 자세로 애니메이션 변경
+		ChangeMontage(IdleDefault);
+	}
 }
 
 void AMainCharacter::GetSetSelectCharacter_Implementation(UMainGameInstance* _MainGameInstance)
 {
 	UIToSelectCharacter = _MainGameInstance->GetUIToSelectCharacter();
+}
+
+void AMainCharacter::DeleteItemInfo(int _Index)
+{
+	FPlayerItemInformation DeleteSlot;
+	ItemSlot[_Index] = DeleteSlot;
 }
 
 void AMainCharacter::ChangePOV()

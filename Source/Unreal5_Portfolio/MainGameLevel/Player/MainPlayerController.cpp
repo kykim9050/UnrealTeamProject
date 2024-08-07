@@ -263,12 +263,18 @@ void AMainPlayerController::Num_BombSetStart()
 		return;
 	}
 
-	//Ch->BombSetStart();
+	Ch->BombSetStart();
 }
 
 void AMainPlayerController::Num_BombSetTick()
 {
+	AMainCharacter* Ch = GetPawn<AMainCharacter>();
+	if (nullptr == Ch)
+	{
+		return;
+	}
 
+	Ch->BombSetTick();
 }
 
 void AMainPlayerController::Num_BombSetEnd()
@@ -279,7 +285,7 @@ void AMainPlayerController::Num_BombSetEnd()
 		return;
 	}
 
-	//Ch->BombSetEnd();
+	Ch->BombSetEnd();
 }
 
 void AMainPlayerController::ChangeLowerState(EPlayerLowerState _State)

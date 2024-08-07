@@ -106,6 +106,10 @@ private : // 문제 발생 여지 있음 발생하면 그냥 지워야 함.
 	UPROPERTY(VisibleAnywhere)
 	int CurItemIndex = -1;
 
+	// 폭탄 설치 진행 상황
+	UPROPERTY()
+	bool IsBombSetting = false;
+
 
 	// 맵에 있는 무기 Data
 	UPROPERTY(Category = "Contents", VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
@@ -222,6 +226,9 @@ private :
 	UFUNCTION(Reliable, Server, BlueprintCallable)
 	void GetSetSelectCharacter(class UMainGameInstance* _MainGameInstance);
 	void GetSetSelectCharacter_Implementation(class UMainGameInstance* _MainGameInstance);
+
+	UFUNCTION()
+	void DeleteItemInfo(int _Index);
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	bool IsServer = false;
