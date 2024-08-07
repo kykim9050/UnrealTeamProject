@@ -4,6 +4,10 @@
 #include "MainGameLevel/UI/InGame/HeadNameWidgetComponent.h"
 #include "MainGameLevel/UI/InGame/HeadNameUserWidget.h"
 
+#include "Global/MainGameBlueprintFunctionLibrary.h"
+#include "Global/MainGameInstance.h"
+#include "Global/ContentsLog.h"
+
 #include "Kismet/KismetMathLibrary.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -33,6 +37,21 @@ void UHeadNameWidgetComponent::BeginPlay()
 	FQuat Q;
 	UKismetMathLibrary::Quat_SetFromEuler(Q, FVector(0.f, 0.f, 0.f));
 	SetRelativeRotation(Q);
+
+	UMainGameInstance* Inst = UMainGameBlueprintFunctionLibrary::GetMainGameInstance(GetWorld());
+	if (nullptr == Inst)
+	{
+		LOG(UILog, Fatal, "MainGameInstance is Null");
+	}
+	FText InstName = FText::FromString(Inst->GetMainNickName());
+	SendNicknames(InstName);
+}
+
+void UHeadNameWidgetComponent::InitWidget()
+{
+	Super::InitWidget();
+
+	SetHeadNameWidgetText(HeadNameText);
 }
 
 void UHeadNameWidgetComponent::BilboardRotate(FVector _WorldLocation)
@@ -67,4 +86,17 @@ void UHeadNameWidgetComponent::SetHeadNameWidgetText(FText _Name)
 	{
 		widget->SetNameText(_Name);
 	}
+}
+
+void UHeadNameWidgetComponent::SendNicknames_Implementation(const FText& _Nickname)
+{
+	HeadNameText = _Nickname;
+}
+
+void UHeadNameWidgetComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(UHeadNameWidgetComponent, HeadNameText);
+
 }
