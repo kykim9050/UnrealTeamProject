@@ -3,3 +3,8 @@
 
 #include "PartDevLevel/UI/HUD/Timer_UserWidget.h"
 
+void UTimer_UserWidget::SetTimerCurStage(EGameStage _SetStage)
+{
+	AMainGameState* WidgetGameState = UMainGameBlueprintFunctionLibrary::GetMainGameState(GetWorld());
+	WidgetGameState->SetCurStage(_SetStage);
+}

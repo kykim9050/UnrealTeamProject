@@ -118,7 +118,7 @@ private:
 	float WalkSpeed = 0.0f;
 
 	/// <summary>
-	/// 보스 달리기 Speed
+	/// 보스 추격 속도
 	/// </summary>
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowprivateAccess = "true"))
 	float RunSpeed = 0.0f;

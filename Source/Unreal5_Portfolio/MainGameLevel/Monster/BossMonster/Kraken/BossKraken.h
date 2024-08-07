@@ -6,7 +6,10 @@
 #include "MainGameLevel/Monster/Base/BossMonsterBase.h"
 #include "BossKraken.generated.h"
 
+class UBoxComponent;
 class UBossKrakenData;
+class ABossKrakenProjectile;
+class UBossKrakenProjectileSpawnPoint;
 
 /**
  * 
@@ -17,10 +20,16 @@ class UNREAL5_PORTFOLIO_API ABossKraken : public ABossMonsterBase
 	GENERATED_BODY()
 
 public:
+	ABossKraken();
+
+public:
 	UBossKrakenData* GetSettingData() const
 	{
 		return BossKrakenSettingData;
 	}
+
+public:
+	void SpawnRock();
 
 protected:
 	virtual void InitData(const FBossMonsterDataRow* BaseData);
@@ -28,6 +37,18 @@ protected:
 private:
 	UPROPERTY()
 	UBossKrakenData* BossKrakenSettingData = nullptr;
+
+private:
+	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = true))
+	UBoxComponent* BodyComponent = nullptr;
+
+private:
+	// Projectile
+	UPROPERTY(EditAnywhere, Category = "Projectile", meta = (AllowPrivateAccess = true))
+	UBossKrakenProjectileSpawnPoint* ProjectileSpawnPoint = nullptr;
+
+	UPROPERTY(EditAnywhere, Category = "Projectile", meta = (AllowPrivateAccess = true))
+	TSubclassOf<ABossKrakenProjectile> ProjectileUClass = nullptr;
 
 private:
 	// Effect

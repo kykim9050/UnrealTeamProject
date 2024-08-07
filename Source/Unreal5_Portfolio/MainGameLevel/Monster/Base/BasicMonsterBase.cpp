@@ -115,12 +115,6 @@ void ABasicMonsterBase::Tick(float DeltaTime)
 
 void ABasicMonsterBase::OnAttackOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
-	UBlackboardComponent* BlackBoard = UAIBlueprintHelperLibrary::GetBlackboard(this);
-	if (nullptr == BlackBoard)
-	{
-		return;
-	}
-
 	ATestCharacter* HitCharacter = Cast<ATestCharacter>(OtherActor);
 	if (nullptr != HitCharacter)
 	{
@@ -162,17 +156,14 @@ void ABasicMonsterBase::ChangeRandomAnimation(uint8 Type)
 
 void ABasicMonsterBase::Damaged(float Damage)
 {
+	Super::Damaged(Damage);
+
 	// Server Only
-	if (false == HasAuthority())
+	if (false == HasAuthority() || 0.0f >= SettingData->Hp)
 	{
 		return;
 	}
-
-	if (0.0f >= SettingData->Hp)
-	{
-		return;
-	}
-
+	
 	SettingData->Hp -= Damage;
 
 	// Dead

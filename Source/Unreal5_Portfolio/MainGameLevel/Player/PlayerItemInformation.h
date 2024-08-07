@@ -19,8 +19,13 @@ public :
 	~FPlayerItemInformation();
 
 public:
+	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))	// => 메인 이전 필요 (24.08.06 추가됨)
+	bool IsItemIn = false;	// 인벤토리 칸에 아이템이 들어 있는지 여부
+
+	// Item Name
 	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	FName Name = "";
+
 	// 장탄 MAX 수치.
 	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	int ReloadMaxNum = -1;

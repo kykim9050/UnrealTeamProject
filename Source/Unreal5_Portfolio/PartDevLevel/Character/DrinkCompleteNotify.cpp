@@ -2,17 +2,18 @@
 
 
 #include "PartDevLevel/Character/DrinkCompleteNotify.h"
-#include "TestLevel/Character/TestCharacter.h"
+#include "ParentsCharacter.h"
 
 void UDrinkCompleteNotify::Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation)
 {
 	Super::Notify(MeshComp, Animation);
 
-	ATestCharacter* PlayCharacter = MeshComp->GetOwner<ATestCharacter>();
-	if (nullptr == PlayCharacter)
+	AParentsCharacter* Actor = MeshComp->GetOwner<AParentsCharacter>();
+
+	if (nullptr == Actor)
 	{
 		return;
 	}
 
-	PlayCharacter->DrinkComplete();
+	Actor->AnimationEnd();
 }

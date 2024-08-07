@@ -13,12 +13,22 @@
 #include "PartDevLevel/Character/PlayerAnimInstance.h"
 #include "Components/SphereComponent.h"
 #include "MainGameLevel/Player/MainPlayerState.h"
+
 #include "MainGameLevel/Monster/Base/BasicMonsterBase.h"
 #include "PartDevLevel/Monster/Boss/TestBossMonsterBase.h"
+#include "PartDevLevel/Monster/Kraken/KrakenProjectile.h"
+
 #include "MainGameLevel/Object/MapObjectBase.h"
+#include "MainGameLevel/Object/DoorObject.h"
 #include "MainGameLevel/Object/Bomb.h"
+#include "MainGameLevel/Object/AreaObject.h"
+
+#include "MainGameLevel/UI/InGame/HeadNameWidgetComponent.h"
+#include "MainGameLevel/UI/InGame/MainGameHUD.h"
 #include "MainGameLevel/UI/Title/MainTitleHUD.h"
 #include "PartDevLevel/UI/GetItem/GetItem_UserWidget.h"
+#include "TestLevel/UI/TestMinimapIconComponent.h"
+
 #include <Kismet/KismetSystemLibrary.h>
 #include <Kismet/GameplayStatics.h>
 
@@ -35,6 +45,16 @@ AMainCharacter::AMainCharacter()
 	GetMesh()->SetRelativeLocation(FVector(0.0f, 0.0f, -88.0f));
 	GetMesh()->bHiddenInSceneCapture = true;
 
+	// 아이템 장착 소켓 초기화.
+	ItemSocketMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ItemSocketMesh"));
+	ItemSocketMesh->SetupAttachment(GetMesh(), FName("ItemSocket"));
+	ItemSocketMesh->SetCollisionProfileName(TEXT("NoCollision"));
+	ItemSocketMesh->SetGenerateOverlapEvents(true);
+	ItemSocketMesh->SetOwnerNoSee(true);
+	ItemSocketMesh->SetVisibility(false);
+	ItemSocketMesh->SetIsReplicated(true);
+	ItemSocketMesh->bHiddenInSceneCapture = true;
+
 	// SpringArm Component
 	SpringArmComponent = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArmComponent"));
 	SpringArmComponent->SetupAttachment(RootComponent);
@@ -48,37 +68,14 @@ AMainCharacter::AMainCharacter()
 	CameraComponent->SetupAttachment(SpringArmComponent);
 	CameraComponent->SetProjectionMode(ECameraProjectionMode::Perspective);
 
-	// MinimapIcon Component
-	//MinimapIconComponent = CreateDefaultSubobject<UTestMinimapIconComponent>(TEXT("MinimapPlayerIcon"));
-	//MinimapIconComponent->SetupAttachment(RootComponent);
-	//MinimapIconComponent->bVisibleInSceneCaptureOnly = true;
-	
-
-
 	// FPV Character Mesh
 	FPVMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("FirstPersonMesh"));
 	FPVMesh->SetupAttachment(CameraComponent);
+	FPVMesh->SetRelativeLocation(FVector(-10.0f, 0.0f, -160.0f));
+	FPVMesh->SetOwnerNoSee(false);
 	FPVMesh->SetOnlyOwnerSee(true);
 	FPVMesh->bCastDynamicShadow = false;
 	FPVMesh->CastShadow = false;
-
-	// Riding Character Mesh
-	//RidingMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("RidingMesh"));
-	//RidingMesh->SetupAttachment(GetMesh());
-	//RidingMesh->SetCollisionProfileName(TEXT("NoCollision"));
-	//RidingMesh->SetVisibility(false);
-	//RidingMesh->SetIsReplicated(true);
-	//RidingMesh->bHiddenInSceneCapture = true;
-
-	// 아이템 장착 소켓 초기화.
-	ItemSocketMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ItemSocketMesh"));
-	ItemSocketMesh->SetupAttachment(GetMesh(), FName("ItemSocket"));
-	ItemSocketMesh->SetCollisionProfileName(TEXT("NoCollision"));
-	ItemSocketMesh->SetGenerateOverlapEvents(true);
-	ItemSocketMesh->SetOwnerNoSee(true);
-	ItemSocketMesh->SetVisibility(false);
-	ItemSocketMesh->SetIsReplicated(true);
-	ItemSocketMesh->bHiddenInSceneCapture = true;
 
 	// 1인칭 아이템 장착 소켓 초기화.
 	FPVItemSocketMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("FPVItemSocketMesh"));
@@ -91,33 +88,36 @@ AMainCharacter::AMainCharacter()
 	FPVItemSocketMesh->bCastDynamicShadow = false;
 	FPVItemSocketMesh->CastShadow = false;
 
-	// Item Create Component
-	CreateItemComponent = CreateDefaultSubobject<USceneComponent>(TEXT("CreateItemComponent"));
-	CreateItemComponent->SetupAttachment(RootComponent);
-	CreateItemComponent->SetRelativeLocation(FVector(100.0, 0.0, -90.0));
-
 	// Map Item 
-	GetMapItemCollisonComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("GetMapItemCollisionComponent"));
-	GetMapItemCollisonComponent->SetupAttachment(RootComponent);
-	GetMapItemCollisonComponent->SetRelativeLocation(FVector(60.0, 0.0, -5.0f));
-	GetMapItemCollisonComponent->SetCollisionProfileName(FName("MapItemSearch"));
-	GetMapItemCollisonComponent->SetBoxExtent(FVector(40.0, 50.0, 80.0));
-
-	// Inventory
-	for (size_t i = 0; i < static_cast<size_t>(EPlayerPosture::Barehand); i++)
-	{
-		FPlayerItemInformation SlotBase;
-		SlotBase.Name = "";
-		SlotBase.ReloadMaxNum = -1;
-		SlotBase.ReloadLeftNum = -1;
-		ItemSlot.Push(SlotBase);
-		IsItemIn.Push(false);
-	}
+	GetMapItemCollisionComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("GetMapItemCollisionComponent"));
+	GetMapItemCollisionComponent->SetupAttachment(RootComponent);
+	GetMapItemCollisionComponent->SetRelativeLocation(FVector(60.0, 0.0, -5.0f));
+	GetMapItemCollisionComponent->SetBoxExtent(FVector(60.0f, 30.0f, 100.0f));
+	GetMapItemCollisionComponent->SetCollisionProfileName(FName("MapItemSearch"));
 
 	// Hand Attack Component
 	HandAttackComponent = CreateDefaultSubobject<USphereComponent>(TEXT("Hand Attack Comp"));
 	HandAttackComponent->SetupAttachment(GetMesh());
 	HandAttackComponent->SetRelativeLocation({ 0.0f, 100.0f, 120.0f });
+	HandAttackComponent->SetCollisionProfileName(TEXT("NoCollision"));
+
+	// MinimapIcon Component
+	MinimapIconComponent = CreateDefaultSubobject<UTestMinimapIconComponent>(TEXT("MinimapPlayerIcon"));
+	MinimapIconComponent->SetupAttachment(RootComponent);
+	MinimapIconComponent->bVisibleInSceneCaptureOnly = true;
+	
+	// HeadName Component
+	HeadNameComponent = CreateDefaultSubobject<UHeadNameWidgetComponent>(TEXT("HeadNameWidgetComponent"));
+	HeadNameComponent->SetupAttachment(RootComponent);
+	HeadNameComponent->SetOwnerNoSee(true);
+	HeadNameComponent->bHiddenInSceneCapture = true;
+
+	// Inventory
+	for (size_t i = 0; i < 4; i++)
+	{
+		FPlayerItemInformation NewSlot;
+		ItemSlot.Push(NewSlot);
+	}
 }
 
 void AMainCharacter::PostInitializeComponents() // FName 부분 수정 필요.
@@ -142,6 +142,11 @@ void AMainCharacter::PostInitializeComponents() // FName 부분 수정 필요.
 		USkeletalMesh* PlayerSkeletalMesh = MainGameInst->GetPlayerData(UIToSelectCharacter)->GetPlayerSkeletalMesh();
 		GetMesh()->SetSkeletalMesh(PlayerSkeletalMesh);
 
+
+		//USkeletalMesh* FPVSkeletalMesh = MainGameInst->GetPlayerData(FName("TestPlayer"))->GetPlayerFPVPlayerSkeletalMesh();
+		USkeletalMesh* FPVSkeletalMesh = MainGameInst->GetPlayerData(UIToSelectCharacter)->GetPlayerFPVPlayerSkeletalMesh();
+		FPVMesh->SetSkeletalMesh(FPVSkeletalMesh);
+
 		// ABP 선택
 		//UClass* AnimInst = Cast<UClass>(MainGameInst->GetPlayerData(FName("TestPlayer"))->GetPlayerAnimInstance());
 		UClass* AnimInst = Cast<UClass>(MainGameInst->GetPlayerData(UIToSelectCharacter)->GetPlayerAnimInstance());
@@ -150,6 +155,7 @@ void AMainCharacter::PostInitializeComponents() // FName 부분 수정 필요.
 
 	Super::PostInitializeComponents();
 
+	// 리로드 위젯
 	if (nullptr != Reload_Widget)
 	{
 		Reload_Widget->AddToViewport();
@@ -162,14 +168,20 @@ void AMainCharacter::BeginPlay()
 {
 	NetCheck();
 	Super::BeginPlay();
+
 	UMainGameBlueprintFunctionLibrary::PushActor(EObjectType::Player, this);
+
+	// PlayerState 초기화
+	SettingPlayerState();
 
 	PlayerAnimInst = Cast<UPlayerAnimInstance>(GetMesh()->GetAnimInstance());
 	FPVPlayerAnimInst = Cast<UPlayerAnimInstance>(FPVMesh->GetAnimInstance());
 
-	HandAttackComponent->SetCollisionProfileName(TEXT("NoCollision"));
+	// GetMapItemCollision Component에 대한 함수 Bind
+	GetMapItemCollisionComponent->OnComponentBeginOverlap.AddDynamic(this, &AMainCharacter::MapItemOverlapStart);
+	GetMapItemCollisionComponent->OnComponentEndOverlap.AddDynamic(this, &AMainCharacter::MapItemOverlapEnd);
 
-	SettingPlayerState();
+	ChangeMontage(EPlayerUpperState::UArm_Idle);
 }
 
 void AMainCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -179,13 +191,19 @@ void AMainCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLi
 	// 하체 정보
 	DOREPLIFETIME(AMainCharacter, LowerStateValue);
 	// 플레이어 자세 유형.
-	DOREPLIFETIME(AMainCharacter, PostureValue);
 	DOREPLIFETIME(AMainCharacter, DirValue);
+	DOREPLIFETIME(AMainCharacter, IdleDefault);
 
 	DOREPLIFETIME(AMainCharacter, Token);
-	DOREPLIFETIME(AMainCharacter, IsFaint);
+	//DOREPLIFETIME(AMainCharacter, IsFaint);
 
-	DOREPLIFETIME(AMainCharacter, UIToSelectCharacter);
+	DOREPLIFETIME(AMainCharacter, UIToSelectCharacter); // Test
+}
+
+void AMainCharacter::AnimationEnd()
+{
+	PlayerAnimInst->ChangeAnimation(IdleDefault);
+	FPVPlayerAnimInst->ChangeAnimation(IdleDefault);
 }
 
 // Called every frame
@@ -203,52 +221,6 @@ void AMainCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 
 }
 
-void AMainCharacter::ChangePosture_Implementation(EPlayerPosture _Type)
-{
-	// Bomb, Drink 상태인 경우 자세를 변경할 수 없도록 수정.
-	if (_Type == EPlayerPosture::Bomb || _Type == EPlayerPosture::Drink)
-	{
-		return;
-	}
-	else if (_Type == EPlayerPosture::Barehand) // 맨손 자세로 변경.
-	{
-		PostureValue = _Type;
-		CurItemIndex = -1;
-
-		ItemSocketMesh->SetVisibility(false);
-		FPVItemSocketMesh->SetVisibility(false);
-	}
-	else // 무기를 든 자세로 변경.
-	{
-		int ItemSlotIndex = static_cast<int>(_Type);
-		if (IsItemIn[ItemSlotIndex] == false)
-		{
-			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("The item slot is empty."));
-			return;
-		}
-		PostureValue = _Type;
-		CurItemIndex = ItemSlotIndex;
-
-		// 아이템 static mesh 세팅
-		ItemSocketMesh->SetStaticMesh(ItemSlot[CurItemIndex].MeshRes);
-		FPVItemSocketMesh->SetStaticMesh(ItemSlot[CurItemIndex].MeshRes);
-
-		// 아이템 메시 transform 세팅
-		ItemSocketMesh->SetRelativeLocation(ItemSlot[CurItemIndex].RelLoc);
-		FPVItemSocketMesh->SetRelativeLocation(ItemSlot[CurItemIndex].RelLoc);
-
-		ItemSocketMesh->SetRelativeRotation(ItemSlot[CurItemIndex].RelRot);
-		FPVItemSocketMesh->SetRelativeRotation(ItemSlot[CurItemIndex].RelRot);
-
-		ItemSocketMesh->SetRelativeScale3D(ItemSlot[CurItemIndex].RelScale);
-		FPVItemSocketMesh->SetRelativeScale3D(ItemSlot[CurItemIndex].RelScale);
-
-		// 아이템 메시 visibility 켜기
-		ItemSocketMesh->SetVisibility(true);
-		FPVItemSocketMesh->SetVisibility(true);
-	}
-}
-
 void AMainCharacter::ChangeLowerState_Implementation(EPlayerLowerState _LowerState)
 {
 	LowerStateValue = _LowerState;
@@ -256,144 +228,185 @@ void AMainCharacter::ChangeLowerState_Implementation(EPlayerLowerState _LowerSta
 
 void AMainCharacter::ChangePlayerDir_Implementation(EPlayerMoveDir _Dir)
 {
+	if (IdleDefault == EPlayerUpperState::UArm_Idle)
+	{
+		switch (_Dir)
+		{
+		case EPlayerMoveDir::Forward:
+			ChangeMontage(EPlayerUpperState::MoveForward);
+			break;
+		case EPlayerMoveDir::Back:
+			ChangeMontage(EPlayerUpperState::MoveBack);
+			break;
+		case EPlayerMoveDir::Left:
+			ChangeMontage(EPlayerUpperState::MoveLeft);
+			break;
+		case EPlayerMoveDir::Right:
+			ChangeMontage(EPlayerUpperState::MoveRight);
+			break;
+		default:
+			break;
+		}
+	}
+
 	DirValue = _Dir;
 }
 
-void AMainCharacter::PickUpItem_Implementation()
+void AMainCharacter::DestroyItem_Implementation(AItemBase* _Item)
 {
-	// 맵에 Actor가 있다면 해당 Actor의 Tag를 가져온다.
-	FString TagName = "";
-	for (size_t i = 0; i < GetMapItemData->Tags.Num(); i++) // 불안한 곳.(약속 깨지면 터짐)
+	// 필드에서 얻은 아이템 Destroy
+	_Item->Destroy();
+}
+
+void AMainCharacter::SetItemSocketVisibility_Implementation(bool _Visibility)
+{
+	ItemSocketMesh->SetVisibility(_Visibility);
+	FPVItemSocketMesh->SetVisibility(_Visibility);
+}
+
+void AMainCharacter::SetItemSocketMesh_Implementation(UStaticMesh* _ItemMeshRes, FVector _ItemRelLoc, FRotator _ItemRelRot, FVector _ItemRelScale)
+{
+	// static mesh 세팅
+	ItemSocketMesh->SetStaticMesh(_ItemMeshRes);
+	FPVItemSocketMesh->SetStaticMesh(_ItemMeshRes);
+
+	// transform 세팅
+	ItemSocketMesh->SetRelativeLocation(_ItemRelLoc);
+	FPVItemSocketMesh->SetRelativeLocation(_ItemRelLoc);
+
+	ItemSocketMesh->SetRelativeRotation(_ItemRelRot);
+	FPVItemSocketMesh->SetRelativeRotation(_ItemRelRot);
+
+	ItemSocketMesh->SetRelativeScale3D(_ItemRelScale);
+	FPVItemSocketMesh->SetRelativeScale3D(_ItemRelScale);
+}
+
+void AMainCharacter::SettingItemSocket(int _InputKey)
+{
+	if (-1 == _InputKey)
 	{
-		TagName = GetMapItemData->Tags[i].ToString();
+		// ItemSocket의 Visibility 끄기
+		SetItemSocketVisibility(false);
+		return;
 	}
 
-	FName ItemStringToName = FName(*TagName);
+	UStaticMesh* ItemMeshRes = ItemSlot[_InputKey].MeshRes;
+	FVector ItemRelLoc = ItemSlot[_InputKey].RelLoc;
+	FRotator ItemRelRot = ItemSlot[_InputKey].RelRot;
+	FVector ItemRelScale = ItemSlot[_InputKey].RelScale;
 
-	//{
-	//	// 버리기 키가 없을 때를 가정.
-	//	if (false == IsItemIn[static_cast<int>(EPlayerPosture::Rifle1)])
-	//	{
-	//		// 1번 슬롯이 비어있는 경우.
-	//		ItemSetting(ItemStringToName, false);
-	//	}
-	//	else if (true == IsItemIn[static_cast<int>(EPlayerPosture::Rifle1)] && false == IsItemIn[static_cast<int>(EPlayerPosture::Rifle2)])
-	//	{
-	//		// 1번 슬롯이 있고 2번 슬롯이 비어있는 경우.
-	//		ItemSetting(ItemStringToName, true);
-	//	}
-	//	else
-	//	{
-	//		// 1, 2번 슬롯이 비어있지 않는 경우.
-	//		if (PostureValue == EPlayerPosture::Rifle1)
-	//		{
-	//			DropItem();
-	//			DeleteItem(static_cast<int>(EPlayerPosture::Rifle1));
-	//			ItemSetting(ItemStringToName, false);
-	//		}
-	//		else if (PostureValue == EPlayerPosture::Rifle2)
-	//		{
-	//			DropItem();
-	//			DeleteItem(static_cast<int>(EPlayerPosture::Rifle2));
-	//			ItemSetting(ItemStringToName, true);
-	//		}
-	//	}
-	//}
+	// ItemSocket의 static mesh 세팅
+	SetItemSocketMesh(ItemMeshRes, ItemRelLoc, ItemRelRot, ItemRelScale);
 
-	// 주은 무기 삭제.
-	GetMapItemData->Destroy();
+	// ItemSocket의 visibility 켜기
+	SetItemSocketVisibility(true);
+}
+
+void AMainCharacter::SpawnItem_Implementation(FName _ItemName, FTransform _SpawnTrans)
+{
+	// 스폰할 아이템 정보 가져오기
+	UMainGameInstance* MainGameInst = UMainGameBlueprintFunctionLibrary::GetMainGameInstance(GetWorld());
+	const FItemDataRow* ItemData = MainGameInst->GetItemData(_ItemName);
+
+	// 필드에 아이템 Spawn
+	AItemBase* DropItem = GetWorld()->SpawnActor<AItemBase>(ItemData->GetItemUClass(), _SpawnTrans);
+	UStaticMeshComponent* DropItemMeshComp = Cast<AItemBase>(DropItem)->GetStaticMeshComponent();
+	DropItemMeshComp->SetSimulatePhysics(true);
+}
+
+void AMainCharacter::PickUpItem(AItemBase* _Item)
+{
+	const FItemDataRow* ItemData = _Item->GetItemData();
+	EItemType ItemType = ItemData->GetItemType();
+	int ItemSlotIndex = static_cast<int>(ItemType);
+	FName ItemName = *(ItemData->GetName());
+
+	// 이미 같은 이름을 가진 아이템이 인벤토리에 있을 경우 return
+	if (ItemName == ItemSlot[ItemSlotIndex].Name)
+	{
+		return;
+	}
+
+	// 이미 같은 타입의 아이템이 인벤토리에 있을 경우 가지고 있던 아이템을 Drop
+	if (true == ItemSlot[ItemSlotIndex].IsItemIn)
+	{
+		//DropItem(ItemSlotIndex);
+	}
+
+	// 인벤토리에 PickUp한 아이템 정보 넣기
+	ItemSlot[ItemSlotIndex].IsItemIn = true;
+	ItemSlot[ItemSlotIndex].Name = ItemName;
+	ItemSlot[ItemSlotIndex].ReloadMaxNum = ItemData->GetReloadNum();		// 무기 장전 단위	 (Max) (-1일 경우 총기류 무기가 아님)
+	ItemSlot[ItemSlotIndex].ReloadLeftNum = ItemData->GetReloadNum();		// 무기 장전 단위	 (Left) (-1일 경우 총기류 무기가 아님)
+	ItemSlot[ItemSlotIndex].Damage = ItemData->GetDamage();					// 무기 공격력 (0일 경우 무기가 아님)
+	ItemSlot[ItemSlotIndex].MeshRes = ItemData->GetResMesh();				// 스태틱 메시 리소스
+	ItemSlot[ItemSlotIndex].RelLoc = ItemData->GetRelLoc();					// ItemSocket, FPVItemSocket 상대적 위치
+	ItemSlot[ItemSlotIndex].RelRot = ItemData->GetRelRot();					// ItemSocket, FPVItemSocket 상대적 회전
+	ItemSlot[ItemSlotIndex].RelScale = ItemData->GetRelScale();				// ItemSocket, FPVItemSocket 상대적 크기
+	
+	// 필드에 존재하는 아이템 액터 삭제
+	DestroyItem(_Item);
+
+	// Change 애니메이션
+	{
+		if (ItemType == EItemType::Rifle)
+		{
+			IdleDefault = EPlayerUpperState::Rifle_Idle;
+		}
+		else if (ItemType == EItemType::Melee)
+		{
+			IdleDefault = EPlayerUpperState::Melee_Idle;
+		}
+		SettingItemSocket(static_cast<int>(ItemType));
+		ChangeMontage(IdleDefault);
+	}
 
 	// To Controller -> To Widget
-	AMainPlayerController* Con = Cast<AMainPlayerController>(GetController());
-	if (nullptr != Con)
-	{
-		Con->FGetItemToWidget.Execute();
-	}
+	//AMainPlayerController* Con = Cast<AMainPlayerController>(GetController());
+	//if (nullptr != Con)
+	//{
+	//	Con->FGetItemToWidget.Execute();
+	//}
 }
 
-void AMainCharacter::ItemSetting(FName _TagName, bool _InNextSlotToItem)
+void AMainCharacter::DropItem(int _SlotIndex)
 {
-	// ItemName에 맞는 아이템 정보를 DT에서 가져온다.
-	UMainGameInstance* Inst = GetGameInstance<UMainGameInstance>();
-	const FItemDataRow* ItemData = Inst->GetItemData(_TagName);
-	EPlayerUpperState ItemType = ItemData->GetType();
+	CurItemIndex = 0;
 
-	// Data Table에 있는 아이템 정보 가져오기.
-	int ItemReloadNum = ItemData->GetReloadNum();		// 무기 장전 단위 (30, 40)	// -1일 경우 총기류 무기가 아님
-	int ItemDamage = ItemData->GetDamage();				// 무기 공격력				// 0일 경우 무기가 아님
-	UStaticMesh* ItemMeshRes = ItemData->GetResMesh();	// 스태틱 메시 리소스
-	FVector ItemRelLoc = ItemData->GetRelLoc();			// 스태틱 메시 컴포넌트 상대적 위치
-	FRotator ItemRelRot = ItemData->GetRelRot();		// 스태틱 메시 컴포넌트 상대적 회
-	FVector ItemRelScale = ItemData->GetRelScale();		// 스태틱 메시 컴포넌트 상대적 크기
-
-	uint8 ItemIndex = static_cast<uint8>(ItemType);		// 아이템을 넣을 인벤토리 인덱스
-	if (true == _InNextSlotToItem)
-	{
-		ItemIndex += 1;
-	}
-	IsItemIn[ItemIndex] = true;
-
-	ItemSlot[ItemIndex].Name = _TagName;
-	ItemSlot[ItemIndex].ReloadMaxNum = ItemReloadNum;
-	ItemSlot[ItemIndex].ReloadLeftNum = ItemReloadNum;
-	ItemSlot[ItemIndex].Damage = ItemDamage;
-	ItemSlot[ItemIndex].MeshRes = ItemMeshRes;
-	ItemSlot[ItemIndex].RelLoc = ItemRelLoc;
-	ItemSlot[ItemIndex].RelRot = ItemRelRot;
-	ItemSlot[ItemIndex].RelScale = ItemRelScale;
-
-	// 무기 Type에 따른 애니메이션 변화 함수 호출.
-	if (true == _InNextSlotToItem)
-	{
-		ChangePosture(EPlayerPosture::Rifle2);
-	}
-	else
-	{
-		ChangePosture(EPlayerPosture::Rifle1);
-	}
-}
-
-void AMainCharacter::DropItem_Implementation()
-{
 	// DropItem 할 수 없는 경우 1: 맨손일 때
 	if (CurItemIndex == -1)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, FString::Printf(TEXT("There's no item to drop. (Current posture is 'Barehand')")));
+#ifdef WITH_EDITOR
+		GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Yellow, FString(TEXT("There's no item to drop. (Current posture is 'Barehand')")));
+#endif // WITH_EDITOR
 		return;
 	}
 
 	// DropItem 할 수 없는 경우 2: (그럴리는 없겠지만) 현재 Posture에 해당하는 무기가 인벤토리에 없을 때
-	if (IsItemIn[CurItemIndex] == false)
+	if (false == ItemSlot[CurItemIndex].IsItemIn)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, FString::Printf(TEXT("There's no item to drop. (The item slot is empty)")));
+#ifdef WITH_EDITOR
+		GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Yellow, FString(TEXT("There's no item to drop. (The item slot is empty)")));
+#endif // WITH_EDITOR
 		return;
 	}
 
 	// 떨어트릴 아이템을 Actor로 생성
-	FName ItemName = ItemSlot[CurItemIndex].Name;
-	UMainGameInstance* MainGameInst = UMainGameBlueprintFunctionLibrary::GetMainGameInstance(GetWorld());
-	const FItemDataRow* ItemBase = MainGameInst->GetItemData(ItemName);
-	FTransform BoneTrans = GetMesh()->GetBoneTransform(FName("RightHand"), ERelativeTransformSpace::RTS_World);
-	GetWorld()->SpawnActor<AActor>(ItemBase->GetItemUClass(), BoneTrans);
+	FName ItemName = ItemSlot[_SlotIndex].Name;
+	FTransform SpawnTrans = GetActorTransform();
+	SpawnTrans.SetTranslation(GetActorLocation() + (GetActorForwardVector() * 100.0f) + (GetActorUpVector() * 50.0f));
 
-	// 손에 들고 있던 아이템을 인벤토리에서 삭제
-	FPlayerItemInformation NewSlot;
-	ItemSlot[CurItemIndex] = NewSlot;
-	IsItemIn[CurItemIndex] = false;
+	SpawnItem(ItemName, SpawnTrans);
+
 
 	// 자세를 맨손으로 변경
-	ChangePosture(EPlayerPosture::Barehand);
+	ChangeMontage(IdleDefault);
 }
 
-void AMainCharacter::FireRayCast_Implementation(float _DeltaTime)
+void AMainCharacter::FireRayCast_Implementation()
 {
-	if (CurItemIndex == -1 || CurItemIndex == 2 || CurItemIndex == 5)
+	if (CurItemIndex == -1 || CurItemIndex == 2)
 	{
-		// 주먹, 근거리
-		if (PostureValue == EPlayerPosture::Barehand || PostureValue == EPlayerPosture::Melee)
-		{
-			ChangeMontage();
-		}
 		return;
 	}
 
@@ -409,7 +422,7 @@ void AMainCharacter::FireRayCast_Implementation(float _DeltaTime)
 
 	AMainPlayerController* Con = Cast<AMainPlayerController>(GetController());
 	FVector Start = GetMesh()->GetSocketLocation(FName("MuzzleSocket"));
-	Start.Z -= 20.0f;
+	//Start.Z -= 20.0f;
 	FVector End = (Con->GetControlRotation().Vector() * 2000.0f) + Start;
 	
 	FHitResult Hit;
@@ -437,92 +450,32 @@ void AMainCharacter::FireRayCast_Implementation(float _DeltaTime)
 			{
 				BossMonster->Damaged(ItemSlot[CurItemIndex].Damage);
 			}
+
+			AKrakenProjectile* Kraken = Cast<AKrakenProjectile>(Hit.GetActor());
+			if (nullptr != Kraken)
+			{
+				Kraken->Damaged(150.0f);
+			}
 		}
 	}
 }
 
-void AMainCharacter::ChangeMontage_Implementation(bool _IsFireEnd)
+void AMainCharacter::ChangeMontage_Implementation(EPlayerUpperState _UpperState, bool IsSet)
 {
-	if (_IsFireEnd == false)
+	if (true == IsSet)
 	{
-		switch (PostureValue)
-		{
-		case EPlayerPosture::Rifle1:
-			UpperStateValue = EPlayerUpperState::Rifle_Attack;
-			break;
-		case EPlayerPosture::Rifle2:
-			UpperStateValue = EPlayerUpperState::Rifle_Attack;
-			break;
-		case EPlayerPosture::Melee:
-			UpperStateValue = EPlayerUpperState::Melee_Attack;
-			break;
-		case EPlayerPosture::Drink:
-			UpperStateValue = EPlayerUpperState::Drink;
-			break;
-		case EPlayerPosture::Bomb:
-			UpperStateValue = EPlayerUpperState::Bomb;
-			break;
-		case EPlayerPosture::Barehand:
-			UpperStateValue = EPlayerUpperState::UArm_Attack;
-			break;
-		case EPlayerPosture::SlotMax:
-			break;
-		default:
-			break;
-		}
-		PlayerAnimInst->ChangeAnimation(UpperStateValue);
-		FPVPlayerAnimInst->ChangeAnimation(UpperStateValue);
-		
-		ClientChangeMontage(false);
+		IdleDefault = _UpperState;
 	}
-	else
-	{
-		UpperStateValue = EPlayerUpperState::Rifle_Idle;
-		PlayerAnimInst->ChangeAnimation(UpperStateValue);
-		FPVPlayerAnimInst->ChangeAnimation(UpperStateValue);
-		
-		ClientChangeMontage(true);
-	}
+
+	PlayerAnimInst->ChangeAnimation(_UpperState);
+	FPVPlayerAnimInst->ChangeAnimation(_UpperState);
+	ClientChangeMontage(_UpperState);
 }
 
-void AMainCharacter::ClientChangeMontage_Implementation(bool _IsFireEnd)
+void AMainCharacter::ClientChangeMontage_Implementation(EPlayerUpperState _UpperState)
 {
-	if (_IsFireEnd == false)
-	{
-		switch (PostureValue)
-		{
-		case EPlayerPosture::Rifle1:
-			UpperStateValue = EPlayerUpperState::Rifle_Attack;
-			break;
-		case EPlayerPosture::Rifle2:
-			UpperStateValue = EPlayerUpperState::Rifle_Attack;
-			break;
-		case EPlayerPosture::Melee:
-			UpperStateValue = EPlayerUpperState::Melee_Attack;
-			break;
-		case EPlayerPosture::Drink:
-			UpperStateValue = EPlayerUpperState::Drink;
-			break;
-		case EPlayerPosture::Bomb:
-			UpperStateValue = EPlayerUpperState::Bomb;
-			break;
-		case EPlayerPosture::Barehand:
-			UpperStateValue = EPlayerUpperState::UArm_Attack;
-			break;
-		case EPlayerPosture::SlotMax:
-			break;
-		default:
-			break;
-		}
-		PlayerAnimInst->ChangeAnimation(UpperStateValue);
-		FPVPlayerAnimInst->ChangeAnimation(UpperStateValue);
-	}
-	else // FireEnd
-	{
-		UpperStateValue = EPlayerUpperState::Rifle_Idle;
-		PlayerAnimInst->ChangeAnimation(UpperStateValue);
-		FPVPlayerAnimInst->ChangeAnimation(UpperStateValue);
-	}
+	PlayerAnimInst->ChangeAnimation(_UpperState);
+	FPVPlayerAnimInst->ChangeAnimation(_UpperState);
 }
 
 void AMainCharacter::SettingPlayerState_Implementation()
@@ -546,15 +499,31 @@ void AMainCharacter::SettingPlayerState_Implementation()
 
 void AMainCharacter::CrouchCameraMove()
 {
-	if (IsFPV)
+	if (PointOfView == EPlayerFPSTPSState::FPS)
 	{
 		switch (LowerStateValue)
 		{
 		case EPlayerLowerState::Idle:
 			SpringArmComponent->SetRelativeLocation(FPVCameraRelLoc_Crouch);
+			ChangeLowerState(EPlayerLowerState::Crouch);
 			break;
 		case EPlayerLowerState::Crouch:
 			SpringArmComponent->SetRelativeLocation(FPVCameraRelLoc);
+			ChangeLowerState(EPlayerLowerState::Idle);
+			break;
+		default:
+			break;
+		}
+	}
+	else if (PointOfView == EPlayerFPSTPSState::TPS)
+	{
+		switch (LowerStateValue)
+		{
+		case EPlayerLowerState::Idle:
+			ChangeLowerState(EPlayerLowerState::Crouch);
+			break;
+		case EPlayerLowerState::Crouch:
+			ChangeLowerState(EPlayerLowerState::Idle);
 			break;
 		default:
 			break;
@@ -562,17 +531,56 @@ void AMainCharacter::CrouchCameraMove()
 	}
 }
 
-void AMainCharacter::MapItemOverlapStart(AActor* _OtherActor, UPrimitiveComponent* _Collision)
+void AMainCharacter::MapItemOverlapStart(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	GetMapItemData = _OtherActor;
+	GetMapItemData = OtherActor;
+
+	AMainPlayerController* MyController = Cast<AMainPlayerController>(GetController());
+	if (nullptr == MyController)
+	{
+		return;
+	}
+
+	AMainGameHUD* PlayHUD = Cast<AMainGameHUD>(MyController->GetHUD());
+	if (nullptr == PlayHUD)
+	{
+		return;
+	}
+
+	AAreaObject* AreaObject = Cast<AAreaObject>(GetMapItemData);
+	if (nullptr != AreaObject)
+	{
+		// Area일 경우 => "5번키를 눌러 상호작용"
+		PlayHUD->UIOn(EUserWidgetType::Num5_Key);
+		return;
+	}
+
+	// 그 외의 경우 => "E키를 눌러 상호작용"
+	PlayHUD->UIOn(EUserWidgetType::E_Key);
 }
 
-void AMainCharacter::MapItemOverlapEnd()
+void AMainCharacter::MapItemOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
 	if (nullptr != GetMapItemData)
 	{
 		GetMapItemData = nullptr;
 	}
+
+	AMainPlayerController* MyController = Cast<AMainPlayerController>(GetController());
+	if (nullptr == MyController)
+	{
+		return;
+	}
+
+	AMainGameHUD* PlayHUD = Cast<AMainGameHUD>(MyController->GetHUD());
+	if (nullptr == PlayHUD)
+	{
+		return;
+	}
+
+	// 켜져 있는 상호작용 관련 UI 모두 끄기
+	PlayHUD->UIOff(EUserWidgetType::Num5_Key);
+	PlayHUD->UIOff(EUserWidgetType::E_Key);
 }
 
 void AMainCharacter::UpdatePlayerHp(float _DeltaTime)
@@ -592,8 +600,8 @@ void AMainCharacter::UpdatePlayerHp(float _DeltaTime)
 	float GetHp = MyMainPlayerState->GetPlayerHp();
 
 	// Get HUD
-	// AMainPlayHUD PlayHUD = Cast<AMainPlayHUD>(MyController->GetHUD());
-	// if(nullptr == )
+	AMainGameHUD* PlayHUD = Cast<AMainGameHUD>(MyController->GetHUD());
+	// if(nullptr != PlayHUD)
 	// {
 	//     UHpBarUserWidget* MyHpWidget = Cast<UHpBarUserWidget>(PlayHUD->GetWidget(EInGameUIType::HpBar));
 	//     MyHpWidget->NickNameUpdate(Token, FText::FromString(FString("")));
@@ -606,21 +614,58 @@ void AMainCharacter::CheckItem()
 	// 맵에 아이템이 없을 경우.
 	if (nullptr == GetMapItemData)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, TEXT("There is no item to check."));
 		return;
 	}
 
-	AMapObjectBase* GetMapItem = Cast<AMapObjectBase>(GetMapItemData);
-	if (nullptr != GetMapItem)
+	AMapObjectBase* GetMapObject = Cast<AMapObjectBase>(GetMapItemData);
+	if (nullptr != GetMapObject)
 	{
 		// 1. 맵오브젝트일 경우
-		InteractObject(GetMapItem);
+		InteractObject(GetMapObject);
 	}
 	else
 	{
 		// 2. 주울 수 있는 아이템일 경우
-		PickUpItem();
+		AItemBase* GetMapItem = Cast<AItemBase>(GetMapItemData);
+		if (nullptr != GetMapItem)
+		{
+			PickUpItem(GetMapItem);
+		}
 	}
+}
+
+void AMainCharacter::AttackCheck()
+{
+	switch (IdleDefault)
+	{
+	case EPlayerUpperState::UArm_Idle:
+		ChangeMontage(EPlayerUpperState::UArm_Attack);
+		break;
+	case EPlayerUpperState::Rifle_Idle:
+		ChangeMontage(EPlayerUpperState::Rifle_Attack);
+		// FireRayCast();
+		break;
+	case EPlayerUpperState::Melee_Idle:
+		ChangeMontage(EPlayerUpperState::Melee_Attack);
+		break;
+	default:
+		break;
+	}
+}
+
+void AMainCharacter::Drink()
+{
+	// 음료 체크
+	if (false == IsItemInItemSlot(static_cast<int>(EItemType::Drink)))
+	{
+		return;
+	}
+
+	// 음료가 있음!
+	SettingItemSocket(static_cast<int>(EItemType::Drink));
+
+	// 애니메이션 실행.
+	ChangeMontage(EPlayerUpperState::Drink);
 }
 
 void AMainCharacter::DeleteItem(int _Index)
@@ -656,24 +701,101 @@ void AMainCharacter::ChangeIsFaint_Implementation()
 
 void AMainCharacter::InteractObject_Implementation(AMapObjectBase* _MapObject)
 {
-	// 그 외 맵오브젝트(Switch 등)일 경우 : 상호작용 발동
-	if (nullptr != _MapObject)
+	// Door일 경우 : 상호작용은 Switch가 발동시키므로 return
+	ADoorObject* DoorObject = Cast<ADoorObject>(_MapObject);
+	if (nullptr != DoorObject)
 	{
-		_MapObject->InterAction();
-
-		ABomb* GetSampleData = Cast<ABomb>(_MapObject);
-		if (nullptr != GetSampleData)
-		{
-			for (size_t i = 0; i < GetSampleData->Tags.Num(); i++)
-			{
-				FName GetItemTag = GetSampleData->Tags[i];
-				if ("Sample" == GetItemTag)
-				{
-					GetSampleData->CharacterToDestroy();
-				}
-			}
-		}
 		return;
+	}
+
+	// Area일 경우 : 상호작용은 플레이어쪽에서 처리해야 하므로 return
+	AAreaObject* AreaObject = Cast<AAreaObject>(_MapObject);
+	if (nullptr != AreaObject)
+	{
+		return;
+	}
+
+	// 그 외 맵오브젝트(Switch 등)일 경우 : 상호작용 발동
+	_MapObject->InterAction();
+}
+
+void AMainCharacter::BombSetStart_Implementation()
+{
+	// 폭탄 아이템 체크
+	if (false == ItemSlot[static_cast<int>(EItemType::Bomb)].IsItemIn)
+	{
+		return;
+	}
+
+	// 폭탄 설치 가능한 Area 체크
+	AAreaObject* AreaObject = Cast<AAreaObject>(GetMapItemData);
+	if (nullptr == AreaObject)
+	{
+		return;
+	}
+
+	// 폭탄 설치 가능.
+	IsBombSetting = true;
+	AreaObject->ResetBombTime();
+	ChangeMontage(EPlayerUpperState::Bomb);
+}
+
+void AMainCharacter::BombSetTick_Implementation()
+{
+	if (true == IsBombSetting)
+	{
+		// 폭탄 설치 가능한 Area 체크
+		AAreaObject* AreaObject = Cast<AAreaObject>(GetMapItemData);
+		if (nullptr == AreaObject)
+		{
+			return;
+		}
+
+		// 설치 시간 카운트가 끝났을 경우
+		if (0 >= AreaObject->GetInstallBombTime())
+		{
+			BombSetEnd();
+		}
+
+		// 설치 시간 카운팅
+		AreaObject->InstallBomb(GetWorld()->GetDeltaSeconds());
+	}
+}
+
+void AMainCharacter::BombSetCancel_Implementation()
+{
+	if (true == IsBombSetting)
+	{
+		IsBombSetting = false;
+		AAreaObject* AreaObject = Cast<AAreaObject>(GetMapItemData);
+		if (nullptr != AreaObject)
+		{
+			AreaObject->ResetBombTime();
+		}
+
+		// 이전 자세로 애니메이션 변경
+		ChangeMontage(IdleDefault);
+	}
+}
+
+void AMainCharacter::BombSetEnd_Implementation()
+{
+	if (true == IsBombSetting)
+	{
+		// 폭탄 설치 완료
+		IsBombSetting = false;
+
+		AAreaObject* AreaObject = Cast<AAreaObject>(GetMapItemData);
+		if (nullptr != AreaObject)
+		{
+			AreaObject->InterAction();
+		}
+
+		// 인벤토리에서 폭탄 아이템 삭제
+		DeleteItemInfo(static_cast<int>(EItemType::Bomb));
+
+		// 이전 자세로 애니메이션 변경
+		ChangeMontage(IdleDefault);
 	}
 }
 
@@ -682,9 +804,20 @@ void AMainCharacter::GetSetSelectCharacter_Implementation(UMainGameInstance* _Ma
 	UIToSelectCharacter = _MainGameInstance->GetUIToSelectCharacter();
 }
 
+void AMainCharacter::DeleteItemInfo(int _Index)
+{
+	FPlayerItemInformation DeleteSlot;
+	ItemSlot[_Index] = DeleteSlot;
+}
+
+bool AMainCharacter::IsItemInItemSlot(int _Index)
+{
+	return ItemSlot[_Index].IsItemIn;
+}
+
 void AMainCharacter::ChangePOV()
 {
-	if (IsFPV)
+	if (PointOfView == EPlayerFPSTPSState::FPS)
 	{
 		// SpringArm 위치 수정
 		SpringArmComponent->TargetArmLength = 300.0f;
@@ -695,16 +828,16 @@ void AMainCharacter::ChangePOV()
 		FPVMesh->SetOwnerNoSee(true);
 
 		// Item Mesh
-		for (int i = 0; i < int(EPlayerPosture::Barehand); i++)
+		for (int i = 0; i < static_cast<int>(EPlayerUpperState::UArm_Attack); i++)
 		{
 			ItemSocketMesh->SetOwnerNoSee(false);
 			FPVItemSocketMesh->SetOwnerNoSee(true);
 		}
 
 		// 일인칭 -> 삼인칭
-		IsFPV = false;
+		PointOfView = EPlayerFPSTPSState::TPS;
 	}
-	else
+	else if (PointOfView == EPlayerFPSTPSState::TPS)
 	{
 		// SpringArm 위치 수정
 		SpringArmComponent->TargetArmLength = 0.0f;
@@ -720,19 +853,19 @@ void AMainCharacter::ChangePOV()
 			break;
 		}
 
-		// Character Mesh 전환
+		// Character Mesh 전환.
 		GetMesh()->SetOwnerNoSee(true);
 		FPVMesh->SetOwnerNoSee(false);
 
 		// Item Mesh
-		for (int i = 0; i < int(EPlayerPosture::Barehand); i++)
+		for (int i = 0; i < static_cast<int>(EPlayerUpperState::UArm_Attack); i++)
 		{
 			ItemSocketMesh->SetOwnerNoSee(true);
 			FPVItemSocketMesh->SetOwnerNoSee(false);
 		}
 
 		// 삼인칭 -> 일인칭
-		IsFPV = true;
+		PointOfView = EPlayerFPSTPSState::FPS;
 	}
 }
 
@@ -774,11 +907,14 @@ void AMainCharacter::HandAttackCollision(AActor* _OtherActor, UPrimitiveComponen
 			BossMonster->Damaged(50.0f);
 		}
 	}
-}
 
-void AMainCharacter::ChangeHandAttackCollisionProfile(FName _Name)
-{
-	HandAttackComponent->SetCollisionProfileName(_Name);
+	{
+		AKrakenProjectile* Rock = Cast<AKrakenProjectile>(_OtherActor);
+		if (nullptr != Rock)
+		{
+			Rock->Damaged(150.0f);
+		}
+	}
 }
 
 void AMainCharacter::NetCheck()
@@ -814,11 +950,13 @@ void AMainCharacter::SendTokenToHpBarWidget()
 	{
 		return;
 	}
-	//AMainPlayHUD* PlayHUD = Cast<ATestPlayHUD>(Con->GetHUD());
-	//if (nullptr == PlayHUD)
-	//{
-	//	return;
-	//}
+
+	AMainGameHUD* PlayHUD = Cast<AMainGameHUD>(Con->GetHUD());
+	if (nullptr == PlayHUD)
+	{
+		return;
+	}
+
 	//UTestHpBarUserWidget* MyHpWidget = Cast<UTestHpBarUserWidget>(PlayHUD->GetWidget(EUserWidgetType::HpBar));
 	//if (nullptr == MyHpWidget)
 	//{

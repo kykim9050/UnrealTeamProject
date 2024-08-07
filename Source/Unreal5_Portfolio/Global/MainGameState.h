@@ -53,16 +53,14 @@ public:
 	UActorGroup* GetActorGroup(uint8 _Index);
 
 	UFUNCTION(BlueprintCallable)
-	FORCEINLINE EGameStage GetCurStage() const
+	EGameStage GetCurStage()
 	{
 		return CurStage;
 	}
 
-	UFUNCTION()
-	FORCEINLINE void SetCurStage(EGameStage _Stage)
-	{
-		CurStage = _Stage;
-	}
+	UFUNCTION(Reliable, Server)
+	void SetCurStage(EGameStage _Stage);
+	void SetCurStage_Implementation(EGameStage _Stage);
 
 	/// <summary>
 	/// 현재 게임 진행 관련 체크 함수
@@ -129,6 +127,11 @@ public:
 
 	int GetQuestItemsNum();
 
+	/// <summary>
+	/// 시네마틱을 재생할 수 있는 TriggerBox를 생성하는 함수
+	/// </summary>
+	void SpawnTriggerBox(FVector _Pos, FRotator _Rot);
+
 protected:
 	AMainGameState();
 
@@ -190,4 +193,10 @@ private:
 	/// QuestItems의 Idx
 	/// </summary>
 	int QuestItemsIdx = 0;
+
+	/// <summary>
+	/// EndingTriggerBox의 위치, 회전값 변수
+	/// </summary>
+	FVector EndingTriggerBoxPos = FVector(-8820.0f, 87310.0f, -6980.0f);
+	FRotator EndingTriggerBoxRot = FRotator(0.0f, 0.0f, 0.0f);
 };

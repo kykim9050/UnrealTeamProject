@@ -6,10 +6,11 @@
 #include "GameFramework/Character.h"
 #include "Global/ContentsEnum.h"
 #include "Net/UnrealNetwork.h"
+#include "PartDevLevel/Character/ParentsCharacter.h"
 #include "MainCharacter.generated.h"
 
 UCLASS()
-class UNREAL5_PORTFOLIO_API AMainCharacter : public ACharacter
+class UNREAL5_PORTFOLIO_API AMainCharacter : public AParentsCharacter
 {
 	GENERATED_BODY()
 
@@ -29,6 +30,8 @@ protected:
 	
 	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
+	virtual void AnimationEnd() override;
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -45,55 +48,34 @@ public :
 	// 상체 정보
 	UPROPERTY(Category = "Contents", Replicated, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	EPlayerUpperState UpperStateValue = EPlayerUpperState::UArm_Idle;
-	
-	// 플레이어 자세 유형
-	UPROPERTY(Category = "Contents", Replicated, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	EPlayerPosture PostureValue = EPlayerPosture::Barehand;
-	
+		
 	// 캐릭터 방향 정보
 	UPROPERTY(Category = "Contents", Replicated, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	EPlayerMoveDir DirValue = EPlayerMoveDir::Forward;
 
+	UPROPERTY(Replicated, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	EPlayerUpperState IdleDefault = EPlayerUpperState::UArm_Idle;
+
 	// 캐릭터 기절 여부.
-	UPROPERTY(Category = "Contents", Replicated, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(Category = "Contents"/*, Replicated*/, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	bool IsFaint = false;
 
 private : // 문제 발생 여지 있음 발생하면 그냥 지워야 함.
 	// == Components ==
 	
 	// 스프링암
-	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-	class USpringArmComponent* SpringArmComponent = nullptr;
 	// 카메라
-	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-	class UCameraComponent* CameraComponent = nullptr;
 	// 일인칭 메시
-	UPROPERTY(Category = "Contents", VisibleDefaultsOnly)
-	USkeletalMeshComponent* FPVMesh = nullptr;
-	// 탈 것?
-	//UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-	//class UStaticMeshComponent* RidingMesh = nullptr;
 	// 미니맵 아이콘
-	//UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-	//class UTestMinimapIconComponent* MinimapIconComponent = nullptr;
 	// 맵에 있는 아이템 탐색 전용 콜리전
-	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-	class UBoxComponent* GetMapItemCollisonComponent = nullptr;
-	// 버리는 아이템 생성 위치
-	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-	class USceneComponent* CreateItemComponent = nullptr;
-
 	// 아이템 장착 소켓
-	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-	class UStaticMeshComponent* ItemSocketMesh = nullptr;
 	// 1인칭 아이템 장착 소켓
-	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-	class UStaticMeshComponent* FPVItemSocketMesh = nullptr;	// => 메인캐릭터로 이전해야 함 (새로 추가됨)
+	// 근접 공격에 사용
 
 		
 	// == 인칭 변경 변수 ==
 	UPROPERTY()
-	bool IsFPV = true;
+	EPlayerFPSTPSState PointOfView = EPlayerFPSTPSState::FPS;
 
 	// == Inventory ==
 	// 아이템 여부
@@ -106,6 +88,10 @@ private : // 문제 발생 여지 있음 발생하면 그냥 지워야 함.
 	UPROPERTY(VisibleAnywhere)
 	int CurItemIndex = -1;
 
+	// 폭탄 설치 진행 상황
+	UPROPERTY()
+	bool IsBombSetting = false;
+
 
 	// 맵에 있는 무기 Data
 	UPROPERTY(Category = "Contents", VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
@@ -116,21 +102,12 @@ private : // 문제 발생 여지 있음 발생하면 그냥 지워야 함.
 	class UPlayerAnimInstance* PlayerAnimInst = nullptr;
 	UPROPERTY()
 	class UPlayerAnimInstance* FPVPlayerAnimInst = nullptr;
-
-	// 근접 공격에 사용
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-	class USphereComponent* HandAttackComponent = nullptr;
-
+	
 	UPROPERTY(Replicated)
 	FName UIToSelectCharacter = "";
 
 	// == Server ==
 public :
-	// 상채 변경
-	UFUNCTION(Reliable, Server)
-	void ChangePosture(EPlayerPosture _Type);
-	void ChangePosture_Implementation(EPlayerPosture _Type);
-
 	// 하제 변경
 	UFUNCTION(Reliable, Server)
 	void ChangeLowerState(EPlayerLowerState _LowerState);
@@ -141,32 +118,18 @@ public :
 	void ChangePlayerDir(EPlayerMoveDir _Dir);
 	void ChangePlayerDir_Implementation(EPlayerMoveDir _Dir);
 
-	// 아이템 변경
-	UFUNCTION(Reliable, Server, BlueprintCallable)
-	void PickUpItem();
-	void PickUpItem_Implementation();
-
-	UFUNCTION(BlueprintCallable)
-	void ItemSetting(FName _TagName, bool _InNextSlotToItem);
-
-	// 아이템 생성 -> 드랍
-	UFUNCTION(Reliable, Server, BlueprintCallable)
-	void DropItem();
-	void DropItem_Implementation();
-
 	// Fire Ray Cast
 	UFUNCTION(Reliable, Server, BlueprintCallable)
-	void FireRayCast(float _DeltaTime);
-	void FireRayCast_Implementation(float _DeltaTime);
+	void FireRayCast();
+	void FireRayCast_Implementation();
 
-	// 공격 몽타주 서버
 	UFUNCTION(Reliable, Server)
-	void ChangeMontage(bool _IsFireEnd = false);
-	void ChangeMontage_Implementation(bool _IsFireEnd = false);
+	void ChangeMontage(EPlayerUpperState _UpperState, bool IsSet = false);
+	void ChangeMontage_Implementation(EPlayerUpperState _UpperState, bool IsSet = false);
 
 	UFUNCTION(Reliable, NetMulticast)
-	void ClientChangeMontage(bool _IsFireEnd = false);
-	void ClientChangeMontage_Implementation(bool _IsFireEnd = false);
+	void ClientChangeMontage(EPlayerUpperState _UpperState);
+	void ClientChangeMontage_Implementation(EPlayerUpperState _UpperState);
 
 	UFUNCTION(Reliable, Server)
 	void SettingPlayerState();
@@ -179,6 +142,19 @@ public :
 	UFUNCTION(Reliable, Server)
 	void InteractObject(AMapObjectBase* _MapObject);
 	void InteractObject_Implementation(AMapObjectBase* _MapObject);
+
+	UFUNCTION(Reliable, Server)
+	void BombSetStart();
+	void BombSetStart_Implementation();
+	UFUNCTION(Reliable, Server)
+	void BombSetTick();
+	void BombSetTick_Implementation();
+	UFUNCTION(Reliable, Server)
+	void BombSetCancel();
+	void BombSetCancel_Implementation();
+	UFUNCTION(Reliable, Server)
+	void BombSetEnd();
+	void BombSetEnd_Implementation();
 
 	/// <summary>
 	/// Crouch 에 대한 카메라 이동
@@ -193,10 +169,10 @@ private :
 	const FVector FPVCameraRelLoc_Crouch = FVector(10.0f, 0.0f, 10.0f);
 
 	UFUNCTION(BlueprintCallable)
-	void MapItemOverlapStart(AActor* _OtherActor, UPrimitiveComponent* _Collision);
+	void MapItemOverlapStart(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 	
 	UFUNCTION(BlueprintCallable)
-	void MapItemOverlapEnd();
+	void MapItemOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
 	UFUNCTION(BlueprintCallable)
 	void UpdatePlayerHp(float _DeltaTime);
@@ -207,6 +183,36 @@ private :
 	UFUNCTION(Reliable, Server, BlueprintCallable)
 	void GetSetSelectCharacter(class UMainGameInstance* _MainGameInstance);
 	void GetSetSelectCharacter_Implementation(class UMainGameInstance* _MainGameInstance);
+
+	UFUNCTION(Reliable, Server)
+	void DestroyItem(AItemBase* _Item);
+	void DestroyItem_Implementation(AItemBase* _Item);
+
+	UFUNCTION(Reliable, Server)
+	void SetItemSocketVisibility(bool _Visibility);
+	void SetItemSocketVisibility_Implementation(bool _Visibility);
+
+	UFUNCTION(Reliable, Server)
+	void SetItemSocketMesh(UStaticMesh* _ItemMeshRes, FVector _ItemRelLoc, FRotator _ItemRelRot, FVector _ItemRelScale);
+	void SetItemSocketMesh_Implementation(UStaticMesh* _ItemMeshRes, FVector _ItemRelLoc, FRotator _ItemRelRot, FVector _ItemRelScale);
+
+	UFUNCTION(Reliable, Server)
+	void SpawnItem(FName _ItemName, FTransform _SpawnTrans);
+	void SpawnItem_Implementation(FName _ItemName, FTransform _SpawnTrans);
+
+	// 아이템 변경
+	UFUNCTION(BlueprintCallable)
+	void PickUpItem(class AItemBase* _Item);
+
+	// 아이템 생성 -> 드랍
+	UFUNCTION(BlueprintCallable)
+	void DropItem(int _SlotIndex);
+
+	UFUNCTION()
+	void DeleteItemInfo(int _Index);
+
+	UFUNCTION()
+	bool IsItemInItemSlot(int _Index);
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	bool IsServer = false;
@@ -225,6 +231,21 @@ public :
 	UFUNCTION(BlueprintCallable)
 	void CheckItem();
 
+	UFUNCTION()
+	void AttackCheck();
+
+	UFUNCTION()
+	void Drink();
+
+	// 소켓에 아이템 설정.
+	UFUNCTION()
+	void SettingItemSocket(int _InputKey);
+
+	UFUNCTION()
+	FORCEINLINE EPlayerUpperState GetIdleDefault() const
+	{
+		return IdleDefault;
+	}
 
 public :
 	// == 인칭 변경 함수 ==
@@ -237,10 +258,6 @@ public :
 
 	UFUNCTION(BlueprintCallable)
 	void HandAttackCollision(AActor* _OtherActor, UPrimitiveComponent* _Collision);
-
-	// Notify State에서 호출.
-	UFUNCTION()
-	void ChangeHandAttackCollisionProfile(FName _Name);
 
 	UFUNCTION()
 	void NetCheck();

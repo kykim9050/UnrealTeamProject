@@ -6,11 +6,25 @@
 #include "Global/ContentsEnum.h"
 #include "Global/ContentsLog.h"
 #include "MainGameLevel/Player/MainCharacter.h"
+#include "MainGameLevel/Object/TriggerBox/TriggerBoxBase.h"
+#include "Global/MainGameBlueprintFunctionLibrary.h"
+#include "MainGameLevel/Player/PlayerItemInformation.h"
 
 // 추후 삭제 필요
 #include "TestLevel/Character/TestCharacter.h"
 
+void AMainGameState::SetCurStage_Implementation(EGameStage _Stage)
+{
+	EGameStage PrevStage = CurStage;
 
+	CurStage = _Stage;
+
+	if (EGameStage::MissionClear == CurStage
+	/*	&& EGameStage::Defensing == PrevStage*/)
+	{
+		SpawnTriggerBox(EndingTriggerBoxPos, EndingTriggerBoxRot);
+	}
+}
 
 int AMainGameState::GetQuestItemsNum()
 {
@@ -70,10 +84,6 @@ void AMainGameState::GameStateCheck_Implementation(AActor* _OtherActor)
 	{
 		return;
 	}
-
-	// 추후 MainCharacter로 변경 필요
-	ATestCharacter* Player = Cast<ATestCharacter>(_OtherActor);
-	//AMainCharacter* Player = Cast<AMainCharacter>(_OtherActor);
 
 	GameStateConditionUpdate(_OtherActor, true);
 
@@ -151,7 +161,6 @@ void AMainGameState::GameStateConditionUpdate(AActor* _OtherActor, bool _IsAdd)
 
 	if (nullptr == Player)
 	{
-		LOG(GlobalLog, Fatal, "if (nullptr == Player)");
 		return;
 	}
 
@@ -159,7 +168,7 @@ void AMainGameState::GameStateConditionUpdate(AActor* _OtherActor, bool _IsAdd)
 	{
 	case EGameStage::Init:
 	{
-		if (true == Player->IsItemIn[static_cast<int>(EPlayerPosture::Melee)])
+		if (true == Player->GetItemSlot()[static_cast<int>(EItemType::Melee)].IsItemIn)
 		{
 			if (true == _IsAdd)
 			{
@@ -174,7 +183,7 @@ void AMainGameState::GameStateConditionUpdate(AActor* _OtherActor, bool _IsAdd)
 	}
 	case EGameStage::VisitArmory:
 	{
-		if (true == Player->IsItemIn[static_cast<int>(EPlayerPosture::Rifle1)])
+		if (true == Player->GetItemSlot()[static_cast<int>(EItemType::Rifle)].IsItemIn)
 		{
 			if (true == _IsAdd)
 			{
@@ -186,7 +195,7 @@ void AMainGameState::GameStateConditionUpdate(AActor* _OtherActor, bool _IsAdd)
 			}
 		}
 
-		if (true == Player->IsItemIn[static_cast<int>(EPlayerPosture::Bomb)])
+		if (true == Player->GetItemSlot()[static_cast<int>(EItemType::Bomb)].IsItemIn)
 		{
 			if (true == _IsAdd)
 			{
@@ -215,5 +224,16 @@ void AMainGameState::GameStateConditionUpdate(AActor* _OtherActor, bool _IsAdd)
 		break;
 	default:
 		break;
+	}
+}
+
+void AMainGameState::SpawnTriggerBox(FVector _Pos, FRotator _Rot)
+{
+	UMainGameInstance* Inst = UMainGameBlueprintFunctionLibrary::GetMainGameInstance(GetWorld());
+	TSubclassOf<UObject> TriggerInfo(Inst->GetGlobalObjectClass("StageEndTriggerBox"));
+
+	if (nullptr != TriggerInfo)
+	{
+		ATriggerBoxBase* EndTriggerBox = GetWorld()->SpawnActor<ATriggerBoxBase>(TriggerInfo, _Pos, _Rot);
 	}
 }

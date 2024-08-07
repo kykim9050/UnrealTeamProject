@@ -11,4 +11,7 @@ class UNREAL5_PORTFOLIO_API AMonsterBase : public ACharacter
 {
 	GENERATED_BODY()
 
+public:
+	virtual void Damaged(float Damage) {};
+
 };

@@ -158,19 +158,18 @@ enum class EBossMonsterState : uint8
 	Chase,
 	MeleeAttack,
 	RangedAttack,
-	KrakenRotate,
 	Dead
 };
 
 UENUM(BlueprintType)
 enum class EBossMonsterAnim : uint8
 {
-	Idle	UMETA(DisplayName = "Idle"),
-	WalK	UMETA(DisplayName = "Walk"),
-	Run	UMETA(DisplayName = "Run"),
-	MeleeAttack	UMETA(DisplayName = "MeleeAttack"),
-	RangedAttack	UMETA(DisplayName = "RangedAttack"),
-	Dead	UMETA(DisplayName = "Dead")
+	Idle				UMETA(DisplayName = "Idle"),
+	WalK				UMETA(DisplayName = "Walk"),
+	Run					UMETA(DisplayName = "Run"),
+	MeleeAttack			UMETA(DisplayName = "MeleeAttack"),
+	RangedAttack		UMETA(DisplayName = "RangedAttack"),
+	Dead				UMETA(DisplayName = "Dead")
 };
 
 UENUM(BlueprintType)

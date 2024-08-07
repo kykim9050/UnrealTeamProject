@@ -46,15 +46,11 @@ public :
 	UFUNCTION(BlueprintCallable)
 	void A_MoveLeft(const FInputActionValue& Value);
 	UFUNCTION(BlueprintCallable)
-	void Spase_Jump(const FInputActionValue& Value);
-	UFUNCTION(BlueprintCallable)
-	void Spase_JumpEnd(const FInputActionValue& Value);
-	UFUNCTION(BlueprintCallable)
-	void MouseLeft_FireStart(const FInputActionValue& Value);
+	void MouseLeft_FireStart();
 	UFUNCTION(BlueprintCallable)
 	void MouseLeft_FireTick(float _DeltaTime);
 	UFUNCTION(BlueprintCallable)
-	void MouseLeft_FireEnd(const FInputActionValue& Value);
+	void MouseLeft_FireEnd();
 	UFUNCTION(BlueprintCallable)
 	void E_CheckItem();
 	UFUNCTION(BlueprintCallable)
@@ -66,11 +62,13 @@ public :
 
 	// Number Key
 	UFUNCTION(BlueprintCallable)
-	void Num_ChangePosture(EPlayerPosture _Posture);
+	void Num_ChangePosture(int _InputKey);
 	UFUNCTION(BlueprintCallable)
-	void Num_Drink_Con();
+	void Num_Drink();
 	UFUNCTION(BlueprintCallable)
 	void Num_BombSetStart();
+	UFUNCTION(BlueprintCallable)
+	void Num_BombSetTick();
 	UFUNCTION(BlueprintCallable)
 	void Num_BombSetEnd();
 
@@ -82,14 +80,6 @@ public :
 	UFUNCTION(BlueprintCallable)
 	void ChangePlayerDir(EPlayerMoveDir _Dir);
 
-	// 공격 몽타주 실행
-	UFUNCTION(BlueprintCallable)
-	void PlayerMontagePlay();
-
-	// 공격 종료 몽타주 실행
-	UFUNCTION(BlueprintCallable)
-	void FireEndMontagePlay();
-
 	// Generic Team Id
 	virtual FGenericTeamId GetGenericTeamId() const override;
 
@@ -98,13 +88,13 @@ private :
 	UPROPERTY()
 	class UInputDatas* InputData = nullptr;
 
+	// Fire 여부
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	bool IsGunFire = false;
+
 	// Monster 요청
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "TeamId", meta = (AllowPrivateAccess = true))
 	FGenericTeamId TeamId;
-
-	// Fire Tick 함수를 위한 Timer 변수.
-	UPROPERTY()
-	FTimerHandle MyTimeHandle;
 
 	// 기절 상태.
 	UPROPERTY()

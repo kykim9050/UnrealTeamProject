@@ -41,6 +41,77 @@ ATestFPVCharacter::ATestFPVCharacter()
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	GetMesh()->SetOwnerNoSee(true);
+	GetMesh()->SetRelativeLocation(FVector(0.0f, 0.0f, -88.0f));
+	GetMesh()->bHiddenInSceneCapture = true;
+
+	// Item Mesh
+	ItemSocketMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ItemSocketMesh"));
+	ItemSocketMesh->SetupAttachment(GetMesh(), FName("ItemSocket"));
+	ItemSocketMesh->SetCollisionProfileName(TEXT("NoCollision"));
+	ItemSocketMesh->SetGenerateOverlapEvents(true);
+	ItemSocketMesh->SetOwnerNoSee(true);
+	ItemSocketMesh->SetVisibility(false);
+	ItemSocketMesh->SetIsReplicated(true);
+	ItemSocketMesh->bHiddenInSceneCapture = true;
+
+	// SpringArm Component
+	SpringArmComponent = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArmComponent"));
+	SpringArmComponent->SetupAttachment(RootComponent);
+	SpringArmComponent->SetRelativeLocation(FPVCameraRelLoc);
+	SpringArmComponent->TargetArmLength = 0.0f;
+	SpringArmComponent->bUsePawnControlRotation = true;
+	SpringArmComponent->bDoCollisionTest = true;
+
+	// Camera Component
+	CameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("CameraComponent"));
+	CameraComponent->SetupAttachment(SpringArmComponent);
+	CameraComponent->SetProjectionMode(ECameraProjectionMode::Perspective);
+
+	// FPV Character Mesh
+	FPVMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("FirstPersonMesh"));
+	FPVMesh->SetupAttachment(CameraComponent);
+	FPVMesh->SetRelativeLocation(FVector(-10.0f, 0.0f, -160.0f));
+	FPVMesh->SetOwnerNoSee(false);
+	FPVMesh->SetOnlyOwnerSee(true);
+	FPVMesh->bCastDynamicShadow = false;
+	FPVMesh->CastShadow = false;
+
+	// FPV Item Mesh
+	FPVItemSocketMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("FPVItemSocketMesh"));
+	FPVItemSocketMesh->SetupAttachment(FPVMesh, FName("FPVItemSocket"));
+	FPVItemSocketMesh->SetCollisionProfileName(TEXT("NoCollision"));
+	FPVItemSocketMesh->SetGenerateOverlapEvents(true);
+	FPVItemSocketMesh->SetOnlyOwnerSee(true);
+	FPVItemSocketMesh->SetVisibility(false);
+	FPVItemSocketMesh->SetIsReplicated(true);
+	FPVItemSocketMesh->bCastDynamicShadow = false;
+	FPVItemSocketMesh->CastShadow = false;
+
+	// Map Item 검사	
+	GetMapItemCollisionComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("GetMapItemCollisionComponent"));
+	GetMapItemCollisionComponent->SetupAttachment(RootComponent);
+	GetMapItemCollisionComponent->SetRelativeLocation(FVector(60.0, 0.0, -5.0f));
+	GetMapItemCollisionComponent->SetBoxExtent(FVector(60.0f, 30.0f, 100.0f));
+	GetMapItemCollisionComponent->SetCollisionProfileName(FName("MapItemSearch"));
+
+	// Hand Attack Component
+	HandAttackComponent = CreateDefaultSubobject<USphereComponent>(TEXT("Hand Attack Comp"));
+	HandAttackComponent->SetupAttachment(GetMesh());
+	HandAttackComponent->SetRelativeLocation({ 0.0f, 100.0f, 120.0f });
+	HandAttackComponent->SetCollisionProfileName(TEXT("NoCollision"));
+
+	// MiniMap Icon Component
+	MinimapIconComponent = CreateDefaultSubobject<UTestMinimapIconComponent>(TEXT("MinimapPlayerIcon"));
+	MinimapIconComponent->SetupAttachment(RootComponent);
+	MinimapIconComponent->bVisibleInSceneCaptureOnly = true;
+
+	// HeadName Component
+	HeadNameComponent = CreateDefaultSubobject<UHeadNameWidgetComponent>(TEXT("HeadNameWidgetComponent"));
+	HeadNameComponent->SetupAttachment(RootComponent);
+	HeadNameComponent->SetOwnerNoSee(true);
+	HeadNameComponent->bHiddenInSceneCapture = true;
+
 	// Inventory			// => 메인 수정 필요 (24.08.06 수정됨) [자식]
 	for (size_t i = 0; i < 4; i++)
 	{
@@ -223,14 +294,6 @@ void ATestFPVCharacter::Tick(float DeltaTime)
 	//TArray<FFPVItemInformation> I = ItemSlot;
 	//int c = CurItemIndex;
 	//AGameModeBase* Ptr = GetWorld()->GetAuthGameMode();
-	int a = 0;
-
-	// IdleDefault 출력.
-	{
-		UEnum* Enum = StaticEnum<EPlayerUpperState>();
-		FName Name = Enum->GetNameByValue(static_cast<int64>(IdleDefault));
-		UMainGameBlueprintFunctionLibrary::DebugTextPrint(GetWorld(), FString(TEXT("IdleDefault = ")) + Name.ToString());
-	}
 }
 
 void ATestFPVCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const

@@ -37,6 +37,9 @@ void AMainPlayerController::SetupInputComponent()
 {
 	Super::SetupInputComponent();
 
+	FInputModeGameOnly InputMode;
+	SetInputMode(InputMode);
+
 	UEnhancedInputLocalPlayerSubsystem* InputSystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer());
 	UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(InputComponent);
 
@@ -50,22 +53,18 @@ void AMainPlayerController::SetupInputComponent()
 		EnhancedInputComponent->BindAction(InputData->Actions[4], ETriggerEvent::Triggered, this, &AMainPlayerController::A_MoveLeft);
 		EnhancedInputComponent->BindAction(InputData->Actions[1], ETriggerEvent::Triggered, this, &AMainPlayerController::W_MoveFront);
 		EnhancedInputComponent->BindAction(InputData->Actions[2], ETriggerEvent::Triggered, this, &AMainPlayerController::S_MoveBack);
-		EnhancedInputComponent->BindAction(InputData->Actions[5], ETriggerEvent::Triggered, this, &AMainPlayerController::Spase_Jump);
-		EnhancedInputComponent->BindAction(InputData->Actions[5], ETriggerEvent::Completed, this, &AMainPlayerController::Spase_JumpEnd);
-		EnhancedInputComponent->BindAction(InputData->Actions[6], ETriggerEvent::Started, this, &AMainPlayerController::MouseLeft_FireStart);
-		EnhancedInputComponent->BindAction(InputData->Actions[6], ETriggerEvent::Completed, this, &AMainPlayerController::MouseLeft_FireEnd);
-		EnhancedInputComponent->BindAction(InputData->Actions[7], ETriggerEvent::Started, this, &AMainPlayerController::Num_ChangePosture, static_cast<EPlayerPosture>(0));
-		EnhancedInputComponent->BindAction(InputData->Actions[8], ETriggerEvent::Started, this, &AMainPlayerController::Num_ChangePosture, static_cast<EPlayerPosture>(1));
-		EnhancedInputComponent->BindAction(InputData->Actions[9], ETriggerEvent::Started, this, &AMainPlayerController::Num_ChangePosture, static_cast<EPlayerPosture>(2));
-		EnhancedInputComponent->BindAction(InputData->Actions[10], ETriggerEvent::Triggered, this, &AMainPlayerController::Num_Drink_Con);
-		EnhancedInputComponent->BindAction(InputData->Actions[11], ETriggerEvent::Triggered, this, &AMainPlayerController::Num_BombSetStart);
+		EnhancedInputComponent->BindAction(InputData->Actions[7], ETriggerEvent::Started, this, &AMainPlayerController::Num_ChangePosture, 0);
+		EnhancedInputComponent->BindAction(InputData->Actions[8], ETriggerEvent::Started, this, &AMainPlayerController::Num_ChangePosture, 1);
+		EnhancedInputComponent->BindAction(InputData->Actions[9], ETriggerEvent::Started, this, &AMainPlayerController::Num_ChangePosture, 2);
+		EnhancedInputComponent->BindAction(InputData->Actions[10], ETriggerEvent::Triggered, this, &AMainPlayerController::Num_Drink);
+		EnhancedInputComponent->BindAction(InputData->Actions[11], ETriggerEvent::Started, this, &AMainPlayerController::Num_BombSetStart);
+		EnhancedInputComponent->BindAction(InputData->Actions[11], ETriggerEvent::Triggered, this, &AMainPlayerController::Num_BombSetTick);
 		EnhancedInputComponent->BindAction(InputData->Actions[11], ETriggerEvent::Completed, this, &AMainPlayerController::Num_BombSetEnd);
-		EnhancedInputComponent->BindAction(InputData->Actions[12], ETriggerEvent::Triggered, this, &AMainPlayerController::Num_ChangePosture, static_cast<EPlayerPosture>(5));
+		EnhancedInputComponent->BindAction(InputData->Actions[12], ETriggerEvent::Triggered, this, &AMainPlayerController::Num_ChangePosture, -1);
 		EnhancedInputComponent->BindAction(InputData->Actions[13], ETriggerEvent::Started, this, &AMainPlayerController::E_CheckItem);
 		EnhancedInputComponent->BindAction(InputData->Actions[14], ETriggerEvent::Started, this, &AMainPlayerController::P_ChangePOVController);
 		EnhancedInputComponent->BindAction(InputData->Actions[15], ETriggerEvent::Started, this, &AMainPlayerController::LCtrl_Crouch);
 		EnhancedInputComponent->BindAction(InputData->Actions[16], ETriggerEvent::Started, this, &AMainPlayerController::R_Reload);
-		// 17 - G
 	}
 }
 
@@ -78,10 +77,11 @@ void AMainPlayerController::MouseRotation(const FInputActionValue& Value)
 
 void AMainPlayerController::W_MoveFront(const FInputActionValue& Value)
 {
-	if (CharacterIsFaint == true)
-	{
-		return;
-	}
+	// 기절 상태
+	//if (CharacterIsFaint == true)
+	//{
+	//	return;
+	//}
 
 	FVector Forward = GetPawn()->GetActorForwardVector();
 	GetPawn()->AddMovementInput(Forward);
@@ -90,22 +90,24 @@ void AMainPlayerController::W_MoveFront(const FInputActionValue& Value)
 
 void AMainPlayerController::S_MoveBack(const FInputActionValue& Value)
 {
-	if (CharacterIsFaint == true)
-	{
-		return;
-	}
+	// 기절 상태
+	//if (CharacterIsFaint == true)
+	//{
+	//	return;
+	//}
 
-	FVector Forward = GetPawn()->GetActorForwardVector();
-	GetPawn()->AddMovementInput(-Forward);
+	FVector Backward = GetPawn()->GetActorForwardVector();
+	GetPawn()->AddMovementInput(-Backward);
 	ChangePlayerDir(EPlayerMoveDir::Back);
 }
 
 void AMainPlayerController::D_MoveRight(const FInputActionValue& Value)
 {
-	if (CharacterIsFaint == true)
-	{
-		return;
-	}
+	// 기절 상태
+	//if (CharacterIsFaint == true)
+	//{
+	//	return;
+	//}
 
 	FVector Rightward = GetPawn()->GetActorRightVector();
 	GetPawn()->AddMovementInput(Rightward);
@@ -114,68 +116,35 @@ void AMainPlayerController::D_MoveRight(const FInputActionValue& Value)
 
 void AMainPlayerController::A_MoveLeft(const FInputActionValue& Value)
 {
-	if (CharacterIsFaint == true)
-	{
-		return;
-	}
+	// 기절 상태
+	//if (CharacterIsFaint == true)
+	//{
+	//	return;
+	//}
 
-	FVector Rightward = GetPawn()->GetActorRightVector();
-	GetPawn()->AddMovementInput(-Rightward);
+	FVector Leftward = GetPawn()->GetActorRightVector();
+	GetPawn()->AddMovementInput(-Leftward);
 	ChangePlayerDir(EPlayerMoveDir::Left);
 }
 
-void AMainPlayerController::Spase_Jump(const FInputActionValue& Value)
+void AMainPlayerController::MouseLeft_FireStart()
 {
-	if (CharacterIsFaint == true)
-	{
-		return;
-	}
-
-	ChangeLowerState(EPlayerLowerState::Idle);
-
-	ACharacter* MyPlayerState = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
-	if (nullptr == MyPlayerState)
-	{
-		return;
-	}
-
-	MyPlayerState->Jump();
-}
-
-void AMainPlayerController::Spase_JumpEnd(const FInputActionValue& Value)
-{
-	ACharacter* MyPlayerState = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
-	if (nullptr == MyPlayerState)
-	{
-		return;
-	}
-
-	MyPlayerState->StopJumping();
-}
-
-void AMainPlayerController::MouseLeft_FireStart(const FInputActionValue& Value)
-{
-	if (CharacterIsFaint == true)
-	{
-		return;
-	}
+	// 기절 상태
+	//if (CharacterIsFaint == true)
+	//{
+	//	return;
+	//}
 
 	AMainCharacter* Ch = GetPawn<AMainCharacter>();
 	if (nullptr == Ch)
 	{
 		return;
 	}
-	Ch->FireRayCast(GetWorld()->GetTimeSeconds());
-
-	PlayerMontagePlay();
+	Ch->AttackCheck();
+	IsGunFire = true;
 
 	// 발싸 신호를 HUD로 넘김.
-	BullitCountToHUD();
-
-	GetWorld()->GetTimerManager().SetTimer(MyTimeHandle, FTimerDelegate::CreateLambda([&]()
-		{
-			MouseLeft_FireTick(GetWorld()->GetTimeSeconds());
-		}), 0.2f, true);
+	//BullitCountToHUD();
 }
 
 void AMainPlayerController::MouseLeft_FireTick(float _DeltaTime)
@@ -185,25 +154,28 @@ void AMainPlayerController::MouseLeft_FireTick(float _DeltaTime)
 	{
 		return;
 	}
-	Ch->FireRayCast(_DeltaTime);
-
-	PlayerMontagePlay();
+	if (true == IsGunFire || Ch->GetIdleDefault() == EPlayerUpperState::Rifle_Idle)
+	{
+		//Ch->FireRayCast(_DeltaTime);
+		Ch->AttackCheck();
+	}
 
 	// 발싸 신호를 HUD로 넘김.
-	BullitCountToHUD();
+	//BullitCountToHUD();
 }
 
-void AMainPlayerController::MouseLeft_FireEnd(const FInputActionValue& Value)
+void AMainPlayerController::MouseLeft_FireEnd()
 {
-	GetWorld()->GetTimerManager().ClearTimer(MyTimeHandle);
+	IsGunFire = false;
 }
 
 void AMainPlayerController::E_CheckItem()
 {
-	if (CharacterIsFaint == true)
-	{
-		return;
-	}
+	// 기절 상태
+	//if (CharacterIsFaint == true)
+	//{
+	//	return;
+	//}
 
 	AMainCharacter* Ch = GetPawn<AMainCharacter>();
 	if (nullptr == Ch)
@@ -226,10 +198,11 @@ void AMainPlayerController::P_ChangePOVController()
 
 void AMainPlayerController::LCtrl_Crouch(const FInputActionValue& Value)
 {
-	if (CharacterIsFaint == true)
-	{
-		return;
-	}
+	// 기절 상태
+	//if (CharacterIsFaint == true)
+	//{
+	//	return;
+	//}
 
 	AMainCharacter* Ch = GetPawn<AMainCharacter>();
 	if (nullptr == Ch)
@@ -237,26 +210,16 @@ void AMainPlayerController::LCtrl_Crouch(const FInputActionValue& Value)
 		return;
 	}
 
-	switch (Ch->LowerStateValue)
-	{
-	case EPlayerLowerState::Idle:
-		Ch->ChangeLowerState(EPlayerLowerState::Crouch);
-		break;
-	case EPlayerLowerState::Crouch:
-		Ch->ChangeLowerState(EPlayerLowerState::Idle);
-		break;
-	default:
-		break;
-	}
 	Ch->CrouchCameraMove();
 }
 
 void AMainPlayerController::R_Reload()
 {
-	if (CharacterIsFaint == true)
-	{
-		return;
-	}
+	// 기절 상태
+	//if (CharacterIsFaint == true)
+	//{
+	//	return;
+	//}
 
 	AMainCharacter* Ch = GetPawn<AMainCharacter>();
 	if (nullptr == Ch)
@@ -266,12 +229,13 @@ void AMainPlayerController::R_Reload()
 	Ch->CharacterReload();
 }
 
-void AMainPlayerController::Num_ChangePosture(EPlayerPosture _Posture)
+void AMainPlayerController::Num_ChangePosture(int _InputKey)
 {
-	if (CharacterIsFaint == true)
-	{
-		return;
-	}
+	// 기절 상태
+	//if (CharacterIsFaint == true)
+	//{
+	//	return;
+	//}
 
 	AMainCharacter* Ch = GetPawn<AMainCharacter>();
 	if (nullptr == Ch)
@@ -279,11 +243,26 @@ void AMainPlayerController::Num_ChangePosture(EPlayerPosture _Posture)
 		return;
 	}
 
-	Ch->ChangePosture(_Posture);
-	ChangePostureToWidget(_Posture);
+	if (_InputKey == 0) // 총
+	{
+		Ch->ChangeMontage(EPlayerUpperState::Rifle_Idle, true);
+	}
+	else if (_InputKey == 1)
+	{
+		Ch->ChangeMontage(EPlayerUpperState::Melee_Idle, true);
+	}
+	else if (_InputKey == -1)
+	{
+		Ch->ChangeMontage(EPlayerUpperState::UArm_Idle, true);
+	}
+
+	Ch->SettingItemSocket(_InputKey);
+
+	//Ch->ChangeMontage(EPlayerUpperState::Rifle_Idle, true);
+	//ChangePostureToWidget(_Posture);
 }
 
-void AMainPlayerController::Num_Drink_Con()
+void AMainPlayerController::Num_Drink()
 {
 	AMainCharacter* Ch = GetPawn<AMainCharacter>();
 	if (nullptr == Ch)
@@ -291,7 +270,7 @@ void AMainPlayerController::Num_Drink_Con()
 		return;
 	}
 
-	//Ch->Drink();
+	Ch->Drink();
 }
 
 void AMainPlayerController::Num_BombSetStart()
@@ -302,7 +281,18 @@ void AMainPlayerController::Num_BombSetStart()
 		return;
 	}
 
-	//Ch->BombSetStart();
+	Ch->BombSetStart();
+}
+
+void AMainPlayerController::Num_BombSetTick()
+{
+	AMainCharacter* Ch = GetPawn<AMainCharacter>();
+	if (nullptr == Ch)
+	{
+		return;
+	}
+
+	Ch->BombSetTick();
 }
 
 void AMainPlayerController::Num_BombSetEnd()
@@ -313,7 +303,7 @@ void AMainPlayerController::Num_BombSetEnd()
 		return;
 	}
 
-	//Ch->BombSetEnd();
+	Ch->BombSetEnd();
 }
 
 void AMainPlayerController::ChangeLowerState(EPlayerLowerState _State)
@@ -336,28 +326,6 @@ void AMainPlayerController::ChangePlayerDir(EPlayerMoveDir _Dir)
 	}
 
 	Ch->ChangePlayerDir(_Dir);
-}
-
-void AMainPlayerController::PlayerMontagePlay()
-{
-	AMainCharacter* Ch = GetPawn<AMainCharacter>();
-	if (nullptr == Ch)
-	{
-		return;
-	}
-
-	Ch->ChangeMontage(false);
-}
-
-void AMainPlayerController::FireEndMontagePlay()
-{
-	AMainCharacter* Ch = GetPawn<AMainCharacter>();
-	if (nullptr == Ch)
-	{
-		return;
-	}
-
-	Ch->ChangeMontage(true);
 }
 
 FGenericTeamId AMainPlayerController::GetGenericTeamId() const

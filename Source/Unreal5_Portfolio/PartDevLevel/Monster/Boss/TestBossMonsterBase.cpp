@@ -141,10 +141,16 @@ void ATestBossMonsterBase::Tick(float DeltaTime)
 void ATestBossMonsterBase::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
 	APlayerController* PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
-	AMainGameHUD* BossUHD = Cast<AMainGameHUD>(PlayerController->GetHUD());
-
-	if (nullptr == BossUHD)
+	if (nullptr == PlayerController)
 	{
+		LOG(MonsterLog, Fatal, "PlayerController is null");
+		return;
+	}
+
+	AMainGameHUD* BossUHD = Cast<AMainGameHUD>(PlayerController->GetHUD());
+	if (nullptr == BossUHD || nullptr == PlayerController)
+	{
+		LOG(MonsterLog, Fatal, "MAinGameHUD is null");
 		return;
 	}
 
