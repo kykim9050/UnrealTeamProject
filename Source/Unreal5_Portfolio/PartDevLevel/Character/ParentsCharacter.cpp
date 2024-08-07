@@ -46,7 +46,7 @@ void AParentsCharacter::AnimationEnd()
 
 }
 
-//void AParentsCharacter::ChangeHandAttackCollisionProfile(FName _Name)
-//{
-//	HandAttackComponent->SetCollisionProfileName(_Name);
-//}
+void AParentsCharacter::ChangeHandAttackCollisionProfile(FName _Name)
+{
+	HandAttackComponent->SetCollisionProfileName(_Name);
+}
