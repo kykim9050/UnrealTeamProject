@@ -13,13 +13,18 @@
 #include "PartDevLevel/Character/PlayerAnimInstance.h"
 #include "Components/SphereComponent.h"
 #include "MainGameLevel/Player/MainPlayerState.h"
+
 #include "MainGameLevel/Monster/Base/BasicMonsterBase.h"
 #include "PartDevLevel/Monster/Boss/TestBossMonsterBase.h"
+
 #include "MainGameLevel/Object/MapObjectBase.h"
 #include "MainGameLevel/Object/Bomb.h"
 #include "MainGameLevel/Object/AreaObject.h"
+
 #include "MainGameLevel/UI/Title/MainTitleHUD.h"
 #include "PartDevLevel/UI/GetItem/GetItem_UserWidget.h"
+#include "TestLevel/UI/TestMinimapIconComponent.h"
+
 #include <Kismet/KismetSystemLibrary.h>
 #include <Kismet/GameplayStatics.h>
 
@@ -50,11 +55,10 @@ AMainCharacter::AMainCharacter()
 	CameraComponent->SetProjectionMode(ECameraProjectionMode::Perspective);
 
 	// MinimapIcon Component
-	//MinimapIconComponent = CreateDefaultSubobject<UTestMinimapIconComponent>(TEXT("MinimapPlayerIcon"));
-	//MinimapIconComponent->SetupAttachment(RootComponent);
-	//MinimapIconComponent->bVisibleInSceneCaptureOnly = true;
+	MinimapIconComponent = CreateDefaultSubobject<UTestMinimapIconComponent>(TEXT("MinimapPlayerIcon"));
+	MinimapIconComponent->SetupAttachment(RootComponent);
+	MinimapIconComponent->bVisibleInSceneCaptureOnly = true;
 	
-
 
 	// FPV Character Mesh
 	FPVMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("FirstPersonMesh"));
@@ -62,14 +66,6 @@ AMainCharacter::AMainCharacter()
 	FPVMesh->SetOnlyOwnerSee(true);
 	FPVMesh->bCastDynamicShadow = false;
 	FPVMesh->CastShadow = false;
-
-	// Riding Character Mesh
-	//RidingMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("RidingMesh"));
-	//RidingMesh->SetupAttachment(GetMesh());
-	//RidingMesh->SetCollisionProfileName(TEXT("NoCollision"));
-	//RidingMesh->SetVisibility(false);
-	//RidingMesh->SetIsReplicated(true);
-	//RidingMesh->bHiddenInSceneCapture = true;
 
 	// 아이템 장착 소켓 초기화.
 	ItemSocketMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ItemSocketMesh"));
@@ -92,17 +88,12 @@ AMainCharacter::AMainCharacter()
 	FPVItemSocketMesh->bCastDynamicShadow = false;
 	FPVItemSocketMesh->CastShadow = false;
 
-	// Item Create Component
-	CreateItemComponent = CreateDefaultSubobject<USceneComponent>(TEXT("CreateItemComponent"));
-	CreateItemComponent->SetupAttachment(RootComponent);
-	CreateItemComponent->SetRelativeLocation(FVector(100.0, 0.0, -90.0));
-
 	// Map Item 
-	GetMapItemCollisonComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("GetMapItemCollisionComponent"));
-	GetMapItemCollisonComponent->SetupAttachment(RootComponent);
-	GetMapItemCollisonComponent->SetRelativeLocation(FVector(60.0, 0.0, -5.0f));
-	GetMapItemCollisonComponent->SetCollisionProfileName(FName("MapItemSearch"));
-	GetMapItemCollisonComponent->SetBoxExtent(FVector(40.0, 50.0, 80.0));
+	GetMapItemCollisionComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("GetMapItemCollisionComponent"));
+	GetMapItemCollisionComponent->SetupAttachment(RootComponent);
+	GetMapItemCollisionComponent->SetRelativeLocation(FVector(60.0, 0.0, -5.0f));
+	GetMapItemCollisionComponent->SetBoxExtent(FVector(60.0f, 30.0f, 100.0f));
+	GetMapItemCollisionComponent->SetCollisionProfileName(FName("MapItemSearch"));
 
 	// Inventory
 	for (size_t i = 0; i < static_cast<size_t>(EPlayerPosture::Barehand); i++)
@@ -187,6 +178,12 @@ void AMainCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLi
 	DOREPLIFETIME(AMainCharacter, IsFaint);
 
 	DOREPLIFETIME(AMainCharacter, UIToSelectCharacter);
+}
+
+void AMainCharacter::AnimationEnd()
+{
+	PlayerAnimInst->ChangeAnimation(IdleDefault);
+	FPVPlayerAnimInst->ChangeAnimation(IdleDefault);
 }
 
 // Called every frame

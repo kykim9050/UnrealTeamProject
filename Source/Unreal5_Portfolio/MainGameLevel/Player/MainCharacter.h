@@ -6,10 +6,11 @@
 #include "GameFramework/Character.h"
 #include "Global/ContentsEnum.h"
 #include "Net/UnrealNetwork.h"
+#include "PartDevLevel/Character/ParentsCharacter.h"
 #include "MainCharacter.generated.h"
 
 UCLASS()
-class UNREAL5_PORTFOLIO_API AMainCharacter : public ACharacter
+class UNREAL5_PORTFOLIO_API AMainCharacter : public AParentsCharacter
 {
 	GENERATED_BODY()
 
@@ -28,6 +29,8 @@ protected:
 	virtual void BeginPlay() override;
 	
 	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+
+	virtual void AnimationEnd() override;
 
 public:	
 	// Called every frame
@@ -62,33 +65,13 @@ private : // 문제 발생 여지 있음 발생하면 그냥 지워야 함.
 	// == Components ==
 	
 	// 스프링암
-	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-	class USpringArmComponent* SpringArmComponent = nullptr;
 	// 카메라
-	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-	class UCameraComponent* CameraComponent = nullptr;
 	// 일인칭 메시
-	UPROPERTY(Category = "Contents", VisibleDefaultsOnly)
-	USkeletalMeshComponent* FPVMesh = nullptr;
-	// 탈 것?
-	//UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-	//class UStaticMeshComponent* RidingMesh = nullptr;
 	// 미니맵 아이콘
-	//UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-	//class UTestMinimapIconComponent* MinimapIconComponent = nullptr;
 	// 맵에 있는 아이템 탐색 전용 콜리전
-	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-	class UBoxComponent* GetMapItemCollisonComponent = nullptr;
-	// 버리는 아이템 생성 위치
-	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-	class USceneComponent* CreateItemComponent = nullptr;
-
 	// 아이템 장착 소켓
-	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-	class UStaticMeshComponent* ItemSocketMesh = nullptr;
 	// 1인칭 아이템 장착 소켓
-	UPROPERTY(Category = "Contents", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-	class UStaticMeshComponent* FPVItemSocketMesh = nullptr;	// => 메인캐릭터로 이전해야 함 (새로 추가됨)
+	// 근접 공격에 사용
 
 		
 	// == 인칭 변경 변수 ==
@@ -120,11 +103,7 @@ private : // 문제 발생 여지 있음 발생하면 그냥 지워야 함.
 	class UPlayerAnimInstance* PlayerAnimInst = nullptr;
 	UPROPERTY()
 	class UPlayerAnimInstance* FPVPlayerAnimInst = nullptr;
-
-	// 근접 공격에 사용
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-	class USphereComponent* HandAttackComponent = nullptr;
-
+	
 	UPROPERTY(Replicated)
 	FName UIToSelectCharacter = "";
 
