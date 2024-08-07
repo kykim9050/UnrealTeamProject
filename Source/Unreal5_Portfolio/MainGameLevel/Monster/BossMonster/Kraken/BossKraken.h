@@ -8,6 +8,7 @@
 
 class UBoxComponent;
 class UBossKrakenData;
+class UBossKrakenProjectileSpawnPoint;
 
 /**
  * 
@@ -36,6 +37,11 @@ private:
 private:
 	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = true))
 	UBoxComponent* BodyComponent = nullptr;
+
+private:
+	// Projectile
+	UPROPERTY(EditAnywhere, Category = "Projectile", meta = (AllowPrivateAccess = true))
+	UBossKrakenProjectileSpawnPoint* ProjectileSpawnPoint = nullptr;
 
 private:
 	// Effect
