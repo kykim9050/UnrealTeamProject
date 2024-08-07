@@ -357,6 +357,7 @@ void AMainCharacter::PickUpItem(AItemBase* _Item)
 		{
 			IdleDefault = EPlayerUpperState::Melee_Idle;
 		}
+		SettingItemSocket(static_cast<int>(ItemType));
 		ChangeMontage(IdleDefault);
 	}
 
@@ -654,6 +655,16 @@ void AMainCharacter::AttackCheck()
 
 void AMainCharacter::Drink()
 {
+	// 음료 체크
+	if (false == IsItemInItemSlot(static_cast<int>(EItemType::Drink)))
+	{
+		return;
+	}
+
+	// 음료가 있음!
+	SettingItemSocket(static_cast<int>(EItemType::Drink));
+
+	// 애니메이션 실행.
 	ChangeMontage(EPlayerUpperState::Drink);
 }
 
@@ -904,11 +915,6 @@ void AMainCharacter::HandAttackCollision(AActor* _OtherActor, UPrimitiveComponen
 			Rock->Damaged(150.0f);
 		}
 	}
-}
-
-void AMainCharacter::ChangeHandAttackCollisionProfile(FName _Name)
-{
-	HandAttackComponent->SetCollisionProfileName(_Name);
 }
 
 void AMainCharacter::NetCheck()

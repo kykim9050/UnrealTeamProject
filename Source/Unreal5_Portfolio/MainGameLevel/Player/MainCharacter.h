@@ -259,10 +259,6 @@ public :
 	UFUNCTION(BlueprintCallable)
 	void HandAttackCollision(AActor* _OtherActor, UPrimitiveComponent* _Collision);
 
-	// Notify State에서 호출.
-	UFUNCTION()
-	void ChangeHandAttackCollisionProfile(FName _Name);
-
 	UFUNCTION()
 	void NetCheck();
 
