@@ -31,6 +31,9 @@ void ATestFPVPlayerController::BeginPlay()
 	Super::BeginPlay();
 
 	FGetItemToWidget_Test_FPV.BindUObject(this, &ATestFPVPlayerController::CallGetItem);
+
+	// Camera(Controller) Shake
+	Stream.GenerateNewSeed();
 }
 
 void ATestFPVPlayerController::SetupInputComponent()
@@ -150,7 +153,6 @@ void ATestFPVPlayerController::FireStart(float _DeltaTime)
 	}
 	Ch->AttackCheck();
 	IsGunFire = true;
-
 }
 
 void ATestFPVPlayerController::FireTick(float _DeltaTime)
@@ -166,6 +168,17 @@ void ATestFPVPlayerController::FireTick(float _DeltaTime)
 	{
 		Ch->AttackCheck();
 	}
+
+	// Camera(Controller) Shake
+	float ShakeX = Stream.FRandRange(-0.2f, 0.2f);
+	float ShakeY = Stream.FRandRange(0.0f, 0.2f);
+	FRotator(ShakeX, ShakeY, 0.0f);
+
+	//FRotator ShakeRotator = FRotator(FQuat::Slerp(Rotation1.ToQuat(), Rotation2.ToQuat(), Alpha));
+	//SetControlRotation(ShakeRotator);
+
+	MouseRotation(FInputActionValue(FVector2D(ShakeX, ShakeY)));
+	
 }
 
 void ATestFPVPlayerController::FireEnd()

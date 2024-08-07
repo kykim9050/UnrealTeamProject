@@ -31,8 +31,6 @@ void ATestPlayerController::BeginPlay()
 	Super::BeginPlay();
 
 	FGetItemToWidget_Test.BindUObject(this, &ATestPlayerController::CallGetItem);
-
-	//Stream.GenerateNewSeed();
 }
 
 void ATestPlayerController::SetupInputComponent()
@@ -207,12 +205,6 @@ void ATestPlayerController::FireStart(float _DeltaTime)	// => 메인도 수정해야 함
 void ATestPlayerController::FireTick(float _DeltaTime)	// => 메인도 수정해야 함 (24.07.25 수정됨) => 메인 적용
 {
 	ATestCharacter* Ch = GetPawn<ATestCharacter>();
-
-	// Camera Shake
-	/*float ShakeX = Stream.FRandRange(-0.2f, 0.2f);
-	float ShakeY = Stream.FRandRange(-0.2f, 0.2f);
-	MouseRotation(FInputActionValue(FVector2D(ShakeX, ShakeY)));*/
-	
 	
 	// RayCast
 	Ch->FireRayCast();

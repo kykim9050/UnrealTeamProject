@@ -133,6 +133,10 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	bool IsGunFire = false;
 
+	// Camera(Controller) Shake
+	UPROPERTY()
+	FRandomStream Stream;
+
 	// HUD / Widget
 	UFUNCTION()
 	void CallGetItem(); // => 메인 적용(Delegate)
