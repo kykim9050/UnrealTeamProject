@@ -50,9 +50,4 @@ private:
 	UPROPERTY(EditAnywhere, Category = "Projectile", meta = (AllowPrivateAccess = true))
 	TSubclassOf<ABossKrakenProjectile> ProjectileUClass = nullptr;
 
-private:
-	// Effect
-	UPROPERTY(EditAnywhere, Category = "Particle", meta = (AllowPrivateAccess = true))
-	UParticleSystem* SmashParticle = nullptr;
-
 };
