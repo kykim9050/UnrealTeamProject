@@ -214,10 +214,11 @@ void AMainPlayerController::LCtrl_Crouch(const FInputActionValue& Value)
 
 void AMainPlayerController::R_Reload()
 {
-	if (CharacterIsFaint == true)
-	{
-		return;
-	}
+	// 기절 상태
+	//if (CharacterIsFaint == true)
+	//{
+	//	return;
+	//}
 
 	AMainCharacter* Ch = GetPawn<AMainCharacter>();
 	if (nullptr == Ch)
