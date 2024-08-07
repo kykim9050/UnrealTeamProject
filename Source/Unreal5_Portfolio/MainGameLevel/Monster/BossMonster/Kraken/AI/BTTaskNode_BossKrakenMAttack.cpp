@@ -3,6 +3,7 @@
 
 
 #include "MainGameLevel/Monster/BossMonster/Kraken/AI/BTTaskNode_BossKrakenMAttack.h"
+#include "MainGameLevel/Monster/BossMonster/AI/BossMonsterAIController.h"
 #include "MainGameLevel/Monster/BossMonster/Kraken/BossKrakenData.h"
 #include "MainGameLevel/Monster/BossMonster/Kraken/BossKraken.h"
 
@@ -30,6 +31,8 @@ EBTNodeResult::Type UBTTaskNode_BossKrakenMAttack::ExecuteTask(UBehaviorTreeComp
 
 	Kraken->ChangeAnimation(EBossMonsterAnim::MeleeAttack);
 	KrakenData->TimeCount = Kraken->GetAnimInstance()->GetKeyAnimMontage(EBossMonsterAnim::MeleeAttack)->GetPlayLength();
+	KrakenData->AttackDamage = KrakenData->BaseData->MeleeAttackDamage;
+	Kraken->GetAIController()->StopMovement();
 
 	return EBTNodeResult::Type::InProgress;
 }

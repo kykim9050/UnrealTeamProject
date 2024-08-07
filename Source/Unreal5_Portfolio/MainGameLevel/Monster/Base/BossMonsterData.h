@@ -26,6 +26,9 @@ public:
 	UPROPERTY(Replicated)
 	float Hp = 0.0f;
 
+	float AttackDamage = 0.0f;
+
+public:
 	float TimeCount = 0.0f;
 
 };
