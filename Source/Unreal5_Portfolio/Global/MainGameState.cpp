@@ -19,7 +19,7 @@ void AMainGameState::SetCurStage_Implementation(EGameStage _Stage)
 	CurStage = _Stage;
 
 	if (EGameStage::MissionClear == CurStage
-		&& EGameStage::Defensing == PrevStage)
+	/*	&& EGameStage::Defensing == PrevStage*/)
 	{
 		SpawnTriggerBox(EndingTriggerBoxPos, EndingTriggerBoxRot);
 	}
@@ -83,10 +83,6 @@ void AMainGameState::GameStateCheck_Implementation(AActor* _OtherActor)
 	{
 		return;
 	}
-
-	// 추후 MainCharacter로 변경 필요
-	ATestCharacter* Player = Cast<ATestCharacter>(_OtherActor);
-	//AMainCharacter* Player = Cast<AMainCharacter>(_OtherActor);
 
 	GameStateConditionUpdate(_OtherActor, true);
 
@@ -164,7 +160,6 @@ void AMainGameState::GameStateConditionUpdate(AActor* _OtherActor, bool _IsAdd)
 
 	if (nullptr == Player)
 	{
-		LOG(GlobalLog, Fatal, "if (nullptr == Player)");
 		return;
 	}
 
