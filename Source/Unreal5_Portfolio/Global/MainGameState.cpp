@@ -6,6 +6,8 @@
 #include "Global/ContentsEnum.h"
 #include "Global/ContentsLog.h"
 #include "MainGameLevel/Player/MainCharacter.h"
+#include "MainGameLevel/Object/TriggerBox/TriggerBoxBase.h"
+#include "Global/MainGameBlueprintFunctionLibrary.h"
 
 // 추후 삭제 필요
 #include "TestLevel/Character/TestCharacter.h"
@@ -231,5 +233,11 @@ void AMainGameState::GameStateConditionUpdate(AActor* _OtherActor, bool _IsAdd)
 
 void AMainGameState::SpawnTriggerBox(FVector _Pos, FRotator _Rot)
 {
-	//GetWorld()->SpawnActor<>()
+	UMainGameInstance* Inst = UMainGameBlueprintFunctionLibrary::GetMainGameInstance(GetWorld());
+	TSubclassOf<UObject> TriggerInfo(Inst->GetGlobalObjectClass("StageEndTriggerBox"));
+
+	if (nullptr != TriggerInfo)
+	{
+		ATriggerBoxBase* EndTriggerBox = GetWorld()->SpawnActor<ATriggerBoxBase>(TriggerInfo, _Pos, _Rot);
+	}
 }
