@@ -66,6 +66,11 @@ void UBTTaskNode_BossKrakenChase::TickTask(UBehaviorTreeComponent& OwnerComp, ui
 		StateChange(OwnerComp, EBossMonsterState::MeleeAttack);
 		return;
 	}
+	else
+	{
+		StateChange(OwnerComp, EBossMonsterState::RangedAttack);
+		return;
+	}
 
 	Kraken->GetAIController()->MoveToLocation(Target->GetActorLocation());
 }
