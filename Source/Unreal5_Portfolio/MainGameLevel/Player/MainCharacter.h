@@ -221,6 +221,18 @@ private :
 	void DestroyItem(AItemBase* _Item);
 	void DestroyItem_Implementation(AItemBase* _Item);
 
+	UFUNCTION(Reliable, Server)
+	void SetItemSocketVisibility(bool _Visibility);
+	void SetItemSocketVisibility_Implementation(bool _Visibility);
+
+	UFUNCTION(Reliable, Server)
+	void SetItemSocketMesh(UStaticMesh* _ItemMeshRes, FVector _ItemRelLoc, FRotator _ItemRelRot, FVector _ItemRelScale);
+	void SetItemSocketMesh_Implementation(UStaticMesh* _ItemMeshRes, FVector _ItemRelLoc, FRotator _ItemRelRot, FVector _ItemRelScale);
+
+	// 소켓에 아이템 설정.
+	UFUNCTION()
+	void SettingItemSocket(int _InputKey);
+
 	// 아이템 변경
 	UFUNCTION(BlueprintCallable)
 	void PickUpItem(class AItemBase* _Item);

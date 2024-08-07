@@ -241,6 +241,21 @@ void AMainPlayerController::Num_ChangePosture(int _InputKey)
 		return;
 	}
 
+	if (_InputKey == 0) // รั
+	{
+		Ch->ChangeMontage(EPlayerUpperState::Rifle_Idle, true);
+	}
+	else if (_InputKey == 1)
+	{
+		Ch->ChangeMontage(EPlayerUpperState::Melee_Idle, true);
+	}
+	else if (_InputKey == -1)
+	{
+		Ch->ChangeMontage(EPlayerUpperState::UArm_Idle, true);
+	}
+
+	Ch->SettingItemSocket(_InputKey);
+
 	//Ch->ChangeMontage(EPlayerUpperState::Rifle_Idle, true);
 	//ChangePostureToWidget(_Posture);
 }

@@ -266,6 +266,50 @@ void AMainCharacter::DestroyItem_Implementation(AItemBase* _Item)
 	_Item->Destroy();
 }
 
+void AMainCharacter::SetItemSocketVisibility_Implementation(bool _Visibility)
+{
+	ItemSocketMesh->SetVisibility(_Visibility);
+	FPVItemSocketMesh->SetVisibility(_Visibility);
+}
+
+void AMainCharacter::SetItemSocketMesh_Implementation(UStaticMesh* _ItemMeshRes, FVector _ItemRelLoc, FRotator _ItemRelRot, FVector _ItemRelScale)
+{
+	// static mesh 세팅
+	ItemSocketMesh->SetStaticMesh(_ItemMeshRes);
+	FPVItemSocketMesh->SetStaticMesh(_ItemMeshRes);
+
+	// transform 세팅
+	ItemSocketMesh->SetRelativeLocation(_ItemRelLoc);
+	FPVItemSocketMesh->SetRelativeLocation(_ItemRelLoc);
+
+	ItemSocketMesh->SetRelativeRotation(_ItemRelRot);
+	FPVItemSocketMesh->SetRelativeRotation(_ItemRelRot);
+
+	ItemSocketMesh->SetRelativeScale3D(_ItemRelScale);
+	FPVItemSocketMesh->SetRelativeScale3D(_ItemRelScale);
+}
+
+void AMainCharacter::SettingItemSocket(int _InputKey)
+{
+	if (-1 == _InputKey)
+	{
+		// ItemSocket의 Visibility 끄기
+		SetItemSocketVisibility(false);
+		return;
+	}
+
+	UStaticMesh* ItemMeshRes = ItemSlot[_InputKey].MeshRes;
+	FVector ItemRelLoc = ItemSlot[_InputKey].RelLoc;
+	FRotator ItemRelRot = ItemSlot[_InputKey].RelRot;
+	FVector ItemRelScale = ItemSlot[_InputKey].RelScale;
+
+	// ItemSocket의 static mesh 세팅
+	SetItemSocketMesh(ItemMeshRes, ItemRelLoc, ItemRelRot, ItemRelScale);
+
+	// ItemSocket의 visibility 켜기
+	SetItemSocketVisibility(true);
+}
+
 void AMainCharacter::PickUpItem(AItemBase* _Item)
 {
 	const FItemDataRow* ItemData = _Item->GetItemData();
