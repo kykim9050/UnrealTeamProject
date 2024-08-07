@@ -148,18 +148,8 @@ public :
 	void ChangePlayerDir(EPlayerMoveDir _Dir);
 	void ChangePlayerDir_Implementation(EPlayerMoveDir _Dir);
 
-	// 아이템 변경
-	UFUNCTION(Reliable, Server, BlueprintCallable)
-	void PickUpItem();
-	void PickUpItem_Implementation();
-
 	UFUNCTION(BlueprintCallable)
 	void ItemSetting(FName _TagName, bool _InNextSlotToItem);
-
-	// 아이템 생성 -> 드랍
-	UFUNCTION(Reliable, Server, BlueprintCallable)
-	void DropItem();
-	void DropItem_Implementation();
 
 	// Fire Ray Cast
 	UFUNCTION(Reliable, Server, BlueprintCallable)
@@ -226,6 +216,18 @@ private :
 	UFUNCTION(Reliable, Server, BlueprintCallable)
 	void GetSetSelectCharacter(class UMainGameInstance* _MainGameInstance);
 	void GetSetSelectCharacter_Implementation(class UMainGameInstance* _MainGameInstance);
+
+	UFUNCTION(Reliable, Server)
+	void DestroyItem(AItemBase* _Item);
+	void DestroyItem_Implementation(AItemBase* _Item);
+
+	// 아이템 변경
+	UFUNCTION(BlueprintCallable)
+	void PickUpItem(class AItemBase* _Item);
+
+	// 아이템 생성 -> 드랍
+	UFUNCTION(BlueprintCallable)
+	void DropItem(int _SlotIndex);
 
 	UFUNCTION()
 	void DeleteItemInfo(int _Index);

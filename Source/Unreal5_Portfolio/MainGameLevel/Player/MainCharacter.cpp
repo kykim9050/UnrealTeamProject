@@ -260,56 +260,64 @@ void AMainCharacter::ChangePlayerDir_Implementation(EPlayerMoveDir _Dir)
 	DirValue = _Dir;
 }
 
-void AMainCharacter::PickUpItem_Implementation()
+void AMainCharacter::DestroyItem_Implementation(AItemBase* _Item)
 {
-	// 맵에 Actor가 있다면 해당 Actor의 Tag를 가져온다.
-	FString TagName = "";
-	for (size_t i = 0; i < GetMapItemData->Tags.Num(); i++) // 불안한 곳.(약속 깨지면 터짐)
+	// 필드에서 얻은 아이템 Destroy
+	_Item->Destroy();
+}
+
+void AMainCharacter::PickUpItem(AItemBase* _Item)
+{
+	const FItemDataRow* ItemData = _Item->GetItemData();
+	EItemType ItemType = ItemData->GetItemType();
+	int ItemSlotIndex = static_cast<int>(ItemType);
+	FName ItemName = *(ItemData->GetName());
+
+	// 이미 같은 이름을 가진 아이템이 인벤토리에 있을 경우 return
+	if (ItemName == ItemSlot[ItemSlotIndex].Name)
 	{
-		TagName = GetMapItemData->Tags[i].ToString();
+		return;
 	}
 
-	FName ItemStringToName = FName(*TagName);
+	// 이미 같은 타입의 아이템이 인벤토리에 있을 경우 가지고 있던 아이템을 Drop
+	if (true == ItemSlot[ItemSlotIndex].IsItemIn)
+	{
+		//DropItem(ItemSlotIndex);
+	}
 
-	//{
-	//	// 버리기 키가 없을 때를 가정.
-	//	if (false == IsItemIn[static_cast<int>(EPlayerPosture::Rifle1)])
-	//	{
-	//		// 1번 슬롯이 비어있는 경우.
-	//		ItemSetting(ItemStringToName, false);
-	//	}
-	//	else if (true == IsItemIn[static_cast<int>(EPlayerPosture::Rifle1)] && false == IsItemIn[static_cast<int>(EPlayerPosture::Rifle2)])
-	//	{
-	//		// 1번 슬롯이 있고 2번 슬롯이 비어있는 경우.
-	//		ItemSetting(ItemStringToName, true);
-	//	}
-	//	else
-	//	{
-	//		// 1, 2번 슬롯이 비어있지 않는 경우.
-	//		if (PostureValue == EPlayerPosture::Rifle1)
-	//		{
-	//			DropItem();
-	//			DeleteItem(static_cast<int>(EPlayerPosture::Rifle1));
-	//			ItemSetting(ItemStringToName, false);
-	//		}
-	//		else if (PostureValue == EPlayerPosture::Rifle2)
-	//		{
-	//			DropItem();
-	//			DeleteItem(static_cast<int>(EPlayerPosture::Rifle2));
-	//			ItemSetting(ItemStringToName, true);
-	//		}
-	//	}
-	//}
+	// 인벤토리에 PickUp한 아이템 정보 넣기
+	ItemSlot[ItemSlotIndex].IsItemIn = true;
+	ItemSlot[ItemSlotIndex].Name = ItemName;
+	ItemSlot[ItemSlotIndex].ReloadMaxNum = ItemData->GetReloadNum();		// 무기 장전 단위	 (Max) (-1일 경우 총기류 무기가 아님)
+	ItemSlot[ItemSlotIndex].ReloadLeftNum = ItemData->GetReloadNum();		// 무기 장전 단위	 (Left) (-1일 경우 총기류 무기가 아님)
+	ItemSlot[ItemSlotIndex].Damage = ItemData->GetDamage();					// 무기 공격력 (0일 경우 무기가 아님)
+	ItemSlot[ItemSlotIndex].MeshRes = ItemData->GetResMesh();				// 스태틱 메시 리소스
+	ItemSlot[ItemSlotIndex].RelLoc = ItemData->GetRelLoc();					// ItemSocket, FPVItemSocket 상대적 위치
+	ItemSlot[ItemSlotIndex].RelRot = ItemData->GetRelRot();					// ItemSocket, FPVItemSocket 상대적 회전
+	ItemSlot[ItemSlotIndex].RelScale = ItemData->GetRelScale();				// ItemSocket, FPVItemSocket 상대적 크기
+	
+	// 필드에 존재하는 아이템 액터 삭제
+	DestroyItem(_Item);
 
-	// 주은 무기 삭제.
-	GetMapItemData->Destroy();
+	// Change 애니메이션
+	{
+		if (ItemType == EItemType::Rifle)
+		{
+			IdleDefault = EPlayerUpperState::Rifle_Idle;
+		}
+		else if (ItemType == EItemType::Melee)
+		{
+			IdleDefault = EPlayerUpperState::Melee_Idle;
+		}
+		ChangeMontage(IdleDefault);
+	}
 
 	// To Controller -> To Widget
-	AMainPlayerController* Con = Cast<AMainPlayerController>(GetController());
-	if (nullptr != Con)
-	{
-		Con->FGetItemToWidget.Execute();
-	}
+	//AMainPlayerController* Con = Cast<AMainPlayerController>(GetController());
+	//if (nullptr != Con)
+	//{
+	//	Con->FGetItemToWidget.Execute();
+	//}
 }
 
 void AMainCharacter::ItemSetting(FName _TagName, bool _InNextSlotToItem)
@@ -354,7 +362,7 @@ void AMainCharacter::ItemSetting(FName _TagName, bool _InNextSlotToItem)
 	}
 }
 
-void AMainCharacter::DropItem_Implementation()
+void AMainCharacter::DropItem(int _SlotIndex)
 {
 	// DropItem 할 수 없는 경우 1: 맨손일 때
 	if (CurItemIndex == -1)
@@ -541,20 +549,21 @@ void AMainCharacter::CheckItem()
 	// 맵에 아이템이 없을 경우.
 	if (nullptr == GetMapItemData)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, TEXT("There is no item to check."));
 		return;
 	}
 
-	AMapObjectBase* GetMapItem = Cast<AMapObjectBase>(GetMapItemData);
-	if (nullptr != GetMapItem)
+	AMapObjectBase* GetMapObject = Cast<AMapObjectBase>(GetMapItemData);
+	if (nullptr != GetMapObject)
 	{
 		// 1. 맵오브젝트일 경우
-		InteractObject(GetMapItem);
+		InteractObject(GetMapObject);
 	}
 	else
 	{
 		// 2. 주울 수 있는 아이템일 경우
-		PickUpItem();
+		AItemBase* GetMapItem = Cast<AItemBase>(GetMapItemData);
+		if(nullptr != GetMapItem)
+		PickUpItem(GetMapItem);
 	}
 }
 

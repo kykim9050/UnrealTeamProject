@@ -170,10 +170,11 @@ void AMainPlayerController::MouseLeft_FireEnd(const FInputActionValue& Value)
 
 void AMainPlayerController::E_CheckItem()
 {
-	if (CharacterIsFaint == true)
-	{
-		return;
-	}
+	// 기절 상태
+	//if (CharacterIsFaint == true)
+	//{
+	//	return;
+	//}
 
 	AMainCharacter* Ch = GetPawn<AMainCharacter>();
 	if (nullptr == Ch)
