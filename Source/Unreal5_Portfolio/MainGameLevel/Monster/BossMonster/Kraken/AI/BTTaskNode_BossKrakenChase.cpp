@@ -46,6 +46,7 @@ EBTNodeResult::Type UBTTaskNode_BossKrakenChase::ExecuteTask(UBehaviorTreeCompon
 
 	Kraken->GetCharacterMovement()->MaxWalkSpeed = KrakenData->BaseData->ChaseSpeed;
 	Kraken->ChangeAnimation(EBossMonsterAnim::Run);
+	KrakenData->TimeCount = TurnTime;
 
 	return EBTNodeResult::Type::InProgress;
 }
@@ -61,18 +62,23 @@ void UBTTaskNode_BossKrakenChase::TickTask(UBehaviorTreeComponent& OwnerComp, ui
 	FVector LocationDiff = Kraken->GetActorLocation() - Target->GetActorLocation();
 	float Diff = LocationDiff.Size();
 
-	if (KrakenData->BaseData->MeleeAttackRange >= Diff)
+	Kraken->GetAIController()->MoveToLocation(Target->GetActorLocation());
+
+	if (0.0f >= KrakenData->TimeCount)
 	{
-		StateChange(OwnerComp, EBossMonsterState::MeleeAttack);
-		return;
-	}
-	else
-	{
-		StateChange(OwnerComp, EBossMonsterState::RangedAttack);
-		return;
+		if (KrakenData->BaseData->MeleeAttackRange >= Diff)
+		{
+			StateChange(OwnerComp, EBossMonsterState::MeleeAttack);
+			return;
+		}
+		else if (KrakenData->BaseData->RangedAttackRange.Min <= Diff && KrakenData->BaseData->RangedAttackRange.Max >= Diff)
+		{
+			StateChange(OwnerComp, EBossMonsterState::RangedAttack);
+			return;
+		}
 	}
 
-	Kraken->GetAIController()->MoveToLocation(Target->GetActorLocation());
+	KrakenData->TimeCount -= DeltaSeconds;
 }
 
 bool UBTTaskNode_BossKrakenChase::FindTarget(UBehaviorTreeComponent& OwnerComp)

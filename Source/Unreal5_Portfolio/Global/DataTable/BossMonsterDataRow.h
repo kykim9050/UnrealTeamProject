@@ -22,11 +22,8 @@ public:
 	float Max = 0.0f;
 };
 
-/**
- * 
- */
-USTRUCT(BlueprintType)
 
+USTRUCT(BlueprintType)
 struct FBossMonsterDataRow : public FTableRowBase
 {
 	GENERATED_BODY()
@@ -55,13 +52,4 @@ public:
 	// ¸ùÅ¸ÁÖ
 	UPROPERTY(EditAnywhere)
 	TMap<EBossMonsterAnim, class UAnimMontage*> AnimMontages;
-
-	// °È±â ¼Óµµ
-	UPROPERTY(EditAnywhere)
-	float WalkSpeed = 0.0f;
-
-	// °ø°Ý ÄðÅ¸ÀÓ
-	UPROPERTY(EditAnywhere)
-	float AttackCoolTime = 0.0f;
-
 };
