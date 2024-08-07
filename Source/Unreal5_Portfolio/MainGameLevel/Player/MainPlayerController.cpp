@@ -127,7 +127,7 @@ void AMainPlayerController::A_MoveLeft(const FInputActionValue& Value)
 	ChangePlayerDir(EPlayerMoveDir::Left);
 }
 
-void AMainPlayerController::MouseLeft_FireStart(const FInputActionValue& Value)
+void AMainPlayerController::MouseLeft_FireStart()
 {
 	// 기절 상태
 	//if (CharacterIsFaint == true)
@@ -156,14 +156,15 @@ void AMainPlayerController::MouseLeft_FireTick(float _DeltaTime)
 	}
 	if (true == IsGunFire || Ch->GetIdleDefault() == EPlayerUpperState::Rifle_Idle)
 	{
-		Ch->FireRayCast(_DeltaTime);
+		//Ch->FireRayCast(_DeltaTime);
+		Ch->AttackCheck();
 	}
 
 	// 발싸 신호를 HUD로 넘김.
 	//BullitCountToHUD();
 }
 
-void AMainPlayerController::MouseLeft_FireEnd(const FInputActionValue& Value)
+void AMainPlayerController::MouseLeft_FireEnd()
 {
 	IsGunFire = false;
 }

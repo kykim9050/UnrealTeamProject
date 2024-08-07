@@ -41,10 +41,6 @@ public:
 	UPROPERTY(EditAnywhere)
 	FRangedAttackRange RangedAttackRange;
 
-	// 투사체 공격력
-	UPROPERTY(EditAnywhere)
-	float ProjectileDamage = 10.0f;
-
 	// 추격 속도
 	UPROPERTY(EditAnywhere)
 	float ChaseSpeed = 0.0f;

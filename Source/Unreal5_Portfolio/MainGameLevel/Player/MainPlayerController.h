@@ -46,11 +46,11 @@ public :
 	UFUNCTION(BlueprintCallable)
 	void A_MoveLeft(const FInputActionValue& Value);
 	UFUNCTION(BlueprintCallable)
-	void MouseLeft_FireStart(const FInputActionValue& Value);
+	void MouseLeft_FireStart();
 	UFUNCTION(BlueprintCallable)
 	void MouseLeft_FireTick(float _DeltaTime);
 	UFUNCTION(BlueprintCallable)
-	void MouseLeft_FireEnd(const FInputActionValue& Value);
+	void MouseLeft_FireEnd();
 	UFUNCTION(BlueprintCallable)
 	void E_CheckItem();
 	UFUNCTION(BlueprintCallable)

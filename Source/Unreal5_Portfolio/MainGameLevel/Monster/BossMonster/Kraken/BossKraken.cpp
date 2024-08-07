@@ -39,7 +39,6 @@ void ABossKraken::SpawnRock()
 	for (int32 i = 0; i < ProjectileSpawnPoint->SpawnLocation.Num(); i++)
 	{
 		FVector SpawnPos = InitPos + ProjectileSpawnPoint->SpawnLocation[i];
-
 		FVector Direction = SpawnPos - GetActorLocation();
 		Direction.Normalize();
 	

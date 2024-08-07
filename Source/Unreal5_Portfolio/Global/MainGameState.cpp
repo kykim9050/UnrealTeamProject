@@ -8,6 +8,7 @@
 #include "MainGameLevel/Player/MainCharacter.h"
 #include "MainGameLevel/Object/TriggerBox/TriggerBoxBase.h"
 #include "Global/MainGameBlueprintFunctionLibrary.h"
+#include "MainGameLevel/Player/PlayerItemInformation.h"
 
 // 추후 삭제 필요
 #include "TestLevel/Character/TestCharacter.h"
@@ -167,7 +168,7 @@ void AMainGameState::GameStateConditionUpdate(AActor* _OtherActor, bool _IsAdd)
 	{
 	case EGameStage::Init:
 	{
-		if (true == Player->IsItemIn[static_cast<int>(EPlayerPosture::Melee)])
+		if (true == Player->GetItemSlot()[static_cast<int>(EItemType::Melee)].IsItemIn)
 		{
 			if (true == _IsAdd)
 			{
@@ -182,7 +183,7 @@ void AMainGameState::GameStateConditionUpdate(AActor* _OtherActor, bool _IsAdd)
 	}
 	case EGameStage::VisitArmory:
 	{
-		if (true == Player->IsItemIn[static_cast<int>(EPlayerPosture::Rifle1)])
+		if (true == Player->GetItemSlot()[static_cast<int>(EItemType::Rifle)].IsItemIn)
 		{
 			if (true == _IsAdd)
 			{
@@ -194,7 +195,7 @@ void AMainGameState::GameStateConditionUpdate(AActor* _OtherActor, bool _IsAdd)
 			}
 		}
 
-		if (true == Player->IsItemIn[static_cast<int>(EPlayerPosture::Bomb)])
+		if (true == Player->GetItemSlot()[static_cast<int>(EItemType::Bomb)].IsItemIn)
 		{
 			if (true == _IsAdd)
 			{
