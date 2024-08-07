@@ -179,7 +179,7 @@ void AMainCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLi
 	// 하체 정보
 	DOREPLIFETIME(AMainCharacter, LowerStateValue);
 	// 플레이어 자세 유형.
-	DOREPLIFETIME(AMainCharacter, PostureValue);
+	DOREPLIFETIME(AMainCharacter, IdleDefault);
 	DOREPLIFETIME(AMainCharacter, DirValue);
 
 	DOREPLIFETIME(AMainCharacter, Token);
@@ -392,7 +392,7 @@ void AMainCharacter::FireRayCast_Implementation(float _DeltaTime)
 		// 주먹, 근거리
 		if (PostureValue == EPlayerPosture::Barehand || PostureValue == EPlayerPosture::Melee)
 		{
-			ChangeMontage();
+			//ChangeMontage();
 		}
 		return;
 	}
@@ -441,88 +441,22 @@ void AMainCharacter::FireRayCast_Implementation(float _DeltaTime)
 	}
 }
 
-void AMainCharacter::ChangeMontage_Implementation(bool _IsFireEnd)
+void AMainCharacter::ChangeMontage_Implementation(EPlayerUpperState _UpperState, bool IsSet)
 {
-	if (_IsFireEnd == false)
+	if (true == IsSet)
 	{
-		switch (PostureValue)
-		{
-		case EPlayerPosture::Rifle1:
-			UpperStateValue = EPlayerUpperState::Rifle_Attack;
-			break;
-		case EPlayerPosture::Rifle2:
-			UpperStateValue = EPlayerUpperState::Rifle_Attack;
-			break;
-		case EPlayerPosture::Melee:
-			UpperStateValue = EPlayerUpperState::Melee_Attack;
-			break;
-		case EPlayerPosture::Drink:
-			UpperStateValue = EPlayerUpperState::Drink;
-			break;
-		case EPlayerPosture::Bomb:
-			UpperStateValue = EPlayerUpperState::Bomb;
-			break;
-		case EPlayerPosture::Barehand:
-			UpperStateValue = EPlayerUpperState::UArm_Attack;
-			break;
-		case EPlayerPosture::SlotMax:
-			break;
-		default:
-			break;
-		}
-		PlayerAnimInst->ChangeAnimation(UpperStateValue);
-		FPVPlayerAnimInst->ChangeAnimation(UpperStateValue);
-		
-		ClientChangeMontage(false);
+		IdleDefault = _UpperState;
 	}
-	else
-	{
-		UpperStateValue = EPlayerUpperState::Rifle_Idle;
-		PlayerAnimInst->ChangeAnimation(UpperStateValue);
-		FPVPlayerAnimInst->ChangeAnimation(UpperStateValue);
-		
-		ClientChangeMontage(true);
-	}
+
+	PlayerAnimInst->ChangeAnimation(_UpperState);
+	FPVPlayerAnimInst->ChangeAnimation(_UpperState);
+	ClientChangeMontage(_UpperState);
 }
 
-void AMainCharacter::ClientChangeMontage_Implementation(bool _IsFireEnd)
+void AMainCharacter::ClientChangeMontage_Implementation(EPlayerUpperState _UpperState)
 {
-	if (_IsFireEnd == false)
-	{
-		switch (PostureValue)
-		{
-		case EPlayerPosture::Rifle1:
-			UpperStateValue = EPlayerUpperState::Rifle_Attack;
-			break;
-		case EPlayerPosture::Rifle2:
-			UpperStateValue = EPlayerUpperState::Rifle_Attack;
-			break;
-		case EPlayerPosture::Melee:
-			UpperStateValue = EPlayerUpperState::Melee_Attack;
-			break;
-		case EPlayerPosture::Drink:
-			UpperStateValue = EPlayerUpperState::Drink;
-			break;
-		case EPlayerPosture::Bomb:
-			UpperStateValue = EPlayerUpperState::Bomb;
-			break;
-		case EPlayerPosture::Barehand:
-			UpperStateValue = EPlayerUpperState::UArm_Attack;
-			break;
-		case EPlayerPosture::SlotMax:
-			break;
-		default:
-			break;
-		}
-		PlayerAnimInst->ChangeAnimation(UpperStateValue);
-		FPVPlayerAnimInst->ChangeAnimation(UpperStateValue);
-	}
-	else // FireEnd
-	{
-		UpperStateValue = EPlayerUpperState::Rifle_Idle;
-		PlayerAnimInst->ChangeAnimation(UpperStateValue);
-		FPVPlayerAnimInst->ChangeAnimation(UpperStateValue);
-	}
+	PlayerAnimInst->ChangeAnimation(_UpperState);
+	FPVPlayerAnimInst->ChangeAnimation(_UpperState);
 }
 
 void AMainCharacter::SettingPlayerState_Implementation()
@@ -623,6 +557,29 @@ void AMainCharacter::CheckItem()
 	}
 }
 
+void AMainCharacter::AttackCheck()
+{
+	switch (IdleDefault)
+	{
+	case EPlayerUpperState::UArm_Idle:
+		ChangeMontage(EPlayerUpperState::UArm_Attack);
+		break;
+	case EPlayerUpperState::Rifle_Idle:
+		ChangeMontage(EPlayerUpperState::Rifle_Attack);
+		break;
+	case EPlayerUpperState::Melee_Idle:
+		ChangeMontage(EPlayerUpperState::Melee_Attack);
+		break;
+	default:
+		break;
+	}
+}
+
+void AMainCharacter::Drink()
+{
+	ChangeMontage(EPlayerUpperState::Drink);
+}
+
 void AMainCharacter::DeleteItem(int _Index)
 {
 	FPlayerItemInformation NewSlot;
@@ -675,6 +632,23 @@ void AMainCharacter::InteractObject_Implementation(AMapObjectBase* _MapObject)
 		}
 		return;
 	}
+}
+
+void AMainCharacter::BombSetStart_Implementation()
+{
+	// 폭탄 아이템 체크
+}
+
+void AMainCharacter::BombSetTick_Implementation()
+{
+}
+
+void AMainCharacter::BombSetCancel_Implementation()
+{
+}
+
+void AMainCharacter::BombSetEnd_Implementation()
+{
 }
 
 void AMainCharacter::GetSetSelectCharacter_Implementation(UMainGameInstance* _MainGameInstance)
