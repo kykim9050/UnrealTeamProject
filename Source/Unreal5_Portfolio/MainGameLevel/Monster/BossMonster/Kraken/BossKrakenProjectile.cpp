@@ -64,21 +64,42 @@ void ABossKrakenProjectile::BeginOverlap(UPrimitiveComponent* OverlappedComponen
 			LOG(MonsterLog, Fatal, TEXT("HitPlayerState Is Not Valid"));
 		}
 
+		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), CrashParticle, GetActorTransform());
 		HitPlayerState->AddDamage(Damage);
-		
-		
-		//OnDead();
+		Destroy();
 	}
 }
 
 void ABossKrakenProjectile::Fly(float DeltaTimes)
 {
+	if (FVector::ZeroVector == MovementComp->Velocity)
+	{
+
+		StateChange(BossKraKenProjectile::EState::Stop);
+	}
 }
 
 void ABossKrakenProjectile::FlyStart()
 {
 	FVector Dir = (GetActorRotation().Vector() + GetActorUpVector()).GetSafeNormal();
 	MovementComp->Velocity = MovementComp->InitialSpeed * Dir;
+}
+
+void ABossKrakenProjectile::Stop(float DeltaTimes)
+{
+	if (0.0f >= LifeTime)
+	{
+		Destroy();
+		return;
+	}
+
+	LifeTime -= DeltaTimes;
+}
+
+void ABossKrakenProjectile::StopStart()
+{
+	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), CrashParticle, GetActorTransform());
+	BodyCollision->SetCollisionProfileName(FName("KrakenRockStop"));
 }
 
 void ABossKrakenProjectile::StateUpdate(float DeltaTimes)
@@ -89,6 +110,7 @@ void ABossKrakenProjectile::StateUpdate(float DeltaTimes)
 		Fly(DeltaTimes);
 		break;
 	case BossKraKenProjectile::EState::Stop:
+		Stop(DeltaTimes);
 		break;
 	}
 }
@@ -103,6 +125,7 @@ void ABossKrakenProjectile::StateChange(BossKraKenProjectile::EState NextState)
 			FlyStart();
 			break;
 		case BossKraKenProjectile::EState::Stop:
+			StopStart();
 			break;
 		}
 

@@ -46,6 +46,9 @@ private:
 	void Fly(float DeltaTimes);
 	void FlyStart();
 
+	void Stop(float DeltaTimes);
+	void StopStart();
+
 private:
 	// Data
 	UPROPERTY(Replicated, EditAnywhere, Category = "SettingData", meta = (AllowPrivateAccess = true))
@@ -55,7 +58,7 @@ private:
 	float Damage = 0.0f;
 
 	UPROPERTY(EditAnywhere, Category = "SettingData", meta = (AllowPrivateAccess = true))
-	float RotateSpeed = 0.0f;
+	float LifeTime = 0.0f;
 
 	BossKraKenProjectile::EState CurState = BossKraKenProjectile::EState::Max;
 
