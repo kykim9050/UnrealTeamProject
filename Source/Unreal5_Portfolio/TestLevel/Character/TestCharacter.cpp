@@ -28,6 +28,7 @@
 #include "MainGameLevel/UI/Title/MainTitleHUD.h"
 #include "PartDevLevel/UI/GetItem/GetItem_UserWidget.h"
 #include "TestLevel/UI/TestMinimapIconComponent.h"
+#include "testLevel/UI/TestHpBarUserWidget.h"
 
 #include <Kismet/KismetSystemLibrary.h>
 #include <Kismet/GameplayStatics.h>
@@ -354,13 +355,15 @@ void ATestCharacter::PickUpItem(AItemBase* _Item)
 		if (ItemType == EItemType::Rifle)
 		{
 			IdleDefault = EPlayerUpperState::Rifle_Idle;
+			SettingItemSocket(static_cast<int>(ItemType));
+			ChangeMontage(IdleDefault, true);
 		}
 		else if (ItemType == EItemType::Melee)
 		{
 			IdleDefault = EPlayerUpperState::Melee_Idle;
+			SettingItemSocket(static_cast<int>(ItemType));
+			ChangeMontage(IdleDefault, true);
 		}
-		SettingItemSocket(static_cast<int>(ItemType));
-		ChangeMontage(IdleDefault, true);
 	}
 
 	// To Controller -> To Widget
@@ -608,12 +611,14 @@ void ATestCharacter::UpdatePlayerHp(float _DeltaTime)
 
 	// Get HUD
 	AMainGameHUD* PlayHUD = Cast<AMainGameHUD>(MyController->GetHUD());
-	// if(nullptr != PlayHUD)
-	// {
-	//     UHpBarUserWidget* MyHpWidget = Cast<UHpBarUserWidget>(PlayHUD->GetWidget(EInGameUIType::HpBar));
-	//     MyHpWidget->NickNameUpdate(Token, FText::FromString(FString("")));
-	//     MyHpWidget->HpbarUpdate(Token, CurHp, 100.0f);
-	// {
+	if (nullptr != PlayHUD)
+	{
+		FString Number = FString::FromInt(Token);
+		FString Name_Number = FString("Play_") + Number;
+		UTestHpBarUserWidget* MyHpWidget = Cast<UTestHpBarUserWidget>(PlayHUD->GetWidget(EUserWidgetType::HpBar));
+		MyHpWidget->NickNameUpdate(Token, FText::FromString(Name_Number));
+		MyHpWidget->HpbarUpdate(Token, GetHp, 100.0f);
+	}
 }
 
 void ATestCharacter::CheckItem()
@@ -964,16 +969,16 @@ void ATestCharacter::SendTokenToHpBarWidget()
 		return;
 	}
 
-	//UTestHpBarUserWidget* MyHpWidget = Cast<UTestHpBarUserWidget>(PlayHUD->GetWidget(EUserWidgetType::HpBar));
-	//if (nullptr == MyHpWidget)
-	//{
-	//	return;
-	//}
+	UTestHpBarUserWidget* MyHpWidget = Cast<UTestHpBarUserWidget>(PlayHUD->GetWidget(EUserWidgetType::HpBar));
+	if (nullptr == MyHpWidget)
+	{
+		return;
+	}
 
-	//if (true == IsCanControlled && -1 != Token)
-	//{
-	//	MyHpWidget->HpbarInit_ForMainPlayer(Token);
-	//}
+	if (true == IsCanControlled && -1 != Token)
+	{
+		MyHpWidget->HpbarInit_ForMainPlayer(Token);
+	}
 }
 
 TArray<struct FPlayerItemInformation> ATestCharacter::GetItemSlot()
