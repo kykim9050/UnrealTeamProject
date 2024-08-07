@@ -51,6 +51,8 @@ public:
 protected:
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+
 	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
 	// Data
@@ -60,7 +62,9 @@ protected:
 	UFUNCTION()
 	void OnAttackOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
-	private:
+	void BossHP_HUDUpdate();
+
+private:
 	// Dead
 	UFUNCTION(Reliable, NetMulticast)
 	void SetDead();
@@ -72,7 +76,7 @@ protected:
 	void DeadFinish()
 	{
 		Destroy();
-	}
+	};
 
 private:
 	// Dissolve Effect

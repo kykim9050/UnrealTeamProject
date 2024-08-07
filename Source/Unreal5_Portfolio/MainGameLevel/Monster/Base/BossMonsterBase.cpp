@@ -4,10 +4,14 @@
 #include "MainGameLevel/Monster/Base/BossMonsterBase.h"
 #include "MainGameLevel/Monster/Base/BossMonsterData.h"
 #include "MainGameLevel/Monster/BossMonster/AI/BossMonsterAIController.h"
+#include "MainGameLevel/UI/InGame/BossHpbarUserWidget.h"
+#include "MainGameLevel/Object/ReportObject.h"
+#include "MainGameLevel/UI/InGame/MainGameHUD.h"
 
 #include "GameFrameWork/CharacterMovementComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/SphereComponent.h"
+#include "Kismet/GameplayStatics.h"
 #include "Net/UnrealNetwork.h"
 #include "BrainComponent.h"
 
@@ -96,6 +100,25 @@ void ABossMonsterBase::BeginPlay()
 		AnimInst->PushAnimation(AnimMontageGroup.Key, AnimMontageGroup.Value);
 	}
 
+	// 몬스터 체력 UHD
+	APlayerController* PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+	if (nullptr == PlayerController)
+	{
+		LOG(MonsterLog, Fatal, "PlayerController is Null");
+		return;
+	}
+
+	AMainGameHUD* BossUHD = Cast<AMainGameHUD>(PlayerController->GetHUD());
+	if (nullptr == BossUHD)
+	{
+		LOG(MonsterLog, Fatal, "BossHUD is Null");
+		return;
+	}
+
+	Cast<UBossHpbarUserWidget>(BossUHD->GetWidget(EUserWidgetType::BossHpbar))->SetBossName(FText::FromString(SettingData->BaseData->BossName));
+	Cast<UBossHpbarUserWidget>(BossUHD->GetWidget(EUserWidgetType::BossHpbar))->SetHp(SettingData->Hp, SettingData->BaseData->MaxHp);
+	BossUHD->UIOn(EUserWidgetType::BossHpbar);
+
 	// 서버 체크
 	if (false == HasAuthority())
 	{
@@ -118,8 +141,32 @@ void ABossMonsterBase::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	Damaged(5.0f);
+
+	BossHP_HUDUpdate();
 	AnimInst->ChangeAnimation(AnimType);
 	DeadTimeLine.TickTimeline(DeltaTime);
+}
+
+void ABossMonsterBase::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	Super::EndPlay(EndPlayReason);
+	
+	APlayerController* PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+	if (nullptr == PlayerController)
+	{
+		LOG(MonsterLog, Fatal, "PlayerController is null");
+		return;
+	}
+
+	AMainGameHUD* BossUHD = Cast<AMainGameHUD>(PlayerController->GetHUD());
+	if (nullptr == BossUHD || nullptr == PlayerController)
+	{
+		LOG(MonsterLog, Fatal, "MainGameHUD is null");
+		return;
+	}
+
+	BossUHD->UIOff(EUserWidgetType::BossHpbar);
 }
 
 void ABossMonsterBase::OnAttackOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
@@ -148,6 +195,35 @@ void ABossMonsterBase::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Out
 void ABossMonsterBase::ChangeAnimation(uint8 Type)
 {
 	AnimType = Type;
+}
+
+void ABossMonsterBase::BossHP_HUDUpdate()
+{
+	if (true == HasAuthority())
+	{
+		float hp = SettingData->Hp;
+		int a = 0;
+	}
+	else
+	{
+		float hp = SettingData->Hp;
+		int a = 0;
+	}
+
+	APlayerController* PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+	if (nullptr == PlayerController)
+	{
+		LOG(MonsterLog, Fatal, "PlayerController is Null");
+	}
+
+	AMainGameHUD* BossUHD = Cast<AMainGameHUD>(PlayerController->GetHUD());
+	if (nullptr == BossUHD)
+	{
+		LOG(MonsterLog, Fatal, "BossHUD is Null");
+		return;
+	}
+
+	Cast<UBossHpbarUserWidget>(BossUHD->GetWidget(EUserWidgetType::BossHpbar))->SetHp(SettingData->Hp, SettingData->BaseData->MaxHp);
 }
 
 void ABossMonsterBase::SetDead_Implementation()

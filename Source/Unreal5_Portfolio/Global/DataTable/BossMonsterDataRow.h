@@ -29,6 +29,14 @@ struct FBossMonsterDataRow : public FTableRowBase
 	GENERATED_BODY()
 	
 public:
+	// 보스 이름
+	UPROPERTY(EditAnywhere)
+	FString BossName;
+
+	// 최대 체력
+	UPROPERTY(EditAnywhere)
+	float MaxHp = 0.0f;
+
 	// 공격 데미지
 	UPROPERTY(EditAnywhere)
 	float MeleeAttackDamage = 20.0f;

@@ -90,9 +90,7 @@ void ATestBossMonsterBase::BeginPlay()
 	}
 
 	Cast<UBossHpbarUserWidget>(BossUHD->GetWidget(EUserWidgetType::BossHpbar))->SetBossName(FText::FromString(FString("Heart")));
-
 	Cast<UBossHpbarUserWidget>(BossUHD->GetWidget(EUserWidgetType::BossHpbar))->SetHp(Hp, SettingBossData->Data->GetHP());
-
 	BossUHD->UIOn(EUserWidgetType::BossHpbar);
 
 	// 클라이언트일 경우
