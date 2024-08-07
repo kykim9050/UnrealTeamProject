@@ -156,7 +156,8 @@ void AMainPlayerController::MouseLeft_FireTick(float _DeltaTime)
 	}
 	if (true == IsGunFire || Ch->GetIdleDefault() == EPlayerUpperState::Rifle_Idle)
 	{
-		Ch->FireRayCast(_DeltaTime);
+		//Ch->FireRayCast(_DeltaTime);
+		Ch->AttackCheck();
 	}
 
 	// πﬂΩŒ Ω≈»£∏¶ HUD∑Œ ≥—±Ë.
