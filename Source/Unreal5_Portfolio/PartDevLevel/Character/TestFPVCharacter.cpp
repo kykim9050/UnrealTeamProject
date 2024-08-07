@@ -639,6 +639,11 @@ void ATestFPVCharacter::ChangeIsFaint_Implementation()
 	}
 }
 
+bool ATestFPVCharacter::IsItemInItemSlot(int _Index)
+{
+	return ItemSlot[_Index].IsItemIn;
+}
+
 void ATestFPVCharacter::CheckItem()	// => 메인 수정 필요 (24.08.02 PickUpItem 인자 추가됨)
 {
 	// 맵에 아이템이 없을 경우.

@@ -99,6 +99,8 @@ public:
 	//TArray<bool> IsItemIn;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	int CurItemIndex = -1;
+	UFUNCTION()
+	bool IsItemInItemSlot(int _Index);
 
 	// Item
 	UPROPERTY(Category = "Contents", VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
