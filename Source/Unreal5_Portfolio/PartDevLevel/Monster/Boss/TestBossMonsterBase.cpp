@@ -143,7 +143,7 @@ void ATestBossMonsterBase::EndPlay(const EEndPlayReason::Type EndPlayReason)
 	APlayerController* PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 	AMainGameHUD* BossUHD = Cast<AMainGameHUD>(PlayerController->GetHUD());
 
-	if (nullptr == BossUHD)
+	if (nullptr == BossUHD || nullptr == PlayerController)
 	{
 		return;
 	}
