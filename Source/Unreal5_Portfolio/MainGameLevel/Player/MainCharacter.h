@@ -93,7 +93,7 @@ private : // 문제 발생 여지 있음 발생하면 그냥 지워야 함.
 		
 	// == 인칭 변경 변수 ==
 	UPROPERTY()
-	bool IsFPV = true;
+	EPlayerFPSTPSState PointOfView = EPlayerFPSTPSState::FPS;
 
 	// == Inventory ==
 	// 아이템 여부

@@ -533,15 +533,31 @@ void AMainCharacter::SettingPlayerState_Implementation()
 
 void AMainCharacter::CrouchCameraMove()
 {
-	if (IsFPV)
+	if (PointOfView == EPlayerFPSTPSState::FPS)
 	{
 		switch (LowerStateValue)
 		{
 		case EPlayerLowerState::Idle:
 			SpringArmComponent->SetRelativeLocation(FPVCameraRelLoc_Crouch);
+			ChangeLowerState(EPlayerLowerState::Crouch);
 			break;
 		case EPlayerLowerState::Crouch:
 			SpringArmComponent->SetRelativeLocation(FPVCameraRelLoc);
+			ChangeLowerState(EPlayerLowerState::Idle);
+			break;
+		default:
+			break;
+		}
+	}
+	else if (PointOfView == EPlayerFPSTPSState::TPS)
+	{
+		switch (LowerStateValue)
+		{
+		case EPlayerLowerState::Idle:
+			ChangeLowerState(EPlayerLowerState::Crouch);
+			break;
+		case EPlayerLowerState::Crouch:
+			ChangeLowerState(EPlayerLowerState::Idle);
 			break;
 		default:
 			break;
@@ -781,7 +797,7 @@ void AMainCharacter::DeleteItemInfo(int _Index)
 
 void AMainCharacter::ChangePOV()
 {
-	if (IsFPV)
+	if (PointOfView == EPlayerFPSTPSState::FPS)
 	{
 		// SpringArm 위치 수정
 		SpringArmComponent->TargetArmLength = 300.0f;
@@ -792,16 +808,16 @@ void AMainCharacter::ChangePOV()
 		FPVMesh->SetOwnerNoSee(true);
 
 		// Item Mesh
-		for (int i = 0; i < int(EPlayerPosture::Barehand); i++)
+		for (int i = 0; i < static_cast<int>(EPlayerUpperState::UArm_Attack); i++)
 		{
 			ItemSocketMesh->SetOwnerNoSee(false);
 			FPVItemSocketMesh->SetOwnerNoSee(true);
 		}
 
 		// 일인칭 -> 삼인칭
-		IsFPV = false;
+		PointOfView = EPlayerFPSTPSState::TPS;
 	}
-	else
+	else if (PointOfView == EPlayerFPSTPSState::TPS)
 	{
 		// SpringArm 위치 수정
 		SpringArmComponent->TargetArmLength = 0.0f;
@@ -817,19 +833,19 @@ void AMainCharacter::ChangePOV()
 			break;
 		}
 
-		// Character Mesh 전환
+		// Character Mesh 전환.
 		GetMesh()->SetOwnerNoSee(true);
 		FPVMesh->SetOwnerNoSee(false);
 
 		// Item Mesh
-		for (int i = 0; i < int(EPlayerPosture::Barehand); i++)
+		for (int i = 0; i < static_cast<int>(EPlayerUpperState::UArm_Attack); i++)
 		{
 			ItemSocketMesh->SetOwnerNoSee(true);
 			FPVItemSocketMesh->SetOwnerNoSee(false);
 		}
 
 		// 삼인칭 -> 일인칭
-		IsFPV = true;
+		PointOfView = EPlayerFPSTPSState::FPS;
 	}
 }
 
