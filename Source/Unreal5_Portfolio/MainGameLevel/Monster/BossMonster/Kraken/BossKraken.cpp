@@ -4,11 +4,20 @@
 #include "MainGameLevel/Monster/BossMonster/Kraken/BossKraken.h"
 #include "MainGameLevel/Monster/BossMonster/Kraken/BossKrakenData.h"
 
+#include "Components/BoxComponent.h"
+
+ABossKraken::ABossKraken()
+{
+	BodyComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("BodyCollision"));
+	BodyComponent->SetupAttachment(RootComponent);
+}
+
 void ABossKraken::InitData(const FBossMonsterDataRow* BaseData)
 {
 	Super::InitData(BaseData);
 
 	BossKrakenSettingData = NewObject<UBossKrakenData>(this);
+	BossKrakenSettingData->BaseData = BaseData;
 	BossKrakenSettingData->Hp = 100.0f;
 
 	SettingData = BossKrakenSettingData;

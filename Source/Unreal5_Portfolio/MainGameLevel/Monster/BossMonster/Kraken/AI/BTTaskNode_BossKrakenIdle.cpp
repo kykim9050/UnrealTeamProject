@@ -9,6 +9,7 @@
 
 #include "Global/MainGameBlueprintFunctionLibrary.h"
 #include "Global/MainGameState.h"
+#include "Global/ContentsEnum.h"
 #include "Global/ContentsLog.h"
 
 #include "TestLevel/Character/TestPlayerState.h"
@@ -113,7 +114,7 @@ void UBTTaskNode_BossKrakenIdle::TickTask(UBehaviorTreeComponent& OwnerComp, uin
 		if (nullptr != TargetActor)
 		{
 			SetValueAsObject(OwnerComp, TEXT("TargetActor"), TargetActor);
-			StateChange(OwnerComp, EBossMonsterState::KrakenRotate);
+			StateChange(OwnerComp, EBossMonsterState::Chase);
 			return;
 		}
 	}

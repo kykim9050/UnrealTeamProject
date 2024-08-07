@@ -24,6 +24,9 @@ public:
 	ABossMonsterBase();
 
 public:
+	void Damaged(float Damage) override;
+
+public:
 	// Get,  Set
 	FORCEINLINE ABossMonsterAIController* GetAIController() const
 	{

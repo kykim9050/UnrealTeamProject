@@ -43,9 +43,9 @@ public:
 	UPROPERTY(EditAnywhere, meta = (AllowprivateAccess = "true"))
 	float WalkSpeed = 50.0f;
 
-	// 달리기 속도
+	// 추격 속도
 	UPROPERTY(EditAnywhere, meta = (AllowprivateAccess = "true"))
-	float RunSpeed = 200.0f;
+	float ChaseSpeed = 200.0f;
 
 	// 몽타주
 	UPROPERTY(EditAnywhere, meta = (AllowprivateAccess = "true"))

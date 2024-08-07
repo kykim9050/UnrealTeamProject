@@ -2,6 +2,7 @@
 
 
 #include "MainGameLevel/Monster/Base/BossMonsterBase.h"
+#include "MainGameLevel/Monster/Base/BossMonsterData.h"
 #include "MainGameLevel/Monster/BossMonster/AI/BossMonsterAIController.h"
 
 #include "Components/SphereComponent.h"
@@ -22,6 +23,29 @@ ABossMonsterBase::ABossMonsterBase()
 	AttackComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	AttackComponent->SetupAttachment(RootComponent);
 
+}
+
+void ABossMonsterBase::Damaged(float Damage)
+{
+	Super::Damaged(Damage);
+
+	// Server Only
+	if (false == HasAuthority() || 0.0f >= SettingData->Hp)
+	{
+		return;
+	}
+
+	SettingData->Hp -= Damage;
+
+	// Dead
+	if (0.0f >= SettingData->Hp)
+	{
+		SettingData->Hp = 0.0f;
+
+		//SetDead();
+		ChangeAnimation(EBossMonsterAnim::Dead);
+		//AIController->GetBrainComponent()->StopLogic(TEXT("Dead"));
+	}
 }
 
 void ABossMonsterBase::BeginPlay()

@@ -162,17 +162,14 @@ void ABasicMonsterBase::ChangeRandomAnimation(uint8 Type)
 
 void ABasicMonsterBase::Damaged(float Damage)
 {
+	Super::Damaged(Damage);
+
 	// Server Only
-	if (false == HasAuthority())
+	if (false == HasAuthority() || 0.0f >= SettingData->Hp)
 	{
 		return;
 	}
-
-	if (0.0f >= SettingData->Hp)
-	{
-		return;
-	}
-
+	
 	SettingData->Hp -= Damage;
 
 	// Dead
