@@ -115,12 +115,6 @@ void ABasicMonsterBase::Tick(float DeltaTime)
 
 void ABasicMonsterBase::OnAttackOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
-	UBlackboardComponent* BlackBoard = UAIBlueprintHelperLibrary::GetBlackboard(this);
-	if (nullptr == BlackBoard)
-	{
-		return;
-	}
-
 	ATestCharacter* HitCharacter = Cast<ATestCharacter>(OtherActor);
 	if (nullptr != HitCharacter)
 	{

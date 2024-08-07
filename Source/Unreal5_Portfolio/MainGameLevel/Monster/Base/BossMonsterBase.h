@@ -33,6 +33,11 @@ public:
 		return AIController;
 	}
 
+	FORCEINLINE USphereComponent* GetAttackComponent() const
+	{
+		return AttackComponent;
+	}
+
 	FORCEINLINE UMainAnimInstance* GetAnimInstance() const
 	{
 		return AnimInst;
@@ -50,6 +55,10 @@ protected:
 
 	// Data
 	virtual void InitData(const FBossMonsterDataRow* BaseData) {};
+
+	// Attack
+	UFUNCTION()
+	void OnAttackOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
 private:
 	// Dissolve Effect
