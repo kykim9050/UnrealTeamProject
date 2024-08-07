@@ -16,7 +16,6 @@
 
 #include "MainGameLevel/Monster/Base/BasicMonsterBase.h"
 #include "PartDevLevel/Monster/Boss/TestBossMonsterBase.h"
-#include "PartDevLevel/Monster/Kraken/KrakenProjectile.h"
 
 #include "MainGameLevel/Object/MapObjectBase.h"
 #include "MainGameLevel/Object/DoorObject.h"
@@ -449,12 +448,6 @@ void AMainCharacter::FireRayCast_Implementation()
 			if(nullptr != BossMonster)
 			{
 				BossMonster->Damaged(ItemSlot[CurItemIndex].Damage);
-			}
-
-			AKrakenProjectile* Kraken = Cast<AKrakenProjectile>(Hit.GetActor());
-			if (nullptr != Kraken)
-			{
-				Kraken->Damaged(150.0f);
 			}
 		}
 	}
@@ -905,14 +898,6 @@ void AMainCharacter::HandAttackCollision(AActor* _OtherActor, UPrimitiveComponen
 		if (nullptr != BossMonster)
 		{
 			BossMonster->Damaged(50.0f);
-		}
-	}
-
-	{
-		AKrakenProjectile* Rock = Cast<AKrakenProjectile>(_OtherActor);
-		if (nullptr != Rock)
-		{
-			Rock->Damaged(150.0f);
 		}
 	}
 }

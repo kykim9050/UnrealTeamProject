@@ -1,10 +1,9 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "PartDevLevel/Monster/TestMonsterSpawner.h"
-#include "PartDevLevel/Monster/Base/TestMonsterBase.h"
-
-#include "TestLevel/Character/TestCharacter.h"
+#include "MainGameLevel/Monster/BasicMonster/BasicMonsterSpawner.h"
+#include "MainGameLevel/Monster/Base/BasicMonsterBase.h"
+#include "MainGameLevel/Player/MainCharacter.h"
 
 #include "Global/MainGameBlueprintFunctionLibrary.h"
 #include "Global/MainGameInstance.h"
@@ -12,8 +11,10 @@
 #include "Components/BillboardComponent.h"
 #include "Components/BoxComponent.h"
 
+#include "TestLevel/Character/TestCharacter.h"
+
 // Sets default values
-ATestMonsterSpawner::ATestMonsterSpawner()
+ABasicMonsterSpawner::ABasicMonsterSpawner()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -24,7 +25,7 @@ ATestMonsterSpawner::ATestMonsterSpawner()
 
 	// Create TriggerBox
 	TriggerBox = CreateDefaultSubobject<UBoxComponent>(TEXT("SpawnTriggerBox"));
-	TriggerBox->OnComponentBeginOverlap.AddDynamic(this, &ATestMonsterSpawner::TriggerBoxBeginOverlap);
+	TriggerBox->OnComponentBeginOverlap.AddDynamic(this, &ABasicMonsterSpawner::TriggerBoxBeginOverlap);
 	TriggerBox->SetBoxExtent(FVector(50.f, 50.f, 50.f));
 	TriggerBox->SetCanEverAffectNavigation(false);
 	TriggerBox->SetupAttachment(RootComponent);
@@ -32,16 +33,16 @@ ATestMonsterSpawner::ATestMonsterSpawner()
 }
 
 // Called when the game starts or when spawned
-void ATestMonsterSpawner::BeginPlay()
+void ABasicMonsterSpawner::BeginPlay()
 {
 	Super::BeginPlay();
-
+	
 	TimeCount = SpawnDelayTime;
 	TriggerBox->SetActive(TriggerIsActive);
 }
 
 // Called every frame
-void ATestMonsterSpawner::Tick(float DeltaTime)
+void ABasicMonsterSpawner::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
@@ -63,11 +64,11 @@ void ATestMonsterSpawner::Tick(float DeltaTime)
 		return;
 	}
 
-	SpawnTestMonster();
+	SpawnBasicMonster();
 	TimeCount = SpawnDelayTime;
 }
 
-void ATestMonsterSpawner::SpawnTestMonster()
+void ABasicMonsterSpawner::SpawnBasicMonster()
 {
 	UMainGameInstance* MainInst = UMainGameBlueprintFunctionLibrary::GetMainGameInstance(GetWorld());
 
@@ -79,7 +80,7 @@ void ATestMonsterSpawner::SpawnTestMonster()
 		int TypeIndex = MainInst->Random.RandRange(0, Size);
 		float SpawnRadius = MainInst->Random.FRandRange(0, MaxSpawnRadius);
 		FVector SpawnLocation = CurPos + MainInst->Random.GetUnitVector().GetSafeNormal2D() * SpawnRadius;
-		ATestMonsterBase* NewMonster = GetWorld()->SpawnActor<ATestMonsterBase>(MonsterUClass[TypeIndex], SpawnLocation, FRotator::ZeroRotator);
+		ABasicMonsterBase* NewMonster = GetWorld()->SpawnActor<ABasicMonsterBase>(MonsterUClass[TypeIndex], SpawnLocation, FRotator::ZeroRotator);
 
 		if (nullptr != NewMonster && true == IsChasePlayer)
 		{
@@ -90,7 +91,7 @@ void ATestMonsterSpawner::SpawnTestMonster()
 	--TotalSpawnCount;
 }
 
-void ATestMonsterSpawner::TriggerBoxBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+void ABasicMonsterSpawner::TriggerBoxBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	ATestCharacter* Player = Cast<ATestCharacter>(OtherActor);
 	if (nullptr == Player)
@@ -100,5 +101,13 @@ void ATestMonsterSpawner::TriggerBoxBeginOverlap(UPrimitiveComponent* Overlapped
 
 	TriggerIsActive = false;
 	TriggerBox->SetActive(TriggerIsActive);
-}
 
+	//AMainCharacter* Player = Cast<AMainCharacter>(OtherActor);
+	//if (nullptr == Player)
+	//{
+	//	return;
+	//}
+	//
+	//TriggerIsActive = false;
+	//TriggerBox->SetActive(TriggerIsActive);
+}

@@ -10,7 +10,6 @@
 #include "TimerManager.h"
 #include "Global/MainGameBlueprintFunctionLibrary.h"
 #include "Global/DataTable/ItemDataRow.h"
-#include "PartDevLevel/Monster/Base/TestMonsterBase.h"
 #include "PartDevLevel/Character/TestFPVPlayerController.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "Kismet/GameplayStatics.h"
@@ -22,7 +21,6 @@
 #include "Components/SphereComponent.h"
 
 #include "PartDevLevel/Monster/Boss/TestBossMonsterBase.h"
-#include "PartDevLevel/Monster/Kraken/KrakenProjectile.h"
 #include "PartDevLevel/Character/PlayerAnimInstance.h"
 
 #include "TestLevel/Character/TestPlayerState.h"
@@ -123,11 +121,11 @@ ATestFPVCharacter::ATestFPVCharacter()
 void ATestFPVCharacter::HandAttackCollision(AActor* _OtherActor, UPrimitiveComponent* _Collision) // => 매인 캐릭터에 적용.
 {
 	{
-		ATestMonsterBase* Monster = Cast<ATestMonsterBase>(_OtherActor);
-		if (nullptr != Monster)
-		{
-			Monster->Damaged(150.0f);
-		}
+		//ATestMonsterBase* Monster = Cast<ATestMonsterBase>(_OtherActor);
+		//if (nullptr != Monster)
+		//{
+		//	Monster->Damaged(150.0f);
+		//}
 	}
 
 	{
@@ -135,16 +133,6 @@ void ATestFPVCharacter::HandAttackCollision(AActor* _OtherActor, UPrimitiveCompo
 		if (nullptr != BossMonster)
 		{
 			BossMonster->Damaged(150.0f);
-		}
-	}
-
-
-	// Kraken의 바위 부시는 함수 호출 (메인 추가 필요)
-	{
-		AKrakenProjectile* Rock = Cast<AKrakenProjectile>(_OtherActor);
-		if (nullptr != Rock)
-		{
-			Rock->Damaged(150.0f);
 		}
 	}
 }
@@ -353,12 +341,12 @@ void ATestFPVCharacter::FireRayCast_Implementation() // => 메인 수정 필요 (24.07
 			FString BoneName = Hit.BoneName.ToString();
 			UE_LOG(LogTemp, Warning, TEXT("Bone Name : %s"), *BoneName);
 			{
-				ATestMonsterBase* Monster = Cast<ATestMonsterBase>(Hit.GetActor()); // [Main] ABasicMonsterBase
-				if (nullptr != Monster)
-				{
-					Monster->Damaged(ItemSlot[CurItemIndex].Damage);
-					GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, FString::Printf(TEXT("%s got damage : %d"), *Monster->GetName(), ItemSlot[CurItemIndex].Damage));
-				}
+				//ATestMonsterBase* Monster = Cast<ATestMonsterBase>(Hit.GetActor()); // [Main] ABasicMonsterBase
+				//if (nullptr != Monster)
+				//{
+				//	Monster->Damaged(ItemSlot[CurItemIndex].Damage);
+				//	GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, FString::Printf(TEXT("%s got damage : %d"), *Monster->GetName(), ItemSlot[CurItemIndex].Damage));
+				//}
 			}
 			{
 				ATestBossMonsterBase* BossMonster = Cast<ATestBossMonsterBase>(Hit.GetActor());
