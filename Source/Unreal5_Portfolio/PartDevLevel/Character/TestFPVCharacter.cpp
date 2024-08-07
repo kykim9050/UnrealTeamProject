@@ -111,8 +111,11 @@ void ATestFPVCharacter::PostInitializeComponents()
 
 void ATestFPVCharacter::AnimationEnd() 
 {
+	PlayerAnimInst->ChangeAnimation(IdleDefault);
+	FPVPlayerAnimInst->ChangeAnimation(IdleDefault);
+
 	// 동기화 이슈 발생.
-	ChangeMontage(IdleDefault);
+	// ChangeMontage(IdleDefault);
 }
 
 // Called when the game starts or when spawned
@@ -239,6 +242,7 @@ void ATestFPVCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Ou
 	DOREPLIFETIME(ATestFPVCharacter, DirValue);			// => 매인 적용.
 	DOREPLIFETIME(ATestFPVCharacter, IsFaint);			// 7/26 추가
 	DOREPLIFETIME(ATestFPVCharacter, IsBombSetting);	// => 메인에 이전 필요 (24.07.29 추가됨)
+	DOREPLIFETIME(ATestFPVCharacter, IdleDefault);
 
 	// Inventory
 	//DOREPLIFETIME(ATestFPVCharacter, ItemSlot);		// => 메인 삭제 필요 (24.08.06 삭제됨)
@@ -340,7 +344,13 @@ void ATestFPVCharacter::Drink()
 // 노티파이
 void ATestFPVCharacter::DrinkComplete_Implementation()			// => 메인에 이전 필요 (24.08.01 수정됨)
 {
+
 	ChangeMontage(IdleDefault);
+}
+
+void ATestFPVCharacter::ChangeHandAttackCollisionProfile(FName _Name)
+{
+	HandAttackComponent->SetCollisionProfileName(_Name);
 }
 
 void ATestFPVCharacter::BombSetStart_Implementation()			// => 메인 수정 필요 (24.08.06 인벤토리에 있는지 검사하는 부분 수정됨)
@@ -441,8 +451,13 @@ void ATestFPVCharacter::BombSetComplete_Implementation()	// => 메인 수정 필요 (2
 	ChangeMontage(IdleDefault);
 }
 
-void ATestFPVCharacter::ChangeMontage_Implementation(EPlayerUpperState _UpperState)
+void ATestFPVCharacter::ChangeMontage_Implementation(EPlayerUpperState _UpperState, bool IsSet)
 {
+	if (true == IsSet)
+	{
+		IdleDefault = _UpperState;
+	}
+
 	PlayerAnimInst->ChangeAnimation(_UpperState);
 	FPVPlayerAnimInst->ChangeAnimation(_UpperState);
 	ClientChangeMontage(_UpperState);
