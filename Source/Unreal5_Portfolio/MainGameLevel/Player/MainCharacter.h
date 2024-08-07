@@ -48,17 +48,16 @@ public :
 	// 상체 정보
 	UPROPERTY(Category = "Contents", Replicated, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	EPlayerUpperState UpperStateValue = EPlayerUpperState::UArm_Idle;
-	
-	// 플레이어 자세 유형
-	UPROPERTY(Category = "Contents", Replicated, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	EPlayerPosture PostureValue = EPlayerPosture::Barehand;
-	
+		
 	// 캐릭터 방향 정보
 	UPROPERTY(Category = "Contents", Replicated, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	EPlayerMoveDir DirValue = EPlayerMoveDir::Forward;
 
+	UPROPERTY(Replicated, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	EPlayerUpperState IdleDefault = EPlayerUpperState::UArm_Idle;
+
 	// 캐릭터 기절 여부.
-	UPROPERTY(Category = "Contents", Replicated, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(Category = "Contents"/*, Replicated*/, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	bool IsFaint = false;
 
 private : // 문제 발생 여지 있음 발생하면 그냥 지워야 함.
@@ -107,16 +106,8 @@ private : // 문제 발생 여지 있음 발생하면 그냥 지워야 함.
 	UPROPERTY(Replicated)
 	FName UIToSelectCharacter = "";
 
-	UPROPERTY(Replicated, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	EPlayerUpperState IdleDefault = EPlayerUpperState::UArm_Idle;
-
 	// == Server ==
 public :
-	// 상채 변경
-	UFUNCTION(Reliable, Server)
-	void ChangePosture(EPlayerPosture _Type);
-	void ChangePosture_Implementation(EPlayerPosture _Type);
-
 	// 하제 변경
 	UFUNCTION(Reliable, Server)
 	void ChangeLowerState(EPlayerLowerState _LowerState);
@@ -127,13 +118,10 @@ public :
 	void ChangePlayerDir(EPlayerMoveDir _Dir);
 	void ChangePlayerDir_Implementation(EPlayerMoveDir _Dir);
 
-	UFUNCTION(BlueprintCallable)
-	void ItemSetting(FName _TagName, bool _InNextSlotToItem);
-
 	// Fire Ray Cast
 	UFUNCTION(Reliable, Server, BlueprintCallable)
-	void FireRayCast(float _DeltaTime);
-	void FireRayCast_Implementation(float _DeltaTime);
+	void FireRayCast();
+	void FireRayCast_Implementation();
 
 	UFUNCTION(Reliable, Server)
 	void ChangeMontage(EPlayerUpperState _UpperState, bool IsSet = false);
@@ -181,10 +169,10 @@ private :
 	const FVector FPVCameraRelLoc_Crouch = FVector(10.0f, 0.0f, 10.0f);
 
 	UFUNCTION(BlueprintCallable)
-	void MapItemOverlapStart(AActor* _OtherActor, UPrimitiveComponent* _Collision);
+	void MapItemOverlapStart(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 	
 	UFUNCTION(BlueprintCallable)
-	void MapItemOverlapEnd();
+	void MapItemOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
 	UFUNCTION(BlueprintCallable)
 	void UpdatePlayerHp(float _DeltaTime);
@@ -208,6 +196,10 @@ private :
 	void SetItemSocketMesh(UStaticMesh* _ItemMeshRes, FVector _ItemRelLoc, FRotator _ItemRelRot, FVector _ItemRelScale);
 	void SetItemSocketMesh_Implementation(UStaticMesh* _ItemMeshRes, FVector _ItemRelLoc, FRotator _ItemRelRot, FVector _ItemRelScale);
 
+	UFUNCTION(Reliable, Server)
+	void SpawnItem(FName _ItemName, FTransform _SpawnTrans);
+	void SpawnItem_Implementation(FName _ItemName, FTransform _SpawnTrans);
+
 	// 아이템 변경
 	UFUNCTION(BlueprintCallable)
 	void PickUpItem(class AItemBase* _Item);
@@ -218,6 +210,9 @@ private :
 
 	UFUNCTION()
 	void DeleteItemInfo(int _Index);
+
+	UFUNCTION()
+	bool IsItemInItemSlot(int _Index);
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	bool IsServer = false;
