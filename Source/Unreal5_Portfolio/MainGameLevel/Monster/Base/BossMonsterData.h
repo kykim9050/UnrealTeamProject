@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "UObject/NoExportTypes.h"
+#include "Components/ActorComponent.h"
 #include "Global/DataTable/BossMonsterDataRow.h"
 #include "BossMonsterData.generated.h"
 
@@ -11,7 +11,7 @@
  * 
  */
 UCLASS()
-class UNREAL5_PORTFOLIO_API UBossMonsterData : public UObject
+class UNREAL5_PORTFOLIO_API UBossMonsterData : public UActorComponent
 {
 	GENERATED_BODY()
 

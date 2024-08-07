@@ -10,6 +10,9 @@
 
 ABossKraken::ABossKraken()
 {
+	BossKrakenSettingData = CreateDefaultSubobject<UBossKrakenData>(TEXT("DataComponent"));
+	BossKrakenSettingData->SetIsReplicated(true);
+	
 	BodyComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("BodyCollision"));
 	BodyComponent->SetupAttachment(RootComponent);
 
@@ -21,7 +24,6 @@ void ABossKraken::InitData(const FBossMonsterDataRow* BaseData)
 {
 	Super::InitData(BaseData);
 
-	BossKrakenSettingData = NewObject<UBossKrakenData>(this);
 	BossKrakenSettingData->BaseData = BaseData;
 	BossKrakenSettingData->Hp = BaseData->MaxHp;
 

@@ -141,9 +141,6 @@ void ABossMonsterBase::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	// Test
-	Damaged(5.0f);
-
 	BossHP_HUDUpdate();
 	AnimInst->ChangeAnimation(AnimType);
 	DeadTimeLine.TickTimeline(DeltaTime);
