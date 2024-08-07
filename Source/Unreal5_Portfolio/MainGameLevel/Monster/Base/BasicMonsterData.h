@@ -15,15 +15,11 @@ class UNREAL5_PORTFOLIO_API UBasicMonsterData : public UObject
 {
 	GENERATED_BODY()
 	
-protected:
-	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
-
 public:
 	// 기본 설정 Data
 	const FMonsterDataRow* BaseData;
 
 	// 개별 Data
-	UPROPERTY(Replicated)
 	float Hp = 100.0f;
 	float AttackDamage = 5.0f;
 
