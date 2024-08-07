@@ -17,6 +17,7 @@
 #include "PartDevLevel/Monster/Boss/TestBossMonsterBase.h"
 #include "MainGameLevel/Object/MapObjectBase.h"
 #include "MainGameLevel/Object/Bomb.h"
+#include "MainGameLevel/Object/AreaObject.h"
 #include "MainGameLevel/UI/Title/MainTitleHUD.h"
 #include "PartDevLevel/UI/GetItem/GetItem_UserWidget.h"
 #include <Kismet/KismetSystemLibrary.h>
@@ -179,7 +180,7 @@ void AMainCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLi
 	// 하체 정보
 	DOREPLIFETIME(AMainCharacter, LowerStateValue);
 	// 플레이어 자세 유형.
-	DOREPLIFETIME(AMainCharacter, PostureValue);
+	DOREPLIFETIME(AMainCharacter, IdleDefault);
 	DOREPLIFETIME(AMainCharacter, DirValue);
 
 	DOREPLIFETIME(AMainCharacter, Token);
@@ -392,7 +393,7 @@ void AMainCharacter::FireRayCast_Implementation(float _DeltaTime)
 		// 주먹, 근거리
 		if (PostureValue == EPlayerPosture::Barehand || PostureValue == EPlayerPosture::Melee)
 		{
-			ChangeMontage();
+			//ChangeMontage();
 		}
 		return;
 	}
@@ -441,88 +442,22 @@ void AMainCharacter::FireRayCast_Implementation(float _DeltaTime)
 	}
 }
 
-void AMainCharacter::ChangeMontage_Implementation(bool _IsFireEnd)
+void AMainCharacter::ChangeMontage_Implementation(EPlayerUpperState _UpperState, bool IsSet)
 {
-	if (_IsFireEnd == false)
+	if (true == IsSet)
 	{
-		switch (PostureValue)
-		{
-		case EPlayerPosture::Rifle1:
-			UpperStateValue = EPlayerUpperState::Rifle_Attack;
-			break;
-		case EPlayerPosture::Rifle2:
-			UpperStateValue = EPlayerUpperState::Rifle_Attack;
-			break;
-		case EPlayerPosture::Melee:
-			UpperStateValue = EPlayerUpperState::Melee_Attack;
-			break;
-		case EPlayerPosture::Drink:
-			UpperStateValue = EPlayerUpperState::Drink;
-			break;
-		case EPlayerPosture::Bomb:
-			UpperStateValue = EPlayerUpperState::Bomb;
-			break;
-		case EPlayerPosture::Barehand:
-			UpperStateValue = EPlayerUpperState::UArm_Attack;
-			break;
-		case EPlayerPosture::SlotMax:
-			break;
-		default:
-			break;
-		}
-		PlayerAnimInst->ChangeAnimation(UpperStateValue);
-		FPVPlayerAnimInst->ChangeAnimation(UpperStateValue);
-		
-		ClientChangeMontage(false);
+		IdleDefault = _UpperState;
 	}
-	else
-	{
-		UpperStateValue = EPlayerUpperState::Rifle_Idle;
-		PlayerAnimInst->ChangeAnimation(UpperStateValue);
-		FPVPlayerAnimInst->ChangeAnimation(UpperStateValue);
-		
-		ClientChangeMontage(true);
-	}
+
+	PlayerAnimInst->ChangeAnimation(_UpperState);
+	FPVPlayerAnimInst->ChangeAnimation(_UpperState);
+	ClientChangeMontage(_UpperState);
 }
 
-void AMainCharacter::ClientChangeMontage_Implementation(bool _IsFireEnd)
+void AMainCharacter::ClientChangeMontage_Implementation(EPlayerUpperState _UpperState)
 {
-	if (_IsFireEnd == false)
-	{
-		switch (PostureValue)
-		{
-		case EPlayerPosture::Rifle1:
-			UpperStateValue = EPlayerUpperState::Rifle_Attack;
-			break;
-		case EPlayerPosture::Rifle2:
-			UpperStateValue = EPlayerUpperState::Rifle_Attack;
-			break;
-		case EPlayerPosture::Melee:
-			UpperStateValue = EPlayerUpperState::Melee_Attack;
-			break;
-		case EPlayerPosture::Drink:
-			UpperStateValue = EPlayerUpperState::Drink;
-			break;
-		case EPlayerPosture::Bomb:
-			UpperStateValue = EPlayerUpperState::Bomb;
-			break;
-		case EPlayerPosture::Barehand:
-			UpperStateValue = EPlayerUpperState::UArm_Attack;
-			break;
-		case EPlayerPosture::SlotMax:
-			break;
-		default:
-			break;
-		}
-		PlayerAnimInst->ChangeAnimation(UpperStateValue);
-		FPVPlayerAnimInst->ChangeAnimation(UpperStateValue);
-	}
-	else // FireEnd
-	{
-		UpperStateValue = EPlayerUpperState::Rifle_Idle;
-		PlayerAnimInst->ChangeAnimation(UpperStateValue);
-		FPVPlayerAnimInst->ChangeAnimation(UpperStateValue);
-	}
+	PlayerAnimInst->ChangeAnimation(_UpperState);
+	FPVPlayerAnimInst->ChangeAnimation(_UpperState);
 }
 
 void AMainCharacter::SettingPlayerState_Implementation()
@@ -623,6 +558,29 @@ void AMainCharacter::CheckItem()
 	}
 }
 
+void AMainCharacter::AttackCheck()
+{
+	switch (IdleDefault)
+	{
+	case EPlayerUpperState::UArm_Idle:
+		ChangeMontage(EPlayerUpperState::UArm_Attack);
+		break;
+	case EPlayerUpperState::Rifle_Idle:
+		ChangeMontage(EPlayerUpperState::Rifle_Attack);
+		break;
+	case EPlayerUpperState::Melee_Idle:
+		ChangeMontage(EPlayerUpperState::Melee_Attack);
+		break;
+	default:
+		break;
+	}
+}
+
+void AMainCharacter::Drink()
+{
+	ChangeMontage(EPlayerUpperState::Drink);
+}
+
 void AMainCharacter::DeleteItem(int _Index)
 {
 	FPlayerItemInformation NewSlot;
@@ -677,9 +635,95 @@ void AMainCharacter::InteractObject_Implementation(AMapObjectBase* _MapObject)
 	}
 }
 
+void AMainCharacter::BombSetStart_Implementation()
+{
+	// 폭탄 아이템 체크
+	if (false == ItemSlot[static_cast<int>(EItemType::Bomb)].IsItemIn)
+	{
+		return;
+	}
+
+	// 폭탄 설치 가능한 Area 체크
+	AAreaObject* AreaObject = Cast<AAreaObject>(GetMapItemData);
+	if (nullptr == AreaObject)
+	{
+		return;
+	}
+
+	// 폭탄 설치 가능.
+	IsBombSetting = true;
+	AreaObject->ResetBombTime();
+	ChangeMontage(EPlayerUpperState::Bomb);
+}
+
+void AMainCharacter::BombSetTick_Implementation()
+{
+	if (true == IsBombSetting)
+	{
+		// 폭탄 설치 가능한 Area 체크
+		AAreaObject* AreaObject = Cast<AAreaObject>(GetMapItemData);
+		if (nullptr == AreaObject)
+		{
+			return;
+		}
+
+		// 설치 시간 카운트가 끝났을 경우
+		if (0 >= AreaObject->GetInstallBombTime())
+		{
+			BombSetEnd();
+		}
+
+		// 설치 시간 카운팅
+		AreaObject->InstallBomb(GetWorld()->GetDeltaSeconds());
+	}
+}
+
+void AMainCharacter::BombSetCancel_Implementation()
+{
+	if (true == IsBombSetting)
+	{
+		IsBombSetting = false;
+		AAreaObject* AreaObject = Cast<AAreaObject>(GetMapItemData);
+		if (nullptr != AreaObject)
+		{
+			AreaObject->ResetBombTime();
+		}
+
+		// 이전 자세로 애니메이션 변경
+		ChangeMontage(IdleDefault);
+	}
+}
+
+void AMainCharacter::BombSetEnd_Implementation()
+{
+	if (true == IsBombSetting)
+	{
+		// 폭탄 설치 완료
+		IsBombSetting = false;
+
+		AAreaObject* AreaObject = Cast<AAreaObject>(GetMapItemData);
+		if (nullptr != AreaObject)
+		{
+			AreaObject->InterAction();
+		}
+
+		// 인벤토리에서 폭탄 아이템 삭제
+		DeleteItemInfo(static_cast<int>(EItemType::Bomb));
+
+		// 이전 자세로 애니메이션 변경
+		ChangeMontage(IdleDefault);
+	}
+}
+
 void AMainCharacter::GetSetSelectCharacter_Implementation(UMainGameInstance* _MainGameInstance)
 {
 	UIToSelectCharacter = _MainGameInstance->GetUIToSelectCharacter();
+}
+
+void AMainCharacter::DeleteItemInfo(int _Index)
+{
+	FPlayerItemInformation DeleteSlot;
+	ItemSlot[_Index] = DeleteSlot;
 }
 
 void AMainCharacter::ChangePOV()

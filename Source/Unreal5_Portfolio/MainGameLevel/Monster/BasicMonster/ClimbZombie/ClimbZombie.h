@@ -4,9 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "MainGameLevel/Monster/Base/BasicMonsterBase.h"
-#include "MainGameLevel/Monster/BasicMonster/ClimbZombie/ClimbZombeData.h"
 #include "ClimbZombie.generated.h"
 
+class UClimbZombeData;
 class UMotionWarpingComponent;
 
 /**

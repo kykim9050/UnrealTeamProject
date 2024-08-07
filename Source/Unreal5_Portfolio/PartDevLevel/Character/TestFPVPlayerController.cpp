@@ -149,14 +149,8 @@ void ATestFPVPlayerController::FireStart(float _DeltaTime)
 		return;
 	}
 	Ch->AttackCheck();
+	IsGunFire = true;
 
-#ifdef WITH_EDITOR
-	GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Yellow, FString(TEXT("Attack Start")));
-#endif // WITH_EDITOR
-	GetWorld()->GetTimerManager().SetTimer(MyTimeHandle, FTimerDelegate::CreateLambda([&]()
-		{
-			FireTick(_DeltaTime);
-		}), 0.2f, true);
 }
 
 void ATestFPVPlayerController::FireTick(float _DeltaTime)
@@ -166,27 +160,30 @@ void ATestFPVPlayerController::FireTick(float _DeltaTime)
 	{
 		return;
 	}
-#ifdef WITH_EDITOR
-	GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Yellow, FString(TEXT("Attack Tick")));
-#endif // WITH_EDITOR
-	Ch->AttackCheck();
+
+	// 내가 총일때만
+	if (true == IsGunFire || Ch->IdleDefault == EPlayerUpperState::Rifle_Idle)
+	{
+		Ch->AttackCheck();
+	}
 }
 
 void ATestFPVPlayerController::FireEnd()
 {
-	GetWorld()->GetTimerManager().ClearTimer(MyTimeHandle);
-	
-	ATestFPVCharacter* Ch = GetPawn<ATestFPVCharacter>();
-	if (nullptr == Ch)
-	{
-		return;
-	}
-
-	Ch->AttackEndCheck();
-
-#ifdef WITH_EDITOR
-	GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Yellow, FString(TEXT("Attack End")));
-#endif // WITH_EDITOR
+	IsGunFire = false;
+//	GetWorld()->GetTimerManager().ClearTimer(MyTimeHandle);
+//	
+//	ATestFPVCharacter* Ch = GetPawn<ATestFPVCharacter>();
+//	if (nullptr == Ch)
+//	{
+//		return;
+//	}
+//
+//	Ch->AttackEndCheck();
+//
+//#ifdef WITH_EDITOR
+//	GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Yellow, FString(TEXT("Attack End")));
+//#endif // WITH_EDITOR
 }
 
 void ATestFPVPlayerController::Drink_Con()	// => 메인에 추후 이전해야 함 (24.07.29 추가 후 테스팅 중) => 메인 적용(주석)
@@ -224,29 +221,24 @@ void ATestFPVPlayerController::ChangePosture_Con(int _InputKey)
 {
 	ATestFPVCharacter* Ch = GetPawn<ATestFPVCharacter>();
 
-	if (_InputKey == 0 || _InputKey == 1) // 총
+	if (_InputKey == 0) // 총
 	{
-		Ch->ChangeMontage(EPlayerUpperState::Rifle_Idle);
-		Ch->IdleDefault = EPlayerUpperState::Rifle_Idle;
-		Ch->SetStaticMesh(FName("SniperRifle"));
-
+		Ch->ChangeMontage(EPlayerUpperState::Rifle_Idle, true);
 		//ChangePostureToWidget(0); // BP To Event 
 		//ChangePostureToWidget(EPlayerUpperState::Rifle_Idle); // 아마?
 	}
-	else if (_InputKey == 2) // 칼
+	else if (_InputKey == 1) // 칼
 	{
-		Ch->ChangeMontage(EPlayerUpperState::Melee_Idle);
-		Ch->IdleDefault = EPlayerUpperState::Melee_Idle;
-		Ch->SetStaticMesh(FName("Katana"));
-
+		Ch->ChangeMontage(EPlayerUpperState::Melee_Idle, true);
 		//ChangePostureToWidget(EPlayerPosture::Rifle2); // BP To Event
 		//ChangePostureToWidget(EPlayerUpperState::Rifle_Idle);
 	}
 	else if (_InputKey == -1) // 주먹
 	{
-		Ch->ChangeMontage(EPlayerUpperState::UArm_Idle);
-		Ch->IdleDefault = EPlayerUpperState::UArm_Idle;
+		Ch->ChangeMontage(EPlayerUpperState::UArm_Idle, true);
 	}
+
+	Ch->SettingItemSocket(_InputKey);
 }
 
 void ATestFPVPlayerController::ChangePOV_Con()

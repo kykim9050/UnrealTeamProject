@@ -43,7 +43,13 @@ public:
 
 	void PushAnimation(uint8 Key, UAnimMontage* Montage, TFunction<void(uint8, UAnimMontage*)> _CallBack = nullptr);
 
-	void SetEndCallBack(uint8 Key, TFunction<void(uint8, UAnimMontage*)> _CallBack = nullptr);
+	template<typename EnumType>
+	void SetEndCallBack(EnumType Key, TFunction<void(uint8, UAnimMontage*)> _CallBack)
+	{
+		SetEndCallBackPush(static_cast<uint8>(Key), _CallBack);
+	}
+
+	void SetEndCallBackPush(uint8 Key, TFunction<void(uint8, UAnimMontage*)> _CallBack);
 
 	TMap<uint8, UAnimMontage*> GetAnimMontages()
 	{

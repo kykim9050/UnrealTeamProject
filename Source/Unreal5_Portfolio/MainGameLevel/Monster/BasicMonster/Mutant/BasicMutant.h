@@ -4,9 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "MainGameLevel/Monster/Base/BasicMonsterBase.h"
-#include "MainGameLevel/Monster/BasicMonster/Mutant/BasicMutantData.h"
 #include "BasicMutant.generated.h"
 
+class UBasicMutantData;
 class UMotionWarpingComponent;
 
 /**

@@ -41,93 +41,12 @@ ATestFPVCharacter::ATestFPVCharacter()
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	// Character Mesh => 메인캐릭터 이전 필요 (24.07.29 수정됨) => 메인 적용.
-	GetMesh()->SetOwnerNoSee(true);
-	GetMesh()->SetRelativeLocation(FVector(0.0f, 0.0f, -88.0f));
-	GetMesh()->bHiddenInSceneCapture = true;
-
-	// Item Mesh			// => 메인캐릭터 적용.
-	ItemSocketMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ItemSocketMesh"));
-	ItemSocketMesh->SetupAttachment(GetMesh(), FName("ItemSocket"));
-	ItemSocketMesh->SetCollisionProfileName(TEXT("NoCollision"));
-	ItemSocketMesh->SetGenerateOverlapEvents(true);
-	ItemSocketMesh->SetOwnerNoSee(true);
-	ItemSocketMesh->SetVisibility(false);
-	ItemSocketMesh->SetIsReplicated(true);
-	ItemSocketMesh->bHiddenInSceneCapture = true;
-
-	// SpringArm Component	// => 메인캐릭터 이전 필요 (24.07.29 수정됨)
-	SpringArmComponent = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArmComponent"));
-	SpringArmComponent->SetupAttachment(RootComponent);
-	SpringArmComponent->SetRelativeLocation(FPVCameraRelLoc);
-	SpringArmComponent->TargetArmLength = 0.0f;
-	SpringArmComponent->bUsePawnControlRotation = true;
-	SpringArmComponent->bDoCollisionTest = true;
-
-	// Camera Component		// => 메인캐릭터 이전 필요 (24.07.29 수정됨)
-	CameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("CameraComponent"));
-	CameraComponent->SetupAttachment(SpringArmComponent);
-	CameraComponent->SetProjectionMode(ECameraProjectionMode::Perspective);
-
-	// FPV Character Mesh	// => 메인 수정 필요 (24.08.02 수정됨)
-	FPVMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("FirstPersonMesh"));
-	FPVMesh->SetupAttachment(CameraComponent);
-	FPVMesh->SetRelativeLocation(FVector(-10.0f, 0.0f, -160.0f));
-	FPVMesh->SetOwnerNoSee(false);
-	FPVMesh->SetOnlyOwnerSee(true);
-	FPVMesh->bCastDynamicShadow = false;
-	FPVMesh->CastShadow = false;
-
-	// FPV Item Mesh		// => 메인캐릭터 적용.
-	FPVItemSocketMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("FPVItemSocketMesh"));
-	FPVItemSocketMesh->SetupAttachment(FPVMesh, FName("FPVItemSocket"));
-	FPVItemSocketMesh->SetCollisionProfileName(TEXT("NoCollision"));
-	FPVItemSocketMesh->SetGenerateOverlapEvents(true);
-	FPVItemSocketMesh->SetOnlyOwnerSee(true);
-	FPVItemSocketMesh->SetVisibility(false);
-	FPVItemSocketMesh->SetIsReplicated(true);
-	FPVItemSocketMesh->bCastDynamicShadow = false;
-	FPVItemSocketMesh->CastShadow = false;
-
-	// Map Item 검사			// => 메인 수정 필요 (24.08.01 수정됨)
-	GetMapItemCollisionComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("GetMapItemCollisionComponent"));
-	GetMapItemCollisionComponent->SetupAttachment(RootComponent);
-	GetMapItemCollisionComponent->SetRelativeLocation(FVector(60.0, 0.0, -5.0f));
-	GetMapItemCollisionComponent->SetBoxExtent(FVector(60.0f, 30.0f, 100.0f));
-	GetMapItemCollisionComponent->SetCollisionProfileName(FName("MapItemSearch"));
-
-	// Inventory			// => 메인 수정 필요 (24.08.06 수정됨)
+	// Inventory			// => 메인 수정 필요 (24.08.06 수정됨) [자식]
 	for (size_t i = 0; i < 4; i++)
 	{
 		FFPVItemInformation NewSlot;
 		ItemSlot.Push(NewSlot);
 	}
-
-	// HandAttack Component => 메인캐릭터 적용.[주석이 없는 3줄 적용. 확인 필요.]
-	//FString Name = "Punch";
-	HandAttackComponent = CreateDefaultSubobject<USphereComponent>(TEXT("Hand Attack Comp"));
-	HandAttackComponent->SetupAttachment(GetMesh());
-	HandAttackComponent->SetRelativeLocation({ 0.0f, 100.0f, 120.0f });
-	HandAttackComponent->SetCollisionProfileName(TEXT("NoCollision"));	// => 메인 수정 필요 (24.08.01 BeginPlay 함수에서 여기로 이동)
-
-	// MinimapIcon Component => 메인캐릭터 적용.
-	MinimapIconComponent = CreateDefaultSubobject<UTestMinimapIconComponent>(TEXT("MinimapPlayerIcon"));
-	MinimapIconComponent->SetupAttachment(RootComponent);
-	MinimapIconComponent->bVisibleInSceneCaptureOnly = true;
-
-	// HeadName Component	// => 메인으로 이전 필요 (24.07.30 추가됨)
-	HeadNameComponent = CreateDefaultSubobject<UHeadNameWidgetComponent>(TEXT("HeadNameWidgetComponent"));
-	HeadNameComponent->SetupAttachment(RootComponent);
-	HeadNameComponent->SetOwnerNoSee(true);
-	HeadNameComponent->bHiddenInSceneCapture = true;
-
-	// Riding Character Mesh => 메인캐릭터 적용.(주석)
-	RidingMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("RidingMesh"));
-	RidingMesh->SetupAttachment(GetMesh());
-	RidingMesh->SetCollisionProfileName(TEXT("NoCollision"));
-	RidingMesh->SetVisibility(false);
-	RidingMesh->SetIsReplicated(true);
-	RidingMesh->bHiddenInSceneCapture = true;
 }
 
 void ATestFPVCharacter::HandAttackCollision(AActor* _OtherActor, UPrimitiveComponent* _Collision) // => 매인 캐릭터에 적용.
@@ -157,12 +76,6 @@ void ATestFPVCharacter::HandAttackCollision(AActor* _OtherActor, UPrimitiveCompo
 			Rock->Damaged(150.0f);
 		}
 	}
-}
-
-// 노티파이 호출 함수.
-void ATestFPVCharacter::ChangeHandAttackCollisionProfile(FName _Name) // => 매인 적용.
-{
-	HandAttackComponent->SetCollisionProfileName(_Name);
 }
 
 // 메인 플레이어 추가 필요 코드 (태환) 07/24 => 매인 적용.
@@ -196,6 +109,15 @@ void ATestFPVCharacter::PostInitializeComponents()
 	Super::PostInitializeComponents();
 }
 
+void ATestFPVCharacter::AnimationEnd() 
+{
+	PlayerAnimInst->ChangeAnimation(IdleDefault);
+	FPVPlayerAnimInst->ChangeAnimation(IdleDefault);
+
+	// 동기화 이슈 발생.
+	// ChangeMontage(IdleDefault);
+}
+
 // Called when the game starts or when spawned
 void ATestFPVCharacter::BeginPlay()	// => 메인 수정 필요 (24.08.01 수정, 추가된 요소 있음)
 {
@@ -219,6 +141,33 @@ void ATestFPVCharacter::BeginPlay()	// => 메인 수정 필요 (24.08.01 수정, 추가된 
 	//double MyVelocity = UKismetMathLibrary::VSizeXY(GetVelocity());
 	//UCharacterMovementComponent* MyMovementComponent = GetCharacterMovement();
 	//MyMovementComponent->IsFalling();
+
+	ChangeMontage(EPlayerUpperState::UArm_Idle);
+
+	// Call Back
+	/*PlayerAnimInst->SetEndCallBack(EPlayerUpperState::Rifle_Attack,
+		[=, this](uint8 _Type, UAnimMontage* _Mon)
+		{
+			AttackEndCheck();
+		});
+
+	PlayerAnimInst->SetEndCallBack(EPlayerUpperState::Melee_Attack,
+		[=, this](uint8 _Type, UAnimMontage* _Mon)
+		{
+			AttackEndCheck();
+		});
+
+	PlayerAnimInst->SetEndCallBack(EPlayerUpperState::UArm_Attack,
+		[=, this](uint8 _Type, UAnimMontage* _Mon)
+		{
+			AttackEndCheck();
+		});
+
+	PlayerAnimInst->SetEndCallBack(EPlayerUpperState::Drink,
+		[=, this](uint8 _Type, UAnimMontage* _Mon)
+		{
+			AttackEndCheck();
+		});*/
 }
 
 // Called every frame
@@ -271,10 +220,17 @@ void ATestFPVCharacter::Tick(float DeltaTime)
 	// Debugging
 	//DefaultRayCast(DeltaTime);
 	//float ts = GetWorld()->GetDeltaSeconds();
-	AGameModeBase* Ptr = GetWorld()->GetAuthGameMode();
-	TArray<FFPVItemInformation> I = ItemSlot;
-	int c = CurItemIndex;
+	//TArray<FFPVItemInformation> I = ItemSlot;
+	//int c = CurItemIndex;
+	//AGameModeBase* Ptr = GetWorld()->GetAuthGameMode();
 	int a = 0;
+
+	// IdleDefault 출력.
+	{
+		UEnum* Enum = StaticEnum<EPlayerUpperState>();
+		FName Name = Enum->GetNameByValue(static_cast<int64>(IdleDefault));
+		UMainGameBlueprintFunctionLibrary::DebugTextPrint(GetWorld(), FString(TEXT("IdleDefault = ")) + Name.ToString());
+	}
 }
 
 void ATestFPVCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -286,10 +242,11 @@ void ATestFPVCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Ou
 	DOREPLIFETIME(ATestFPVCharacter, DirValue);			// => 매인 적용.
 	DOREPLIFETIME(ATestFPVCharacter, IsFaint);			// 7/26 추가
 	DOREPLIFETIME(ATestFPVCharacter, IsBombSetting);	// => 메인에 이전 필요 (24.07.29 추가됨)
+	DOREPLIFETIME(ATestFPVCharacter, IdleDefault);
 
 	// Inventory
-	//DOREPLIFETIME(ATestFPVCharacter, ItemSlot);		// => 메인 삭제 필요 (24.08.06 추가됨)
-	//DOREPLIFETIME(ATestFPVCharacter, IsItemIn);		// => 메인 삭제 필요 (24.08.06 추가됨)
+	//DOREPLIFETIME(ATestFPVCharacter, ItemSlot);		// => 메인 삭제 필요 (24.08.06 삭제됨)
+	//DOREPLIFETIME(ATestFPVCharacter, IsItemIn);		// => 메인 삭제 필요 (24.08.06 삭제됨)
 
 	// Item
 	//DOREPLIFETIME(ATestFPVCharacter, RayCastToItemName); // 사용 안함.
@@ -387,7 +344,13 @@ void ATestFPVCharacter::Drink()
 // 노티파이
 void ATestFPVCharacter::DrinkComplete_Implementation()			// => 메인에 이전 필요 (24.08.01 수정됨)
 {
+
 	ChangeMontage(IdleDefault);
+}
+
+void ATestFPVCharacter::ChangeHandAttackCollisionProfile(FName _Name)
+{
+	HandAttackComponent->SetCollisionProfileName(_Name);
 }
 
 void ATestFPVCharacter::BombSetStart_Implementation()			// => 메인 수정 필요 (24.08.06 인벤토리에 있는지 검사하는 부분 수정됨)
@@ -419,7 +382,6 @@ void ATestFPVCharacter::BombSetStart_Implementation()			// => 메인 수정 필요 (24
 #endif
 
 	// 애니메이션 변경
-	//ChangePosture(EPlayerPosture::Bomb);
 	ChangeMontage(EPlayerUpperState::Bomb);
 }
 
@@ -463,12 +425,11 @@ void ATestFPVCharacter::BombSetCancel_Implementation()		// => 메인에 이전 필요 (
 		}
 
 		// 이전 자세로 애니메이션 변경
-		//ChangePosture(PrevPostureValue);
 		ChangeMontage(IdleDefault);
 	}
 }
 
-void ATestFPVCharacter::BombSetComplete_Implementation()	// => 메인에 이전 필요 (24.08.01 수정됨)
+void ATestFPVCharacter::BombSetComplete_Implementation()	// => 메인 수정 필요 (24.08.06 인벤토리에서 아이템 삭제하는 부분 수정됨)
 {
 	// 폭탄 설치 완료
 	IsBombSetting = false;
@@ -482,16 +443,21 @@ void ATestFPVCharacter::BombSetComplete_Implementation()	// => 메인에 이전 필요 
 	GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, FString(TEXT("Bomb setting completed!")));
 #endif // WITH_EDITOR
 
-	// 폭탄 아이템 삭제
-	DeleteItem(4);
+	// 인벤토리에서 폭탄 아이템 삭제
+	DeleteItemInfo(static_cast<int>(EItemType::Bomb));
 
 	// 이전 자세로 애니메이션 변경
 	//ChangePosture(PrevPostureValue);
 	ChangeMontage(IdleDefault);
 }
 
-void ATestFPVCharacter::ChangeMontage_Implementation(EPlayerUpperState _UpperState)
+void ATestFPVCharacter::ChangeMontage_Implementation(EPlayerUpperState _UpperState, bool IsSet)
 {
+	if (true == IsSet)
+	{
+		IdleDefault = _UpperState;
+	}
+
 	PlayerAnimInst->ChangeAnimation(_UpperState);
 	FPVPlayerAnimInst->ChangeAnimation(_UpperState);
 	ClientChangeMontage(_UpperState);
@@ -503,61 +469,48 @@ void ATestFPVCharacter::ClientChangeMontage_Implementation(EPlayerUpperState _Up
 	FPVPlayerAnimInst->ChangeAnimation(_UpperState);
 }
 
-void ATestFPVCharacter::SetStaticMesh_Implementation(FName _ItemName)
+void ATestFPVCharacter::SettingItemSocket(int _InputKey)		// => 메인에 이전 필요 (24.08.06 추가됨)
 {
-	// test
+	if (-1 == _InputKey)
 	{
-		UMainGameInstance* Inst = GetGameInstance<UMainGameInstance>();
-		const FItemDataRow* ItemData = Inst->GetItemData(_ItemName);
-
-		int ItemReloadNum = ItemData->GetReloadNum();
-		int ItemDamage = ItemData->GetDamage();
-		UStaticMesh* ItemMeshRes = ItemData->GetResMesh();
-		FVector ItemRelLoc = ItemData->GetRelLoc();
-		FRotator ItemRelRot = ItemData->GetRelRot();
-		FVector ItemRelScale = ItemData->GetRelScale();
-
-		if (_ItemName == "SniperRifle")
-		{
-			ItemSlot[0].Name = _ItemName;
-			ItemSlot[0].ReloadMaxNum = ItemReloadNum;
-			ItemSlot[0].ReloadLeftNum = ItemReloadNum;
-			ItemSlot[0].Damage = ItemDamage;
-			ItemSlot[0].MeshRes = ItemMeshRes;
-			ItemSlot[0].RelLoc = ItemRelLoc;
-			ItemSlot[0].RelRot = ItemRelRot;
-			ItemSlot[0].RelScale = ItemRelScale;
-		}
-		else if (_ItemName == "Katana")
-		{
-			ItemSlot[1].Name = _ItemName;
-			ItemSlot[1].ReloadMaxNum = ItemReloadNum;
-			ItemSlot[1].ReloadLeftNum = ItemReloadNum;
-			ItemSlot[1].Damage = ItemDamage;
-			ItemSlot[1].MeshRes = ItemMeshRes;
-			ItemSlot[1].RelLoc = ItemRelLoc;
-			ItemSlot[1].RelRot = ItemRelRot;
-			ItemSlot[1].RelScale = ItemRelScale;
-		}
+		// ItemSocket의 visibility 끄기
+		SetItemSocketVisibility(false);
+		return;
 	}
 
-	//아이템 static mesh 세팅
-	ItemSocketMesh->SetStaticMesh(ItemSlot[0].MeshRes);
-	FPVItemSocketMesh->SetStaticMesh(ItemSlot[0].MeshRes);
+	UStaticMesh* ItemMeshRes = ItemSlot[_InputKey].MeshRes;
+	FVector ItemRelLoc = ItemSlot[_InputKey].RelLoc;
+	FRotator ItemRelRot = ItemSlot[_InputKey].RelRot;
+	FVector ItemRelScale = ItemSlot[_InputKey].RelScale;
 
-	// 아이템 메시 transform 세팅
-	ItemSocketMesh->SetRelativeLocation(ItemSlot[0].RelLoc);
-	FPVItemSocketMesh->SetRelativeLocation(ItemSlot[0].RelLoc);
+	// ItemSocket의 static mesh 세팅
+	SetItemSocketMesh(ItemMeshRes, ItemRelLoc, ItemRelRot, ItemRelScale);
 
-	ItemSocketMesh->SetRelativeRotation(ItemSlot[0].RelRot);
-	FPVItemSocketMesh->SetRelativeRotation(ItemSlot[0].RelRot);
+	// ItemSocket의 visibility 켜기
+	SetItemSocketVisibility(true);
+}
 
-	ItemSocketMesh->SetRelativeScale3D(ItemSlot[0].RelScale);
-	FPVItemSocketMesh->SetRelativeScale3D(ItemSlot[0].RelScale);
+void ATestFPVCharacter::SetItemSocketMesh_Implementation(UStaticMesh* _ItemMeshRes, FVector _ItemRelLoc, FRotator _ItemRelRot, FVector _ItemRelScale)
+{
+	// static mesh 세팅
+	ItemSocketMesh->SetStaticMesh(_ItemMeshRes);
+	FPVItemSocketMesh->SetStaticMesh(_ItemMeshRes);
 
-	// 아이템 메시 visibility 켜기
-	ItemSocketMesh->SetVisibility(true);
-	FPVItemSocketMesh->SetVisibility(true);
+	// transform 세팅
+	ItemSocketMesh->SetRelativeLocation(_ItemRelLoc);
+	FPVItemSocketMesh->SetRelativeLocation(_ItemRelLoc);
+
+	ItemSocketMesh->SetRelativeRotation(_ItemRelRot);
+	FPVItemSocketMesh->SetRelativeRotation(_ItemRelRot);
+
+	ItemSocketMesh->SetRelativeScale3D(_ItemRelScale);
+	FPVItemSocketMesh->SetRelativeScale3D(_ItemRelScale);
+}
+
+void ATestFPVCharacter::SetItemSocketVisibility_Implementation(bool _Visibility)
+{
+	ItemSocketMesh->SetVisibility(_Visibility);
+	FPVItemSocketMesh->SetVisibility(_Visibility);
 }
 
 //void ATestFPVCharacter::ChangePosture_Implementation(EPlayerPosture _Type)	// => 메인으로 이전해야 함 (24.07.30 수정 중)
@@ -664,6 +617,27 @@ void ATestFPVCharacter::ChangeLowerState_Implementation(EPlayerLowerState _Lower
 
 void ATestFPVCharacter::ChangePlayerDir_Implementation(EPlayerMoveDir _Dir) // => 매인 적용.
 {
+	if (IdleDefault == EPlayerUpperState::UArm_Idle)
+	{
+		switch (_Dir)
+		{
+		case EPlayerMoveDir::Forward:
+			ChangeMontage(EPlayerUpperState::MoveForward);
+			break;
+		case EPlayerMoveDir::Back:
+			ChangeMontage(EPlayerUpperState::MoveBack);
+			break;
+		case EPlayerMoveDir::Left:
+			ChangeMontage(EPlayerUpperState::MoveLeft);
+			break;
+		case EPlayerMoveDir::Right:
+			ChangeMontage(EPlayerUpperState::MoveRight);
+			break;
+		default:
+			break;
+		}
+	}
+
 	// W A S D
 	DirValue = _Dir;
 }
@@ -678,6 +652,11 @@ void ATestFPVCharacter::ChangeIsFaint_Implementation()
 	{
 		IsFaint = true;
 	}
+}
+
+bool ATestFPVCharacter::IsItemInItemSlot(int _Index)
+{
+	return ItemSlot[_Index].IsItemIn;
 }
 
 void ATestFPVCharacter::CheckItem()	// => 메인 수정 필요 (24.08.02 PickUpItem 인자 추가됨)
@@ -770,8 +749,10 @@ void ATestFPVCharacter::PickUpItem(AItemBase* _Item)	// => 메인 수정 필요 (24.08
 	ItemToCheckAnimation();
 }
 
-void ATestFPVCharacter::DropItem_Implementation(int _SlotIndex)	// => 메인 수정 필요 (24.08.06 수정됨)
+void ATestFPVCharacter::DropItem(int _SlotIndex)	// => 메인 수정 필요 (24.08.06 수정됨)
 {
+	CurItemIndex = 0;	// Testing
+
 	// DropItem 할 수 없는 경우 1 : 맨손일 때
 	if (CurItemIndex == -1)
 	{
@@ -789,44 +770,51 @@ void ATestFPVCharacter::DropItem_Implementation(int _SlotIndex)	// => 메인 수정 
 #endif // WITH_EDITOR
 		return;
 	}
-
-	// 떨어트릴 아이템을 Actor로 생성
-	UMainGameInstance* MainGameInst = UMainGameBlueprintFunctionLibrary::GetMainGameInstance(GetWorld());	// 매인에는 이렇게 적용됨.
-	//UMainGameInstance* MainGameInst = GetWorld()->GetGameInstanceChecked<UMainGameInstance>();
-	const FItemDataRow* ItemData = MainGameInst->GetItemData(ItemSlot[_SlotIndex].Name);
+	
+	// 떨어트릴 아이템을 스폰
+	FName ItemName = ItemSlot[_SlotIndex].Name;
 	FTransform SpawnTrans = GetActorTransform();
 	SpawnTrans.SetTranslation(GetActorLocation() + (GetActorForwardVector() * 100.0f) + (GetActorUpVector() * 50.0f));
 
-	// Spawn
-	AActor* DropItem = GetWorld()->SpawnActor<AActor>(ItemData->GetItemUClass(), SpawnTrans);
-	UStaticMeshComponent* DropItemMeshComp = Cast<AItemBase>(DropItem)->GetStaticMeshComponent();
-	DropItemMeshComp->SetSimulatePhysics(true);
-	//bool r = DropItemMeshComp->IsSimulatingPhysics();
-	//int a = 0;
+	SpawnItem(ItemName, SpawnTrans);
 
-	// 아이템 앞으로 던지기 (미완)
+	// 아이템 앞으로 던지기 (수정 중)
 	//GetMesh()->SetSimulatePhysics(true);
-	FVector ImpulseVector = GetActorForwardVector() * 1000.0f;
-	GetMesh()->AddImpulse(ImpulseVector, FName("RightHand"), false);
+	//FVector ImpulseVector = GetActorForwardVector() * 1000.0f;
+	//GetMesh()->AddImpulse(ImpulseVector, FName("RightHand"), false);
 
 	// 인벤토리에서 버린 아이템 정보 삭제
-	DeleteItem(_SlotIndex);
+	DeleteItemInfo(_SlotIndex);
 
 #ifdef WITH_EDITOR
 	GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, FString::Printf(TEXT("Drop the item. (Index : %d)"), _SlotIndex + 1));
 #endif // WITH_EDITOR
 
 	// 애니메이션 업데이트
+	ItemToCheckAnimation();
 	//ChangePosture(EPlayerPosture::Barehand);
-	ChangeMontage(EPlayerUpperState::UArm_Attack);
+	//ChangeMontage(EPlayerUpperState::UArm_Attack);
 }
 
-void ATestFPVCharacter::DestroyItem_Implementation(AItemBase* _Item)
+void ATestFPVCharacter::DestroyItem_Implementation(AItemBase* _Item)	// => 메인 이전 필요 (24.08.06 추가됨)
 {
+	// 필드에서 아이템 Destroy
 	_Item->Destroy();
 }
 
-void ATestFPVCharacter::DeleteItem(int _Index)		// => 메인 수정 필요 (24.08.06 수정됨)
+void ATestFPVCharacter::SpawnItem_Implementation(FName _ItemName, FTransform _SpawnTrans)	// => 메인 이전 필요 (24.08.06 추가됨)
+{
+	// 스폰할 아이템 정보 가져오기
+	UMainGameInstance* MainGameInst = UMainGameBlueprintFunctionLibrary::GetMainGameInstance(GetWorld());
+	const FItemDataRow* ItemData = MainGameInst->GetItemData(_ItemName);
+
+	// 필드에 아이템 Spawn
+	AItemBase* DropItem = GetWorld()->SpawnActor<AItemBase>(ItemData->GetItemUClass(), _SpawnTrans);
+	UStaticMeshComponent* DropItemMeshComp = Cast<AItemBase>(DropItem)->GetStaticMeshComponent();
+	DropItemMeshComp->SetSimulatePhysics(true);
+}
+
+void ATestFPVCharacter::DeleteItemInfo(int _Index)		// => 메인 수정 필요 (24.08.06 수정됨)
 {
 	FFPVItemInformation NewSlot;
 	ItemSlot[_Index] = NewSlot;
@@ -988,6 +976,8 @@ void ATestFPVCharacter::AttackCheck()
 
 void ATestFPVCharacter::AttackEndCheck()
 {
+	//ChangeMontage(IdleDefault);
+
 	//UAnimMontage* GetCurMontage = GetCurrentMontage();
 	//FName GetCurMontageName = GetCurMontage->GetFName();
 	//// E_Fire_Stand_Montage

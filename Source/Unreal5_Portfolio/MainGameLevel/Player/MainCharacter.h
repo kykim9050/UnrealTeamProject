@@ -106,6 +106,10 @@ private : // 문제 발생 여지 있음 발생하면 그냥 지워야 함.
 	UPROPERTY(VisibleAnywhere)
 	int CurItemIndex = -1;
 
+	// 폭탄 설치 진행 상황
+	UPROPERTY()
+	bool IsBombSetting = false;
+
 
 	// 맵에 있는 무기 Data
 	UPROPERTY(Category = "Contents", VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
@@ -123,6 +127,9 @@ private : // 문제 발생 여지 있음 발생하면 그냥 지워야 함.
 
 	UPROPERTY(Replicated)
 	FName UIToSelectCharacter = "";
+
+	UPROPERTY(Replicated, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	EPlayerUpperState IdleDefault = EPlayerUpperState::UArm_Idle;
 
 	// == Server ==
 public :
@@ -159,14 +166,13 @@ public :
 	void FireRayCast(float _DeltaTime);
 	void FireRayCast_Implementation(float _DeltaTime);
 
-	// 공격 몽타주 서버
 	UFUNCTION(Reliable, Server)
-	void ChangeMontage(bool _IsFireEnd = false);
-	void ChangeMontage_Implementation(bool _IsFireEnd = false);
+	void ChangeMontage(EPlayerUpperState _UpperState, bool IsSet = false);
+	void ChangeMontage_Implementation(EPlayerUpperState _UpperState, bool IsSet = false);
 
 	UFUNCTION(Reliable, NetMulticast)
-	void ClientChangeMontage(bool _IsFireEnd = false);
-	void ClientChangeMontage_Implementation(bool _IsFireEnd = false);
+	void ClientChangeMontage(EPlayerUpperState _UpperState);
+	void ClientChangeMontage_Implementation(EPlayerUpperState _UpperState);
 
 	UFUNCTION(Reliable, Server)
 	void SettingPlayerState();
@@ -179,6 +185,19 @@ public :
 	UFUNCTION(Reliable, Server)
 	void InteractObject(AMapObjectBase* _MapObject);
 	void InteractObject_Implementation(AMapObjectBase* _MapObject);
+
+	UFUNCTION(Reliable, Server)
+	void BombSetStart();
+	void BombSetStart_Implementation();
+	UFUNCTION(Reliable, Server)
+	void BombSetTick();
+	void BombSetTick_Implementation();
+	UFUNCTION(Reliable, Server)
+	void BombSetCancel();
+	void BombSetCancel_Implementation();
+	UFUNCTION(Reliable, Server)
+	void BombSetEnd();
+	void BombSetEnd_Implementation();
 
 	/// <summary>
 	/// Crouch 에 대한 카메라 이동
@@ -208,6 +227,9 @@ private :
 	void GetSetSelectCharacter(class UMainGameInstance* _MainGameInstance);
 	void GetSetSelectCharacter_Implementation(class UMainGameInstance* _MainGameInstance);
 
+	UFUNCTION()
+	void DeleteItemInfo(int _Index);
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	bool IsServer = false;
 
@@ -225,6 +247,17 @@ public :
 	UFUNCTION(BlueprintCallable)
 	void CheckItem();
 
+	UFUNCTION()
+	void AttackCheck();
+
+	UFUNCTION()
+	void Drink();
+
+	UFUNCTION()
+	FORCEINLINE EPlayerUpperState GetIdleDefault() const
+	{
+		return IdleDefault;
+	}
 
 public :
 	// == 인칭 변경 함수 ==

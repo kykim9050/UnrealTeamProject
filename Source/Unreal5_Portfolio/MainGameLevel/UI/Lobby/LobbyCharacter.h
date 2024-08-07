@@ -37,21 +37,31 @@ public:
 	void ClientChangedMesh(FName _NewType); // 클라에서 자신의 타입을 보내주기 위한 파라미터
 	void ClientChangedMesh_Implementation(FName _NewType);
 
+	UFUNCTION(Reliable, Server)
+	void SendNicknames(const FText& _Nickname);
+	void SendNicknames_Implementation(const FText& _Nickname);
+
 	UPROPERTY()
 	bool ReadyClicked = false;
 
 	UPROPERTY(Replicated, BlueprintReadOnly)
-	int MyOrder = -1; // 나의 들어온 순서 및 번호 (0 ~ 3)
+	int MyOrder = -1;		// 나의 들어온 순서 및 번호 (0 ~ 3)
 
 	UPROPERTY(Replicated, BlueprintReadOnly)
-	FName MyChracterType; // 캐릭터 메시 타입
+	FName MyChracterType;	// 캐릭터 메시 타입
+
+	UFUNCTION()
+	FText GetMyNickName() const
+	{
+		return MyNickName;
+	}
 private:
 	UPROPERTY()
 	AGameModeBase* IsServerPtr = nullptr; // nullptr이면 client
 
-	UPROPERTY()
-	bool SetWidgetNickName = false;
-
 	UPROPERTY(Replicated, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	class ALobbyCapCharacter* MyMannequin = nullptr;
+
+	UPROPERTY(Replicated, meta = (AllowPrivateAccess = "true"))
+	FText MyNickName;		// 닉네임
 };

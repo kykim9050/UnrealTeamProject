@@ -130,6 +130,9 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	bool PlayerIsBombSetting = false; // 메인 적용 필요
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	bool IsGunFire = false;
+
 	// HUD / Widget
 	UFUNCTION()
 	void CallGetItem(); // => 메인 적용(Delegate)

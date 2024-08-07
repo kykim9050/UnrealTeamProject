@@ -3,14 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "MainGameLevel/Monster/BasicMonster/AI/TaskNode/BTTaskNodeBase_Monster.h"
+#include "MainGameLevel/Monster/Base/BTTaskNodeBase_Monster.h"
 #include "BTTaskNode_BasicMutantChase.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class UNREAL5_PORTFOLIO_API UBTTaskNode_BasicMutantChase : public UBTTaskNodeBase_BasicMonster
+class UNREAL5_PORTFOLIO_API UBTTaskNode_BasicMutantChase : public UBTTaskNodeBase_Monster
 {
 	GENERATED_BODY()
 
