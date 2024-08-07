@@ -58,8 +58,9 @@ public:
 		return CurStage;
 	}
 
-	UFUNCTION()
+	UFUNCTION(Reliable, Server)
 	void SetCurStage(EGameStage _Stage);
+	void SetCurStage_Implementation(EGameStage _Stage);
 
 	/// <summary>
 	/// 현재 게임 진행 관련 체크 함수

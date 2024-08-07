@@ -10,7 +10,7 @@
 // 추후 삭제 필요
 #include "TestLevel/Character/TestCharacter.h"
 
-void AMainGameState::SetCurStage(EGameStage _Stage)
+void AMainGameState::SetCurStage_Implementation(EGameStage _Stage)
 {
 	EGameStage PrevStage = CurStage;
 
@@ -231,5 +231,5 @@ void AMainGameState::GameStateConditionUpdate(AActor* _OtherActor, bool _IsAdd)
 
 void AMainGameState::SpawnTriggerBox(FVector _Pos, FRotator _Rot)
 {
-	int a = 0;
+	//GetWorld()->SpawnActor<>()
 }
