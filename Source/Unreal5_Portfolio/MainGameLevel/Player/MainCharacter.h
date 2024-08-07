@@ -229,10 +229,6 @@ private :
 	void SetItemSocketMesh(UStaticMesh* _ItemMeshRes, FVector _ItemRelLoc, FRotator _ItemRelRot, FVector _ItemRelScale);
 	void SetItemSocketMesh_Implementation(UStaticMesh* _ItemMeshRes, FVector _ItemRelLoc, FRotator _ItemRelRot, FVector _ItemRelScale);
 
-	// 소켓에 아이템 설정.
-	UFUNCTION()
-	void SettingItemSocket(int _InputKey);
-
 	// 아이템 변경
 	UFUNCTION(BlueprintCallable)
 	void PickUpItem(class AItemBase* _Item);
@@ -266,6 +262,10 @@ public :
 
 	UFUNCTION()
 	void Drink();
+
+	// 소켓에 아이템 설정.
+	UFUNCTION()
+	void SettingItemSocket(int _InputKey);
 
 	UFUNCTION()
 	FORCEINLINE EPlayerUpperState GetIdleDefault() const
