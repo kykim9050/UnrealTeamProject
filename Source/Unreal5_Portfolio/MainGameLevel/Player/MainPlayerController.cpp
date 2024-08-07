@@ -127,7 +127,7 @@ void AMainPlayerController::A_MoveLeft(const FInputActionValue& Value)
 	ChangePlayerDir(EPlayerMoveDir::Left);
 }
 
-void AMainPlayerController::MouseLeft_FireStart(const FInputActionValue& Value)
+void AMainPlayerController::MouseLeft_FireStart()
 {
 	// 기절 상태
 	//if (CharacterIsFaint == true)
@@ -163,7 +163,7 @@ void AMainPlayerController::MouseLeft_FireTick(float _DeltaTime)
 	//BullitCountToHUD();
 }
 
-void AMainPlayerController::MouseLeft_FireEnd(const FInputActionValue& Value)
+void AMainPlayerController::MouseLeft_FireEnd()
 {
 	IsGunFire = false;
 }
