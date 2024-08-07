@@ -185,6 +185,8 @@ public:
 	void DrinkComplete();
 	void DrinkComplete_Implementation();
 
+	void ChangeHandAttackCollisionProfile(FName _Name);
+
 	// Bomb Setting
 	UPROPERTY(Replicated, BlueprintReadWrite)
 	bool IsBombSetting = false;	// => 메인에 이전 필요 (24.07.29 추가됨)

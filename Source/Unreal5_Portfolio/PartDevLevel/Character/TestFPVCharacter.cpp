@@ -343,6 +343,11 @@ void ATestFPVCharacter::DrinkComplete_Implementation()			// => 메인에 이전 필요 
 	ChangeMontage(IdleDefault);
 }
 
+void ATestFPVCharacter::ChangeHandAttackCollisionProfile(FName _Name)
+{
+	HandAttackComponent->SetCollisionProfileName(_Name);
+}
+
 void ATestFPVCharacter::BombSetStart_Implementation()			// => 메인 수정 필요 (24.08.06 인벤토리에 있는지 검사하는 부분 수정됨)
 {
 	// 폭탄 아이템이 없다면 return
