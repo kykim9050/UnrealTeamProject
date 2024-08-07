@@ -23,7 +23,7 @@ void ABossKraken::InitData(const FBossMonsterDataRow* BaseData)
 
 	BossKrakenSettingData = NewObject<UBossKrakenData>(this);
 	BossKrakenSettingData->BaseData = BaseData;
-	BossKrakenSettingData->Hp = 100.0f;
+	BossKrakenSettingData->Hp = BaseData->MaxHp;
 
 	SettingData = BossKrakenSettingData;
 }
