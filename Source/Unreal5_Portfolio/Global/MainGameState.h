@@ -53,7 +53,7 @@ public:
 	UActorGroup* GetActorGroup(uint8 _Index);
 
 	UFUNCTION(BlueprintCallable)
-	FORCEINLINE EGameStage GetCurStage() const
+	EGameStage GetCurStage()
 	{
 		return CurStage;
 	}
