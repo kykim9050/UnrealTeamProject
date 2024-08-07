@@ -205,8 +205,8 @@ public:
 
 	// Animation, Montage
 	UFUNCTION(Reliable, Server)				// 공격 시 서버 캐릭터 몽타주 변경 함수 (태환)
-	void ChangeMontage(EPlayerUpperState _UpperState);
-	void ChangeMontage_Implementation(EPlayerUpperState _UpperState);
+	void ChangeMontage(EPlayerUpperState _UpperState, bool IsSet = false);
+	void ChangeMontage_Implementation(EPlayerUpperState _UpperState, bool IsSet = false);
 	UFUNCTION(Reliable, NetMulticast)		// 공격 시 서버 캐릭터 몽타주 변경 함수 (태환)
 	void ClientChangeMontage(EPlayerUpperState _UpperState);
 	void ClientChangeMontage_Implementation(EPlayerUpperState _UpperState);
@@ -242,12 +242,14 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	bool IsClient = false;
 
+
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	bool IsCanControlled = false;
 
 	UPROPERTY(Category = "TPSNet", Replicated, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	int Token = -1;
 
-	UPROPERTY()
+	UPROPERTY(Category = "TPSNet", Replicated, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	EPlayerUpperState IdleDefault = EPlayerUpperState::UArm_Idle;
 };
