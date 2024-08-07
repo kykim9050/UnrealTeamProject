@@ -149,31 +149,28 @@ void ATestFPVPlayerController::FireStart(float _DeltaTime)
 		return;
 	}
 	Ch->AttackCheck();
+	IsGunFire = true;
 
-//#ifdef WITH_EDITOR
-//	GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Yellow, FString(TEXT("Attack Start")));
-//#endif // WITH_EDITOR
-//	GetWorld()->GetTimerManager().SetTimer(MyTimeHandle, FTimerDelegate::CreateLambda([&]()
-//		{
-//			FireTick(_DeltaTime);
-//		}), 0.2f, true);
 }
 
 void ATestFPVPlayerController::FireTick(float _DeltaTime)
 {
-//	ATestFPVCharacter* Ch = GetPawn<ATestFPVCharacter>();
-//	if (nullptr == Ch)
-//	{
-//		return;
-//	}
-//#ifdef WITH_EDITOR
-//	GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Yellow, FString(TEXT("Attack Tick")));
-//#endif // WITH_EDITOR
-//	Ch->AttackCheck();
+	ATestFPVCharacter* Ch = GetPawn<ATestFPVCharacter>();
+	if (nullptr == Ch)
+	{
+		return;
+	}
+
+	// ³»°¡ ÃÑÀÏ¶§¸¸
+	if (true == IsGunFire || Ch->IdleDefault == EPlayerUpperState::Rifle_Idle)
+	{
+		Ch->AttackCheck();
+	}
 }
 
 void ATestFPVPlayerController::FireEnd()
 {
+	IsGunFire = false;
 //	GetWorld()->GetTimerManager().ClearTimer(MyTimeHandle);
 //	
 //	ATestFPVCharacter* Ch = GetPawn<ATestFPVCharacter>();
@@ -226,23 +223,19 @@ void ATestFPVPlayerController::ChangePosture_Con(int _InputKey)
 
 	if (_InputKey == 0) // ÃÑ
 	{
-		Ch->ChangeMontage(EPlayerUpperState::Rifle_Idle);
-		Ch->IdleDefault = EPlayerUpperState::Rifle_Idle;
+		Ch->ChangeMontage(EPlayerUpperState::Rifle_Idle, true);
 		//ChangePostureToWidget(0); // BP To Event 
 		//ChangePostureToWidget(EPlayerUpperState::Rifle_Idle); // ¾Æ¸¶?
 	}
 	else if (_InputKey == 1) // Ä®
 	{
-		Ch->ChangeMontage(EPlayerUpperState::Melee_Idle);
-		Ch->IdleDefault = EPlayerUpperState::Melee_Idle;
-
+		Ch->ChangeMontage(EPlayerUpperState::Melee_Idle, true);
 		//ChangePostureToWidget(EPlayerPosture::Rifle2); // BP To Event
 		//ChangePostureToWidget(EPlayerUpperState::Rifle_Idle);
 	}
 	else if (_InputKey == -1) // ÁÖ¸Ô
 	{
-		Ch->ChangeMontage(EPlayerUpperState::UArm_Idle);
-		Ch->IdleDefault = EPlayerUpperState::UArm_Idle;
+		Ch->ChangeMontage(EPlayerUpperState::UArm_Idle, true);
 	}
 
 	Ch->SettingItemSocket(_InputKey);

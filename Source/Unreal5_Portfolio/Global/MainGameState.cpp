@@ -10,7 +10,18 @@
 // 추후 삭제 필요
 #include "TestLevel/Character/TestCharacter.h"
 
+void AMainGameState::SetCurStage(EGameStage _Stage)
+{
+	EGameStage PrevStage = CurStage;
 
+	CurStage = _Stage;
+
+	if (EGameStage::MissionClear == CurStage
+		&& EGameStage::Defensing == PrevStage)
+	{
+		SpawnTriggerBox(EndingTriggerBoxPos, EndingTriggerBoxRot);
+	}
+}
 
 int AMainGameState::GetQuestItemsNum()
 {
@@ -216,4 +227,9 @@ void AMainGameState::GameStateConditionUpdate(AActor* _OtherActor, bool _IsAdd)
 	default:
 		break;
 	}
+}
+
+void AMainGameState::SpawnTriggerBox(FVector _Pos, FRotator _Rot)
+{
+	int a = 0;
 }
