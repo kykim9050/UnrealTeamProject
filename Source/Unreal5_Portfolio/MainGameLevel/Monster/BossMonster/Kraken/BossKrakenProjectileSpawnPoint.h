@@ -15,7 +15,7 @@ class UNREAL5_PORTFOLIO_API UBossKrakenProjectileSpawnPoint : public USceneCompo
 public:	
 	UBossKrakenProjectileSpawnPoint();
 
-private:
+public:
 	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = true))
 	TArray<FVector> SpawnLocation;
 		

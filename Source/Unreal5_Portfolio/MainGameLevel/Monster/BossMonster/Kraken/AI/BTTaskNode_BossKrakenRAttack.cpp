@@ -42,7 +42,6 @@ void UBTTaskNode_BossKrakenRAttack::TickTask(UBehaviorTreeComponent& OwnerComp, 
 	
 	if (0.0f >= KrakenData->TimeCount)
 	{
-		//Kraken->SpawnRock();
 		StateChange(OwnerComp, EBossMonsterState::Idle);
 		return;
 	}

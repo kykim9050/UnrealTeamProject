@@ -8,6 +8,7 @@
 
 class UBoxComponent;
 class UBossKrakenData;
+class ABossKrakenProjectile;
 class UBossKrakenProjectileSpawnPoint;
 
 /**
@@ -27,6 +28,9 @@ public:
 		return BossKrakenSettingData;
 	}
 
+public:
+	void SpawnRock();
+
 protected:
 	virtual void InitData(const FBossMonsterDataRow* BaseData);
 	
@@ -42,6 +46,9 @@ private:
 	// Projectile
 	UPROPERTY(EditAnywhere, Category = "Projectile", meta = (AllowPrivateAccess = true))
 	UBossKrakenProjectileSpawnPoint* ProjectileSpawnPoint = nullptr;
+
+	UPROPERTY(EditAnywhere, Category = "Projectile", meta = (AllowPrivateAccess = true))
+	TSubclassOf<ABossKrakenProjectile> ProjectileUClass = nullptr;
 
 private:
 	// Effect
