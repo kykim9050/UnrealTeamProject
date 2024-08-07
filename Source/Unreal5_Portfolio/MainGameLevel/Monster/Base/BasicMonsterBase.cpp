@@ -4,8 +4,6 @@
 #include "MainGameLevel/Monster/Base/BasicMonsterBase.h"
 #include "MainGameLevel/Monster/Animation/MonsterRandomAnimInstance.h"
 #include "MainGameLevel/Monster/BasicMonster/AI/BasicMonsterAIController.h"
-#include "MainGameLevel/Player/MainPlayerState.h"
-#include "MainGameLevel/Player/MainCharacter.h"
 
 #include "GameFrameWork/CharacterMovementComponent.h"
 #include "Blueprint/AIBlueprintHelperLibrary.h"
@@ -127,25 +125,6 @@ void ABasicMonsterBase::OnAttackOverlapEnd(UPrimitiveComponent* OverlappedComp, 
 		
 		HitPlayerState->AddDamage(SettingData->AttackDamage);
 	}
-
-	//UBlackboardComponent* BlackBoard = UAIBlueprintHelperLibrary::GetBlackboard(this);
-	//if (nullptr == BlackBoard)
-	//{
-	//	return;
-	//}
-	//
-	//EBasicMonsterState MonsterState = static_cast<EBasicMonsterState>(BlackBoard->GetValueAsEnum(TEXT("CurState")));
-	//AMainCharacter* HitCharacter = Cast<AMainCharacter>(OtherActor);
-	//if (nullptr != HitCharacter && EBasicMonsterState::Attack == MonsterState)
-	//{
-	//	AMainPlayerState* HitPlayerState = Cast<AMainPlayerState>(HitCharacter->GetPlayerState());
-	//	if (nullptr == HitPlayerState)
-	//	{
-	//		LOG(MonsterLog, Fatal, TEXT("HitPlayerState Is Not Valid"));
-	//	}
-	//
-	//	HitPlayerState->AddDamage(SettingData->AttackDamage);
-	//}
 }
 
 void ABasicMonsterBase::ChangeRandomAnimation(uint8 Type)

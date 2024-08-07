@@ -60,6 +60,20 @@ protected:
 	UFUNCTION()
 	void OnAttackOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
+	private:
+	// Dead
+	UFUNCTION(Reliable, NetMulticast)
+	void SetDead();
+	void SetDead_Implementation();
+
+	UFUNCTION()
+	void DeadDissolveInterp(float _Value);
+	UFUNCTION()
+	void DeadFinish()
+	{
+		Destroy();
+	}
+
 private:
 	// Dissolve Effect
 	UPROPERTY()

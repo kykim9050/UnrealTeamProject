@@ -5,8 +5,11 @@
 #include "MainGameLevel/Monster/Base/BossMonsterData.h"
 #include "MainGameLevel/Monster/BossMonster/AI/BossMonsterAIController.h"
 
+#include "GameFrameWork/CharacterMovementComponent.h"
+#include "Components/CapsuleComponent.h"
 #include "Components/SphereComponent.h"
 #include "Net/UnrealNetwork.h"
+#include "BrainComponent.h"
 
 #include "Global/MainGameBlueprintFunctionLibrary.h"
 #include "Global/DataTable/BossMonsterDataRow.h"
@@ -26,6 +29,9 @@ ABossMonsterBase::ABossMonsterBase()
 	AttackComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	AttackComponent->SetupAttachment(RootComponent);
 
+	// Dissolve
+	DeadTimelineFinish.BindUFunction(this, "DeadFinish");
+	DeadDissolveCallBack.BindUFunction(this, "DeadDissolveInterp");
 }
 
 void ABossMonsterBase::Damaged(float Damage)
@@ -45,9 +51,9 @@ void ABossMonsterBase::Damaged(float Damage)
 	{
 		SettingData->Hp = 0.0f;
 
-		//SetDead();
+		SetDead();
 		ChangeAnimation(EBossMonsterAnim::Dead);
-		//AIController->GetBrainComponent()->StopLogic(TEXT("Dead"));
+		AIController->GetBrainComponent()->StopLogic(TEXT("Dead"));
 	}
 }
 
@@ -113,6 +119,7 @@ void ABossMonsterBase::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 	AnimInst->ChangeAnimation(AnimType);
+	DeadTimeLine.TickTimeline(DeltaTime);
 }
 
 void ABossMonsterBase::OnAttackOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
@@ -129,25 +136,6 @@ void ABossMonsterBase::OnAttackOverlapEnd(UPrimitiveComponent* OverlappedComp, A
 
 		HitPlayerState->AddDamage(SettingData->AttackDamage);
 	}
-
-	//UBlackboardComponent* BlackBoard = UAIBlueprintHelperLibrary::GetBlackboard(this);
-	//if (nullptr == BlackBoard)
-	//{
-	//	return;
-	//}
-	//
-	//EBasicMonsterState MonsterState = static_cast<EBasicMonsterState>(BlackBoard->GetValueAsEnum(TEXT("CurState")));
-	//AMainCharacter* HitCharacter = Cast<AMainCharacter>(OtherActor);
-	//if (nullptr != HitCharacter && EBasicMonsterState::Attack == MonsterState)
-	//{
-	//	AMainPlayerState* HitPlayerState = Cast<AMainPlayerState>(HitCharacter->GetPlayerState());
-	//	if (nullptr == HitPlayerState)
-	//	{
-	//		LOG(MonsterLog, Fatal, TEXT("HitPlayerState Is Not Valid"));
-	//	}
-	//
-	//	HitPlayerState->AddDamage(SettingData->AttackDamage);
-	//}
 }
 
 void ABossMonsterBase::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -162,3 +150,36 @@ void ABossMonsterBase::ChangeAnimation(uint8 Type)
 	AnimType = Type;
 }
 
+void ABossMonsterBase::SetDead_Implementation()
+{
+	// Dissolve Setting
+	TArray<class UMaterialInterface*> MaterialsInterface = GetMesh()->GetMaterials();
+
+	DynamicMaterials.Empty();
+	for (int32 i = 0; i < MaterialsInterface.Num(); i++)
+	{
+		UMaterialInstanceDynamic* MatInstDynamic = GetMesh()->UPrimitiveComponent::CreateDynamicMaterialInstance(i, MaterialsInterface[i], TEXT("None"));
+		DynamicMaterials.Add(MatInstDynamic);
+	}
+
+	DeadTimeLine.AddInterpFloat(DeadDissolveCurve, DeadDissolveCallBack);
+	DeadTimeLine.SetTimelineFinishedFunc(DeadTimelineFinish);
+	DeadTimeLine.SetTimelineLength(3.0f);
+	DeadTimeLine.SetLooping(false);
+	DeadTimeLine.PlayFromStart();
+
+	// Collision Setting
+	GetCapsuleComponent()->SetCollisionResponseToAllChannels(ECR_Ignore);
+	AttackComponent->SetCollisionResponseToAllChannels(ECR_Ignore);
+
+	// MoveMoment Setting
+	GetCharacterMovement()->SetActive(false);
+}
+
+void ABossMonsterBase::DeadDissolveInterp(float _Value)
+{
+	for (UMaterialInstanceDynamic* DynamicMat : DynamicMaterials)
+	{
+		DynamicMat->SetScalarParameterValue("Dissolve", _Value);
+	}
+}
