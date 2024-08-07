@@ -14,7 +14,7 @@ void UAnimNotifyState_Muzzle_Particle::NotifyBegin(USkeletalMeshComponent* MeshC
 	{
 		if (true == MeshComp->bOwnerNoSee)
 		{
-			PlayCharacter->ShowMuzzle();
+			//PlayCharacter->ShowMuzzle();
 		}
 	}
 }

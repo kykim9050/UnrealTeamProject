@@ -70,5 +70,5 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 
-	//void ChangeHandAttackCollisionProfile(FName _Name);
+	void ChangeHandAttackCollisionProfile(FName _Name);
 };
