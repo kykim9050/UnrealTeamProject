@@ -64,7 +64,7 @@ private:
 
 private:
 	// Component
-	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = true))
+	UPROPERTY(VisibleAnywhere, meta = (AllowPrivateAccess = true))
 	USphereComponent* BodyCollision = nullptr;
 	
 	UPROPERTY(VisibleAnywhere, meta = (AllowPrivateAccess = true))
@@ -73,8 +73,8 @@ private:
 	UPROPERTY(VisibleAnywhere, meta = (AllowPrivateAccess = true))
 	UProjectileMovementComponent* MovementComp = nullptr;
 
-	UPROPERTY(EditAnywhere, Category = "Particle", meta = (AllowPrivateAccess = true))
-	UParticleSystem* FireParticle = nullptr;
+	UPROPERTY(VisibleAnywhere, Category = "Particle", meta = (AllowPrivateAccess = true))
+	UParticleSystemComponent* ParticleSystemComponent;
 
 	UPROPERTY(EditAnywhere, Category = "Particle", meta = (AllowPrivateAccess = true))
 	UParticleSystem* CrashParticle = nullptr;

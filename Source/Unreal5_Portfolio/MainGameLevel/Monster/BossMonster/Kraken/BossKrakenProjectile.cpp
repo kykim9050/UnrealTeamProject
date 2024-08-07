@@ -4,6 +4,7 @@
 #include "MainGameLevel/Monster/BossMonster/Kraken/BossKrakenProjectile.h"
 
 #include "GameFramework/ProjectileMovementComponent.h"
+#include "Particles/ParticleSystemComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "Components/SphereComponent.h"
 #include "Kismet/GameplayStatics.h"
@@ -28,6 +29,8 @@ ABossKrakenProjectile::ABossKrakenProjectile()
 	MovementComp->bRotationFollowsVelocity = true;
 	MovementComp->bShouldBounce = false;
 
+	ParticleSystemComponent = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("ParticleSystemComponent"));
+	ParticleSystemComponent->SetupAttachment(BodyMesh);
 }
 
 void ABossKrakenProjectile::BeginPlay()
@@ -62,10 +65,15 @@ void ABossKrakenProjectile::BeginOverlap(UPrimitiveComponent* OverlappedComponen
 		if (nullptr == HitPlayerState)
 		{
 			LOG(MonsterLog, Fatal, TEXT("HitPlayerState Is Not Valid"));
+			return;
 		}
 
 		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), CrashParticle, GetActorTransform());
-		HitPlayerState->AddDamage(Damage);
+		if (BossKraKenProjectile::EState::Fly == CurState)
+		{
+			HitPlayerState->AddDamage(Damage);
+		}
+		
 		Destroy();
 	}
 }
@@ -74,7 +82,6 @@ void ABossKrakenProjectile::Fly(float DeltaTimes)
 {
 	if (FVector::ZeroVector == MovementComp->Velocity)
 	{
-
 		StateChange(BossKraKenProjectile::EState::Stop);
 	}
 }
@@ -100,6 +107,7 @@ void ABossKrakenProjectile::StopStart()
 {
 	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), CrashParticle, GetActorTransform());
 	BodyCollision->SetCollisionProfileName(FName("KrakenRockStop"));
+	ParticleSystemComponent->SetActive(false);
 }
 
 void ABossKrakenProjectile::StateUpdate(float DeltaTimes)
