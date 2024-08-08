@@ -2,19 +2,22 @@
 
 
 #include "TestCharacter.h"
-#include "Global/MainGameBlueprintFunctionLibrary.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "Components/BoxComponent.h"
+#include "Components/SphereComponent.h"
+#include "Camera/CameraComponent.h"
+
+#include "Global/MainGameBlueprintFunctionLibrary.h"
 #include "Global/MainGameInstance.h"
 #include "Global/ContentsLog.h"
 #include "Global/DataTable/ItemDataRow.h"
 #include "Global/DataTable/MapObjDataRow.h"
-#include "Components/BoxComponent.h"
-#include "Camera/CameraComponent.h"
-#include "TestPlayerController.h"
+
+#include "MainGameLevel/Player/MainPlayerState.h"
 #include "MainGameLevel/Player/PlayerItemInformation.h"
 #include "PartDevLevel/Character/PlayerAnimInstance.h"
-#include "Components/SphereComponent.h"
-#include "MainGameLevel/Player/MainPlayerState.h"
+#include "TestPlayerState.h"
+#include "TestPlayerController.h"
 
 #include "MainGameLevel/Monster/Base/MonsterBase.h"
 #include "PartDevLevel/Monster/Boss/TestBossMonsterBase.h"
@@ -34,7 +37,6 @@
 #include <Kismet/KismetSystemLibrary.h>
 #include <Kismet/GameplayStatics.h>
 
-#include "TestPlayerState.h"
 
 // Sets default values
 ATestCharacter::ATestCharacter()
@@ -675,12 +677,12 @@ void ATestCharacter::Drink()
 	ChangeMontage(EPlayerUpperState::Drink);
 }
 
-void ATestCharacter::DeleteItem(int _Index)
-{
-	FPlayerItemInformation NewSlot;
-	ItemSlot[_Index] = NewSlot;
-	IsItemIn[_Index] = false;
-}
+//void ATestCharacter::DeleteItem(int _Index)
+//{
+//	FPlayerItemInformation NewSlot;
+//	ItemSlot[_Index] = NewSlot;
+//	IsItemIn[_Index] = false;
+//}
 
 void ATestCharacter::ChangeIsFaint_Implementation()
 {

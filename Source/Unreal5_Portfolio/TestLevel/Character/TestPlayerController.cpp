@@ -137,6 +137,7 @@ void ATestPlayerController::MouseLeft_FireStart()
 	//	return;
 	//}
 
+	// Attack
 	ATestCharacter* Ch = GetPawn<ATestCharacter>();
 	if (nullptr == Ch)
 	{
@@ -144,6 +145,9 @@ void ATestPlayerController::MouseLeft_FireStart()
 	}
 	Ch->AttackCheck();
 	IsGunFire = true;
+
+	// Camera Shake
+	ChangeCameraShakeState(ECameraShakeState::Shoot);
 
 	// πﬂΩŒ Ω≈»£∏¶ HUD∑Œ ≥—±Ë.
 	//BullitCountToHUD();
@@ -168,7 +172,11 @@ void ATestPlayerController::MouseLeft_FireTick(float _DeltaTime)
 
 void ATestPlayerController::MouseLeft_FireEnd()
 {
+	// Attack
 	IsGunFire = false;
+
+	// Camera Shake
+	ChangeCameraShakeState(ECameraShakeState::Stop);
 }
 
 void ATestPlayerController::E_CheckItem()
@@ -348,4 +356,65 @@ void ATestPlayerController::CallFaint(bool _Faint)
 void ATestPlayerController::CallGetItem()
 {
 	CallGetItemToWidget();
+}
+
+void ATestPlayerController::ResetCameraShakeTimer()
+{
+	ShakeTimer = 0.2f;
+}
+
+void ATestPlayerController::ResetCameraShakeValue()
+{
+	ShakeValue = FVector(2.0f, 2.0f, 0.0f);
+}
+
+void ATestPlayerController::ChangeCameraShakeState(ECameraShakeState _ShakeState)
+{
+	ShakeState = _ShakeState;
+	ResetCameraShakeValue();
+
+	if (_ShakeState == ECameraShakeState::Shoot)
+	{
+		ResetCameraShakeTimer();
+	}
+}
+
+void ATestPlayerController::CameraShakeTick(float _DeltaTime)
+{
+	/*if (ShakeState == ECameraShakeState::Stop)
+	{
+		return;
+	}
+	
+	if (ShakeState == ECameraShakeState::Shoot)
+	{
+		if (ShakeTimer <= 0.0f)
+		{
+			ChangeCameraShakeState(ECameraShakeState::Shoot);
+			return;
+		}
+
+		if ((ShakeTimer <= 0.1f) || (ShakeValue.Size() <= 0.01f))
+		{
+			ChangeCameraShakeState(ECameraShakeState::Turnback);
+			return;
+		}
+
+		AddYawInput(ShakeValue.X);
+		AddPitchInput(ShakeValue.Y);
+	}
+	else if (ShakeState == ECameraShakeState::Turnback)
+	{
+		if ((ShakeTimer <= 0.0f) || (ShakeValue.Size() <= 0.01f))
+		{
+			ChangeCameraShakeState(ECameraShakeState::Shoot);
+			return;
+		}
+
+		AddYawInput(-ShakeValue.X);
+		AddPitchInput(-ShakeValue.Y);
+	}
+
+	ShakeValue = FMath::Lerp(ShakeValue, FVector(0.0f, 0.0f, 0.0f), 0.5f);
+	ShakeTimer -= _DeltaTime;*/
 }
