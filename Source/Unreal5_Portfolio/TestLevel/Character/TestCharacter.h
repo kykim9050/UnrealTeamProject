@@ -79,8 +79,8 @@ private: // 문제 발생 여지 있음 발생하면 그냥 지워야 함.
 
 	// == Inventory ==
 	// 아이템 여부
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	TArray<bool> IsItemIn;
+	/*UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	TArray<bool> IsItemIn;*/
 	// 현재 아이템 정보.
 	UPROPERTY(VisibleAnywhere)
 	TArray<struct FPlayerItemInformation> ItemSlot;
@@ -189,8 +189,8 @@ private:
 	UFUNCTION(BlueprintCallable)
 	void UpdatePlayerHp(float _DeltaTime);
 
-	UFUNCTION(BlueprintCallable)
-	void DeleteItem(int _Index);
+	/*UFUNCTION(BlueprintCallable)
+	void DeleteItem(int _Index);*/
 
 	UFUNCTION(Reliable, Server, BlueprintCallable)
 	void GetSetSelectCharacter(class UMainGameInstance* _MainGameInstance);
