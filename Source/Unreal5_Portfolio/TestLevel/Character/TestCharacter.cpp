@@ -110,6 +110,7 @@ ATestCharacter::ATestCharacter()
 
 	// HeadName Component
 	HeadNameComponent = CreateDefaultSubobject<UHeadNameWidgetComponent>(TEXT("HeadNameWidgetComponent"));
+	HeadNameComponent->SetIsReplicated(true);
 	HeadNameComponent->SetupAttachment(RootComponent);
 	HeadNameComponent->SetOwnerNoSee(true);
 	HeadNameComponent->bHiddenInSceneCapture = true;
