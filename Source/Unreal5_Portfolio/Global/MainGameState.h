@@ -120,6 +120,9 @@ public:
 		IsStageChange = _Value;
 	}
 
+	void PlayBackgroundSound();
+
+	void StopBackgroundSound();
 
 	/// <summary>
 	/// 시네마틱을 재생할 수 있는 TriggerBox를 생성하는 함수
@@ -183,4 +186,10 @@ private:
 	/// </summary>
 	FVector EndingTriggerBoxPos = FVector(-8820.0f, 87310.0f, -6980.0f);
 	FRotator EndingTriggerBoxRot = FRotator(0.0f, 0.0f, 0.0f);
+
+	/// <summary>
+	/// 배경음악 컴포넌트
+	/// </summary>
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	class UAudioComponent* BackgroundSound = nullptr;
 };
