@@ -34,7 +34,7 @@ void UPlayerAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 
 	//PlayerPosture = OwnerPlayer->PostureValue;
 	PlayerLowerState = OwnerPlayer->LowerStateValue;
-	//PlayerUppperState = OwnerPlayer->[UpperStateValue];
+	PlayerUppperState = OwnerPlayer->IdleDefault;
 	PlayerDir = OwnerPlayer->DirValue;
 	//PlayerIsFaint = OwnerPlayer->IsFaint;
 	//PlayerIsBombSetting = OwnerPlayer->IsBombSetting;
