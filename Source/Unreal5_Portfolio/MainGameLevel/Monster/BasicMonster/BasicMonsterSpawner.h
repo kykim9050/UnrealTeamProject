@@ -8,6 +8,7 @@
 #include "BasicMonsterSpawner.generated.h"
 
 class UBoxComponent;
+class ABasicMonsterBase;
 
 UCLASS()
 class UNREAL5_PORTFOLIO_API ABasicMonsterSpawner : public AActor
@@ -27,11 +28,15 @@ private:
 private:
 	// Spawn Monster UClass
 	UPROPERTY(EditAnywhere, meta = (AllowprivateAccess = "true"))
-	TArray<TSubclassOf<AActor>> MonsterUClass;
+	TArray<TSubclassOf<ABasicMonsterBase>> MonsterUClass;
 
 	// Total Number of Spawn
 	UPROPERTY(EditAnywhere, meta = (AllowprivateAccess = "true"))
 	int TotalSpawnCount = 0;
+
+	// Init Spawn Delay Time
+	UPROPERTY(EditAnywhere, meta = (AllowprivateAccess = "true"))
+	float InitSpawnDelayTime = 0.0f;
 
 	// Time interval between Spawn
 	UPROPERTY(EditAnywhere, meta = (AllowprivateAccess = "true"))

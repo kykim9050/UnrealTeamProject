@@ -120,12 +120,9 @@ public:
 		IsStageChange = _Value;
 	}
 
-	FORCEINLINE void QuestItemGet()
-	{
-		QuestItems[QuestItemsIdx++] = true;
-	}
+	void PlayBackgroundSound();
 
-	int GetQuestItemsNum();
+	void StopBackgroundSound();
 
 	/// <summary>
 	/// 시네마틱을 재생할 수 있는 TriggerBox를 생성하는 함수
@@ -175,7 +172,7 @@ private:
 	/// 플레이어 최대 수
 	/// </summary>
 	UPROPERTY()
-	int MaxPlayerCount = 1;
+	int MaxPlayerCount = 4;
 
 	/// <summary>
 	/// 체크할 아이템 카운트 수
@@ -183,20 +180,16 @@ private:
 	UPROPERTY()
 	int ItemCount = 0;
 
-	/// <summary>
-	/// StageClear에 필요한 퀘스트 아이템 수집 상태 관련 TArray
-	/// </summary>
-	UPROPERTY()
-	TArray<bool> QuestItems = TArray<bool>();
-
-	/// <summary>
-	/// QuestItems의 Idx
-	/// </summary>
-	int QuestItemsIdx = 0;
 
 	/// <summary>
 	/// EndingTriggerBox의 위치, 회전값 변수
 	/// </summary>
 	FVector EndingTriggerBoxPos = FVector(-8820.0f, 87310.0f, -6980.0f);
 	FRotator EndingTriggerBoxRot = FRotator(0.0f, 0.0f, 0.0f);
+
+	/// <summary>
+	/// 배경음악 컴포넌트
+	/// </summary>
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	class UAudioComponent* BackgroundSound = nullptr;
 };

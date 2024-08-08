@@ -163,11 +163,11 @@ void ATestCharacter::PostInitializeComponents() // FName 부분 수정 필요.
 	Super::PostInitializeComponents();
 
 	// 리로드 위젯
-	if (nullptr != Reload_Widget)
-	{
-		Reload_Widget->AddToViewport();
-		Reload_Widget->SetVisibility(ESlateVisibility::Hidden);
-	}
+	//if (nullptr != Reload_Widget)
+	//{
+	//	Reload_Widget->AddToViewport();
+	//	Reload_Widget->SetVisibility(ESlateVisibility::Hidden);
+	//}
 }
 
 // Called when the game starts or when spawned
@@ -188,6 +188,16 @@ void ATestCharacter::BeginPlay()
 	GetMapItemCollisionComponent->OnComponentBeginOverlap.AddDynamic(this, &ATestCharacter::MapItemOverlapStart);
 	GetMapItemCollisionComponent->OnComponentEndOverlap.AddDynamic(this, &ATestCharacter::MapItemOverlapEnd);
 
+	// Instance에 저장돼있는 닉네임 모두가 알 수 있도록 하는 작업. 
+	UMainGameInstance* Inst = UMainGameBlueprintFunctionLibrary::GetMainGameInstance(GetWorld());
+	if (nullptr == Inst)
+	{
+		//LOG(UILog, Fatal, "MainGameInstance is Null");
+		return;
+	}
+	FText InstName = FText::FromString(Inst->GetMainNickName());
+	SendNicknames(InstName);
+
 	ChangeMontage(EPlayerUpperState::UArm_Idle);
 }
 
@@ -202,7 +212,7 @@ void ATestCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLi
 	DOREPLIFETIME(ATestCharacter, IdleDefault);
 
 	DOREPLIFETIME(ATestCharacter, Token);
-	//DOREPLIFETIME(ATestCharacter, IsFaint);
+	DOREPLIFETIME(ATestCharacter, MyNickName);
 
 	DOREPLIFETIME(ATestCharacter, UIToSelectCharacter); // Test
 }
@@ -217,6 +227,12 @@ void ATestCharacter::AnimationEnd()
 void ATestCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	// 다른 플레이어의 HeadNameComponent가 항상 나를 향하도록 회전	// => 메인 이전 필요 (24.07.30 추가됨)
+	if (nullptr != HeadNameComponent)
+	{
+		HeadNameComponent->BilboardRotate(GetActorLocation());
+	}
 
 	UpdatePlayerHp(DeltaTime);
 }
@@ -321,6 +337,11 @@ void ATestCharacter::SpawnItem_Implementation(FName _ItemName, FTransform _Spawn
 	DropItemMeshComp->SetSimulatePhysics(true);
 }
 
+void ATestCharacter::SendNicknames_Implementation(const FText& _Nickname)
+{
+	MyNickName = _Nickname;
+}
+
 void ATestCharacter::PickUpItem(AItemBase* _Item)
 {
 	const FItemDataRow* ItemData = _Item->GetItemData();
@@ -414,22 +435,6 @@ void ATestCharacter::DropItem(int _SlotIndex)
 
 void ATestCharacter::FireRayCast_Implementation()
 {
-	CurItemIndex = 0;
-	if (CurItemIndex == -1 || CurItemIndex == 2)
-	{
-		return;
-	}
-
-	//// 탄알이 없다면 
-	//if (ItemSlot[CurItemIndex].ReloadLeftNum <= 0)
-	//{
-	//	//ItemSlot[CurItemIndex].ReloadLeftNum = ItemSlot[CurItemIndex].ReloadMaxNum;
-	//	// 장전하라는 Widget을 띄워야 함.
-	//	// 장전 함수는 CharacterReload 이다.
-	//	Reload_Widget->SetVisibility(ESlateVisibility::Visible);
-	//	return;
-	//}
-
 	ATestPlayerController* Con = Cast<ATestPlayerController>(GetController());
 	FVector Start = GetMesh()->GetSocketLocation(FName("MuzzleSocket"));
 	//Start.Z -= 20.0f;
@@ -438,9 +443,6 @@ void ATestCharacter::FireRayCast_Implementation()
 	FHitResult Hit;
 	if (GetWorld())
 	{
-		// 탄수 깎기.
-		ItemSlot[CurItemIndex].ReloadLeftNum -= 1;
-
 		// Ray Cast
 		TArray<AActor*> IgnoreActors; // 무시할 Actor들.
 		bool ActorHit = UKismetSystemLibrary::LineTraceSingle(GetWorld(), Start, End, ETraceTypeQuery::TraceTypeQuery1, false, IgnoreActors, EDrawDebugTrace::None, Hit, true, FLinearColor::Red, FLinearColor::Green, 5.0f);
@@ -610,10 +612,8 @@ void ATestCharacter::UpdatePlayerHp(float _DeltaTime)
 	AMainGameHUD* PlayHUD = Cast<AMainGameHUD>(MyController->GetHUD());
 	if (nullptr != PlayHUD)
 	{
-		FString Number = FString::FromInt(Token);
-		FString Name_Number = FString("Play_") + Number;
 		UTestHpBarUserWidget* MyHpWidget = Cast<UTestHpBarUserWidget>(PlayHUD->GetWidget(EUserWidgetType::HpBar));
-		MyHpWidget->NickNameUpdate(Token, FText::FromString(Name_Number));
+		MyHpWidget->NickNameUpdate(Token, MyNickName);
 		MyHpWidget->HpbarUpdate(Token, GetHp, 100.0f);
 	}
 }
@@ -648,15 +648,25 @@ void ATestCharacter::AttackCheck()
 	switch (IdleDefault)
 	{
 	case EPlayerUpperState::UArm_Idle:
+	{
 		ChangeMontage(EPlayerUpperState::UArm_Attack);
 		break;
+	}
 	case EPlayerUpperState::Rifle_Idle:
-		ChangeMontage(EPlayerUpperState::Rifle_Attack);
-		FireRayCast();
+	{
+		BulletCalculation();
+		if (true == IsExtraBullets)
+		{
+			ChangeMontage(EPlayerUpperState::Rifle_Attack);
+			FireRayCast();
+		}
 		break;
+	}
 	case EPlayerUpperState::Melee_Idle:
+	{
 		ChangeMontage(EPlayerUpperState::Melee_Attack);
 		break;
+	}
 	default:
 		break;
 	}
@@ -851,6 +861,39 @@ void ATestCharacter::DeleteItemInfo(int _Index)
 	ItemSlot[_Index] = DeleteSlot;
 }
 
+void ATestCharacter::BulletCalculation()
+{
+	// 탄수 깎기.
+	ItemSlot[0].ReloadLeftNum -= 1;
+
+	// 탄알이 없다면 
+	if (ItemSlot[0].ReloadLeftNum < 0)
+	{
+		ItemSlot[0].ReloadLeftNum = 0;
+		IsExtraBullets = false;
+		
+		ATestPlayerController* MyController = Cast<ATestPlayerController>(GetController());
+		if (nullptr == MyController)
+		{
+			return;
+		}
+
+		AMainGameHUD* PlayHUD = Cast<AMainGameHUD>(MyController->GetHUD());
+		if (nullptr == PlayHUD)
+		{
+			return;
+		}
+		PlayHUD->UIOn(EUserWidgetType::ReloadComment);
+				
+		//Reload_Widget->SetVisibility(ESlateVisibility::Visible);
+		return;
+	}
+	else
+	{
+		IsExtraBullets = true;
+	}
+}
+
 bool ATestCharacter::IsItemInItemSlot(int _Index)
 {
 	return ItemSlot[_Index].IsItemIn;
@@ -912,16 +955,28 @@ void ATestCharacter::ChangePOV()
 
 void ATestCharacter::CharacterReload()
 {
-	if (-1 == CurItemIndex)
+	if (EPlayerUpperState::Rifle_Idle != IdleDefault)
 	{
 		return;
 	}
 
-	// Widget 숨기기
-	Reload_Widget->SetVisibility(ESlateVisibility::Hidden);
-
 	// 총알 데이터 설정.
-	ItemSlot[CurItemIndex].ReloadLeftNum = ItemSlot[CurItemIndex].ReloadMaxNum;
+	ItemSlot[0].ReloadLeftNum = ItemSlot[0].ReloadMaxNum;
+
+	// Widget 숨기기
+	ATestPlayerController* MyController = Cast<ATestPlayerController>(GetController());
+	if (nullptr == MyController)
+	{
+		return;
+	}
+
+	AMainGameHUD* PlayHUD = Cast<AMainGameHUD>(MyController->GetHUD());
+	if (nullptr == PlayHUD)
+	{
+		return;
+	}
+	PlayHUD->UIOff(EUserWidgetType::ReloadComment);
+	//Reload_Widget->SetVisibility(ESlateVisibility::Hidden);
 
 	// 변경된 총알 데이터 호출.
 	ATestPlayerController* Con = Cast<ATestPlayerController>(GetController());

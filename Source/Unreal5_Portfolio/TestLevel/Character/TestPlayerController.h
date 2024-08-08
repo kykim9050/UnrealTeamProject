@@ -134,7 +134,7 @@ protected:
 	void BullitCountToHUD();
 
 	UFUNCTION(BlueprintImplementableEvent, meta = (CallInEditor = true))
-	void ChangePostureToWidget(EPlayerPosture _Posture);
+	void ChangePostureToWidget(EPlayerUpperState _Posture);
 
 	UFUNCTION(BlueprintImplementableEvent, meta = (CallInEditor = true))
 	void CallGetItemToWidget();

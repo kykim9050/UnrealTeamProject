@@ -61,23 +61,6 @@ void UBTTaskNode_BasicMonsterAttack::TickTask(UBehaviorTreeComponent& OwnerComp,
 		return;
 	}
 
-	//// Target Check
-	//AMainCharacter* Target = GetValueAsObject<AMainCharacter>(OwnerComp, TEXT("TargetActor"));
-	//if (nullptr == Target)
-	//{
-	//	StateChange(OwnerComp, EBasicMonsterState::Idle);
-	//	return;
-	//}
-	//
-	//// Player Dead Check
-	//AMainPlayerState* TargetPlayerState = Cast<AMainPlayerState>(Target->GetPlayerState());
-	//if (0.0f >= TargetPlayerState->GetPlayerHp())
-	//{
-	//	OwnerComp.GetBlackboardComponent()->SetValueAsObject(TEXT("TargetActor"), nullptr);
-	//	StateChange(OwnerComp, EBasicMonsterState::Idle);
-	//	return;
-	//}
-
 	ABasicMonsterBase* Monster = GetSelfActor<ABasicMonsterBase>(OwnerComp);
 	UBasicMonsterData* MonsterData = Monster->GetSettingData();
 

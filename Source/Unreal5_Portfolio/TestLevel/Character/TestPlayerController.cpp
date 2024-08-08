@@ -143,14 +143,13 @@ void ATestPlayerController::MouseLeft_FireStart()
 	{
 		return;
 	}
-	Ch->AttackCheck();
 	IsGunFire = true;
 
 	// Camera Shake
 	ChangeCameraShakeState(ECameraShakeState::Shoot);
 
 	// ¹ß½Î ½ÅÈ£¸¦ HUD·Î ³Ñ±è.
-	//BullitCountToHUD();
+	BullitCountToHUD();
 }
 
 void ATestPlayerController::MouseLeft_FireTick(float _DeltaTime)
@@ -167,7 +166,7 @@ void ATestPlayerController::MouseLeft_FireTick(float _DeltaTime)
 	}
 
 	// ¹ß½Î ½ÅÈ£¸¦ HUD·Î ³Ñ±è.
-	//BullitCountToHUD();
+	BullitCountToHUD();
 }
 
 void ATestPlayerController::MouseLeft_FireEnd()
@@ -256,20 +255,20 @@ void ATestPlayerController::Num_ChangePosture(int _InputKey)
 	if (_InputKey == 0) // ÃÑ
 	{
 		Ch->ChangeMontage(EPlayerUpperState::Rifle_Idle, true);
+		ChangePostureToWidget(EPlayerUpperState::Rifle_Idle); // Widget
 	}
 	else if (_InputKey == 1)
 	{
 		Ch->ChangeMontage(EPlayerUpperState::Melee_Idle, true);
+		ChangePostureToWidget(EPlayerUpperState::Melee_Idle); // Widget
 	}
 	else if (_InputKey == -1)
 	{
 		Ch->ChangeMontage(EPlayerUpperState::UArm_Idle, true);
+		ChangePostureToWidget(EPlayerUpperState::UArm_Idle); // Widget
 	}
 
 	Ch->SettingItemSocket(_InputKey);
-
-	//Ch->ChangeMontage(EPlayerUpperState::Rifle_Idle, true);
-	//ChangePostureToWidget(_Posture);
 }
 
 void ATestPlayerController::Num_Drink()

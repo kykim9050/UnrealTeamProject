@@ -196,6 +196,7 @@ enum class EUserWidgetType : uint8
 	E_Key,
 	Num5_Key,
 	Quest,
+	Timer,
 	SlotEmpty,
 	NotAreaComment,
 	AnyInteractionComment,

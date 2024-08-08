@@ -9,6 +9,7 @@
 #include "MainGameLevel/Object/TriggerBox/TriggerBoxBase.h"
 #include "Global/MainGameBlueprintFunctionLibrary.h"
 #include "MainGameLevel/Player/PlayerItemInformation.h"
+#include "Components/AudioComponent.h"
 
 // 추후 삭제 필요
 #include "TestLevel/Character/TestCharacter.h"
@@ -20,35 +21,18 @@ void AMainGameState::SetCurStage_Implementation(EGameStage _Stage)
 	CurStage = _Stage;
 
 	if (EGameStage::MissionClear == CurStage
-	/*	&& EGameStage::Defensing == PrevStage*/)
+		&& EGameStage::Defensing == PrevStage)
 	{
 		SpawnTriggerBox(EndingTriggerBoxPos, EndingTriggerBoxRot);
 	}
 }
 
-int AMainGameState::GetQuestItemsNum()
-{
-	int Cnt = 0;
-
-	for (int i = 0; i < static_cast<int>(EQuestItem::Max); i++)
-	{
-		if (true == QuestItems[i])
-		{
-			++Cnt;
-		}
-	}
-
-	return Cnt;
-}
 
 AMainGameState::AMainGameState()
 {
-	int QuestItemsNum = static_cast<int>(EQuestItem::Max);
-
-	for (int i = 0; i < QuestItemsNum; i++)
-	{
-		QuestItems.Add(false);
-	}
+	BackgroundSound = CreateDefaultSubobject<UAudioComponent>("BackgroundSound");
+	BackgroundSound->SetupAttachment(RootComponent);
+	BackgroundSound->SetIsReplicated(false);
 }
 
 void AMainGameState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -236,4 +220,14 @@ void AMainGameState::SpawnTriggerBox(FVector _Pos, FRotator _Rot)
 	{
 		ATriggerBoxBase* EndTriggerBox = GetWorld()->SpawnActor<ATriggerBoxBase>(TriggerInfo, _Pos, _Rot);
 	}
+}
+
+void AMainGameState::PlayBackgroundSound()
+{
+	BackgroundSound->Play();
+}
+
+void AMainGameState::StopBackgroundSound()
+{
+	BackgroundSound->Stop();
 }

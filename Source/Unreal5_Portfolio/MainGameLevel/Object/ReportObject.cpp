@@ -55,7 +55,6 @@ void AReportObject::InterAction_Implementation()
 			return;
 		}
 
-		MainGameState->QuestItemGet();
 		EGameStage CurStage = MainGameState->GetCurStage();
 
 		switch (CurStage)

@@ -48,6 +48,7 @@ void AMainGameHUD::AllUIOn()
 {
 	// 인게임에서 디폴트로 켜놓는 애들만 다시 켜주도록 override
 	UIOn(EUserWidgetType::HpBar);
+	UIOn(EUserWidgetType::Timer);
 	UIOn(EUserWidgetType::WeaponSlot);
 	UIOn(EUserWidgetType::MiniMap);
 	UIOn(EUserWidgetType::Crosshair);

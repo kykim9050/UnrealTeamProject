@@ -36,7 +36,6 @@ void UBTTaskNode_ClimbZombieClimb::TickTask(UBehaviorTreeComponent& OwnerComp, u
 	FVector DestPos = GetValueAsVector(OwnerComp, TEXT("Destination"));
 	FVector CurPos = ClimbZombie->GetActorLocation();
 
-	//if (CurPos.Z >= Dest.Z - (ClimbZombie->GetCapsuleComponent()->GetUnscaledCapsuleHalfHeight() * 1.5f))
 	if (CurPos.Z >= DestPos.Z)
 	{
 		StateChange(OwnerComp, EBasicMonsterState::ClimbEnd);
