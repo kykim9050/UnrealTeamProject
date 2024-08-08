@@ -867,6 +867,7 @@ void ATestCharacter::BulletCalculation()
 	// 탄알이 없다면 
 	if (ItemSlot[0].ReloadLeftNum < 0)
 	{
+		ItemSlot[0].ReloadLeftNum = 0;
 		IsExtraBullets = false;
 		
 		ATestPlayerController* MyController = Cast<ATestPlayerController>(GetController());
