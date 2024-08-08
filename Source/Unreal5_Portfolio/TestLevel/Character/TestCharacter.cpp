@@ -724,7 +724,7 @@ void ATestCharacter::InteractObject_Implementation(AMapObjectBase* _MapObject)
 	_MapObject->InterAction();
 }
 
-void ATestCharacter::BombSetStart_Implementation()
+void ATestCharacter::BombSetStart()
 {
 	// 폭탄 아이템 체크
 	if (false == ItemSlot[static_cast<int>(EItemType::Bomb)].IsItemIn)
@@ -745,7 +745,7 @@ void ATestCharacter::BombSetStart_Implementation()
 	ChangeMontage(EPlayerUpperState::Bomb);
 }
 
-void ATestCharacter::BombSetTick_Implementation()
+void ATestCharacter::BombSetTick()
 {
 	if (true == IsBombSetting)
 	{
@@ -757,7 +757,7 @@ void ATestCharacter::BombSetTick_Implementation()
 		}
 
 		// 설치 시간 카운트가 끝났을 경우
-		if (0 >= AreaObject->GetInstallBombTime())
+		if (0.0f >= AreaObject->GetInstallBombTime())
 		{
 			BombSetEnd();
 		}
@@ -767,7 +767,7 @@ void ATestCharacter::BombSetTick_Implementation()
 	}
 }
 
-void ATestCharacter::BombSetCancel_Implementation()
+void ATestCharacter::BombSetCancel()
 {
 	if (true == IsBombSetting)
 	{
@@ -783,17 +783,21 @@ void ATestCharacter::BombSetCancel_Implementation()
 	}
 }
 
-void ATestCharacter::BombSetEnd_Implementation()
+void ATestCharacter::BombSetEnd()
 {
 	if (true == IsBombSetting)
 	{
 		// 폭탄 설치 완료
 		IsBombSetting = false;
 
+		// 맵에 폭탄 설치.
 		AAreaObject* AreaObject = Cast<AAreaObject>(GetMapItemData);
 		if (nullptr != AreaObject)
 		{
-			AreaObject->InterAction();
+			//AreaObject->InterAction();
+
+			FName InfoName = FName(TEXT("Bomb"));
+			AreaObject->BombPlanting(InfoName);
 		}
 
 		// 인벤토리에서 폭탄 아이템 삭제
