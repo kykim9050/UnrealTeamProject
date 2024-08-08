@@ -251,9 +251,6 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void CheckItem();
 
-	UFUNCTION(BlueprintCallable)
-	bool IsItemInItemSlot(int _Index);
-
 	UFUNCTION()
 	void AttackCheck();
 
