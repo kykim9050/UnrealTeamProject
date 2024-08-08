@@ -153,14 +153,12 @@ void ABossMonsterBase::EndPlay(const EEndPlayReason::Type EndPlayReason)
 	APlayerController* PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 	if (nullptr == PlayerController)
 	{
-		LOG(MonsterLog, Fatal, "PlayerController is null");
 		return;
 	}
 
 	AMainGameHUD* BossUHD = Cast<AMainGameHUD>(PlayerController->GetHUD());
 	if (nullptr == BossUHD || nullptr == PlayerController)
 	{
-		LOG(MonsterLog, Fatal, "MainGameHUD is null");
 		return;
 	}
 
