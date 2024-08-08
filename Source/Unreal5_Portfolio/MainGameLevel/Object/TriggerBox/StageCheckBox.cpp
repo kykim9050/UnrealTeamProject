@@ -59,8 +59,6 @@ void AStageCheckBox::OnOverlapEnd(AActor* OverlappedActor, AActor* OtherActor)
 	}
 
 	MainGameState->SubPlayerCount();
-
-	MainGameState->GameStateModify(OtherActor);
 }
 
 void AStageCheckBox::DestroyTrigger_Implementation()

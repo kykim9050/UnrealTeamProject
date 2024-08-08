@@ -69,8 +69,6 @@ void AMainGameState::GameStateCheck_Implementation(AActor* _OtherActor)
 		return;
 	}
 
-	GameStateConditionUpdate(_OtherActor, true);
-
 	// 플레이어 수가 일정 수 도달했을 때 조건 체크 함수
 	if (MaxPlayerCount == PlayerCount)
 	{
@@ -78,28 +76,16 @@ void AMainGameState::GameStateCheck_Implementation(AActor* _OtherActor)
 		{
 		case EGameStage::Init:
 		{
-			if (MaxPlayerCount == ItemCount)
-			{
-				CurStage = EGameStage::VisitArmory;
-				PlayerCount = 0;
-				ItemCount = 0;
-				SetIsStageChange(true);
-				break;
-			}
+			CurStage = EGameStage::VisitArmory;
+			PlayerCount = 0;
+			SetIsStageChange(true);
 			break;
 		}
 		case EGameStage::VisitArmory:
 		{
-			if (MaxPlayerCount == ItemCount
-				&& MaxBombCount == BombCount)
-			{
-				CurStage = EGameStage::ObtainFirstSample;
-				PlayerCount = 0;
-				BombCount = 0;
-				ItemCount = 0;
-				SetIsStageChange(true);
-				break;
-			}
+			CurStage = EGameStage::ObtainFirstSample;
+			PlayerCount = 0;
+			SetIsStageChange(true);
 			break;
 		}
 		case EGameStage::ObtainFirstSample:
@@ -124,90 +110,6 @@ void AMainGameState::GameStateCheck_Implementation(AActor* _OtherActor)
 		default:
 			break;
 		}
-	}
-}
-
-void AMainGameState::GameStateModify_Implementation(AActor* _OtherActor)
-{
-	if (false == HasAuthority())
-	{
-		return;
-	}
-
-	GameStateConditionUpdate(_OtherActor, false);
-}
-
-void AMainGameState::GameStateConditionUpdate(AActor* _OtherActor, bool _IsAdd)
-{
-	// 추후 MainCharacter로 변경 필요
-	ATestCharacter* Player = Cast<ATestCharacter>(_OtherActor);
-	//AMainCharacter* Player = Cast<AMainCharacter>(_OtherActor);
-
-	if (nullptr == Player)
-	{
-		return;
-	}
-
-	switch (CurStage)
-	{
-	case EGameStage::Init:
-	{
-		if (true == Player->GetItemSlot()[static_cast<int>(EItemType::Melee)].IsItemIn)
-		{
-			if (true == _IsAdd)
-			{
-				++ItemCount;
-			}
-			else
-			{
-				--ItemCount;
-			}
-		}
-		break;
-	}
-	case EGameStage::VisitArmory:
-	{
-		if (true == Player->GetItemSlot()[static_cast<int>(EItemType::Rifle)].IsItemIn)
-		{
-			if (true == _IsAdd)
-			{
-				++ItemCount;
-			}
-			else
-			{
-				--ItemCount;
-			}
-		}
-
-		if (true == Player->GetItemSlot()[static_cast<int>(EItemType::Bomb)].IsItemIn)
-		{
-			if (true == _IsAdd)
-			{
-				++BombCount;
-			}
-			else
-			{
-				--BombCount;
-			}
-		}
-		break;
-	}
-	case EGameStage::ObtainFirstSample:
-		break;
-	case EGameStage::ObtainSecondSample:
-		break;
-	case EGameStage::ObtainThirdSample:
-		break;
-	case EGameStage::PlantingBomb:
-		break;
-	case EGameStage::MoveToGatheringPoint:
-		break;
-	case EGameStage::Defensing:
-		break;
-	case EGameStage::MissionClear:
-		break;
-	default:
-		break;
 	}
 }
 
