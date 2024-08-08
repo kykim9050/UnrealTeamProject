@@ -233,6 +233,7 @@ void ATestBossMonsterBase::SetOnDead_Implementation()
 	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), BloodParticle, GetActorTransform());
 
 	// Collision Setting
+	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	GetCapsuleComponent()->SetCollisionObjectType(ECC_GameTraceChannel5);
 	MeleeAttackComponent->SetCollisionObjectType(ECC_GameTraceChannel5);
 	GetCharacterMovement()->SetActive(false);
