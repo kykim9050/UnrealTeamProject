@@ -16,7 +16,7 @@
 #include "Components/SphereComponent.h"
 #include "MainGameLevel/Player/MainPlayerState.h"
 
-#include "MainGameLevel/Monster/Base/BasicMonsterBase.h"
+#include "MainGameLevel/Monster/Base/MonsterBase.h"
 #include "PartDevLevel/Monster/Boss/TestBossMonsterBase.h"
 
 #include "MainGameLevel/Object/MapObjectBase.h"
@@ -448,7 +448,7 @@ void ATestCharacter::FireRayCast_Implementation()
 		if (true == ActorHit && nullptr != Hit.GetActor())
 		{
 			FString BoneName = Hit.BoneName.ToString();
-			ABasicMonsterBase* Monster = Cast<ABasicMonsterBase>(Hit.GetActor());
+			AMonsterBase* Monster = Cast<AMonsterBase>(Hit.GetActor());
 			if (nullptr != Monster)
 			{
 				Monster->Damaged(RifleDamage);
@@ -932,7 +932,7 @@ void ATestCharacter::CharacterReload()
 void ATestCharacter::HandAttackCollision(AActor* _OtherActor, UPrimitiveComponent* _Collision)
 {
 	{
-		ABasicMonsterBase* Monster = Cast<ABasicMonsterBase>(_OtherActor);
+		AMonsterBase* Monster = Cast<AMonsterBase>(_OtherActor);
 		if (nullptr != Monster)
 		{
 			Monster->Damaged(50.0f);
