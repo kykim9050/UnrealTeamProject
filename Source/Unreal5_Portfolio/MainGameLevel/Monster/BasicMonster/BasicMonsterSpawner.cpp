@@ -34,7 +34,7 @@ void ABasicMonsterSpawner::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	TimeCount = SpawnDelayTime;
+	TimeCount = InitSpawnDelayTime;
 	TriggerBox->SetActive(TriggerIsActive);
 }
 
@@ -54,7 +54,7 @@ void ABasicMonsterSpawner::Tick(float DeltaTime)
 		return;
 	}
 
-	if (0 >= TotalSpawnCount)
+	if (0 >= TotalSpawnCount || EGameStage::MissionClear == UMainGameBlueprintFunctionLibrary::GetMainGameState(GetWorld())->GetCurStage())
 	{
 		Destroy();
 		return;
