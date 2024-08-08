@@ -15,6 +15,10 @@ class UNREAL5_PORTFOLIO_API UBossHeartData : public UBossMonsterData
 	GENERATED_BODY()
 	
 public:
-	FVector WalkDir = FVector::ZeroVector;
+	UPROPERTY(EditAnywhere, Category = "WalkState")
+	FVector WalkOriginPos = FVector::ZeroVector;
+
+	UPROPERTY(EditAnywhere, Category = "WalkState")
+	float WalkRaidus = 0.0f;
 
 };

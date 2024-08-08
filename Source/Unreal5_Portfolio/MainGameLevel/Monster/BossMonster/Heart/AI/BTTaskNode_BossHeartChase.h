@@ -14,4 +14,8 @@ class UNREAL5_PORTFOLIO_API UBTTaskNode_BossHeartChase : public UBTTaskNodeBase_
 {
 	GENERATED_BODY()
 	
+public:
+	EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) override;
+	void TickTask(UBehaviorTreeComponent& OwnerComp, uint8* pNodeMemory, float DeltaSeconds) override;
+
 };

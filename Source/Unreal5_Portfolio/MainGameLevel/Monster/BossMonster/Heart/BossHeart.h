@@ -30,7 +30,7 @@ protected:
 	virtual void InitData(const FBossMonsterDataRow* BaseData) override;
 
 private:
-	UPROPERTY()
+	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true"))
 	UBossHeartData* BossHeartSettingData = nullptr;
 
 };
