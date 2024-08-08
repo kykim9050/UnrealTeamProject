@@ -60,6 +60,10 @@ public:
 	UPROPERTY(Category = "Contents"/*, Replicated*/, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	bool IsFaint = false;
 
+	// 인벤토리에 아이템이 있는지 여부.
+	UFUNCTION(BlueprintCallable)
+	bool IsItemInItemSlot(int _Index);
+
 private: // 문제 발생 여지 있음 발생하면 그냥 지워야 함.
 	// == Components ==
 
@@ -230,9 +234,6 @@ private:
 	UFUNCTION()
 	void BulletCalculation();
 
-	UFUNCTION()
-	bool IsItemInItemSlot(int _Index);
-
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	bool IsServer = false;
 
@@ -264,6 +265,12 @@ public:
 	FORCEINLINE EPlayerUpperState GetIdleDefault() const
 	{
 		return IdleDefault;
+	}
+
+	UFUNCTION()
+	FORCEINLINE bool GetIsExtraBullets() const
+	{
+		return IsExtraBullets;
 	}
 
 public:

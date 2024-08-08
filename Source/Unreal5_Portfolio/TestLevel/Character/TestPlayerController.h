@@ -98,12 +98,8 @@ private:
 	UPROPERTY()
 	ECameraShakeState ShakeState = ECameraShakeState::Stop;
 	UPROPERTY()
-	float ShakeTimer = 0.0f;
-	UPROPERTY()
 	FVector ShakeValue = FVector(0.0f, 0.0f, 0.0f);
 
-	UFUNCTION()
-	void ResetCameraShakeTimer();
 	UFUNCTION()
 	void ResetCameraShakeValue();
 	UFUNCTION()
