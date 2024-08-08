@@ -217,8 +217,13 @@ void ATestCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLi
 	DOREPLIFETIME(ATestCharacter, UIToSelectCharacter); // Test
 }
 
-void ATestCharacter::AnimationEnd()
+void ATestCharacter::AnimationEnd(FString _CurMontage)
 {
+	if ("" == _CurMontage)
+	{
+
+	}
+
 	PlayerAnimInst->ChangeAnimation(IdleDefault);
 	FPVPlayerAnimInst->ChangeAnimation(IdleDefault);
 }

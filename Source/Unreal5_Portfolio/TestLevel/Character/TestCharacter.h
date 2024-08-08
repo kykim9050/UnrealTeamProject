@@ -30,7 +30,7 @@ protected:
 
 	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
-	virtual void AnimationEnd() override;
+	virtual void AnimationEnd(FString _CurMontage) override;
 
 public:
 	// Called every frame
@@ -250,6 +250,9 @@ private:
 public:
 	UFUNCTION(BlueprintCallable)
 	void CheckItem();
+
+	UFUNCTION(BlueprintCallable)
+	bool IsItemInItemSlot(int _Index);
 
 	UFUNCTION()
 	void AttackCheck();
