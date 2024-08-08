@@ -49,6 +49,10 @@ public:
 	UPROPERTY(EditAnywhere)
 	FRangedAttackRange RangedAttackRange;
 
+	// 걷기 속도
+	UPROPERTY(EditAnywhere)
+	float WalkSpeed = 0.0f;
+
 	// 추격 속도
 	UPROPERTY(EditAnywhere)
 	float ChaseSpeed = 0.0f;

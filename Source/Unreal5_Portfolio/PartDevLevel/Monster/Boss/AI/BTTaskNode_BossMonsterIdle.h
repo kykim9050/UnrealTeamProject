@@ -16,6 +16,5 @@ class UNREAL5_PORTFOLIO_API UBTTaskNode_BossMonsterIdle : public UBTTaskNode_Bos
 
 public:
 	EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& _OwnerComponent, uint8* _NodeMemory) override;
-
 	void TickTask(UBehaviorTreeComponent& _OwnerComponent, uint8* _pNodeMemory, float _DeltaSeconds) override;
 };

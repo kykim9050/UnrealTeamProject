@@ -14,4 +14,7 @@ class UNREAL5_PORTFOLIO_API UBossHeartData : public UBossMonsterData
 {
 	GENERATED_BODY()
 	
+public:
+	FVector WalkDir = FVector::ZeroVector;
+
 };

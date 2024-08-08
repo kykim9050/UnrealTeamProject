@@ -164,6 +164,7 @@ UENUM(BlueprintType)
 enum class EBossMonsterState : uint8
 {
 	Idle,
+	Walk,
 	Chase,
 	MeleeAttack,
 	RangedAttack,
