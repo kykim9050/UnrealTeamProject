@@ -151,7 +151,7 @@ public:
 		return UIToSelectCharacter;
 	}
 
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable)
 	FORCEINLINE FString GetMainNickName() const
 	{
 		return MainNickname;
