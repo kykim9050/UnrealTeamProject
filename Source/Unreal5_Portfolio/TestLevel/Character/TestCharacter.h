@@ -155,6 +155,9 @@ public:
 	UFUNCTION(/*Reliable, Server*/)
 	void BombSetEnd();
 	//void BombSetEnd_Implementation();
+	UFUNCTION(Reliable, Server)
+	void BombPlanting(AAreaObject* _AreaObject);
+	void BombPlanting_Implementation(AAreaObject* _AreaObject);
 
 	/// <summary>
 	/// Crouch 에 대한 카메라 이동

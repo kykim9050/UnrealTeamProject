@@ -5,7 +5,9 @@
 #include "Global/MainGameBlueprintFunctionLibrary.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Global/MainGameInstance.h"
+#include "Global/ContentsLog.h"
 #include "Global/DataTable/ItemDataRow.h"
+#include "Global/DataTable/MapObjDataRow.h"
 #include "Components/BoxComponent.h"
 #include "Camera/CameraComponent.h"
 #include "TestPlayerController.h"
@@ -18,8 +20,8 @@
 #include "PartDevLevel/Monster/Boss/TestBossMonsterBase.h"
 
 #include "MainGameLevel/Object/MapObjectBase.h"
+#include "MainGameLevel/Object/ItemBase.h"
 #include "MainGameLevel/Object/DoorObject.h"
-#include "MainGameLevel/Object/Bomb.h"
 #include "MainGameLevel/Object/AreaObject.h"
 
 #include "MainGameLevel/UI/InGame/HeadNameWidgetComponent.h"
@@ -794,10 +796,7 @@ void ATestCharacter::BombSetEnd()
 		AAreaObject* AreaObject = Cast<AAreaObject>(GetMapItemData);
 		if (nullptr != AreaObject)
 		{
-			//AreaObject->InterAction();
-
-			FName InfoName = FName(TEXT("Bomb"));
-			AreaObject->BombPlanting(InfoName);
+			BombPlanting(AreaObject);
 		}
 
 		// 인벤토리에서 폭탄 아이템 삭제
@@ -805,6 +804,37 @@ void ATestCharacter::BombSetEnd()
 
 		// 이전 자세로 애니메이션 변경
 		ChangeMontage(IdleDefault);
+	}
+}
+
+void ATestCharacter::BombPlanting_Implementation(AAreaObject* _AreaObject)
+{
+	UMainGameInstance* Inst = UMainGameBlueprintFunctionLibrary::GetMainGameInstance(GetWorld());
+
+	if (nullptr == Inst)
+	{
+		LOG(ObjectLog, Fatal, "if (nullptr == Inst)");
+		return;
+	}
+
+	const FMapObjDataRow* TableData = Inst->GetMapObjDataTable(FName(TEXT("Bomb")));
+	_AreaObject->BombMesh->SetStaticMesh(TableData->GetMesh());
+	_AreaObject->BombMesh->SetRelativeScale3D(FVector(0.002f, 0.002f, 0.002f));
+	_AreaObject->PlantingSpotCollision->SetCollisionProfileName(FName(TEXT("NoCollision")));
+
+	if (true == HasAuthority())
+	{
+		AMainGameState* MainGameState = UMainGameBlueprintFunctionLibrary::GetMainGameState(GetWorld());
+
+		if (nullptr == MainGameState)
+		{
+			return;
+		}
+
+		if (EGameStage::PlantingBomb == MainGameState->GetCurStage())
+		{
+			MainGameState->SetCurStage(EGameStage::MoveToGatheringPoint);
+		}
 	}
 }
 

@@ -15,8 +15,6 @@ class UNREAL5_PORTFOLIO_API AAreaObject : public AMapObjectBase
 	GENERATED_BODY()
 
 public:
-	void InterAction() override;
-
 	FORCEINLINE void ResetBombTime()
 	{
 		InstallBombTime = 3.0f;
@@ -29,9 +27,11 @@ public:
 
 	void InstallBomb(float _DeltaTime);
 
-	UFUNCTION(Reliable, Server)
-	void BombPlanting(FName _InfoName);
-	void BombPlanting_Implementation(FName _InfoName);
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	class UStaticMeshComponent* BombMesh = nullptr;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	class UBoxComponent* PlantingSpotCollision = nullptr;
 
 protected:
 	AAreaObject();
@@ -46,11 +46,5 @@ private:
 	/// ÆøÅº ¼³Ä¡ ½Ã°£
 	/// </summary>
 	float InstallBombTime = 3.0f;
-
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-	class UStaticMeshComponent* BombMesh = nullptr;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-	class UBoxComponent* PlantingSpotCollision = nullptr;
 
 };
