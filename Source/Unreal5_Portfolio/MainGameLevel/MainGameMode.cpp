@@ -12,20 +12,10 @@ void AMainGameMode::BeginPlay()
 {
 	Super::BeginPlay();
 
-	//UMainGameBlueprintFunctionLibrary::GetMainGameState(GetWorld())->SetCurStage(EGameStage::ObtainSecondSample);
+	//UMainGameBlueprintFunctionLibrary::GetMainGameState(GetWorld())->SetCurStage(EGameStage::MoveToGatheringPoint);
 }
 
 void AMainGameMode::Tick(float _DeltaTime)
 {
 	Super::Tick(_DeltaTime);
 }
-
-//void AMainGameMode::PostLogin(APlayerController* NewPlayer)
-//{
-//	Super::PostLogin(NewPlayer);
-//
-//	AMainPlayerState* MainPlayerController = Cast<AMainPlayerState>(NewPlayer->PlayerState);
-//	MainPlayerController->InitPlayerData();
-//}
-
-

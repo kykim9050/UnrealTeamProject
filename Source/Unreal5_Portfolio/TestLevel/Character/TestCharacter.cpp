@@ -161,11 +161,11 @@ void ATestCharacter::PostInitializeComponents() // FName 부분 수정 필요.
 	Super::PostInitializeComponents();
 
 	// 리로드 위젯
-	if (nullptr != Reload_Widget)
-	{
-		Reload_Widget->AddToViewport();
-		Reload_Widget->SetVisibility(ESlateVisibility::Hidden);
-	}
+	//if (nullptr != Reload_Widget)
+	//{
+	//	Reload_Widget->AddToViewport();
+	//	Reload_Widget->SetVisibility(ESlateVisibility::Hidden);
+	//}
 }
 
 // Called when the game starts or when spawned
@@ -652,10 +652,10 @@ void ATestCharacter::AttackCheck()
 	}
 	case EPlayerUpperState::Rifle_Idle:
 	{
-		ChangeMontage(EPlayerUpperState::Rifle_Attack);
 		BulletCalculation();
 		if (true == IsExtraBullets)
 		{
+			ChangeMontage(EPlayerUpperState::Rifle_Attack);
 			FireRayCast();
 		}
 		break;
@@ -867,7 +867,22 @@ void ATestCharacter::BulletCalculation()
 	// 탄알이 없다면 
 	if (ItemSlot[0].ReloadLeftNum < 0)
 	{
+		ItemSlot[0].ReloadLeftNum = 0;
 		IsExtraBullets = false;
+		
+		ATestPlayerController* MyController = Cast<ATestPlayerController>(GetController());
+		if (nullptr == MyController)
+		{
+			return;
+		}
+
+		AMainGameHUD* PlayHUD = Cast<AMainGameHUD>(MyController->GetHUD());
+		if (nullptr == PlayHUD)
+		{
+			return;
+		}
+		PlayHUD->UIOn(EUserWidgetType::ReloadComment);
+				
 		//Reload_Widget->SetVisibility(ESlateVisibility::Visible);
 		return;
 	}
@@ -938,16 +953,28 @@ void ATestCharacter::ChangePOV()
 
 void ATestCharacter::CharacterReload()
 {
-	if (0 != CurItemIndex)
+	if (EPlayerUpperState::Rifle_Idle != IdleDefault)
 	{
 		return;
 	}
 
-	// Widget 숨기기
-	//Reload_Widget->SetVisibility(ESlateVisibility::Hidden);
-
 	// 총알 데이터 설정.
 	ItemSlot[0].ReloadLeftNum = ItemSlot[0].ReloadMaxNum;
+
+	// Widget 숨기기
+	ATestPlayerController* MyController = Cast<ATestPlayerController>(GetController());
+	if (nullptr == MyController)
+	{
+		return;
+	}
+
+	AMainGameHUD* PlayHUD = Cast<AMainGameHUD>(MyController->GetHUD());
+	if (nullptr == PlayHUD)
+	{
+		return;
+	}
+	PlayHUD->UIOff(EUserWidgetType::ReloadComment);
+	//Reload_Widget->SetVisibility(ESlateVisibility::Hidden);
 
 	// 변경된 총알 데이터 호출.
 	ATestPlayerController* Con = Cast<ATestPlayerController>(GetController());

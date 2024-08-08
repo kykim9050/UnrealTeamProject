@@ -14,7 +14,12 @@ class UNREAL5_PORTFOLIO_API UEndingMessageUserWidget : public UUserWidget
 {
 	GENERATED_BODY()
 
+	virtual void NativeConstruct() override;
+
 public:
+	UPROPERTY(BlueprintReadWrite)
+	FText EndingCreditText;
+
 	UPROPERTY(BlueprintReadWrite)
 	TArray<FText> EndingCreditArr;
 
