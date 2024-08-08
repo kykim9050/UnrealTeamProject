@@ -29,15 +29,17 @@ public:
 
 	void InstallBomb(float _DeltaTime);
 
+	UFUNCTION(Reliable, Server)
+	void BombPlanting(FName _InfoName);
+	void BombPlanting_Implementation(FName _InfoName);
+
 protected:
 	AAreaObject();
 	
 	void BeginPlay() override;
 	void Tick(float DeltaTime) override;
 	
-	UFUNCTION(Reliable, NetMulticast)
-	void BombPlanting(FName _InfoName);
-	void BombPlanting_Implementation(FName _InfoName);
+
 
 private:
 	/// <summary>
@@ -46,8 +48,9 @@ private:
 	float InstallBombTime = 3.0f;
 
 
-
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	class UStaticMeshComponent* BombMesh = nullptr;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	class UBoxComponent* PlantingSpotCollision = nullptr;
 
 };
