@@ -6,21 +6,38 @@
 #include "GameFramework/Actor.h"
 #include "BossHeartProjectile.generated.h"
 
+class USphereComponent;
+class UProjectileMovementComponent;
+
 UCLASS()
 class UNREAL5_PORTFOLIO_API ABossHeartProjectile : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
-	// Sets default values for this actor's properties
 	ABossHeartProjectile();
 
+public:
+	FORCEINLINE void SetDamage(float Value)
+	{
+		Damage = Value;
+	}
+
 protected:
-	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+	UFUNCTION()
+	void BeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
+private:
+	UPROPERTY(EditAnywhere, Category = "Components")
+	UStaticMeshComponent* BodyMesh = nullptr;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
+	USphereComponent* BodyCollision = nullptr;
+
+	UPROPERTY(EditAnywhere, Category = "Movement")
+	UProjectileMovementComponent* MovementComp = nullptr;
+
+	float Damage = 0.0f;
 };

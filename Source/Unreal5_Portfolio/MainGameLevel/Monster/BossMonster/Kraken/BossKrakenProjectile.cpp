@@ -20,6 +20,7 @@ ABossKrakenProjectile::ABossKrakenProjectile()
 	PrimaryActorTick.bCanEverTick = true;
 
 	BodyCollision = CreateDefaultSubobject<USphereComponent>(TEXT("BodyCollision"));
+	BodyCollision->OnComponentBeginOverlap.AddDynamic(this, &ABossKrakenProjectile::BeginOverlap);
 	SetRootComponent(BodyCollision);
 
 	BodyMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("BodyMesh"));
@@ -36,8 +37,6 @@ ABossKrakenProjectile::ABossKrakenProjectile()
 void ABossKrakenProjectile::BeginPlay()
 {
 	Super::BeginPlay();
-
-	BodyCollision->OnComponentBeginOverlap.AddDynamic(this, &ABossKrakenProjectile::BeginOverlap);
 
 	StateChange(BossKraKenProjectile::EState::Fly);
 }

@@ -3,6 +3,7 @@
 
 #include "MainGameLevel/Monster/BossMonster/Heart/BossHeart.h"
 #include "MainGameLevel/Monster/BossMonster/Heart/BossHeartData.h"
+#include "MainGameLevel/Monster/BossMonster/Heart/BossHeartProjectile.h"
 
 ABossHeart::ABossHeart()
 {
@@ -27,13 +28,10 @@ void ABossHeart::Shooting()
 		return;
 	}
 
-	//FVector InitPos = ProjectileSpawnPoint->GetComponentLocation();
-	//for (int32 i = 0; i < ProjectileSpawnPoint->SpawnLocation.Num(); i++)
-	//{
-	//	FVector SpawnPos = InitPos + ProjectileSpawnPoint->SpawnLocation[i];
-	//	FVector Direction = SpawnPos - GetActorLocation();
-	//	Direction.Normalize();
-	//
-	//	ABossKrakenProjectile* Rock = GetWorld()->SpawnActor<ABossKrakenProjectile>(ProjectileUClass, SpawnPos, Direction.Rotation());
-	//}
+	FVector SpawnPos = GetActorLocation() + FTransform(GetControlRotation()).TransformVector(GunOffset);
+	ABossHeartProjectile* Bullet = GetWorld()->SpawnActor<ABossHeartProjectile>(ProjectileUClass, SpawnPos, GetActorForwardVector().Rotation());
+	if (nullptr != Bullet)
+	{
+		Bullet->SetDamage(SettingData->BaseData->RangedAttackDamage);
+	}
 }

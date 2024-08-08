@@ -7,6 +7,7 @@
 #include "BossHeart.generated.h"
 
 class UBossHeartData;
+class ABossHeartProjectile;
 struct FBossMonsterDataRow;
 
 /**
@@ -35,5 +36,11 @@ protected:
 private:
 	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true"))
 	UBossHeartData* BossHeartSettingData = nullptr;
+
+	UPROPERTY(EditAnywhere, Category = "Projectile", meta = (AllowPrivateAccess = true))
+	TSubclassOf<ABossHeartProjectile> ProjectileUClass = nullptr;
+
+	UPROPERTY(EditAnywhere, Category = "Projectile")
+	FVector GunOffset = FVector::ZeroVector;
 
 };
