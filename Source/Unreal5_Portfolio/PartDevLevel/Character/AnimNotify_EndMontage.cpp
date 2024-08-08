@@ -19,8 +19,8 @@ void UAnimNotify_EndMontage::Notify(USkeletalMeshComponent* MeshComp, UAnimSeque
 	{
 		return;
 	}
+
+	FString CurMontage = Animation->GetName();
 	
-	Actor->AnimationEnd();
-
-
+	Actor->AnimationEnd(CurMontage);
 }

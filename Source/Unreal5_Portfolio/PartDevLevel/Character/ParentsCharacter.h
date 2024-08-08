@@ -17,6 +17,7 @@ public:
 
 	// Call Notify
 	virtual void AnimationEnd();
+	virtual void AnimationEnd(FString _CurMontage);
 
 protected:
 	// Component
