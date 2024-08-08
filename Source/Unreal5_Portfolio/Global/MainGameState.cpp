@@ -69,6 +69,12 @@ void AMainGameState::GameStateCheck_Implementation(AActor* _OtherActor)
 		return;
 	}
 
+	if (false == SetPlayerMaxNum)
+	{
+		MaxPlayerCount = PlayerArray.Num();
+		SetPlayerMaxNum = true;
+	}
+
 	// 플레이어 수가 일정 수 도달했을 때 조건 체크 함수
 	if (MaxPlayerCount == PlayerCount)
 	{

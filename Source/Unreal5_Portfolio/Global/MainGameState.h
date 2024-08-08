@@ -145,7 +145,13 @@ private:
 	/// 플레이어 최대 수
 	/// </summary>
 	UPROPERTY()
-	int MaxPlayerCount = 2;
+	int MaxPlayerCount = 4;
+
+	/// <summary>
+	/// 최대 플레이어 수를 받아서 MaxPlayerCount 값에 대입했는지에 대한 유무 변수
+	/// </summary>
+	UPROPERTY()
+	bool SetPlayerMaxNum = false;
 
 	/// <summary>
 	/// EndingTriggerBox의 위치, 회전값 변수
