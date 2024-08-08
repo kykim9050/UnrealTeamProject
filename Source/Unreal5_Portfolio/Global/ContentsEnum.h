@@ -32,15 +32,16 @@ enum class EPlayerState : uint8
 UENUM(BlueprintType)
 enum class EGameStage : uint8
 {
-	Init					UMETA(DisplayName = "게임 플레이 시작 초기"),
-	VisitArmory				UMETA(DisplayName = "무기고 방문"),
-	ObtainFirstSample		UMETA(DisplayName = "샘플1 아이템 확보"),
-	ObtainSecondSample		UMETA(DisplayName = "샘플2 아이템 확보"),
-	ObtainThirdSample		UMETA(DisplayName = "샘플3 아이템 확보"),
-	PlantingBomb			UMETA(DisplayName = "폭탄 설치"),
-	MoveToGatheringPoint	UMETA(DisplayName = "집결지로 이동"),
-	Defensing				UMETA(DisplayName = "거점 방어"),
-	MissionClear			UMETA(DisplayName = "미션 성공")
+	Init,					// 게임 플레이 시작 초기
+	VisitArmory,			// 무기고 방문
+	ObtainFirstSample,		// 샘플1 아이템 확보
+	ObtainSecondSample,		// 샘플2 아이템 확보
+	ObtainThirdSample,		// 샘플3 아이템 확보
+	PlantingBomb,			// 폭탄 설치
+	MoveToGatheringPoint,	// 집결지로 이동
+	Defensing,				// 거점 방어
+	MissionClear,			// 미션 성공
+	Max
 };
 
 
@@ -187,6 +188,7 @@ enum class EUserWidgetType : uint8
 	E_Key,
 	Num5_Key,
 	Quest,
+	Timer,
 	SlotEmpty,
 	NotAreaComment,
 	AnyInteractionComment,

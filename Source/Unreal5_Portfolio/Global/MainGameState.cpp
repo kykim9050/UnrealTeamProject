@@ -20,35 +20,16 @@ void AMainGameState::SetCurStage_Implementation(EGameStage _Stage)
 	CurStage = _Stage;
 
 	if (EGameStage::MissionClear == CurStage
-	/*	&& EGameStage::Defensing == PrevStage*/)
+		&& EGameStage::Defensing == PrevStage)
 	{
 		SpawnTriggerBox(EndingTriggerBoxPos, EndingTriggerBoxRot);
 	}
 }
 
-int AMainGameState::GetQuestItemsNum()
-{
-	int Cnt = 0;
-
-	for (int i = 0; i < static_cast<int>(EQuestItem::Max); i++)
-	{
-		if (true == QuestItems[i])
-		{
-			++Cnt;
-		}
-	}
-
-	return Cnt;
-}
 
 AMainGameState::AMainGameState()
 {
-	int QuestItemsNum = static_cast<int>(EQuestItem::Max);
-
-	for (int i = 0; i < QuestItemsNum; i++)
-	{
-		QuestItems.Add(false);
-	}
+	
 }
 
 void AMainGameState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const

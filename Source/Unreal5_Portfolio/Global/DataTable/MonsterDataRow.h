@@ -33,14 +33,4 @@ public:
 	// 몽타주
 	UPROPERTY(EditAnywhere)
 	TMap<EBasicMonsterAnim, FAnimMontageGroup> AllAnimMontages;
-	
-	// Test
-	// 몬스터 타입
-	UPROPERTY(EditAnywhere)
-	ETestMonsterType MonsterType = ETestMonsterType::Noraml;
-
-	// 몽타주
-	UPROPERTY(EditAnywhere)
-	TMap<ETestMonsterAnim, FAnimMontageGroup> TestAnimMontages;
-
 };

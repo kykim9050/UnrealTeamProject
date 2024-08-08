@@ -5,7 +5,9 @@
 #include "Global/MainGameBlueprintFunctionLibrary.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Global/MainGameInstance.h"
+#include "Global/ContentsLog.h"
 #include "Global/DataTable/ItemDataRow.h"
+#include "Global/DataTable/MapObjDataRow.h"
 #include "Components/BoxComponent.h"
 #include "Camera/CameraComponent.h"
 #include "TestPlayerController.h"
@@ -14,12 +16,12 @@
 #include "Components/SphereComponent.h"
 #include "MainGameLevel/Player/MainPlayerState.h"
 
-#include "MainGameLevel/Monster/Base/BasicMonsterBase.h"
+#include "MainGameLevel/Monster/Base/MonsterBase.h"
 #include "PartDevLevel/Monster/Boss/TestBossMonsterBase.h"
 
 #include "MainGameLevel/Object/MapObjectBase.h"
+#include "MainGameLevel/Object/ItemBase.h"
 #include "MainGameLevel/Object/DoorObject.h"
-#include "MainGameLevel/Object/Bomb.h"
 #include "MainGameLevel/Object/AreaObject.h"
 
 #include "MainGameLevel/UI/InGame/HeadNameWidgetComponent.h"
@@ -110,6 +112,7 @@ ATestCharacter::ATestCharacter()
 
 	// HeadName Component
 	HeadNameComponent = CreateDefaultSubobject<UHeadNameWidgetComponent>(TEXT("HeadNameWidgetComponent"));
+	HeadNameComponent->SetIsReplicated(true);
 	HeadNameComponent->SetupAttachment(RootComponent);
 	HeadNameComponent->SetOwnerNoSee(true);
 	HeadNameComponent->bHiddenInSceneCapture = true;
@@ -183,6 +186,16 @@ void ATestCharacter::BeginPlay()
 	GetMapItemCollisionComponent->OnComponentBeginOverlap.AddDynamic(this, &ATestCharacter::MapItemOverlapStart);
 	GetMapItemCollisionComponent->OnComponentEndOverlap.AddDynamic(this, &ATestCharacter::MapItemOverlapEnd);
 
+	// Instance에 저장돼있는 닉네임 모두가 알 수 있도록 하는 작업. 
+	UMainGameInstance* Inst = UMainGameBlueprintFunctionLibrary::GetMainGameInstance(GetWorld());
+	if (nullptr == Inst)
+	{
+		//LOG(UILog, Fatal, "MainGameInstance is Null");
+		return;
+	}
+	FText InstName = FText::FromString(Inst->GetMainNickName());
+	SendNicknames(InstName);
+
 	ChangeMontage(EPlayerUpperState::UArm_Idle);
 }
 
@@ -197,7 +210,7 @@ void ATestCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLi
 	DOREPLIFETIME(ATestCharacter, IdleDefault);
 
 	DOREPLIFETIME(ATestCharacter, Token);
-	//DOREPLIFETIME(ATestCharacter, IsFaint);
+	DOREPLIFETIME(ATestCharacter, MyNickName);
 
 	DOREPLIFETIME(ATestCharacter, UIToSelectCharacter); // Test
 }
@@ -212,6 +225,12 @@ void ATestCharacter::AnimationEnd()
 void ATestCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	// 다른 플레이어의 HeadNameComponent가 항상 나를 향하도록 회전	// => 메인 이전 필요 (24.07.30 추가됨)
+	if (nullptr != HeadNameComponent)
+	{
+		HeadNameComponent->BilboardRotate(GetActorLocation());
+	}
 
 	UpdatePlayerHp(DeltaTime);
 }
@@ -316,6 +335,11 @@ void ATestCharacter::SpawnItem_Implementation(FName _ItemName, FTransform _Spawn
 	DropItemMeshComp->SetSimulatePhysics(true);
 }
 
+void ATestCharacter::SendNicknames_Implementation(const FText& _Nickname)
+{
+	MyNickName = _Nickname;
+}
+
 void ATestCharacter::PickUpItem(AItemBase* _Item)
 {
 	const FItemDataRow* ItemData = _Item->GetItemData();
@@ -409,22 +433,6 @@ void ATestCharacter::DropItem(int _SlotIndex)
 
 void ATestCharacter::FireRayCast_Implementation()
 {
-	CurItemIndex = 0;
-	if (CurItemIndex == -1 || CurItemIndex == 2)
-	{
-		return;
-	}
-
-	//// 탄알이 없다면 
-	//if (ItemSlot[CurItemIndex].ReloadLeftNum <= 0)
-	//{
-	//	//ItemSlot[CurItemIndex].ReloadLeftNum = ItemSlot[CurItemIndex].ReloadMaxNum;
-	//	// 장전하라는 Widget을 띄워야 함.
-	//	// 장전 함수는 CharacterReload 이다.
-	//	Reload_Widget->SetVisibility(ESlateVisibility::Visible);
-	//	return;
-	//}
-
 	ATestPlayerController* Con = Cast<ATestPlayerController>(GetController());
 	FVector Start = GetMesh()->GetSocketLocation(FName("MuzzleSocket"));
 	//Start.Z -= 20.0f;
@@ -433,9 +441,6 @@ void ATestCharacter::FireRayCast_Implementation()
 	FHitResult Hit;
 	if (GetWorld())
 	{
-		// 탄수 깎기.
-		ItemSlot[CurItemIndex].ReloadLeftNum -= 1;
-
 		// Ray Cast
 		TArray<AActor*> IgnoreActors; // 무시할 Actor들.
 		bool ActorHit = UKismetSystemLibrary::LineTraceSingle(GetWorld(), Start, End, ETraceTypeQuery::TraceTypeQuery1, false, IgnoreActors, EDrawDebugTrace::None, Hit, true, FLinearColor::Red, FLinearColor::Green, 5.0f);
@@ -445,7 +450,7 @@ void ATestCharacter::FireRayCast_Implementation()
 		if (true == ActorHit && nullptr != Hit.GetActor())
 		{
 			FString BoneName = Hit.BoneName.ToString();
-			ABasicMonsterBase* Monster = Cast<ABasicMonsterBase>(Hit.GetActor());
+			AMonsterBase* Monster = Cast<AMonsterBase>(Hit.GetActor());
 			if (nullptr != Monster)
 			{
 				Monster->Damaged(RifleDamage);
@@ -605,10 +610,8 @@ void ATestCharacter::UpdatePlayerHp(float _DeltaTime)
 	AMainGameHUD* PlayHUD = Cast<AMainGameHUD>(MyController->GetHUD());
 	if (nullptr != PlayHUD)
 	{
-		FString Number = FString::FromInt(Token);
-		FString Name_Number = FString("Play_") + Number;
 		UTestHpBarUserWidget* MyHpWidget = Cast<UTestHpBarUserWidget>(PlayHUD->GetWidget(EUserWidgetType::HpBar));
-		MyHpWidget->NickNameUpdate(Token, FText::FromString(Name_Number));
+		MyHpWidget->NickNameUpdate(Token, MyNickName);
 		MyHpWidget->HpbarUpdate(Token, GetHp, 100.0f);
 	}
 }
@@ -643,15 +646,25 @@ void ATestCharacter::AttackCheck()
 	switch (IdleDefault)
 	{
 	case EPlayerUpperState::UArm_Idle:
+	{
 		ChangeMontage(EPlayerUpperState::UArm_Attack);
 		break;
+	}
 	case EPlayerUpperState::Rifle_Idle:
+	{
 		ChangeMontage(EPlayerUpperState::Rifle_Attack);
-		FireRayCast();
+		BulletCalculation();
+		if (true == IsExtraBullets)
+		{
+			FireRayCast();
+		}
 		break;
+	}
 	case EPlayerUpperState::Melee_Idle:
+	{
 		ChangeMontage(EPlayerUpperState::Melee_Attack);
 		break;
+	}
 	default:
 		break;
 	}
@@ -723,7 +736,7 @@ void ATestCharacter::InteractObject_Implementation(AMapObjectBase* _MapObject)
 	_MapObject->InterAction();
 }
 
-void ATestCharacter::BombSetStart_Implementation()
+void ATestCharacter::BombSetStart()
 {
 	// 폭탄 아이템 체크
 	if (false == ItemSlot[static_cast<int>(EItemType::Bomb)].IsItemIn)
@@ -744,7 +757,7 @@ void ATestCharacter::BombSetStart_Implementation()
 	ChangeMontage(EPlayerUpperState::Bomb);
 }
 
-void ATestCharacter::BombSetTick_Implementation()
+void ATestCharacter::BombSetTick()
 {
 	if (true == IsBombSetting)
 	{
@@ -756,7 +769,7 @@ void ATestCharacter::BombSetTick_Implementation()
 		}
 
 		// 설치 시간 카운트가 끝났을 경우
-		if (0 >= AreaObject->GetInstallBombTime())
+		if (0.0f >= AreaObject->GetInstallBombTime())
 		{
 			BombSetEnd();
 		}
@@ -766,7 +779,7 @@ void ATestCharacter::BombSetTick_Implementation()
 	}
 }
 
-void ATestCharacter::BombSetCancel_Implementation()
+void ATestCharacter::BombSetCancel()
 {
 	if (true == IsBombSetting)
 	{
@@ -782,17 +795,18 @@ void ATestCharacter::BombSetCancel_Implementation()
 	}
 }
 
-void ATestCharacter::BombSetEnd_Implementation()
+void ATestCharacter::BombSetEnd()
 {
 	if (true == IsBombSetting)
 	{
 		// 폭탄 설치 완료
 		IsBombSetting = false;
 
+		// 맵에 폭탄 설치.
 		AAreaObject* AreaObject = Cast<AAreaObject>(GetMapItemData);
 		if (nullptr != AreaObject)
 		{
-			AreaObject->InterAction();
+			BombPlanting(AreaObject);
 		}
 
 		// 인벤토리에서 폭탄 아이템 삭제
@@ -800,6 +814,37 @@ void ATestCharacter::BombSetEnd_Implementation()
 
 		// 이전 자세로 애니메이션 변경
 		ChangeMontage(IdleDefault);
+	}
+}
+
+void ATestCharacter::BombPlanting_Implementation(AAreaObject* _AreaObject)
+{
+	UMainGameInstance* Inst = UMainGameBlueprintFunctionLibrary::GetMainGameInstance(GetWorld());
+
+	if (nullptr == Inst)
+	{
+		LOG(ObjectLog, Fatal, "if (nullptr == Inst)");
+		return;
+	}
+
+	const FMapObjDataRow* TableData = Inst->GetMapObjDataTable(FName(TEXT("Bomb")));
+	_AreaObject->BombMesh->SetStaticMesh(TableData->GetMesh());
+	_AreaObject->BombMesh->SetRelativeScale3D(FVector(0.002f, 0.002f, 0.002f));
+	_AreaObject->PlantingSpotCollision->SetCollisionProfileName(FName(TEXT("NoCollision")));
+
+	if (true == HasAuthority())
+	{
+		AMainGameState* MainGameState = UMainGameBlueprintFunctionLibrary::GetMainGameState(GetWorld());
+
+		if (nullptr == MainGameState)
+		{
+			return;
+		}
+
+		if (EGameStage::PlantingBomb == MainGameState->GetCurStage())
+		{
+			MainGameState->SetCurStage(EGameStage::MoveToGatheringPoint);
+		}
 	}
 }
 
@@ -812,6 +857,24 @@ void ATestCharacter::DeleteItemInfo(int _Index)
 {
 	FPlayerItemInformation DeleteSlot;
 	ItemSlot[_Index] = DeleteSlot;
+}
+
+void ATestCharacter::BulletCalculation()
+{
+	// 탄수 깎기.
+	ItemSlot[0].ReloadLeftNum -= 1;
+
+	// 탄알이 없다면 
+	if (ItemSlot[0].ReloadLeftNum < 0)
+	{
+		IsExtraBullets = false;
+		//Reload_Widget->SetVisibility(ESlateVisibility::Visible);
+		return;
+	}
+	else
+	{
+		IsExtraBullets = true;
+	}
 }
 
 bool ATestCharacter::IsItemInItemSlot(int _Index)
@@ -875,16 +938,16 @@ void ATestCharacter::ChangePOV()
 
 void ATestCharacter::CharacterReload()
 {
-	if (-1 == CurItemIndex)
+	if (0 != CurItemIndex)
 	{
 		return;
 	}
 
 	// Widget 숨기기
-	Reload_Widget->SetVisibility(ESlateVisibility::Hidden);
+	//Reload_Widget->SetVisibility(ESlateVisibility::Hidden);
 
 	// 총알 데이터 설정.
-	ItemSlot[CurItemIndex].ReloadLeftNum = ItemSlot[CurItemIndex].ReloadMaxNum;
+	ItemSlot[0].ReloadLeftNum = ItemSlot[0].ReloadMaxNum;
 
 	// 변경된 총알 데이터 호출.
 	ATestPlayerController* Con = Cast<ATestPlayerController>(GetController());
@@ -897,7 +960,7 @@ void ATestCharacter::CharacterReload()
 void ATestCharacter::HandAttackCollision(AActor* _OtherActor, UPrimitiveComponent* _Collision)
 {
 	{
-		ABasicMonsterBase* Monster = Cast<ABasicMonsterBase>(_OtherActor);
+		AMonsterBase* Monster = Cast<AMonsterBase>(_OtherActor);
 		if (nullptr != Monster)
 		{
 			Monster->Damaged(50.0f);

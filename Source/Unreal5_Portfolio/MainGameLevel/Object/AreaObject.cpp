@@ -15,6 +15,8 @@ AAreaObject::AAreaObject()
 
 	PlantingSpotCollision->SetupAttachment(RootComponent);
 	BombMesh->SetupAttachment(PlantingSpotCollision);
+
+	BombMesh->SetIsReplicated(true);
 }
 
 void AAreaObject::BeginPlay()
@@ -31,50 +33,6 @@ void AAreaObject::BeginPlay()
 void AAreaObject::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-}
-
-void AAreaObject::InterAction()
-{
-	Super::InterAction();
-
-
-	if (0.0f >= InstallBombTime)
-	{
-		InstallBombTime = 3.0f;
-		FName InfoName = FName(TEXT("Bomb"));
-		BombPlanting(InfoName);
-	}
-}
-
-void AAreaObject::BombPlanting_Implementation(FName _InfoName)
-{
-	UMainGameInstance* Inst = UMainGameBlueprintFunctionLibrary::GetMainGameInstance(GetWorld());
-
-	if (nullptr == Inst)
-	{
-		LOG(ObjectLog, Fatal, "if (nullptr == Inst)");
-		return;
-	}
-
-	const FMapObjDataRow* TableData = Inst->GetMapObjDataTable(_InfoName);
-	BombMesh->SetStaticMesh(TableData->GetMesh());
-	BombMesh->SetRelativeScale3D(FVector(0.01f, 0.01f, 0.01f));
-	PlantingSpotCollision->SetCollisionProfileName(FName(TEXT("NoCollision")));
-
-	if (true == HasAuthority())
-	{
-		AMainGameState* MainGameState = UMainGameBlueprintFunctionLibrary::GetMainGameState(GetWorld());
-
-		if (nullptr == MainGameState)
-		{
-			return;
-		}
-
-		if (EGameStage::PlantingBomb == MainGameState->GetCurStage())
-		{
-			MainGameState->SetCurStage(EGameStage::MoveToGatheringPoint);
-		}
-	}
 }
 
 void AAreaObject::InstallBomb(float _DeltaTime)
