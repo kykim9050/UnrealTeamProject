@@ -143,18 +143,21 @@ public:
 	void InteractObject(AMapObjectBase* _MapObject);
 	void InteractObject_Implementation(AMapObjectBase* _MapObject);
 
-	UFUNCTION(Reliable, Server)
+	UFUNCTION(/*Reliable, Server*/)
 	void BombSetStart();
-	void BombSetStart_Implementation();
-	UFUNCTION(Reliable, Server)
+	//void BombSetStart_Implementation();
+	UFUNCTION(/*Reliable, Server*/)
 	void BombSetTick();
-	void BombSetTick_Implementation();
-	UFUNCTION(Reliable, Server)
+	//void BombSetTick_Implementation();
+	UFUNCTION(/*Reliable, Server*/)
 	void BombSetCancel();
-	void BombSetCancel_Implementation();
-	UFUNCTION(Reliable, Server)
+	//void BombSetCancel_Implementation();
+	UFUNCTION(/*Reliable, Server*/)
 	void BombSetEnd();
-	void BombSetEnd_Implementation();
+	//void BombSetEnd_Implementation();
+	UFUNCTION(Reliable, Server)
+	void BombPlanting(AAreaObject* _AreaObject);
+	void BombPlanting_Implementation(AAreaObject* _AreaObject);
 
 	/// <summary>
 	/// Crouch 에 대한 카메라 이동

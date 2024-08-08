@@ -5,7 +5,9 @@
 #include "Global/MainGameBlueprintFunctionLibrary.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Global/MainGameInstance.h"
+#include "Global/ContentsLog.h"
 #include "Global/DataTable/ItemDataRow.h"
+#include "Global/DataTable/MapObjDataRow.h"
 #include "Components/BoxComponent.h"
 #include "Camera/CameraComponent.h"
 #include "TestPlayerController.h"
@@ -14,12 +16,12 @@
 #include "Components/SphereComponent.h"
 #include "MainGameLevel/Player/MainPlayerState.h"
 
-#include "MainGameLevel/Monster/Base/BasicMonsterBase.h"
+#include "MainGameLevel/Monster/Base/MonsterBase.h"
 #include "PartDevLevel/Monster/Boss/TestBossMonsterBase.h"
 
 #include "MainGameLevel/Object/MapObjectBase.h"
+#include "MainGameLevel/Object/ItemBase.h"
 #include "MainGameLevel/Object/DoorObject.h"
-#include "MainGameLevel/Object/Bomb.h"
 #include "MainGameLevel/Object/AreaObject.h"
 
 #include "MainGameLevel/UI/InGame/HeadNameWidgetComponent.h"
@@ -110,6 +112,7 @@ ATestCharacter::ATestCharacter()
 
 	// HeadName Component
 	HeadNameComponent = CreateDefaultSubobject<UHeadNameWidgetComponent>(TEXT("HeadNameWidgetComponent"));
+	HeadNameComponent->SetIsReplicated(true);
 	HeadNameComponent->SetupAttachment(RootComponent);
 	HeadNameComponent->SetOwnerNoSee(true);
 	HeadNameComponent->bHiddenInSceneCapture = true;
@@ -445,7 +448,7 @@ void ATestCharacter::FireRayCast_Implementation()
 		if (true == ActorHit && nullptr != Hit.GetActor())
 		{
 			FString BoneName = Hit.BoneName.ToString();
-			ABasicMonsterBase* Monster = Cast<ABasicMonsterBase>(Hit.GetActor());
+			AMonsterBase* Monster = Cast<AMonsterBase>(Hit.GetActor());
 			if (nullptr != Monster)
 			{
 				Monster->Damaged(RifleDamage);
@@ -723,7 +726,7 @@ void ATestCharacter::InteractObject_Implementation(AMapObjectBase* _MapObject)
 	_MapObject->InterAction();
 }
 
-void ATestCharacter::BombSetStart_Implementation()
+void ATestCharacter::BombSetStart()
 {
 	// 폭탄 아이템 체크
 	if (false == ItemSlot[static_cast<int>(EItemType::Bomb)].IsItemIn)
@@ -744,7 +747,7 @@ void ATestCharacter::BombSetStart_Implementation()
 	ChangeMontage(EPlayerUpperState::Bomb);
 }
 
-void ATestCharacter::BombSetTick_Implementation()
+void ATestCharacter::BombSetTick()
 {
 	if (true == IsBombSetting)
 	{
@@ -756,7 +759,7 @@ void ATestCharacter::BombSetTick_Implementation()
 		}
 
 		// 설치 시간 카운트가 끝났을 경우
-		if (0 >= AreaObject->GetInstallBombTime())
+		if (0.0f >= AreaObject->GetInstallBombTime())
 		{
 			BombSetEnd();
 		}
@@ -766,7 +769,7 @@ void ATestCharacter::BombSetTick_Implementation()
 	}
 }
 
-void ATestCharacter::BombSetCancel_Implementation()
+void ATestCharacter::BombSetCancel()
 {
 	if (true == IsBombSetting)
 	{
@@ -782,17 +785,18 @@ void ATestCharacter::BombSetCancel_Implementation()
 	}
 }
 
-void ATestCharacter::BombSetEnd_Implementation()
+void ATestCharacter::BombSetEnd()
 {
 	if (true == IsBombSetting)
 	{
 		// 폭탄 설치 완료
 		IsBombSetting = false;
 
+		// 맵에 폭탄 설치.
 		AAreaObject* AreaObject = Cast<AAreaObject>(GetMapItemData);
 		if (nullptr != AreaObject)
 		{
-			AreaObject->InterAction();
+			BombPlanting(AreaObject);
 		}
 
 		// 인벤토리에서 폭탄 아이템 삭제
@@ -800,6 +804,37 @@ void ATestCharacter::BombSetEnd_Implementation()
 
 		// 이전 자세로 애니메이션 변경
 		ChangeMontage(IdleDefault);
+	}
+}
+
+void ATestCharacter::BombPlanting_Implementation(AAreaObject* _AreaObject)
+{
+	UMainGameInstance* Inst = UMainGameBlueprintFunctionLibrary::GetMainGameInstance(GetWorld());
+
+	if (nullptr == Inst)
+	{
+		LOG(ObjectLog, Fatal, "if (nullptr == Inst)");
+		return;
+	}
+
+	const FMapObjDataRow* TableData = Inst->GetMapObjDataTable(FName(TEXT("Bomb")));
+	_AreaObject->BombMesh->SetStaticMesh(TableData->GetMesh());
+	_AreaObject->BombMesh->SetRelativeScale3D(FVector(0.002f, 0.002f, 0.002f));
+	_AreaObject->PlantingSpotCollision->SetCollisionProfileName(FName(TEXT("NoCollision")));
+
+	if (true == HasAuthority())
+	{
+		AMainGameState* MainGameState = UMainGameBlueprintFunctionLibrary::GetMainGameState(GetWorld());
+
+		if (nullptr == MainGameState)
+		{
+			return;
+		}
+
+		if (EGameStage::PlantingBomb == MainGameState->GetCurStage())
+		{
+			MainGameState->SetCurStage(EGameStage::MoveToGatheringPoint);
+		}
 	}
 }
 
@@ -897,7 +932,7 @@ void ATestCharacter::CharacterReload()
 void ATestCharacter::HandAttackCollision(AActor* _OtherActor, UPrimitiveComponent* _Collision)
 {
 	{
-		ABasicMonsterBase* Monster = Cast<ABasicMonsterBase>(_OtherActor);
+		AMonsterBase* Monster = Cast<AMonsterBase>(_OtherActor);
 		if (nullptr != Monster)
 		{
 			Monster->Damaged(50.0f);
