@@ -9,6 +9,7 @@
 #include "MainGameLevel/Object/TriggerBox/TriggerBoxBase.h"
 #include "Global/MainGameBlueprintFunctionLibrary.h"
 #include "MainGameLevel/Player/PlayerItemInformation.h"
+#include "Components/AudioComponent.h"
 
 // 추후 삭제 필요
 #include "TestLevel/Character/TestCharacter.h"
@@ -29,7 +30,9 @@ void AMainGameState::SetCurStage_Implementation(EGameStage _Stage)
 
 AMainGameState::AMainGameState()
 {
-	
+	BackgroundSound = CreateDefaultSubobject<UAudioComponent>("BackgroundSound");
+	BackgroundSound->SetupAttachment(RootComponent);
+	BackgroundSound->SetIsReplicated(false);
 }
 
 void AMainGameState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -217,4 +220,14 @@ void AMainGameState::SpawnTriggerBox(FVector _Pos, FRotator _Rot)
 	{
 		ATriggerBoxBase* EndTriggerBox = GetWorld()->SpawnActor<ATriggerBoxBase>(TriggerInfo, _Pos, _Rot);
 	}
+}
+
+void AMainGameState::PlayBackgroundSound()
+{
+	BackgroundSound->Play();
+}
+
+void AMainGameState::StopBackgroundSound()
+{
+	BackgroundSound->Stop();
 }
