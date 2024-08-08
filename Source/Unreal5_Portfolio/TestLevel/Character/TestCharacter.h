@@ -103,8 +103,11 @@ private: // 문제 발생 여지 있음 발생하면 그냥 지워야 함.
 	UPROPERTY()
 	class UPlayerAnimInstance* FPVPlayerAnimInst = nullptr;
 
-	UPROPERTY(Replicated)
+	UPROPERTY(Replicated, meta = (AllowPrivateAccess = "true"))
 	FName UIToSelectCharacter = "";
+
+	UPROPERTY(Replicated, meta = (AllowPrivateAccess = "true"))
+	FText MyNickName;
 
 	// == Server ==
 public:
@@ -174,6 +177,9 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	int RifleDamage = 50;
 
+	UPROPERTY(meta = (AllowPrivateAccess = "true"))
+	bool IsExtraBullets = false;
+
 	UFUNCTION(BlueprintCallable)
 	void MapItemOverlapStart(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
@@ -206,6 +212,10 @@ private:
 	void SpawnItem(FName _ItemName, FTransform _SpawnTrans);
 	void SpawnItem_Implementation(FName _ItemName, FTransform _SpawnTrans);
 
+	UFUNCTION(Reliable, Server)
+	void SendNicknames(const FText& _Nickname);
+	void SendNicknames_Implementation(const FText& _Nickname);
+
 	// 아이템 변경
 	UFUNCTION(BlueprintCallable)
 	void PickUpItem(class AItemBase* _Item);
@@ -216,6 +226,9 @@ private:
 
 	UFUNCTION()
 	void DeleteItemInfo(int _Index);
+
+	UFUNCTION()
+	void BulletCalculation();
 
 	UFUNCTION()
 	bool IsItemInItemSlot(int _Index);

@@ -120,12 +120,6 @@ public:
 		IsStageChange = _Value;
 	}
 
-	FORCEINLINE void QuestItemGet()
-	{
-		QuestItems[QuestItemsIdx++] = true;
-	}
-
-	int GetQuestItemsNum();
 
 	/// <summary>
 	/// 시네마틱을 재생할 수 있는 TriggerBox를 생성하는 함수
@@ -183,16 +177,6 @@ private:
 	UPROPERTY()
 	int ItemCount = 0;
 
-	/// <summary>
-	/// StageClear에 필요한 퀘스트 아이템 수집 상태 관련 TArray
-	/// </summary>
-	UPROPERTY()
-	TArray<bool> QuestItems = TArray<bool>();
-
-	/// <summary>
-	/// QuestItems의 Idx
-	/// </summary>
-	int QuestItemsIdx = 0;
 
 	/// <summary>
 	/// EndingTriggerBox의 위치, 회전값 변수
