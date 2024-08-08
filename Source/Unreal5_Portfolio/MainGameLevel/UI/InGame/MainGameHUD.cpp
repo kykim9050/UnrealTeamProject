@@ -53,4 +53,5 @@ void AMainGameHUD::AllUIOn()
 	UIOn(EUserWidgetType::MiniMap);
 	UIOn(EUserWidgetType::Crosshair);
 	UIOn(EUserWidgetType::KeyHelp);
+	UIOn(EUserWidgetType::Quest);
 }

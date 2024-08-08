@@ -6,9 +6,13 @@
 #include "Global/MainGameInstance.h"
 #include "Player/MainPlayerState.h"
 
+#include "Global/ContentsEnum.h"
+
 void AMainGameMode::BeginPlay()
 {
 	Super::BeginPlay();
+
+	//UMainGameBlueprintFunctionLibrary::GetMainGameState(GetWorld())->SetCurStage(EGameStage::ObtainSecondSample);
 }
 
 void AMainGameMode::Tick(float _DeltaTime)
