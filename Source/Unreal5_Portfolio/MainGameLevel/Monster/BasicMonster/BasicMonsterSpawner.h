@@ -34,6 +34,10 @@ private:
 	UPROPERTY(EditAnywhere, meta = (AllowprivateAccess = "true"))
 	int TotalSpawnCount = 0;
 
+	// Init Spawn Delay Time
+	UPROPERTY(EditAnywhere, meta = (AllowprivateAccess = "true"))
+	float InitSpawnDelayTime = 0.0f;
+
 	// Time interval between Spawn
 	UPROPERTY(EditAnywhere, meta = (AllowprivateAccess = "true"))
 	float SpawnDelayTime = 0.0f;
