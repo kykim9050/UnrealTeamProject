@@ -233,6 +233,32 @@ void ATestCharacter::Tick(float DeltaTime)
 	}
 
 	UpdatePlayerHp(DeltaTime);
+
+#if WITH_EDITOR
+	{
+		if (true == HasAuthority())
+		{
+			AMainGameState* CurGameState = UMainGameBlueprintFunctionLibrary::GetMainGameState(GetWorld());
+
+			if (nullptr == CurGameState)
+			{
+				return;
+			}
+			int CurPlayerNum = CurGameState->GetPlayerCount();
+			FString PNString = FString::FromInt(CurPlayerNum);
+			UMainGameBlueprintFunctionLibrary::DebugTextPrint(GetWorld(), FString(TEXT("CurPlayerCount = ")) + PNString);
+
+			EGameStage StageNum = CurGameState->GetCurStage();
+			FString StageString = FString();
+			const UEnum* StateEnum = FindObject<UEnum>(ANY_PACKAGE, TEXT("EGameStage"), true);
+			if (StateEnum)
+			{
+				StageString = StateEnum->GetNameStringByValue((int64)StageNum);
+			}
+			UMainGameBlueprintFunctionLibrary::DebugTextPrint(GetWorld(), FString(TEXT("CurStage = ")) + StageString);
+		}
+	}
+#endif
 }
 
 // Called to bind functionality to input
