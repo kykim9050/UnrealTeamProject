@@ -46,7 +46,7 @@ private:
 	void Fly(float DeltaTimes);
 	void FlyStart();
 
-	void Stop(float DeltaTimes);
+	void Stop(float DeltaTimes) {};
 	void StopStart();
 
 private:

@@ -76,8 +76,7 @@ void UBTTaskNode_BossHeartWalk::TickTask(UBehaviorTreeComponent& OwnerComp, uint
 				StateChange(OwnerComp, EBossMonsterState::Chase);
 				return;
 			case 1:
-				StateChange(OwnerComp, EBossMonsterState::Chase);
-				//StateChange(OwnerComp, EBossMonsterState::RangedAttack);
+				StateChange(OwnerComp, EBossMonsterState::RangedAttack);
 				return;
 			}
 		}

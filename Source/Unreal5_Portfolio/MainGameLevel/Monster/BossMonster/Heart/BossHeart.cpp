@@ -19,3 +19,21 @@ void ABossHeart::InitData(const FBossMonsterDataRow* BaseData)
 
 	SettingData = BossHeartSettingData;
 }
+
+void ABossHeart::Shooting()
+{
+	if (false == HasAuthority())
+	{
+		return;
+	}
+
+	//FVector InitPos = ProjectileSpawnPoint->GetComponentLocation();
+	//for (int32 i = 0; i < ProjectileSpawnPoint->SpawnLocation.Num(); i++)
+	//{
+	//	FVector SpawnPos = InitPos + ProjectileSpawnPoint->SpawnLocation[i];
+	//	FVector Direction = SpawnPos - GetActorLocation();
+	//	Direction.Normalize();
+	//
+	//	ABossKrakenProjectile* Rock = GetWorld()->SpawnActor<ABossKrakenProjectile>(ProjectileUClass, SpawnPos, Direction.Rotation());
+	//}
+}

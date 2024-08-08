@@ -25,6 +25,9 @@ public:
 	{
 		return BossHeartSettingData;
 	}
+
+public:
+	void Shooting();
 	
 protected:
 	virtual void InitData(const FBossMonsterDataRow* BaseData) override;
