@@ -12,7 +12,7 @@ void AMainGameMode::BeginPlay()
 {
 	Super::BeginPlay();
 
-	//UMainGameBlueprintFunctionLibrary::GetMainGameState(GetWorld())->SetCurStage(EGameStage::ObtainSecondSample);
+	//UMainGameBlueprintFunctionLibrary::GetMainGameState(GetWorld())->SetCurStage(EGameStage::ObtainThirdSample);
 }
 
 void AMainGameMode::Tick(float _DeltaTime)
