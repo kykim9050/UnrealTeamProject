@@ -10,6 +10,7 @@ class UBoxComponent;
 class UBossKrakenData;
 class ABossKrakenProjectile;
 class UBossKrakenProjectileSpawnPoint;
+struct FBossMonsterDataRow;
 
 /**
  * 
@@ -32,7 +33,7 @@ public:
 	void SpawnRock();
 
 protected:
-	virtual void InitData(const FBossMonsterDataRow* BaseData);
+	virtual void InitData(const FBossMonsterDataRow* BaseData) override;
 	
 private:
 	UPROPERTY()
