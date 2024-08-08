@@ -13,7 +13,7 @@
 
 #include "Global/ContentsLog.h"
 
-#include "TestLevel/Character/TestCharacter.h"
+#include "PartDevLevel/Character/ParentsCharacter.h"
 #include "TestLevel/Character/TestPlayerState.h"
 
 EBTNodeResult::Type UBTTaskNode_BasicMutantJumpAttack::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
@@ -70,8 +70,7 @@ void UBTTaskNode_BasicMutantJumpAttack::TickTask(UBehaviorTreeComponent& OwnerCo
 
 	if (0.0f >= MutantData->TimeCount)
 	{
-		// 교체 필요
-		ATestCharacter* TargetPlayer = GetValueAsObject<ATestCharacter>(OwnerComp, TEXT("TargetActor"));
+		AParentsCharacter* TargetPlayer = GetValueAsObject<AParentsCharacter>(OwnerComp, TEXT("TargetActor"));
 		ATestPlayerState* TargetPlayerState = Cast<ATestPlayerState>(TargetPlayer->GetPlayerState());
 
 		if (0.0f >= TargetPlayerState->GetPlayerHp())

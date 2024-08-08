@@ -10,9 +10,7 @@
 #include "Perception/AISenseConfig_Sight.h"
 #include "GenericTeamAgentInterface.h"
 
-
-
-#include "TestLevel/Character/TestCharacter.h"
+#include "PartDevLevel/Character/ParentsCharacter.h"
 #include "TestLevel/Character/TestPlayerState.h"
 
 ABasicMonsterAIController::ABasicMonsterAIController()
@@ -41,7 +39,7 @@ void ABasicMonsterAIController::PlayerDetect(AActor* Other, FAIStimulus const St
 		return;
 	}
 
-	ATestCharacter* TargetPlayer = Cast<ATestCharacter>(Other);
+	AParentsCharacter* TargetPlayer = Cast<AParentsCharacter>(Other);
 	if (nullptr == TargetPlayer)
 	{
 		return;

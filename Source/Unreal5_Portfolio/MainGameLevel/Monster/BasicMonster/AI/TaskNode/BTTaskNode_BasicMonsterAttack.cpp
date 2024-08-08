@@ -12,7 +12,7 @@
 
 #include "Global/ContentsLog.h"
 
-#include "TestLevel/Character/TestCharacter.h"
+#include "PartDevLevel/Character/ParentsCharacter.h"
 #include "TestLevel/Character/TestPlayerState.h"
 
 EBTNodeResult::Type UBTTaskNode_BasicMonsterAttack::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
@@ -45,7 +45,7 @@ void UBTTaskNode_BasicMonsterAttack::TickTask(UBehaviorTreeComponent& OwnerComp,
 	Super::TickTask(OwnerComp, pNodeMemory, DeltaSeconds);
 
 	// Target Check
-	ATestCharacter* Target = GetValueAsObject<ATestCharacter>(OwnerComp, TEXT("TargetActor"));
+	AParentsCharacter* Target = GetValueAsObject<AParentsCharacter>(OwnerComp, TEXT("TargetActor"));
 	if (nullptr == Target)
 	{
 		StateChange(OwnerComp, EBasicMonsterState::Idle);
