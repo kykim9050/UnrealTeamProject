@@ -7,19 +7,17 @@
 
 #include "Global/MainGameBlueprintFunctionLibrary.h"
 #include "Global/MainGameInstance.h"
+#include "Global/MainGameState.h"
 
 #include "Components/BillboardComponent.h"
 #include "Components/BoxComponent.h"
 
 #include "TestLevel/Character/TestCharacter.h"
 
-// Sets default values
 ABasicMonsterSpawner::ABasicMonsterSpawner()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	// Default Root
 	UBillboardComponent* Root = CreateDefaultSubobject<UBillboardComponent>(TEXT("RootComponent"));
 	RootComponent = Root;
 
@@ -32,7 +30,6 @@ ABasicMonsterSpawner::ABasicMonsterSpawner()
 
 }
 
-// Called when the game starts or when spawned
 void ABasicMonsterSpawner::BeginPlay()
 {
 	Super::BeginPlay();
@@ -41,7 +38,6 @@ void ABasicMonsterSpawner::BeginPlay()
 	TriggerBox->SetActive(TriggerIsActive);
 }
 
-// Called every frame
 void ABasicMonsterSpawner::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
@@ -99,15 +95,16 @@ void ABasicMonsterSpawner::TriggerBoxBeginOverlap(UPrimitiveComponent* Overlappe
 		return;
 	}
 
-	TriggerIsActive = false;
-	TriggerBox->SetActive(TriggerIsActive);
+	AMainGameState* MainGameState = UMainGameBlueprintFunctionLibrary::GetMainGameState(GetWorld());
+	if (nullptr == MainGameState)
+	{
+		return;
+	}
 
-	//AMainCharacter* Player = Cast<AMainCharacter>(OtherActor);
-	//if (nullptr == Player)
-	//{
-	//	return;
-	//}
-	//
-	//TriggerIsActive = false;
-	//TriggerBox->SetActive(TriggerIsActive);
+	EGameStage CurStage = MainGameState->GetCurStage();
+	if (TriggerCheckStage == CurStage)
+	{
+		TriggerIsActive = false;
+		TriggerBox->SetActive(TriggerIsActive);
+	}
 }

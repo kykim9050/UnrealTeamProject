@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Global/ContentsEnum.h"
 #include "BasicMonsterSpawner.generated.h"
 
 class UBoxComponent;
@@ -60,6 +61,10 @@ private:
 	UPROPERTY(EditAnywhere, meta = (AllowprivateAccess = "true"))
 	UBoxComponent* TriggerBox = nullptr;
 	
+	// TriggerBox Stage
+	UPROPERTY(EditAnywhere, meta = (AllowprivateAccess = "true"))
+	EGameStage TriggerCheckStage = EGameStage::Max;
+
 	// TriggerBox is Active
 	UPROPERTY(EditAnywhere, meta = (AllowprivateAccess = "true"))
 	bool TriggerIsActive = false;
