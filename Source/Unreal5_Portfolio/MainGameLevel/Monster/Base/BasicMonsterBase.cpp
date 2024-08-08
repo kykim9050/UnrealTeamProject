@@ -19,7 +19,7 @@
 #include "Global/MainGameState.h"
 #include "Global/ContentsLog.h"
 
-#include "TestLevel/Character/TestCharacter.h"
+#include "PartDevLevel/Character/ParentsCharacter.h"
 #include "TestLevel/Character/TestPlayerState.h"
 
 ABasicMonsterBase::ABasicMonsterBase()
@@ -113,7 +113,7 @@ void ABasicMonsterBase::Tick(float DeltaTime)
 
 void ABasicMonsterBase::OnAttackOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
-	ATestCharacter* HitCharacter = Cast<ATestCharacter>(OtherActor);
+	AParentsCharacter* HitCharacter = Cast<AParentsCharacter>(OtherActor);
 	if (nullptr != HitCharacter)
 	{
 		ATestPlayerState* HitPlayerState = Cast<ATestPlayerState>(HitCharacter->GetPlayerState());

@@ -92,6 +92,25 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	bool IsGunFire = false;
 
+	// Camera Shake
+	UPROPERTY()
+	bool IsCameraShakeOn = false;
+	UPROPERTY()
+	ECameraShakeState ShakeState = ECameraShakeState::Stop;
+	UPROPERTY()
+	float ShakeTimer = 0.0f;
+	UPROPERTY()
+	FVector ShakeValue = FVector(0.0f, 0.0f, 0.0f);
+
+	UFUNCTION()
+	void ResetCameraShakeTimer();
+	UFUNCTION()
+	void ResetCameraShakeValue();
+	UFUNCTION()
+	void ChangeCameraShakeState(ECameraShakeState _ShakeState);
+	UFUNCTION(BlueprintCallable)
+	void CameraShakeTick(float _DeltaTime);
+
 	// Monster ø‰√ª
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "TeamId", meta = (AllowPrivateAccess = true))
 	FGenericTeamId TeamId;
