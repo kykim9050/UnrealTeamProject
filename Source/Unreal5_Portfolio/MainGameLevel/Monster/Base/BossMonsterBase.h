@@ -61,8 +61,12 @@ protected:
 	// Attack
 	UFUNCTION()
 	void OnAttackOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
-
+	
+	// HUD
 	void BossHP_HUDUpdate();
+
+	// Item
+	virtual void DropItem() {};
 
 private:
 	// Dead

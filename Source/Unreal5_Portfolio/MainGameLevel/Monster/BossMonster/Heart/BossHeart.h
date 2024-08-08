@@ -32,6 +32,7 @@ public:
 	
 protected:
 	virtual void InitData(const FBossMonsterDataRow* BaseData) override;
+	virtual void DropItem() override;
 
 private:
 	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true"))

@@ -56,6 +56,7 @@ void ABossMonsterBase::Damaged(float Damage)
 		SettingData->Hp = 0.0f;
 
 		SetDead();
+		DropItem();
 		ChangeAnimation(EBossMonsterAnim::Dead);
 		AIController->GetBrainComponent()->StopLogic(TEXT("Dead"));
 	}
