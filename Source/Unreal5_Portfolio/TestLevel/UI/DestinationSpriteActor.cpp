@@ -48,6 +48,33 @@ void ADestinationSpriteActor::BeginPlay()
 	SetActorRotation(Q);
 }
 
+FName ADestinationSpriteActor::EnumToFName(EGameStage _EnumValue)
+{
+    switch (_EnumValue)
+    {
+    case EGameStage::Init:
+        return FName("Init");
+    case EGameStage::VisitArmory:
+        return FName("VisitArmory");
+    case EGameStage::ObtainFirstSample:
+        return FName("ObtainFirstSample");
+    case EGameStage::ObtainSecondSample:
+        return FName("ObtainSecondSample");
+    case EGameStage::ObtainThirdSample:
+        return FName("ObtainThirdSample");
+    case EGameStage::PlantingBomb:
+        return FName("PlantingBomb");
+    case EGameStage::MoveToGatheringPoint:
+        return FName("MoveToGatheringPoint");
+    case EGameStage::Defensing:
+        return FName("Defensing");
+    case EGameStage::MissionClear:
+        return FName("MissionClear");
+    default:
+        return FName("Unknown");
+    }
+}
+
 // Called every frame
 void ADestinationSpriteActor::Tick(float DeltaTime)
 {
