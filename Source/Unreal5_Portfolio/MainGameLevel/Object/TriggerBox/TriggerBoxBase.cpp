@@ -13,6 +13,8 @@
 #include "LevelSequenceActor.h"
 #include "LevelSequencePlayer.h"
 #include "MainGameLevel/UI/InGame/MainGameHUD.h"
+#include "Global/MainGameState.h"
+#include "Global/MainGameBlueprintFunctionLibrary.h"
 
 
 #include "Global/ContentsLog.h"
@@ -71,6 +73,8 @@ void ATriggerBoxBase::OnOverlapBegin(AActor* OverlappedActor, AActor* OtherActor
 	// 시네마틱 시퀀스 재생
 	PlayCinematicSequence();
 
+	// 백그라운드 사운드 재생 정지
+	BackgroundSoundOnOff(UMainGameBlueprintFunctionLibrary::GetMainGameState(GetWorld()), false);
 }
 
 void ATriggerBoxBase::SetAllPlayersLocation_Implementation(const FVector& NewLocation)
@@ -143,6 +147,9 @@ void ATriggerBoxBase::OnSequenceFinished()
 		}
 	}
 
+	// 백그라운드 사운드 재생
+	BackgroundSoundOnOff(UMainGameBlueprintFunctionLibrary::GetMainGameState(GetWorld()), true);
+
 	Destroy();
 }
 
@@ -170,7 +177,7 @@ void ATriggerBoxBase::EnablePlayerHUD_Implementation(APlayerController* PlayerCo
 	{
 		PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 		Cast<AMainGameHUD>(PlayerController->GetHUD())->AllUIOn();
-	}	
+	}
 }
 
 void ATriggerBoxBase::DisablePlayerHUD_Implementation(APlayerController* PlayerController)
@@ -179,5 +186,24 @@ void ATriggerBoxBase::DisablePlayerHUD_Implementation(APlayerController* PlayerC
 	{
 		PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 		Cast<AMainGameHUD>(PlayerController->GetHUD())->AllUIOff();
+	}
+}
+
+void ATriggerBoxBase::BackgroundSoundOnOff_Implementation(AGameState* _CurGameState, bool _Value)
+{
+	AMainGameState* CurGameState = Cast<AMainGameState>(_CurGameState);
+
+	if (nullptr == CurGameState)
+	{
+		return;
+	}
+
+	if (true == _Value)
+	{
+		CurGameState->PlayBackgroundSound();
+	}
+	else
+	{
+		CurGameState->StopBackgroundSound();
 	}
 }

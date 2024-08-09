@@ -60,6 +60,12 @@ protected:
     void DisablePlayerHUD(APlayerController* PlayerController);
     void DisablePlayerHUD_Implementation(APlayerController* PlayerController);
 
+    // BackGroundSound On/Off
+    // _Value : true(Sound On), false(Sound Off)
+    UFUNCTION(Reliable, NetMulticast)
+    void BackgroundSoundOnOff(AGameState* _CurGameState, bool _Value);
+    void BackgroundSoundOnOff_Implementation(AGameState* _CurGameState, bool _Value);
+
 protected:
     UPROPERTY(Replicated)
     FVector CenterLocation;
