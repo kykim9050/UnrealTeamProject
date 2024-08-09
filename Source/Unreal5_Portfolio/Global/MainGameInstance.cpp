@@ -11,8 +11,6 @@
 #include "Global/DataTable/MapObjDataRow.h"
 #include "Global/DataTable/QuestDataRow.h"
 
-#include "Global/DataTable/BossDataRow.h"
-
 UMainGameInstance::UMainGameInstance()
 {
 	Random.GenerateNewSeed();
@@ -217,26 +215,6 @@ const FWidgetDataRow* UMainGameInstance::GetLobbyUserWidgetDataTable(FName _Name
 	if (nullptr == Data)
 	{
 		UE_LOG(UILog, Error, TEXT("%S(%u)> %s Name Data Is Nullptr"), __FUNCTION__, __LINE__, *_Name.ToString());
-		return nullptr;
-	}
-
-	return Data;
-}
-
-
-
-const FBossDataRow* UMainGameInstance::GetBossDataTable(FName _Name)
-{
-	if (nullptr == BossDataTable)
-	{
-		UE_LOG(MonsterLog, Fatal, TEXT("%S(%u)> if (nullptr == BossDataTable)"), __FUNCTION__, __LINE__);
-	}
-
-	FBossDataRow* Data = BossDataTable->FindRow<FBossDataRow>(_Name, nullptr);
-
-	if (nullptr == Data)
-	{
-		UE_LOG(MonsterLog, Error, TEXT("%S(%u)> %s Name Data Is Nullptr"), __FUNCTION__, __LINE__, *_Name.ToString());
 		return nullptr;
 	}
 

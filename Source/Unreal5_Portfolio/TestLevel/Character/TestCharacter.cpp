@@ -20,7 +20,6 @@
 #include "TestPlayerController.h"
 
 #include "MainGameLevel/Monster/Base/MonsterBase.h"
-#include "PartDevLevel/Monster/Boss/TestBossMonsterBase.h"
 
 #include "MainGameLevel/Object/MapObjectBase.h"
 #include "MainGameLevel/Object/ItemBase.h"
@@ -230,9 +229,9 @@ void ATestCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLi
 
 void ATestCharacter::AnimationEnd(FString _CurMontage)
 {
-	if ("" == _CurMontage)
+	if ("E_Drinking_Montage" == _CurMontage)
 	{
-
+		PlayerHp_Heal();
 	}
 
 	PlayerAnimInst->ChangeAnimation(IdleDefault);
@@ -524,13 +523,6 @@ void ATestCharacter::FireRayCast_Implementation()
 				Monster->Damaged(RifleDamage);
 				return;
 			}
-
-			ATestBossMonsterBase* BossMonster = Cast<ATestBossMonsterBase>(Hit.GetActor());
-			if (nullptr != BossMonster)
-			{
-				BossMonster->Damaged(RifleDamage);
-				return;
-			}
 		}
 	}
 }
@@ -549,6 +541,11 @@ void ATestCharacter::ChangeMontage_Implementation(EPlayerUpperState _UpperState,
 
 void ATestCharacter::ClientChangeMontage_Implementation(EPlayerUpperState _UpperState)
 {
+	if (PlayerAnimInst == nullptr || FPVPlayerAnimInst == nullptr)
+	{
+		return;
+	}
+
 	PlayerAnimInst->ChangeAnimation(_UpperState);
 	FPVPlayerAnimInst->ChangeAnimation(_UpperState);
 }
@@ -570,6 +567,40 @@ void ATestCharacter::SettingPlayerState_Implementation()
 	}
 
 	ThisPlayerState->InitPlayerData();
+}
+
+void ATestCharacter::PlayerHp_Heal()
+{
+	ATestPlayerController* Con = Cast<ATestPlayerController>(GetController());
+	if (nullptr == Con)
+	{
+		int a = 0;
+		return;
+	}
+
+	ATestPlayerState* ThisPlayerState = Cast<ATestPlayerState>(Con->PlayerState);
+	if (nullptr == ThisPlayerState)
+	{
+		int a = 0;
+		return;
+	}
+
+	ThisPlayerState->HealHp();
+
+	switch (IdleDefault)
+	{
+	case EPlayerUpperState::Rifle_Idle :
+		SettingItemSocket(static_cast<int>(EItemType::Rifle));
+		break;
+	case EPlayerUpperState::Melee_Idle :
+		SettingItemSocket(static_cast<int>(EItemType::Melee));
+		break;
+	case EPlayerUpperState::UArm_Idle :
+		SettingItemSocket(static_cast<int>(EItemType::None));
+		break;
+	default :
+		break;
+	}
 }
 
 void ATestCharacter::CrouchCameraMove()
@@ -1083,14 +1114,6 @@ void ATestCharacter::HandAttackCollision(AActor* _OtherActor, UPrimitiveComponen
 		if (nullptr != Monster)
 		{
 			Monster->Damaged(50.0f);
-		}
-	}
-
-	{
-		ATestBossMonsterBase* BossMonster = Cast<ATestBossMonsterBase>(_OtherActor); // 추후 Main으로 바꿔야 함.
-		if (nullptr != BossMonster)
-		{
-			BossMonster->Damaged(50.0f);
 		}
 	}
 }

@@ -75,14 +75,6 @@ public:
 	const struct FWidgetDataRow* GetLobbyUserWidgetDataTable(FName _Name);
 
 	/// <summary>
-	/// BossDataTable 포인터를 받아오는 함수
-	/// FName은 생성한 BossDataTable 행 이름
-	/// </summary>
-	/// <param name="_Name"></param>
-	/// <returns></returns>
-	const struct FBossDataRow* GetBossDataTable(FName _Name);
-
-	/// <summary>
 	/// GlobalObjectTable 포인터를 받아오는 함수
 	/// FName은 생성한 GlobalObjectTable 행 이름
 	/// </summary>
@@ -195,9 +187,6 @@ private:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowprivateAccess = "true"))
 	UDataTable* LobbyUserWidgetDataTable = nullptr;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowprivateAccess = "true"))
-	UDataTable* BossDataTable = nullptr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowprivateAccess = "true"))
 	UDataTable* GlobalObjectTable = nullptr;

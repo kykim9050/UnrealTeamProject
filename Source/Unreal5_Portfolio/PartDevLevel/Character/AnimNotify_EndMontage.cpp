@@ -6,7 +6,9 @@
 
 UAnimNotify_EndMontage::UAnimNotify_EndMontage()
 {
+#if WITH_EDITOR
 	bShouldFireInEditor = false;
+#endif
 }
 
 void UAnimNotify_EndMontage::Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation)

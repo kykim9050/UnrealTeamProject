@@ -142,6 +142,9 @@ public:
 	void SettingPlayerState();
 	void SettingPlayerState_Implementation();
 
+	UFUNCTION()
+	void PlayerHp_Heal();
+
 	UFUNCTION(Reliable, Server)
 	void ChangeIsFaint();
 	void ChangeIsFaint_Implementation();

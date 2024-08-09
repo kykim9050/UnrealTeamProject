@@ -143,6 +143,7 @@ void ATestPlayerController::MouseLeft_FireStart()
 	{
 		return;
 	}
+	Ch->AttackCheck();
 	IsGunFire = true;
 
 	// Camera Shake
@@ -359,7 +360,7 @@ void ATestPlayerController::CallGetItem()
 
 void ATestPlayerController::ResetCameraShakeValue()
 {
-	ShakeValue = FVector(0.1f, 0.1f, 0.0f);
+	ShakeValue = FVector(0.15f, 0.15f, 0.0f);
 }
 
 void ATestPlayerController::ChangeCameraShakeState(ECameraShakeState _ShakeState)
@@ -393,7 +394,7 @@ void ATestPlayerController::CameraShakeTick(float _DeltaTime)
 		AddYawInput(ShakeValue.X);
 		AddPitchInput(ShakeValue.Y);
 
-		ShakeValue = FMath::Lerp(ShakeValue, FVector(0.0f, 0.0f, 0.0f), 0.9f);
+		ShakeValue = FMath::Lerp(ShakeValue, FVector(0.0f, 0.0f, 0.0f), 0.95f);
 	}
 	else if (ECameraShakeState::Turnback == ShakeState)
 	{
@@ -403,7 +404,7 @@ void ATestPlayerController::CameraShakeTick(float _DeltaTime)
 			return;
 		}
 
-		FVector TunbackShakeValue = FVector(0.1f, 0.1f, 0.1f) - ShakeValue;
+		FVector TunbackShakeValue = FVector(0.15f, 0.15f, 0.0f) - ShakeValue;
 		AddYawInput(-TunbackShakeValue.X);
 		AddPitchInput(-TunbackShakeValue.Y);
 
