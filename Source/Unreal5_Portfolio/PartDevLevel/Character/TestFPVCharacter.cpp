@@ -20,7 +20,6 @@
 #include "Components/BoxComponent.h"
 #include "Components/SphereComponent.h"
 
-#include "PartDevLevel/Monster/Boss/TestBossMonsterBase.h"
 #include "PartDevLevel/Character/PlayerAnimInstance.h"
 
 #include "TestLevel/Character/TestPlayerState.h"
@@ -129,11 +128,11 @@ void ATestFPVCharacter::HandAttackCollision(AActor* _OtherActor, UPrimitiveCompo
 	}
 
 	{
-		ATestBossMonsterBase* BossMonster = Cast<ATestBossMonsterBase>(_OtherActor);
-		if (nullptr != BossMonster)
-		{
-			BossMonster->Damaged(150.0f);
-		}
+		//ATestBossMonsterBase* BossMonster = Cast<ATestBossMonsterBase>(_OtherActor);
+		//if (nullptr != BossMonster)
+		//{
+		//	BossMonster->Damaged(150.0f);
+		//}
 	}
 }
 
@@ -349,12 +348,12 @@ void ATestFPVCharacter::FireRayCast_Implementation() // => 메인 수정 필요 (24.07
 				//}
 			}
 			{
-				ATestBossMonsterBase* BossMonster = Cast<ATestBossMonsterBase>(Hit.GetActor());
-				if (nullptr != BossMonster)
-				{
-					BossMonster->Damaged(ItemSlot[CurItemIndex].Damage);
-					GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, FString::Printf(TEXT("%s got damage : %d"), *BossMonster->GetName(), ItemSlot[CurItemIndex].Damage));
-				}
+				//ATestBossMonsterBase* BossMonster = Cast<ATestBossMonsterBase>(Hit.GetActor());
+				//if (nullptr != BossMonster)
+				//{
+				//	BossMonster->Damaged(ItemSlot[CurItemIndex].Damage);
+				//	GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, FString::Printf(TEXT("%s got damage : %d"), *BossMonster->GetName(), ItemSlot[CurItemIndex].Damage));
+				//}
 			}
 		}
 	}
