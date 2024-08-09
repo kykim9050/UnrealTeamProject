@@ -197,8 +197,12 @@ private:
 	void DeleteItem(int _Index);*/
 
 	UFUNCTION(Reliable, Server, BlueprintCallable)
-	void GetSetSelectCharacter(class UMainGameInstance* _MainGameInstance);
-	void GetSetSelectCharacter_Implementation(class UMainGameInstance* _MainGameInstance);
+	void GetSetSelectCharacter(FName _CharacterType);
+	void GetSetSelectCharacter_Implementation(FName _CharacterType);   //fname
+
+	UFUNCTION(Reliable, NetMulticast)
+	void ClientMeshChange(FName _CharacterType);
+	void ClientMeshChange_Implementation(FName _CharacterType);
 
 	UFUNCTION(Reliable, Server)
 	void DestroyItem(AItemBase* _Item);
@@ -278,6 +282,7 @@ public:
 	UFUNCTION()
 	void ChangePOV();
 
+
 	// ¸®·Îµå.
 	UFUNCTION()
 	void CharacterReload();
@@ -298,6 +303,8 @@ public:
 protected:
 	UPROPERTY(Category = "Widget", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	class UGetItem_UserWidget* Reload_Widget = nullptr;
+
+	FTimerHandle MeshHandle;
 };
 
 /** BP
