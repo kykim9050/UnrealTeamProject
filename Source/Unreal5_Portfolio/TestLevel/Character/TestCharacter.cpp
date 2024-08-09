@@ -430,7 +430,7 @@ void ATestCharacter::PickUpItem(AItemBase* _Item)
 	// 이미 같은 타입의 아이템이 인벤토리에 있을 경우 가지고 있던 아이템을 Drop
 	if (true == ItemSlot[ItemSlotIndex].IsItemIn)
 	{
-		//DropItem(ItemSlotIndex);
+		DropItem(ItemSlotIndex);
 	}
 
 	// 인벤토리에 PickUp한 아이템 정보 넣기
@@ -609,7 +609,7 @@ void ATestCharacter::PlayerHp_Heal()
 		SettingItemSocket(static_cast<int>(EItemType::Melee));
 		break;
 	case EPlayerUpperState::UArm_Idle :
-		SettingItemSocket(static_cast<int>(EItemType::None));
+		SettingItemSocket(-1);
 		break;
 	default :
 		break;
