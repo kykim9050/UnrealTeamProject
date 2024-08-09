@@ -40,6 +40,7 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	// AnimInstance
+	
 public:
 	// 하체 정보 (Controller 에서 호출함. -> 나중에 수정 필요.)
 	UPROPERTY(Category = "Contents", Replicated, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))

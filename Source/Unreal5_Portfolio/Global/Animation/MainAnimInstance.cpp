@@ -80,3 +80,7 @@ uint8 UMainAnimInstance::GetAnimationKey(class UAnimMontage* _AnimMontage)
 	return -1;
 }
 
+void UMainAnimInstance::ClearAnimMontages()
+{
+	AnimMontages.Empty();
+}

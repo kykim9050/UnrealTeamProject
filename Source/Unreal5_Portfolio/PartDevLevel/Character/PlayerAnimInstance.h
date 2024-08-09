@@ -23,6 +23,8 @@ public:
 
 	void ChangeAnimation(EPlayerUpperState _Posture);
 
+	void SetAnimMontages(TMap<EPlayerUpperState, class UAnimMontage*> _AnimMontages);
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	class ATestCharacter* OwnerPlayer = nullptr;
 	//class AMainCharacter* OwnerPlayer = nullptr; // main - kjb
