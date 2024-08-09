@@ -506,6 +506,11 @@ void ATestCharacter::ChangeMontage_Implementation(EPlayerUpperState _UpperState,
 
 void ATestCharacter::ClientChangeMontage_Implementation(EPlayerUpperState _UpperState)
 {
+	if (PlayerAnimInst == nullptr || FPVPlayerAnimInst == nullptr)
+	{
+		return;
+	}
+
 	PlayerAnimInst->ChangeAnimation(_UpperState);
 	FPVPlayerAnimInst->ChangeAnimation(_UpperState);
 }
