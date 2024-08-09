@@ -156,8 +156,9 @@ private:
 	/// <summary>
 	/// EndingTriggerBox의 위치, 회전값 변수
 	/// </summary>
-	FVector EndingTriggerBoxPos = FVector(-8820.0f, 87310.0f, -6980.0f);
-	FRotator EndingTriggerBoxRot = FRotator(0.0f, 0.0f, 0.0f);
+	FVector EndingTriggerBoxPos = FVector(-8500.0f, 87200.0f, -7030.0f);
+	FRotator EndingTriggerBoxRot = FRotator(0.0f, 0.0f, 60.0f);
+	FVector TriggerBoxColScale = FVector(10.0f, 10.0f, 10.0f);
 
 	/// <summary>
 	/// 배경음악 컴포넌트
