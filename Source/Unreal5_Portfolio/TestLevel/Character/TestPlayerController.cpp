@@ -260,19 +260,13 @@ void ATestPlayerController::Num_ChangePosture(int _InputKey)
 
 	if (_InputKey == 0) // รั
 	{
-		if (true == Ch->IsItemInItemSlot(_InputKey))
-		{
-			Ch->ChangeMontage(EPlayerUpperState::Rifle_Idle, true);
-			ChangePostureToWidget(EPlayerUpperState::Rifle_Idle); // Widget
-		}
+		Ch->ChangeMontage(EPlayerUpperState::Rifle_Idle, true);
+		ChangePostureToWidget(EPlayerUpperState::Rifle_Idle); // Widget
 	}
 	else if (_InputKey == 1)
 	{
-		if (true == Ch->IsItemInItemSlot(_InputKey))
-		{
-			Ch->ChangeMontage(EPlayerUpperState::Melee_Idle, true);
-			ChangePostureToWidget(EPlayerUpperState::Melee_Idle); // Widget
-		}
+		Ch->ChangeMontage(EPlayerUpperState::Melee_Idle, true);
+		ChangePostureToWidget(EPlayerUpperState::Melee_Idle); // Widget
 	}
 	else if (_InputKey == -1)
 	{
