@@ -218,9 +218,9 @@ void ATestCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLi
 
 void ATestCharacter::AnimationEnd(FString _CurMontage)
 {
-	if ("" == _CurMontage)
+	if ("E_Drinking_Montage" == _CurMontage)
 	{
-
+		PlayerHp_Heal();
 	}
 
 	PlayerAnimInst->ChangeAnimation(IdleDefault);
@@ -527,6 +527,40 @@ void ATestCharacter::SettingPlayerState_Implementation()
 	}
 
 	ThisPlayerState->InitPlayerData();
+}
+
+void ATestCharacter::PlayerHp_Heal()
+{
+	ATestPlayerController* Con = Cast<ATestPlayerController>(GetController());
+	if (nullptr == Con)
+	{
+		int a = 0;
+		return;
+	}
+
+	ATestPlayerState* ThisPlayerState = Cast<ATestPlayerState>(Con->PlayerState);
+	if (nullptr == ThisPlayerState)
+	{
+		int a = 0;
+		return;
+	}
+
+	ThisPlayerState->HealHp();
+
+	switch (IdleDefault)
+	{
+	case EPlayerUpperState::Rifle_Idle :
+		SettingItemSocket(static_cast<int>(EItemType::Rifle));
+		break;
+	case EPlayerUpperState::Melee_Idle :
+		SettingItemSocket(static_cast<int>(EItemType::Melee));
+		break;
+	case EPlayerUpperState::UArm_Idle :
+		SettingItemSocket(static_cast<int>(EItemType::None));
+		break;
+	default :
+		break;
+	}
 }
 
 void ATestCharacter::CrouchCameraMove()
