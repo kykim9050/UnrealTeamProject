@@ -307,6 +307,7 @@ protected:
 	UPROPERTY(Category = "Widget", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	class UGetItem_UserWidget* Reload_Widget = nullptr;
 
+	UPROPERTY()
 	FTimerHandle MeshHandle;
 };
 
