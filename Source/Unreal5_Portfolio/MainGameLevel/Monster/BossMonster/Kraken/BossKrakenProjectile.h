@@ -29,6 +29,11 @@ class UNREAL5_PORTFOLIO_API ABossKrakenProjectile : public AActor
 public:
 	ABossKrakenProjectile();
 
+	FORCEINLINE void SetDamage(float Value)
+	{
+		Damage = Value;
+	}
+
 protected:
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTimes) override;
@@ -46,20 +51,19 @@ private:
 	void Fly(float DeltaTimes);
 	void FlyStart();
 
-	void Stop(float DeltaTimes);
+	void Stop(float DeltaTimes) {};
 	void StopStart();
 
 private:
 	// Data
 	UPROPERTY(Replicated, EditAnywhere, Category = "SettingData", meta = (AllowPrivateAccess = true))
 	float Hp = 100.0f;
-	
-	UPROPERTY(EditAnywhere, Category = "SettingData", meta = (AllowPrivateAccess = true))
 	float Damage = 0.0f;
-
+	
 	UPROPERTY(EditAnywhere, Category = "SettingData", meta = (AllowPrivateAccess = true))
 	float LifeTime = 0.0f;
 
+	
 	BossKraKenProjectile::EState CurState = BossKraKenProjectile::EState::Max;
 
 private:

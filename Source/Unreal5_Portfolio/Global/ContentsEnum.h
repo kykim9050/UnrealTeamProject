@@ -71,6 +71,14 @@ enum class EItemType : uint8
 };
 
 UENUM(BlueprintType)
+enum class ECameraShakeState : uint8
+{
+	Shoot,
+	Turnback,
+	Stop
+};
+
+UENUM(BlueprintType)
 enum class ETestMonsterState : uint8
 {
 	Idle,
@@ -156,6 +164,7 @@ UENUM(BlueprintType)
 enum class EBossMonsterState : uint8
 {
 	Idle,
+	Walk,
 	Chase,
 	MeleeAttack,
 	RangedAttack,

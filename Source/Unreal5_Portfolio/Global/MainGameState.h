@@ -65,24 +65,9 @@ public:
 	/// <summary>
 	/// 현재 게임 진행 관련 체크 함수
 	/// </summary>
-	UFUNCTION(Reliable, NetMulticast)
+	UFUNCTION(Reliable, Server)
 	void GameStateCheck(AActor* _OtherActor);
 	void GameStateCheck_Implementation(AActor* _OtherActor);
-
-	/// <summary>
-	/// 인자(AActor)의 대상에 대한 정보로 GameState 변수 조정
-	/// </summary>
-	/// <param name="_OtherActor"></param>
-	UFUNCTION(Reliable, NetMulticast)
-	void GameStateModify(AActor* _OtherActor);
-	void GameStateModify_Implementation(AActor* _OtherActor);
-
-	/// <summary>
-	/// GameState 변수 정보 갱신 함수
-	/// </summary>
-	/// <param name="_OtherActor"></param>
-	UFUNCTION()
-	void GameStateConditionUpdate(AActor* _OtherActor, bool _IsAdd);
 
 	UFUNCTION()
 	FORCEINLINE int GetPlayerCount()
@@ -151,18 +136,6 @@ private:
 	bool IsStageChange = false;
 
 	/// <summary>
-	/// 현재 확보한 Bomb 수
-	/// </summary>
-	UPROPERTY()
-	int BombCount = 0;
-
-	/// <summary>
-	/// 확보 가능한 최대 Bomb 수
-	/// </summary>
-	UPROPERTY()
-	int MaxBombCount = 1;
-
-	/// <summary>
 	/// 플레이어 수
 	/// </summary>
 	UPROPERTY()
@@ -175,17 +148,17 @@ private:
 	int MaxPlayerCount = 4;
 
 	/// <summary>
-	/// 체크할 아이템 카운트 수
+	/// 최대 플레이어 수를 받아서 MaxPlayerCount 값에 대입했는지에 대한 유무 변수
 	/// </summary>
 	UPROPERTY()
-	int ItemCount = 0;
-
+	bool SetPlayerMaxNum = false;
 
 	/// <summary>
 	/// EndingTriggerBox의 위치, 회전값 변수
 	/// </summary>
-	FVector EndingTriggerBoxPos = FVector(-8820.0f, 87310.0f, -6980.0f);
-	FRotator EndingTriggerBoxRot = FRotator(0.0f, 0.0f, 0.0f);
+	FVector EndingTriggerBoxPos = FVector(-8500.0f, 87200.0f, -7030.0f);
+	FRotator EndingTriggerBoxRot = FRotator(0.0f, 0.0f, 60.0f);
+	FVector TriggerBoxColScale = FVector(10.0f, 10.0f, 10.0f);
 
 	/// <summary>
 	/// 배경음악 컴포넌트

@@ -39,7 +39,7 @@ public:
 
 	// 공격 데미지
 	UPROPERTY(EditAnywhere)
-	float MeleeAttackDamage = 20.0f;
+	float MeleeAttackDamage = 0.0f;
 
 	// 근접 공격 범위
 	UPROPERTY(EditAnywhere)
@@ -48,6 +48,14 @@ public:
 	// 원거리 공격 범위 
 	UPROPERTY(EditAnywhere)
 	FRangedAttackRange RangedAttackRange;
+
+	// 원거리 공격 범위 
+	UPROPERTY(EditAnywhere)
+	float RangedAttackDamage = 0.0f;
+
+	// 걷기 속도
+	UPROPERTY(EditAnywhere)
+	float WalkSpeed = 0.0f;
 
 	// 추격 속도
 	UPROPERTY(EditAnywhere)

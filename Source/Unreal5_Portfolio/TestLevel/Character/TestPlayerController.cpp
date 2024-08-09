@@ -137,12 +137,17 @@ void ATestPlayerController::MouseLeft_FireStart()
 	//	return;
 	//}
 
+	// Attack
 	ATestCharacter* Ch = GetPawn<ATestCharacter>();
 	if (nullptr == Ch)
 	{
 		return;
 	}
+	Ch->AttackCheck();
 	IsGunFire = true;
+
+	// Camera Shake
+	ChangeCameraShakeState(ECameraShakeState::Shoot);
 
 	// πﬂΩŒ Ω≈»£∏¶ HUD∑Œ ≥—±Ë.
 	BullitCountToHUD();
@@ -167,7 +172,11 @@ void ATestPlayerController::MouseLeft_FireTick(float _DeltaTime)
 
 void ATestPlayerController::MouseLeft_FireEnd()
 {
+	// Attack
 	IsGunFire = false;
+
+	// Camera Shake
+	ChangeCameraShakeState(ECameraShakeState::Stop);
 }
 
 void ATestPlayerController::E_CheckItem()
@@ -347,4 +356,58 @@ void ATestPlayerController::CallFaint(bool _Faint)
 void ATestPlayerController::CallGetItem()
 {
 	CallGetItemToWidget();
+}
+
+void ATestPlayerController::ResetCameraShakeValue()
+{
+	ShakeValue = FVector(0.1f, 0.1f, 0.0f);
+}
+
+void ATestPlayerController::ChangeCameraShakeState(ECameraShakeState _ShakeState)
+{
+	ShakeState = _ShakeState;
+	ResetCameraShakeValue();
+}
+
+void ATestPlayerController::CameraShakeTick(float _DeltaTime)
+{
+	ATestCharacter* Ch = GetPawn<ATestCharacter>();
+	if (
+		nullptr == Ch ||
+		false == IsGunFire ||
+		EPlayerUpperState::Rifle_Idle != Ch->GetIdleDefault() ||
+		false == Ch->GetIsExtraBullets() ||
+		ECameraShakeState::Stop == ShakeState
+		)
+	{
+		return;
+	}
+	
+	if (ECameraShakeState::Shoot == ShakeState)
+	{
+		if (0.01f >= ShakeValue.Size())
+		{
+			ChangeCameraShakeState(ECameraShakeState::Turnback);
+			return;
+		}
+
+		AddYawInput(ShakeValue.X);
+		AddPitchInput(ShakeValue.Y);
+
+		ShakeValue = FMath::Lerp(ShakeValue, FVector(0.0f, 0.0f, 0.0f), 0.9f);
+	}
+	else if (ECameraShakeState::Turnback == ShakeState)
+	{
+		if (0.001f >= ShakeValue.Size())
+		{
+			ChangeCameraShakeState(ECameraShakeState::Shoot);
+			return;
+		}
+
+		FVector TunbackShakeValue = FVector(0.1f, 0.1f, 0.1f) - ShakeValue;
+		AddYawInput(-TunbackShakeValue.X);
+		AddPitchInput(-TunbackShakeValue.Y);
+
+		ShakeValue = FMath::Lerp(ShakeValue, FVector(0.0f, 0.0f, 0.0f), 0.6f);
+	}
 }

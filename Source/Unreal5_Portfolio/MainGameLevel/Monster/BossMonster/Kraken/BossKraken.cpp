@@ -45,5 +45,9 @@ void ABossKraken::SpawnRock()
 		Direction.Normalize();
 	
 		ABossKrakenProjectile* Rock = GetWorld()->SpawnActor<ABossKrakenProjectile>(ProjectileUClass, SpawnPos, Direction.Rotation());
+		if (nullptr != Rock)
+		{
+			Rock->SetDamage(SettingData->BaseData->RangedAttackDamage);
+		}
 	}
 }

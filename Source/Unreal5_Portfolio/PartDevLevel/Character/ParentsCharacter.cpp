@@ -43,6 +43,10 @@ void AParentsCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 
 void AParentsCharacter::AnimationEnd()
 {
+}
+
+void AParentsCharacter::AnimationEnd(FString _CurMontage)
+{
 
 }
 

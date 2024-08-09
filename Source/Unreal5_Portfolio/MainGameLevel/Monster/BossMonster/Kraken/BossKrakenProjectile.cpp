@@ -20,6 +20,7 @@ ABossKrakenProjectile::ABossKrakenProjectile()
 	PrimaryActorTick.bCanEverTick = true;
 
 	BodyCollision = CreateDefaultSubobject<USphereComponent>(TEXT("BodyCollision"));
+	BodyCollision->OnComponentBeginOverlap.AddDynamic(this, &ABossKrakenProjectile::BeginOverlap);
 	SetRootComponent(BodyCollision);
 
 	BodyMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("BodyMesh"));
@@ -36,8 +37,6 @@ ABossKrakenProjectile::ABossKrakenProjectile()
 void ABossKrakenProjectile::BeginPlay()
 {
 	Super::BeginPlay();
-
-	BodyCollision->OnComponentBeginOverlap.AddDynamic(this, &ABossKrakenProjectile::BeginOverlap);
 
 	StateChange(BossKraKenProjectile::EState::Fly);
 }
@@ -92,22 +91,12 @@ void ABossKrakenProjectile::FlyStart()
 	MovementComp->Velocity = MovementComp->InitialSpeed * Dir;
 }
 
-void ABossKrakenProjectile::Stop(float DeltaTimes)
-{
-	if (0.0f >= LifeTime)
-	{
-		Destroy();
-		return;
-	}
-
-	LifeTime -= DeltaTimes;
-}
-
 void ABossKrakenProjectile::StopStart()
 {
 	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), CrashParticle, GetActorTransform());
 	BodyCollision->SetCollisionProfileName(FName("KrakenRockStop"));
 	ParticleSystemComponent->SetActive(false);
+	SetLifeSpan(LifeTime);
 }
 
 void ABossKrakenProjectile::StateUpdate(float DeltaTimes)

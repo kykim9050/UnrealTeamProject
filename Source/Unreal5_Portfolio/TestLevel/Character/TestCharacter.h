@@ -30,7 +30,7 @@ protected:
 
 	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
-	virtual void AnimationEnd() override;
+	virtual void AnimationEnd(FString _CurMontage) override;
 
 public:
 	// Called every frame
@@ -60,6 +60,10 @@ public:
 	UPROPERTY(Category = "Contents"/*, Replicated*/, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	bool IsFaint = false;
 
+	// 인벤토리에 아이템이 있는지 여부.
+	UFUNCTION(BlueprintCallable)
+	bool IsItemInItemSlot(int _Index);
+
 private: // 문제 발생 여지 있음 발생하면 그냥 지워야 함.
 	// == Components ==
 
@@ -79,8 +83,8 @@ private: // 문제 발생 여지 있음 발생하면 그냥 지워야 함.
 
 	// == Inventory ==
 	// 아이템 여부
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	TArray<bool> IsItemIn;
+	/*UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	TArray<bool> IsItemIn;*/
 	// 현재 아이템 정보.
 	UPROPERTY(VisibleAnywhere)
 	TArray<struct FPlayerItemInformation> ItemSlot;
@@ -189,8 +193,8 @@ private:
 	UFUNCTION(BlueprintCallable)
 	void UpdatePlayerHp(float _DeltaTime);
 
-	UFUNCTION(BlueprintCallable)
-	void DeleteItem(int _Index);
+	/*UFUNCTION(BlueprintCallable)
+	void DeleteItem(int _Index);*/
 
 	UFUNCTION(Reliable, Server, BlueprintCallable)
 	void GetSetSelectCharacter(class UMainGameInstance* _MainGameInstance);
@@ -230,9 +234,6 @@ private:
 	UFUNCTION()
 	void BulletCalculation();
 
-	UFUNCTION()
-	bool IsItemInItemSlot(int _Index);
-
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	bool IsServer = false;
 
@@ -264,6 +265,12 @@ public:
 	FORCEINLINE EPlayerUpperState GetIdleDefault() const
 	{
 		return IdleDefault;
+	}
+
+	UFUNCTION()
+	FORCEINLINE bool GetIsExtraBullets() const
+	{
+		return IsExtraBullets;
 	}
 
 public:
