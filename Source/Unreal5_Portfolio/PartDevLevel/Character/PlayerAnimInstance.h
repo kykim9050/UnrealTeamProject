@@ -28,8 +28,8 @@ public:
 	//class AMainCharacter* OwnerPlayer = nullptr; // main - kjb
 	//class ATestFPVCharacter* OwnerPlayer = nullptr; // TestPlayer - kjb
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-	EPlayerPosture PlayerPosture = EPlayerPosture::Barehand;
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	//EPlayerPosture PlayerPosture = EPlayerPosture::Barehand;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	EPlayerLowerState PlayerLowerState = EPlayerLowerState::Idle;
