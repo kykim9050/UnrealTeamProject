@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include "../../Global/MainGameBlueprintFunctionLibrary.h"
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "DestinationSpriteActor.generated.h"
@@ -20,6 +21,9 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+
+	UFUNCTION(BlueprintCallable)
+	FName EnumToFName(EGameStage _EnumValue);
 
 public:	
 	// Called every frame
