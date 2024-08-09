@@ -20,7 +20,6 @@
 #include "TestPlayerController.h"
 
 #include "MainGameLevel/Monster/Base/MonsterBase.h"
-#include "PartDevLevel/Monster/Boss/TestBossMonsterBase.h"
 
 #include "MainGameLevel/Object/MapObjectBase.h"
 #include "MainGameLevel/Object/ItemBase.h"
@@ -487,13 +486,6 @@ void ATestCharacter::FireRayCast_Implementation()
 			if (nullptr != Monster)
 			{
 				Monster->Damaged(RifleDamage);
-				return;
-			}
-
-			ATestBossMonsterBase* BossMonster = Cast<ATestBossMonsterBase>(Hit.GetActor());
-			if (nullptr != BossMonster)
-			{
-				BossMonster->Damaged(RifleDamage);
 				return;
 			}
 		}
@@ -1024,14 +1016,6 @@ void ATestCharacter::HandAttackCollision(AActor* _OtherActor, UPrimitiveComponen
 		if (nullptr != Monster)
 		{
 			Monster->Damaged(50.0f);
-		}
-	}
-
-	{
-		ATestBossMonsterBase* BossMonster = Cast<ATestBossMonsterBase>(_OtherActor); // 추후 Main으로 바꿔야 함.
-		if (nullptr != BossMonster)
-		{
-			BossMonster->Damaged(50.0f);
 		}
 	}
 }
