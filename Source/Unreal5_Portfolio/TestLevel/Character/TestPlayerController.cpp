@@ -143,6 +143,7 @@ void ATestPlayerController::MouseLeft_FireStart()
 	{
 		return;
 	}
+	Ch->AttackCheck();
 	IsGunFire = true;
 
 	// Camera Shake
