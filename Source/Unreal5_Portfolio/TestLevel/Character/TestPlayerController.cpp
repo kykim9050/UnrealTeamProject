@@ -55,13 +55,13 @@ void ATestPlayerController::SetupInputComponent()
 		EnhancedInputComponent->BindAction(InputData->Actions[4], ETriggerEvent::Triggered, this, &ATestPlayerController::A_MoveLeft);
 		EnhancedInputComponent->BindAction(InputData->Actions[1], ETriggerEvent::Triggered, this, &ATestPlayerController::W_MoveFront);
 		EnhancedInputComponent->BindAction(InputData->Actions[2], ETriggerEvent::Triggered, this, &ATestPlayerController::S_MoveBack);
-		EnhancedInputComponent->BindAction(InputData->Actions[7], ETriggerEvent::Started, this, &ATestPlayerController::Num_ChangePosture, 0);
-		EnhancedInputComponent->BindAction(InputData->Actions[8], ETriggerEvent::Started, this, &ATestPlayerController::Num_ChangePosture, 1);
-		EnhancedInputComponent->BindAction(InputData->Actions[9], ETriggerEvent::Started, this, &ATestPlayerController::Num_ChangePosture, 2);
-		EnhancedInputComponent->BindAction(InputData->Actions[10], ETriggerEvent::Triggered, this, &ATestPlayerController::Num_Drink);
-		EnhancedInputComponent->BindAction(InputData->Actions[11], ETriggerEvent::Started, this, &ATestPlayerController::Num_BombSetStart);
-		EnhancedInputComponent->BindAction(InputData->Actions[11], ETriggerEvent::Triggered, this, &ATestPlayerController::Num_BombSetTick);
-		EnhancedInputComponent->BindAction(InputData->Actions[11], ETriggerEvent::Completed, this, &ATestPlayerController::Num_BombSetEnd);
+		EnhancedInputComponent->BindAction(InputData->Actions[7], ETriggerEvent::Triggered, this, &ATestPlayerController::Num_ChangePosture, 0);
+		EnhancedInputComponent->BindAction(InputData->Actions[8], ETriggerEvent::Triggered, this, &ATestPlayerController::Num_ChangePosture, 1);
+		//EnhancedInputComponent->BindAction(InputData->Actions[9], ETriggerEvent::Triggered, this, &ATestPlayerController::Num_ChangePosture, 2);
+		EnhancedInputComponent->BindAction(InputData->Actions[9], ETriggerEvent::Triggered, this, &ATestPlayerController::Num_Drink);
+		EnhancedInputComponent->BindAction(InputData->Actions[10], ETriggerEvent::Started, this, &ATestPlayerController::Num_BombSetStart);
+		EnhancedInputComponent->BindAction(InputData->Actions[10], ETriggerEvent::Triggered, this, &ATestPlayerController::Num_BombSetTick);
+		EnhancedInputComponent->BindAction(InputData->Actions[10], ETriggerEvent::Completed, this, &ATestPlayerController::Num_BombSetEnd);
 		EnhancedInputComponent->BindAction(InputData->Actions[12], ETriggerEvent::Triggered, this, &ATestPlayerController::Num_ChangePosture, -1);
 		EnhancedInputComponent->BindAction(InputData->Actions[13], ETriggerEvent::Started, this, &ATestPlayerController::E_CheckItem);
 		EnhancedInputComponent->BindAction(InputData->Actions[14], ETriggerEvent::Started, this, &ATestPlayerController::P_ChangePOVController);
@@ -253,22 +253,27 @@ void ATestPlayerController::Num_ChangePosture(int _InputKey)
 		return;
 	}
 
-	if (false == Ch->IsItemInItemSlot(_InputKey))
+	if (_InputKey == 0)			// ÃÑ
 	{
-		return;
-	}
+		if (false == Ch->IsItemInItemSlot(_InputKey))
+		{
+			return;
+		}
 
-	if (_InputKey == 0) // ÃÑ
-	{
 		Ch->ChangeMontage(EPlayerUpperState::Rifle_Idle, true);
 		ChangePostureToWidget(EPlayerUpperState::Rifle_Idle); // Widget
 	}
-	else if (_InputKey == 1)
+	else if (_InputKey == 1)	// Ä®
 	{
+		if (false == Ch->IsItemInItemSlot(_InputKey))
+		{
+			return;
+		}
+
 		Ch->ChangeMontage(EPlayerUpperState::Melee_Idle, true);
 		ChangePostureToWidget(EPlayerUpperState::Melee_Idle); // Widget
 	}
-	else if (_InputKey == -1)
+	else if (_InputKey == -1)	// ¸Ç¼Õ
 	{
 		Ch->ChangeMontage(EPlayerUpperState::UArm_Idle, true);
 		ChangePostureToWidget(EPlayerUpperState::UArm_Idle); // Widget
