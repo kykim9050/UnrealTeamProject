@@ -399,18 +399,13 @@ void ATestCharacter::ClientMeshChange_Implementation(FName _CharacterType)
 	}
 
 	// 스켈레탈 메쉬 선택
-	//USkeletalMesh* PlayerSkeletalMesh = MainGameInst->GetPlayerData(FName("TestPlayer"))->GetPlayerSkeletalMesh();
 	USkeletalMesh* PlayerSkeletalMesh = Inst->GetPlayerData(_CharacterType)->GetPlayerSkeletalMesh();
 	GetMesh()->SetSkeletalMesh(PlayerSkeletalMesh);
-
-
-	//USkeletalMesh* FPVSkeletalMesh = MainGameInst->GetPlayerData(FName("TestPlayer"))->GetPlayerFPVPlayerSkeletalMesh();
 	USkeletalMesh* FPVSkeletalMesh = Inst->GetPlayerData(_CharacterType)->GetPlayerFPVPlayerSkeletalMesh();
 	FPVMesh->SetSkeletalMesh(FPVSkeletalMesh);
 
 	// ABP 선택
-	//UClass* AnimInst = Cast<UClass>(MainGameInst->GetPlayerData(FName("TestPlayer"))->GetPlayerAnimInstance());
-	UClass* AnimInst = Cast<UClass>(Inst->GetPlayerData(UIToSelectCharacter)->GetPlayerAnimInstance());
+	UClass* AnimInst = Cast<UClass>(Inst->GetPlayerData(_CharacterType)->GetPlayerAnimInstance());
 	GetMesh()->SetAnimInstanceClass(AnimInst);
 	FPVMesh->SetAnimInstanceClass(AnimInst);
 	PlayerAnimInst = Cast<UPlayerAnimInstance>(GetMesh()->GetAnimInstance());
@@ -984,17 +979,12 @@ void ATestCharacter::GetSetSelectCharacter_Implementation(FName _CharacterType)
 	}
 
 	// 스켈레탈 메쉬 선택
-	//USkeletalMesh* PlayerSkeletalMesh = MainGameInst->GetPlayerData(FName("TestPlayer"))->GetPlayerSkeletalMesh();
 	USkeletalMesh* PlayerSkeletalMesh = Inst->GetPlayerData(UIToSelectCharacter)->GetPlayerSkeletalMesh();
 	GetMesh()->SetSkeletalMesh(PlayerSkeletalMesh);
-
-
-	//USkeletalMesh* FPVSkeletalMesh = MainGameInst->GetPlayerData(FName("TestPlayer"))->GetPlayerFPVPlayerSkeletalMesh();
 	USkeletalMesh* FPVSkeletalMesh = Inst->GetPlayerData(UIToSelectCharacter)->GetPlayerFPVPlayerSkeletalMesh();
 	FPVMesh->SetSkeletalMesh(FPVSkeletalMesh);
 
 	// ABP 선택
-	//UClass* AnimInst = Cast<UClass>(MainGameInst->GetPlayerData(FName("TestPlayer"))->GetPlayerAnimInstance());
 	UClass* AnimInst = Cast<UClass>(Inst->GetPlayerData(UIToSelectCharacter)->GetPlayerAnimInstance());
 	GetMesh()->SetAnimInstanceClass(AnimInst);
 	FPVMesh->SetAnimInstanceClass(AnimInst);
@@ -1002,12 +992,12 @@ void ATestCharacter::GetSetSelectCharacter_Implementation(FName _CharacterType)
 	FPVPlayerAnimInst = Cast<UPlayerAnimInstance>(GetMesh()->GetAnimInstance());
 
 	// AnimMontage 선택
-	TMap<EPlayerUpperState, class UAnimMontage*> AnimMon = Inst->GetPlayerData(_CharacterType)->GetAnimMontages();
+	TMap<EPlayerUpperState, class UAnimMontage*> AnimMon = Inst->GetPlayerData(UIToSelectCharacter)->GetAnimMontages();
 	PlayerAnimInst->SetAnimMontages(AnimMon);
 	FPVPlayerAnimInst->SetAnimMontages(AnimMon);
 
-	ClientMeshChange(UIToSelectCharacter);
 
+	ClientMeshChange(UIToSelectCharacter);
 }
 
 void ATestCharacter::DeleteItemInfo(int _Index)
