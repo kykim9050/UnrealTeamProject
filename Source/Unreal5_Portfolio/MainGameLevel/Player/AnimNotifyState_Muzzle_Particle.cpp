@@ -4,18 +4,40 @@
 #include "MainGameLevel/Player/AnimNotifyState_Muzzle_Particle.h"
 #include "TestLevel/Character/TestCharacter.h"
 #include "MainGameLevel/Player/MainCharacter.h"
+#include "MainGameLevel/Player/PlayerItemInformation.h"
+#include "Engine/StaticMeshSocket.h"
+#include "Kismet/GameplayStatics.h"
+#include "Particles/ParticleSystemComponent.h"
+#include "Components/ArrowComponent.h"
 
 void UAnimNotifyState_Muzzle_Particle::NotifyBegin(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation, float TotalDuration, const FAnimNotifyEventReference& EventReference)
 {
 	Super::NotifyBegin(MeshComp, Animation, TotalDuration, EventReference);
 
-	ATestCharacter* PlayCharacter = MeshComp->GetOwner<ATestCharacter>();
-	if (nullptr != PlayCharacter)
+	ATestCharacter* Player = MeshComp->GetOwner<ATestCharacter>();
+	if (nullptr == Player)
 	{
-		if (true == MeshComp->bOwnerNoSee)
-		{
-			//PlayCharacter->ShowMuzzle();
-		}
+		return;
+	}
+
+	UArrowComponent* Position = nullptr;
+	switch (Player->GetPointOfView())
+	{
+	case EPlayerFPSTPSState::TPS:
+		Position = Player->MuzzlePos;
+		break;
+	case EPlayerFPSTPSState::FPS:
+		Position = Player->FPVMuzzlePos;
+		break;
+	}
+	FVector SpawnParticlePos = Position->GetComponentLocation();
+	FRotator Rotate = FRotator::ZeroRotator;
+	Rotate.Pitch = 90.0f;
+	FVector Scale = FVector(0.2f, 0.2f, 0.2f);
+	UWorld* World = Player->GetWorld();
+	if (nullptr != World)
+	{ 
+		UGameplayStatics::SpawnEmitterAtLocation(World, Player->MuzzleEffect, SpawnParticlePos, Rotate, Scale);
 	}
 }
 

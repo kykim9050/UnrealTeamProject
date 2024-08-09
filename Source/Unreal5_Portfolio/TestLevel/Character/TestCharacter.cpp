@@ -37,6 +37,7 @@
 #include <Kismet/GameplayStatics.h>
 
 #include "TimerManager.h"
+#include "Components/ArrowComponent.h"
 
 // Sets default values
 ATestCharacter::ATestCharacter()
@@ -118,6 +119,12 @@ ATestCharacter::ATestCharacter()
 	HeadNameComponent->SetupAttachment(RootComponent);
 	HeadNameComponent->SetOwnerNoSee(true);
 	HeadNameComponent->bHiddenInSceneCapture = true;
+
+	MuzzlePos = CreateDefaultSubobject<UArrowComponent>(TEXT("Muzzle Position"));
+	MuzzlePos->SetupAttachment(ItemSocketMesh);
+
+	FPVMuzzlePos = CreateDefaultSubobject<UArrowComponent>(TEXT("FPV Muzzle Position"));
+	FPVMuzzlePos->SetupAttachment(FPVItemSocketMesh);
 
 	// Inventory
 	for (size_t i = 0; i < 4; i++)
