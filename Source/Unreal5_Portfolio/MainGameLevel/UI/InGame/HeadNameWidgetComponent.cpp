@@ -33,8 +33,8 @@ void UHeadNameWidgetComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	SetRelativeLocation(FVector(0, 0, 75));
-	SetRelativeScale3D(FVector(0.2f, 0.2f, 0.2f));
+	SetRelativeLocation(FVector(0, 0, 70));
+	SetRelativeScale3D(FVector(0.4f, 0.4f, 0.4f));
 
 	FQuat Q;
 	UKismetMathLibrary::Quat_SetFromEuler(Q, FVector(0.f, 0.f, 0.f));
