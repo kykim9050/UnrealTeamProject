@@ -351,6 +351,10 @@ void ATestCharacter::SettingItemSocket(int _InputKey)
 	{
 		// ItemSocket의 Visibility 끄기
 		SetItemSocketVisibility(false);
+
+		// 현재 아이템 알려주기
+		CurItemIndex = _InputKey;
+
 		return;
 	}
 
@@ -364,6 +368,9 @@ void ATestCharacter::SettingItemSocket(int _InputKey)
 
 	// ItemSocket의 visibility 켜기
 	SetItemSocketVisibility(true);
+
+	// 현재 아이템 알려주기
+	CurItemIndex = _InputKey;
 }
 
 void ATestCharacter::SpawnItem_Implementation(FName _ItemName, FTransform _SpawnTrans)
@@ -466,10 +473,8 @@ void ATestCharacter::PickUpItem(AItemBase* _Item)
 
 void ATestCharacter::DropItem(int _SlotIndex)
 {
-	CurItemIndex = 0;
-
 	// DropItem 할 수 없는 경우 1: 맨손일 때
-	if (CurItemIndex == -1)
+	if (-1 == _SlotIndex)
 	{
 #ifdef WITH_EDITOR
 		GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Yellow, FString(TEXT("There's no item to drop. (Current posture is 'Barehand')")));
@@ -477,8 +482,8 @@ void ATestCharacter::DropItem(int _SlotIndex)
 		return;
 	}
 
-	// DropItem 할 수 없는 경우 2: (그럴리는 없겠지만) 현재 Posture에 해당하는 무기가 인벤토리에 없을 때
-	if (false == ItemSlot[CurItemIndex].IsItemIn)
+	// DropItem 할 수 없는 경우 2: Drop 하려는 아이템이 인벤토리에 없을 때
+	if (false == ItemSlot[_SlotIndex].IsItemIn)
 	{
 #ifdef WITH_EDITOR
 		GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Yellow, FString(TEXT("There's no item to drop. (The item slot is empty)")));
@@ -493,9 +498,17 @@ void ATestCharacter::DropItem(int _SlotIndex)
 
 	SpawnItem(ItemName, SpawnTrans);
 
+	// 인벤토리에서 버린 아이템 정보 삭제
+	DeleteItemInfo(_SlotIndex);
 
 	// 자세를 맨손으로 변경
+	IdleDefault = EPlayerUpperState::UArm_Idle;
+	SettingItemSocket(-1);
 	ChangeMontage(IdleDefault);
+
+#ifdef WITH_EDITOR
+	GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, FString::Printf(TEXT("Drop the item. (Index : %d)"), _SlotIndex + 1));
+#endif // WITH_EDITOR
 }
 
 void ATestCharacter::FireRayCast_Implementation()
@@ -949,6 +962,11 @@ void ATestCharacter::BombPlanting_Implementation(AAreaObject* _AreaObject)
 
 void ATestCharacter::GetSetSelectCharacter_Implementation(FName _CharacterType)
 {
+	if (true == _CharacterType.IsNone())
+	{
+		_CharacterType = FName("TestPlayer");
+	}
+
 	UIToSelectCharacter = _CharacterType;
 
 	UMainGameInstance* Inst = UMainGameBlueprintFunctionLibrary::GetMainGameInstance(GetWorld());

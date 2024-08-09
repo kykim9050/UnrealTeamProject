@@ -11,10 +11,12 @@
 #include "Kismet/KismetMathLibrary.h"
 #include "Kismet/GameplayStatics.h"
 
+#include "TimerManager.h"
+
+
 UHeadNameWidgetComponent::UHeadNameWidgetComponent()
 {
 	static ConstructorHelpers::FClassFinder<UUserWidget> HeadNameWidget(TEXT("/Game/BluePrint/MainGameLevel/UI/InGame/WBP_HeadName"));
-
 	if (true == HeadNameWidget.Succeeded())
 	{
 		SetWidgetClass(HeadNameWidget.Class);
@@ -45,13 +47,18 @@ void UHeadNameWidgetComponent::BeginPlay()
 	}
 	FText InstName = FText::FromString(Inst->GetMainNickName());
 	SendNicknames(InstName);
+
+	GetWorld()->GetTimerManager().SetTimer(HeadNameHandle, [this]()
+		{
+			SetHeadNameWidgetText(HeadNameText);
+		}, 2.0f, false);
 }
 
 void UHeadNameWidgetComponent::InitWidget()
 {
 	Super::InitWidget();
 
-	SetHeadNameWidgetText(HeadNameText);
+	//	SetHeadNameWidgetText(HeadNameText);
 }
 
 void UHeadNameWidgetComponent::BilboardRotate(FVector _WorldLocation)
@@ -82,7 +89,7 @@ void UHeadNameWidgetComponent::SetHeadNameRelativeRotation(FVector _Rot)
 void UHeadNameWidgetComponent::SetHeadNameWidgetText(FText _Name)
 {
 	UHeadNameUserWidget* widget = Cast<UHeadNameUserWidget>(GetUserWidgetObject());
-	if(nullptr != widget)
+	if (nullptr != widget)
 	{
 		widget->SetNameText(_Name);
 	}
