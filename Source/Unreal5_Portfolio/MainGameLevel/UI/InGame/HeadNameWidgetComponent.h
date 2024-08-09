@@ -41,5 +41,8 @@ public:
 
 	UPROPERTY(Replicated)
 	FText HeadNameText;
+
+	UPROPERTY()
+	FTimerHandle HeadNameHandle;
 private:
 };

@@ -949,6 +949,11 @@ void ATestCharacter::BombPlanting_Implementation(AAreaObject* _AreaObject)
 
 void ATestCharacter::GetSetSelectCharacter_Implementation(FName _CharacterType)
 {
+	if (true == _CharacterType.IsNone())
+	{
+		_CharacterType = FName("TestPlayer");
+	}
+
 	UIToSelectCharacter = _CharacterType;
 
 	UMainGameInstance* Inst = UMainGameBlueprintFunctionLibrary::GetMainGameInstance(GetWorld());
