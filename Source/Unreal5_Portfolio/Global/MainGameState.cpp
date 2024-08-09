@@ -10,6 +10,7 @@
 #include "Global/MainGameBlueprintFunctionLibrary.h"
 #include "MainGameLevel/Player/PlayerItemInformation.h"
 #include "Components/AudioComponent.h"
+#include "MainGameLevel/Object/TriggerBox/StageCheckBox.h"
 
 // 추후 삭제 필요
 #include "TestLevel/Character/TestCharacter.h"
@@ -23,7 +24,14 @@ void AMainGameState::SetCurStage_Implementation(EGameStage _Stage)
 	if (EGameStage::MissionClear == CurStage
 		&& EGameStage::Defensing == PrevStage)
 	{
-		SpawnTriggerBox(EndingTriggerBoxPos, EndingTriggerBoxRot);
+		UMainGameInstance* Inst = UMainGameBlueprintFunctionLibrary::GetMainGameInstance(GetWorld());
+		TSubclassOf<UObject> TriggerInfo(Inst->GetGlobalObjectClass("StageEndCheckBox"));
+
+		if (nullptr != TriggerInfo)
+		{
+			AStageCheckBox* StageCheckBox = GetWorld()->SpawnActor<AStageCheckBox>(TriggerInfo, EndingTriggerBoxPos, EndingTriggerBoxRot);
+			StageCheckBox->SetActorScale3D(FVector(10.0f, 10.0f, 10.0f));
+		}
 	}
 }
 
@@ -112,7 +120,10 @@ void AMainGameState::GameStateCheck_Implementation(AActor* _OtherActor)
 		case EGameStage::Defensing:
 			break;
 		case EGameStage::MissionClear:
+		{
+			SpawnTriggerBox(EndingTriggerBoxPos, EndingTriggerBoxRot);
 			break;
+		}
 		default:
 			break;
 		}
