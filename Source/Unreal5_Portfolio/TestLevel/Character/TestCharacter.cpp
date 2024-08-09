@@ -207,7 +207,7 @@ void ATestCharacter::BeginPlay()
 			{
 				UMainGameInstance* Init = UMainGameBlueprintFunctionLibrary::GetMainGameInstance(GetWorld());
 				GetSetSelectCharacter(Init->GetUIToSelectCharacter());
-			}, 2.0f, false);
+			}, 5.0f, false);
 	}
 }
 

@@ -51,7 +51,7 @@ void UHeadNameWidgetComponent::BeginPlay()
 	GetWorld()->GetTimerManager().SetTimer(HeadNameHandle, [this]()
 		{
 			SetHeadNameWidgetText(HeadNameText);
-		}, 2.0f, false);
+		}, 5.0f, false);
 }
 
 void UHeadNameWidgetComponent::InitWidget()
