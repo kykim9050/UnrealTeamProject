@@ -253,6 +253,11 @@ void ATestPlayerController::Num_ChangePosture(int _InputKey)
 		return;
 	}
 
+	if (false == Ch->IsItemInItemSlot(_InputKey))
+	{
+		return;
+	}
+
 	if (_InputKey == 0) // รั
 	{
 		Ch->ChangeMontage(EPlayerUpperState::Rifle_Idle, true);
