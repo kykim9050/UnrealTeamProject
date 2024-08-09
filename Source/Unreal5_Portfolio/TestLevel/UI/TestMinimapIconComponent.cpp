@@ -2,9 +2,14 @@
 
 
 #include "TestLevel/UI/TestMinimapIconComponent.h"
-#include "Kismet/KismetMathLibrary.h"
-#include "PaperSprite.h"
+#include "TestLevel/Character/TestCharacter.h"
+
 #include "Global/ContentsLog.h"
+
+#include "Kismet/KismetMathLibrary.h"
+#include "Kismet/GameplayStatics.h"
+
+#include "PaperSprite.h"
 
 UTestMinimapIconComponent::UTestMinimapIconComponent()
 {
@@ -30,4 +35,10 @@ UTestMinimapIconComponent::UTestMinimapIconComponent()
 void UTestMinimapIconComponent::BeginPlay()
 {
 	Super::BeginPlay();
+
+	//ATestCharacter* aaa = Cast<ATestCharacter>(GetOwner());
+	if (Cast<ATestCharacter>(GetOwner()) == Cast<ATestCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0)))
+	{
+		SetSpriteColor(FLinearColor::Red);
+	}
 }
