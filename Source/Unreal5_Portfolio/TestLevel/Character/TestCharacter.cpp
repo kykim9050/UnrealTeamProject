@@ -410,8 +410,16 @@ void ATestCharacter::ClientMeshChange_Implementation(FName _CharacterType)
 
 	// ABP 선택
 	//UClass* AnimInst = Cast<UClass>(MainGameInst->GetPlayerData(FName("TestPlayer"))->GetPlayerAnimInstance());
-	UClass* AnimInst = Cast<UClass>(Inst->GetPlayerData(_CharacterType)->GetPlayerAnimInstance());
+	UClass* AnimInst = Cast<UClass>(Inst->GetPlayerData(UIToSelectCharacter)->GetPlayerAnimInstance());
 	GetMesh()->SetAnimInstanceClass(AnimInst);
+	FPVMesh->SetAnimInstanceClass(AnimInst);
+	PlayerAnimInst = Cast<UPlayerAnimInstance>(GetMesh()->GetAnimInstance());
+	FPVPlayerAnimInst = Cast<UPlayerAnimInstance>(GetMesh()->GetAnimInstance());
+
+	// AnimMontage 선택
+	TMap<EPlayerUpperState, class UAnimMontage*> AnimMon = Inst->GetPlayerData(_CharacterType)->GetAnimMontages();
+	PlayerAnimInst->SetAnimMontages(AnimMon);
+	FPVPlayerAnimInst->SetAnimMontages(AnimMon);
 }
 
 void ATestCharacter::PickUpItem(AItemBase* _Item)
@@ -989,6 +997,14 @@ void ATestCharacter::GetSetSelectCharacter_Implementation(FName _CharacterType)
 	//UClass* AnimInst = Cast<UClass>(MainGameInst->GetPlayerData(FName("TestPlayer"))->GetPlayerAnimInstance());
 	UClass* AnimInst = Cast<UClass>(Inst->GetPlayerData(UIToSelectCharacter)->GetPlayerAnimInstance());
 	GetMesh()->SetAnimInstanceClass(AnimInst);
+	FPVMesh->SetAnimInstanceClass(AnimInst);
+	PlayerAnimInst = Cast<UPlayerAnimInstance>(GetMesh()->GetAnimInstance());
+	FPVPlayerAnimInst = Cast<UPlayerAnimInstance>(GetMesh()->GetAnimInstance());
+
+	// AnimMontage 선택
+	TMap<EPlayerUpperState, class UAnimMontage*> AnimMon = Inst->GetPlayerData(_CharacterType)->GetAnimMontages();
+	PlayerAnimInst->SetAnimMontages(AnimMon);
+	FPVPlayerAnimInst->SetAnimMontages(AnimMon);
 
 	ClientMeshChange(UIToSelectCharacter);
 

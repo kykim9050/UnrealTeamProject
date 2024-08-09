@@ -44,3 +44,13 @@ void UPlayerAnimInstance::ChangeAnimation(EPlayerUpperState _UpperState)
 {
 	Super::ChangeAnimation(_UpperState);
 }
+
+void UPlayerAnimInstance::SetAnimMontages(TMap<EPlayerUpperState, class UAnimMontage*> _Montages)
+{
+	for (TPair<EPlayerUpperState, class UAnimMontage*> Montage : _Montages)
+	{
+		SetKeyAnimMontage(static_cast<uint8>(Montage.Key), Montage.Value);
+	}
+
+	GetAnimMontages();
+}

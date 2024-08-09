@@ -67,7 +67,14 @@ public:
 		return AnimMontages[Key];
 	}
 
+	void SetKeyAnimMontage(uint8 Key, class UAnimMontage* _AnimMontage)
+	{
+		AnimMontages[Key] = _AnimMontage;
+	}
+
 	uint8 GetAnimationKey(class UAnimMontage* _AnimMontage);
+
+	void ClearAnimMontages();
 
 private:
 	UPROPERTY()
