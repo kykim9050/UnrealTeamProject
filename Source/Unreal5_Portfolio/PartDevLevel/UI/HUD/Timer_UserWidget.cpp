@@ -24,7 +24,9 @@ void UTimer_UserWidget::SetTimer(int _Hour, int _Min, int _Second)
 	FFormatNamedArguments Arguments;
 	Arguments.Add(TEXT("_Hour"), FText::AsNumber(_Hour));
 	Arguments.Add(TEXT("_Min"), FText::AsNumber(_Min));
-	Arguments.Add(TEXT("_Second"), FText::AsNumber(_Secondime = FText::Format(TextTemplate, Arguments);
+	Arguments.Add(TEXT("_Second"), FText::AsNumber(_Second));
+
+	T_Time = FText::Format(TextTemplate, Arguments);
 }
 
 void UTimer_UserWidget::SetTimer(int _Min, int _Second)
