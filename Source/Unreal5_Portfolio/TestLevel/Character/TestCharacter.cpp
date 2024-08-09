@@ -36,6 +36,7 @@
 #include <Kismet/KismetSystemLibrary.h>
 #include <Kismet/GameplayStatics.h>
 
+#include "TimerManager.h"
 
 // Sets default values
 ATestCharacter::ATestCharacter()
@@ -137,7 +138,7 @@ void ATestCharacter::PostInitializeComponents() // FName 부분 수정 필요.
 			return;
 		}
 
-		GetSetSelectCharacter(MainGameInst);
+		//GetSetSelectCharacter(MainGameInst->GetUIToSelectCharacter()); 이걸 여기서하면 네명이 다 서버 메인플레이어의 값이 됨 ㅇㅅㅇ...
 		if (UIToSelectCharacter == "")
 		{
 			UIToSelectCharacter = "TestPlayer"; // test
@@ -198,6 +199,16 @@ void ATestCharacter::BeginPlay()
 	SendNicknames(InstName);
 
 	ChangeMontage(EPlayerUpperState::UArm_Idle);
+
+	ATestPlayerController* CastCharacter = Cast<ATestPlayerController>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
+	ATestPlayerController* MyController = Cast<ATestPlayerController>(GetController());
+	if (MyController == CastCharacter) {
+		GetWorldTimerManager().SetTimer(MeshHandle, [this]()
+			{
+				UMainGameInstance* Init = UMainGameBlueprintFunctionLibrary::GetMainGameInstance(GetWorld());
+				GetSetSelectCharacter(Init->GetUIToSelectCharacter());
+			}, 2.0f, false);
+	}
 }
 
 void ATestCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -379,6 +390,30 @@ void ATestCharacter::SendNicknames_Implementation(const FText& _Nickname)
 	MyNickName = _Nickname;
 }
 
+void ATestCharacter::ClientMeshChange_Implementation(FName _CharacterType)
+{
+	UMainGameInstance* Inst = UMainGameBlueprintFunctionLibrary::GetMainGameInstance(GetWorld());
+	if (nullptr == Inst)
+	{
+		return;
+	}
+
+	// 스켈레탈 메쉬 선택
+	//USkeletalMesh* PlayerSkeletalMesh = MainGameInst->GetPlayerData(FName("TestPlayer"))->GetPlayerSkeletalMesh();
+	USkeletalMesh* PlayerSkeletalMesh = Inst->GetPlayerData(_CharacterType)->GetPlayerSkeletalMesh();
+	GetMesh()->SetSkeletalMesh(PlayerSkeletalMesh);
+
+
+	//USkeletalMesh* FPVSkeletalMesh = MainGameInst->GetPlayerData(FName("TestPlayer"))->GetPlayerFPVPlayerSkeletalMesh();
+	USkeletalMesh* FPVSkeletalMesh = Inst->GetPlayerData(_CharacterType)->GetPlayerFPVPlayerSkeletalMesh();
+	FPVMesh->SetSkeletalMesh(FPVSkeletalMesh);
+
+	// ABP 선택
+	//UClass* AnimInst = Cast<UClass>(MainGameInst->GetPlayerData(FName("TestPlayer"))->GetPlayerAnimInstance());
+	UClass* AnimInst = Cast<UClass>(Inst->GetPlayerData(_CharacterType)->GetPlayerAnimInstance());
+	GetMesh()->SetAnimInstanceClass(AnimInst);
+}
+
 void ATestCharacter::PickUpItem(AItemBase* _Item)
 {
 	const FItemDataRow* ItemData = _Item->GetItemData();
@@ -519,6 +554,11 @@ void ATestCharacter::ChangeMontage_Implementation(EPlayerUpperState _UpperState,
 
 void ATestCharacter::ClientChangeMontage_Implementation(EPlayerUpperState _UpperState)
 {
+	if (PlayerAnimInst == nullptr || FPVPlayerAnimInst == nullptr)
+	{
+		return;
+	}
+
 	PlayerAnimInst->ChangeAnimation(_UpperState);
 	FPVPlayerAnimInst->ChangeAnimation(_UpperState);
 }
@@ -920,9 +960,33 @@ void ATestCharacter::BombPlanting_Implementation(AAreaObject* _AreaObject)
 	}
 }
 
-void ATestCharacter::GetSetSelectCharacter_Implementation(UMainGameInstance* _MainGameInstance)
+void ATestCharacter::GetSetSelectCharacter_Implementation(FName _CharacterType)
 {
-	UIToSelectCharacter = _MainGameInstance->GetUIToSelectCharacter();
+	UIToSelectCharacter = _CharacterType;
+
+	UMainGameInstance* Inst = UMainGameBlueprintFunctionLibrary::GetMainGameInstance(GetWorld());
+	if (nullptr == Inst)
+	{
+		return;
+	}
+
+	// 스켈레탈 메쉬 선택
+	//USkeletalMesh* PlayerSkeletalMesh = MainGameInst->GetPlayerData(FName("TestPlayer"))->GetPlayerSkeletalMesh();
+	USkeletalMesh* PlayerSkeletalMesh = Inst->GetPlayerData(UIToSelectCharacter)->GetPlayerSkeletalMesh();
+	GetMesh()->SetSkeletalMesh(PlayerSkeletalMesh);
+
+
+	//USkeletalMesh* FPVSkeletalMesh = MainGameInst->GetPlayerData(FName("TestPlayer"))->GetPlayerFPVPlayerSkeletalMesh();
+	USkeletalMesh* FPVSkeletalMesh = Inst->GetPlayerData(UIToSelectCharacter)->GetPlayerFPVPlayerSkeletalMesh();
+	FPVMesh->SetSkeletalMesh(FPVSkeletalMesh);
+
+	// ABP 선택
+	//UClass* AnimInst = Cast<UClass>(MainGameInst->GetPlayerData(FName("TestPlayer"))->GetPlayerAnimInstance());
+	UClass* AnimInst = Cast<UClass>(Inst->GetPlayerData(UIToSelectCharacter)->GetPlayerAnimInstance());
+	GetMesh()->SetAnimInstanceClass(AnimInst);
+
+	ClientMeshChange(UIToSelectCharacter);
+
 }
 
 void ATestCharacter::DeleteItemInfo(int _Index)
