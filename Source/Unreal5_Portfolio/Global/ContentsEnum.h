@@ -45,20 +45,20 @@ enum class EGameStage : uint8
 };
 
 
-/// <summary>
-/// 1, 2, 3, 4 번에 대한 플레이어 자세.
-/// </summary>
-UENUM(BlueprintType)
-enum class EPlayerPosture : uint8
-{
-	Rifle1,			// 주 무기 1		// 해당 무기공격 자세 있음
-	Rifle2,			// 주 무기 2		// 해당 무기공격 자세 있음
-	Melee,			// 근거리 무기	// 해당 무기공격 자세 있음
-	Drink,			// 음료(힐팩)	// 인벤토리에만 존재
-	Bomb,			// 설치형 폭탄	// 인벤토리에만 존재
-	Barehand,		// 맨손			// 해당 무기공격 자세 있음
-	SlotMax
-};
+///// <summary>
+///// 1, 2, 3, 4 번에 대한 플레이어 자세.
+///// </summary>
+//UENUM(BlueprintType)
+//enum class EPlayerPosture : uint8
+//{
+//	Rifle1,			// 주 무기 1		// 해당 무기공격 자세 있음
+//	Rifle2,			// 주 무기 2		// 해당 무기공격 자세 있음
+//	Melee,			// 근거리 무기	// 해당 무기공격 자세 있음
+//	Drink,			// 음료(힐팩)	// 인벤토리에만 존재
+//	Bomb,			// 설치형 폭탄	// 인벤토리에만 존재
+//	Barehand,		// 맨손			// 해당 무기공격 자세 있음
+//	SlotMax
+//};
 
 UENUM(BlueprintType)
 enum class EItemType : uint8

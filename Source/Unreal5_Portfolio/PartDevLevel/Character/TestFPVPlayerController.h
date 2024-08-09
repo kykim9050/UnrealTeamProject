@@ -142,8 +142,8 @@ private:
 	void CallGetItem(); // => 메인 적용(Delegate)
 
 protected: // => 메인 적용(Delegate)
-	UFUNCTION(BlueprintImplementableEvent, meta = (CallInEditor = true))
-	void ChangePostureToWidget(EPlayerPosture _Posture);
+	//UFUNCTION(BlueprintImplementableEvent, meta = (CallInEditor = true))
+	//void ChangePostureToWidget(EPlayerPosture _Posture);
 
 	UFUNCTION(BlueprintImplementableEvent, meta = (CallInEditor = true))
 	void GetItemToWidget();

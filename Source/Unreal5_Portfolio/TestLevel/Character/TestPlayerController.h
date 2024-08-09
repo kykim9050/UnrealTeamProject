@@ -94,8 +94,6 @@ private:
 
 	// Camera Shake
 	UPROPERTY()
-	bool IsCameraShakeOn = false;
-	UPROPERTY()
 	ECameraShakeState ShakeState = ECameraShakeState::Stop;
 	UPROPERTY()
 	FVector ShakeValue = FVector(0.0f, 0.0f, 0.0f);
