@@ -30,6 +30,5 @@ public:
 	float TimeCount = 0.0f;
 	
 	float PatrolRange = 800.0f;
-	float AttackRange = 200.0f;
 	bool bScream = false;
 };
