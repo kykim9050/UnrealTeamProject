@@ -3,7 +3,7 @@
 
 #include "MainGameLevel/Monster/BasicMonster/ClimbZombie/AI/BTTaskNode_ClimbZombieClimbEnd.h"
 #include "MainGameLevel/Monster/BasicMonster/ClimbZombie/ClimbZombie.h"
-#include "MainGameLevel/Monster/BasicMonster/ClimbZombie/ClimbZombeData.h"
+#include "MainGameLevel/Monster/BasicMonster/ClimbZombie/ClimbZombieData.h"
 #include "MainGameLevel/Monster/BasicMonster/AI/BasicMonsterAIController.h"
 #include "MainGameLevel/Monster/Animation/MonsterRandomAnimInstance.h"
 
@@ -24,7 +24,7 @@ EBTNodeResult::Type UBTTaskNode_ClimbZombieClimbEnd::ExecuteTask(UBehaviorTreeCo
 		return EBTNodeResult::Aborted;
 	}
 
-	UClimbZombeData* ClimbZombieData = ClimbZombie->GetSettingData();
+	UClimbZombieData* ClimbZombieData = ClimbZombie->GetSettingData();
 	if (false == ClimbZombieData->IsValidLowLevel())
 	{
 		LOG(MonsterLog, Fatal, TEXT("ClimbZombieData Is Not Valid"));
@@ -60,7 +60,7 @@ void UBTTaskNode_ClimbZombieClimbEnd::TickTask(UBehaviorTreeComponent& OwnerComp
 	Super::TickTask(OwnerComp, pNodeMemory, DeltaSeconds);
 
 	AClimbZombie* ClimbZombie = GetSelfActor<AClimbZombie>(OwnerComp);
-	UClimbZombeData* ClimbZombieData = ClimbZombie->GetSettingData();
+	UClimbZombieData* ClimbZombieData = ClimbZombie->GetSettingData();
 
 	if (0.0f >= ClimbZombieData->TimeCount)
 	{

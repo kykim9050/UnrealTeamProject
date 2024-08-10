@@ -70,6 +70,10 @@ void ABasicMonsterBase::BeginPlay()
 		return;
 	}
 
+	SettingData->OriginPos = GetActorLocation();
+	SettingData->Hp = BaseData->MaxHp;
+	SettingData->BaseData = BaseData;
+
 	// 애니메이션 세팅
 	AnimInst = Cast<UMonsterRandomAnimInstance>(GetMesh()->GetAnimInstance());
 	if (nullptr == AnimInst)

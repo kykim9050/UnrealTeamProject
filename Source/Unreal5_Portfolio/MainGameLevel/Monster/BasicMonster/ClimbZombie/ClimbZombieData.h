@@ -4,13 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "MainGameLevel/Monster/Base/BasicMonsterData.h"
-#include "ClimbZombeData.generated.h"
+#include "ClimbZombieData.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class UNREAL5_PORTFOLIO_API UClimbZombeData : public UBasicMonsterData
+class UNREAL5_PORTFOLIO_API UClimbZombieData : public UBasicMonsterData
 {
 	GENERATED_BODY()
 

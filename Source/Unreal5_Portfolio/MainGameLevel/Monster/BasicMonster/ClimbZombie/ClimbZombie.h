@@ -6,7 +6,7 @@
 #include "MainGameLevel/Monster/Base/BasicMonsterBase.h"
 #include "ClimbZombie.generated.h"
 
-class UClimbZombeData;
+class UClimbZombieData;
 class UMotionWarpingComponent;
 
 /**
@@ -21,7 +21,7 @@ public:
 	AClimbZombie();
 
 public:
-	UClimbZombeData* GetSettingData() const
+	UClimbZombieData* GetSettingData() const
 	{
 		return ClimbZombieSettingData;
 	}
@@ -36,7 +36,7 @@ protected:
 
 private:
 	UPROPERTY()
-	UClimbZombeData* ClimbZombieSettingData = nullptr;
+	UClimbZombieData* ClimbZombieSettingData = nullptr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	UMotionWarpingComponent* MotionWarpingComponent = nullptr;

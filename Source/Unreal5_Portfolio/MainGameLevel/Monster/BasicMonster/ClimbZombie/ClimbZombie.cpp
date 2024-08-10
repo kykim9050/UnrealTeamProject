@@ -2,7 +2,7 @@
 
 
 #include "MainGameLevel/Monster/BasicMonster/ClimbZombie/ClimbZombie.h"
-#include "MainGameLevel/Monster/BasicMonster/ClimbZombie/ClimbZombeData.h"
+#include "MainGameLevel/Monster/BasicMonster/ClimbZombie/ClimbZombieData.h"
 #include "MotionWarpingComponent.h"
 
 AClimbZombie::AClimbZombie()
@@ -14,9 +14,7 @@ void AClimbZombie::InitData(const FMonsterDataRow* BaseData)
 {
 	Super::InitData(BaseData);
 
-	ClimbZombieSettingData = NewObject<UClimbZombeData>(this);
-	ClimbZombieSettingData->OriginPos = GetActorLocation();
-	ClimbZombieSettingData->BaseData = BaseData;
+	ClimbZombieSettingData = NewObject<UClimbZombieData>(this);
 	ClimbZombieSettingData->bScream = false;
 
 	SettingData = ClimbZombieSettingData;

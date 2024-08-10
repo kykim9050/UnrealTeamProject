@@ -20,8 +20,8 @@ public:
 	const FMonsterDataRow* BaseData;
 
 	// 개별 Data
-	float Hp = 100.0f;
-	float AttackDamage = 5.0f;
+	float Hp = 0.0f;
+	float AttackDamage = 3.0f;
 
 	// 스폰 위치
 	FVector OriginPos = FVector::ZeroVector;
@@ -29,10 +29,7 @@ public:
 public:
 	float TimeCount = 0.0f;
 	
-	// 데이터 테이블 승격 필요
 	float PatrolRange = 800.0f;
-
 	float AttackRange = 200.0f;
-
 	bool bScream = false;
 };

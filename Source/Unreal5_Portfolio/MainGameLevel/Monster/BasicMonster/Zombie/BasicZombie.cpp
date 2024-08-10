@@ -10,8 +10,6 @@ void ABasicZombie::InitData(const FMonsterDataRow* BaseData)
 	Super::InitData(BaseData);
 
 	ZombieSettingData = NewObject<UBasicZombieData>(this);
-	ZombieSettingData->OriginPos = GetActorLocation();
-	ZombieSettingData->BaseData = BaseData;
 	ZombieSettingData->bScream = false;
 
 	SettingData = ZombieSettingData;

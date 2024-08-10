@@ -88,6 +88,9 @@ void ABossMonsterBase::BeginPlay()
 		return;
 	}
 
+	SettingData->BaseData = BaseData;
+	SettingData->Hp = BaseData->MaxHp;
+
 	// 애니메이션 세팅
 	AnimInst = Cast<UMainAnimInstance>(GetMesh()->GetAnimInstance());
 	if (nullptr == AnimInst)
