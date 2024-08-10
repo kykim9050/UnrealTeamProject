@@ -123,7 +123,6 @@ void ABasicMonsterBase::OnAttackOverlapEnd(UPrimitiveComponent* OverlappedComp, 
 		ATestPlayerState* HitPlayerState = Cast<ATestPlayerState>(HitCharacter->GetPlayerState());
 		if (nullptr == HitPlayerState)
 		{
-			LOG(MonsterLog, Fatal, TEXT("HitPlayerState Is Not Valid"));
 			return;
 		}
 		
