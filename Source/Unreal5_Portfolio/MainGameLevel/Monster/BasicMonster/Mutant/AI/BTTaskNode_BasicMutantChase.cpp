@@ -54,7 +54,7 @@ void UBTTaskNode_BasicMutantChase::TickTask(UBehaviorTreeComponent& OwnerComp, u
 	UBasicMutantData* MutantData = Mutant->GetSettingData();
 	FVector LocationDiff = TargetLocation - MutantLocation;
 	float DiffLength = LocationDiff.Size();
-	if (DiffLength <= MutantData->AttackRange)
+	if (DiffLength <= MutantData->BaseData->AttackRange)
 	{
 		StateChange(OwnerComp, EBasicMonsterState::Attack);
 		return;
