@@ -10,6 +10,22 @@
 class UBoxComponent;
 class ABasicMonsterBase;
 
+USTRUCT()
+struct FFixedSpawn
+{
+	GENERATED_BODY()
+
+public:
+	// Spawn Monster UClass
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<ABasicMonsterBase> MonsterUClass;
+	
+	// Number of creation per time (Fixed)
+	UPROPERTY(EditAnywhere)
+	int SpawnFixedMonsterCount = 0;
+
+};
+
 UCLASS()
 class UNREAL5_PORTFOLIO_API ABasicMonsterSpawner : public AActor
 {
@@ -28,7 +44,15 @@ private:
 private:
 	// Spawn Monster UClass
 	UPROPERTY(EditAnywhere, meta = (AllowprivateAccess = "true"))
-	TArray<TSubclassOf<ABasicMonsterBase>> MonsterUClass;
+	TArray<TSubclassOf<ABasicMonsterBase>> RandomMonsterUClass;
+
+	// Number of creation per time (Random)
+	UPROPERTY(EditAnywhere, meta = (AllowprivateAccess = "true"))
+	int SpawnRandomMonsterCount = 0;
+
+	// Fixed Spawn Type
+	UPROPERTY(EditAnywhere, meta = (AllowprivateAccess = "true"))
+	TArray<FFixedSpawn> FixedSpawn;
 
 	// Total Number of Spawn
 	UPROPERTY(EditAnywhere, meta = (AllowprivateAccess = "true"))
@@ -41,10 +65,6 @@ private:
 	// Time interval between Spawn
 	UPROPERTY(EditAnywhere, meta = (AllowprivateAccess = "true"))
 	float SpawnDelayTime = 0.0f;
-
-	// Number of creation per time
-	UPROPERTY(EditAnywhere, meta = (AllowprivateAccess = "true"))
-	int SpawnMonsterCount = 0;
 	
 	// Max Spawn Radius
 	UPROPERTY(EditAnywhere, meta = (AllowprivateAccess = "true"))

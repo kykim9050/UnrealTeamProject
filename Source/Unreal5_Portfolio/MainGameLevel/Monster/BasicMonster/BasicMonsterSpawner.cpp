@@ -67,16 +67,32 @@ void ABasicMonsterSpawner::Tick(float DeltaTime)
 void ABasicMonsterSpawner::SpawnBasicMonster()
 {
 	UMainGameInstance* MainInst = UMainGameBlueprintFunctionLibrary::GetMainGameInstance(GetWorld());
-
-	int Size = MonsterUClass.Num() - 1;
 	FVector CurPos = GetActorLocation();
 
-	for (int32 i = 0; i < SpawnMonsterCount; i++)
+	// 고정 스폰
+	for (FFixedSpawn& CurSpawnInfo : FixedSpawn)
+	{
+		for (int i = 0; i < CurSpawnInfo.SpawnFixedMonsterCount; ++i)
+		{
+			float SpawnRadius = MainInst->Random.FRandRange(0, MaxSpawnRadius);
+			FVector SpawnLocation = CurPos + MainInst->Random.GetUnitVector().GetSafeNormal2D() * SpawnRadius;
+			ABasicMonsterBase* NewMonster = GetWorld()->SpawnActor<ABasicMonsterBase>(CurSpawnInfo.MonsterUClass, SpawnLocation, FRotator::ZeroRotator);
+		
+			if (nullptr != NewMonster && true == IsChasePlayer)
+			{
+				NewMonster->SetChasePlayer();
+			}
+		}
+	}
+
+	// 랜덤 스폰
+	int Size = RandomMonsterUClass.Num() - 1;
+	for (int32 i = 0; i < SpawnRandomMonsterCount; ++i)
 	{
 		int TypeIndex = MainInst->Random.RandRange(0, Size);
 		float SpawnRadius = MainInst->Random.FRandRange(0, MaxSpawnRadius);
 		FVector SpawnLocation = CurPos + MainInst->Random.GetUnitVector().GetSafeNormal2D() * SpawnRadius;
-		ABasicMonsterBase* NewMonster = GetWorld()->SpawnActor<ABasicMonsterBase>(MonsterUClass[TypeIndex], SpawnLocation, FRotator::ZeroRotator);
+		ABasicMonsterBase* NewMonster = GetWorld()->SpawnActor<ABasicMonsterBase>(RandomMonsterUClass[TypeIndex], SpawnLocation, FRotator::ZeroRotator);
 
 		if (nullptr != NewMonster && true == IsChasePlayer)
 		{
