@@ -76,6 +76,23 @@ void UBTTaskNode_BossKrakenChase::TickTask(UBehaviorTreeComponent& OwnerComp, ui
 			StateChange(OwnerComp, EBossMonsterState::RangedAttack);
 			return;
 		}
+		else
+		{
+			UMainGameInstance* MainGameInst = UMainGameBlueprintFunctionLibrary::GetMainGameInstance(GetWorld());
+			if (nullptr != MainGameInst)
+			{
+				int32 RandInt = MainGameInst->Random.RandRange(0, 1);
+				switch (RandInt)
+				{
+				case 0:
+					StateChange(OwnerComp, EBossMonsterState::MeleeAttack);
+					return;
+				case 1:
+					StateChange(OwnerComp, EBossMonsterState::RangedAttack);
+					return;
+				}
+			}
+		}
 	}
 
 	KrakenData->TimeCount -= DeltaSeconds;
