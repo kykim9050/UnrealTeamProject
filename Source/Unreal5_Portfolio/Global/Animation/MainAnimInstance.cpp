@@ -49,7 +49,7 @@ void UMainAnimInstance::PushAnimation(uint8 Key, UAnimMontage* Montage, TFunctio
 
 	AnimMontages.Add(Key, Montage);
 
-	if (nullptr != _CallBack)
+	if (_CallBack != nullptr)
 	{
 		UAnimCallBack* NewCallBack = NewObject<UAnimCallBack>(this);
 		NewCallBack->CallBack = _CallBack;
@@ -59,7 +59,7 @@ void UMainAnimInstance::PushAnimation(uint8 Key, UAnimMontage* Montage, TFunctio
 
 void UMainAnimInstance::SetEndCallBackPush(uint8 Key, TFunction<void(uint8, UAnimMontage*)> _CallBack)
 {
-	if (nullptr != _CallBack)
+	if (_CallBack != nullptr)
 	{
 		UAnimCallBack* NewCallBack = NewObject<UAnimCallBack>(this);
 		NewCallBack->CallBack = _CallBack;

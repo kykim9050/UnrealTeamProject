@@ -33,11 +33,11 @@ void UAnimNotifyState_Muzzle_Particle::NotifyBegin(USkeletalMeshComponent* MeshC
 	FVector SpawnParticlePos = Position->GetComponentLocation();
 	FRotator Rotate = FRotator::ZeroRotator;
 	Rotate.Pitch = 90.0f;
-	FVector Scale = FVector(0.2f, 0.2f, 0.2f);
+	FVector Scale = FVector(1.0f, 1.0f, 1.0f);
 	UWorld* World = Player->GetWorld();
 	if (nullptr != World)
 	{ 
-		UGameplayStatics::SpawnEmitterAtLocation(World, Player->MuzzleEffect, SpawnParticlePos, Rotate, Scale);
+		UGameplayStatics::SpawnEmitterAtLocation(World, Player->MuzzleEffect, SpawnParticlePos, Rotate, Scale, true);
 	}
 }
 
