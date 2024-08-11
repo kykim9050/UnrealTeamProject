@@ -76,6 +76,23 @@ void UBTTaskNode_BossKrakenChase::TickTask(UBehaviorTreeComponent& OwnerComp, ui
 			StateChange(OwnerComp, EBossMonsterState::RangedAttack);
 			return;
 		}
+		else
+		{
+			UMainGameInstance* MainGameInst = UMainGameBlueprintFunctionLibrary::GetMainGameInstance(GetWorld());
+			if (nullptr != MainGameInst)
+			{
+				int32 RandInt = MainGameInst->Random.RandRange(0, 1);
+				switch (RandInt)
+				{
+				case 0:
+					StateChange(OwnerComp, EBossMonsterState::MeleeAttack);
+					return;
+				case 1:
+					StateChange(OwnerComp, EBossMonsterState::RangedAttack);
+					return;
+				}
+			}
+		}
 	}
 
 	KrakenData->TimeCount -= DeltaSeconds;
@@ -118,25 +135,6 @@ bool UBTTaskNode_BossKrakenChase::FindTarget(UBehaviorTreeComponent& OwnerComp)
 		{
 			continue;
 		}
-
-		//AMainCharacter* Player = Cast<AMainCharacter>(Actor);
-		//if (nullptr == Player)
-		//{
-		//	LOG(MonsterLog, Fatal, TEXT("Player Is Nullptr"));
-		//	return;
-		//}
-		//
-		//AMainPlayerState* MainPlayerState = Cast<AMainPlayerState>(Player->GetPlayerState());
-		//if (nullptr == MainPlayerState)
-		//{
-		//	LOG(MonsterLog, Fatal, TEXT("MainPlayerState Is Nullptr"));
-		//	return;
-		//}
-		//
-		//if (0.0f >= MainPlayerState->GetPlayerHp())
-		//{
-		//	continue;
-		//}
 
 		// 최단 거리 Player 찾기
 		FVector PlayerLocation = Player->GetActorLocation();

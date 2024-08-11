@@ -24,5 +24,5 @@ private:
 	bool FindTarget(UBehaviorTreeComponent& OwnerComp);
 
 private:
-	const float TurnTime = 1.0f;
+	const float TurnTime = 3.0f;
 };

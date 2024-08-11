@@ -43,7 +43,7 @@ public:
 		return Cast<OwnerType>(GetSelfActor(OwnerComp));
 	}
 
-	FORCEINLINE AActor* GetSelfActor(UBehaviorTreeComponent& OwnerComp);
+	AActor* GetSelfActor(UBehaviorTreeComponent& OwnerComp);
 
 	// Object
 	template<typename ObjectType>
@@ -52,11 +52,11 @@ public:
 		return Cast<ObjectType>(GetValueAsObject(OwnerComp, Name));
 	}
 
-	FORCEINLINE UObject* GetValueAsObject(UBehaviorTreeComponent& OwnerComp, FName Name);
-	FORCEINLINE void SetValueAsObject(UBehaviorTreeComponent& OwnerComp, FName Name, UObject* Value);
+	UObject* GetValueAsObject(UBehaviorTreeComponent& OwnerComp, FName Name);
+	void SetValueAsObject(UBehaviorTreeComponent& OwnerComp, FName Name, UObject* Value);
 
 	// Vector
-	FORCEINLINE FVector GetValueAsVector(UBehaviorTreeComponent& OwnerComp, FName Name);
-	FORCEINLINE void SetValueAsVector(UBehaviorTreeComponent& OwnerComp, FName Name, const FVector& Value);
+	FVector GetValueAsVector(UBehaviorTreeComponent& OwnerComp, FName Name);
+	void SetValueAsVector(UBehaviorTreeComponent& OwnerComp, FName Name, const FVector& Value);
 
 };
