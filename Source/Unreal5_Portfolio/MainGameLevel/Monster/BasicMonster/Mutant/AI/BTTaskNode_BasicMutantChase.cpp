@@ -39,6 +39,13 @@ void UBTTaskNode_BasicMutantChase::TickTask(UBehaviorTreeComponent& OwnerComp, u
 {
 	Super::TickTask(OwnerComp, pNodeMemory, DeltaSeconds);
 
+	// 상태 변화시 Failed
+	if (EBasicMonsterState::Chase != static_cast<EBasicMonsterState>(GetCurState(OwnerComp)))
+	{
+		FinishLatentTask(OwnerComp, EBTNodeResult::Failed);
+		return;
+	}
+
 	ABasicMutant* Mutant = GetSelfActor<ABasicMutant>(OwnerComp);
 	FVector MutantLocation = Mutant->GetActorLocation();
 
@@ -59,13 +66,6 @@ void UBTTaskNode_BasicMutantChase::TickTask(UBehaviorTreeComponent& OwnerComp, u
 			// 이동
 			Mutant->GetAIController()->MoveToLocation(TargetLocation);
 		}
-	}
-
-	// 상태 변화시 Failed
-	if (EBasicMonsterState::Chase != static_cast<EBasicMonsterState>(GetCurState(OwnerComp)))
-	{
-		FinishLatentTask(OwnerComp, EBTNodeResult::Failed);
-		return;
 	}
 
 	// Attack Range Check

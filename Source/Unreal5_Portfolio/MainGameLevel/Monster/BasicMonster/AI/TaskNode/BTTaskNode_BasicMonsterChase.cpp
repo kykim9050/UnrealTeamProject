@@ -40,6 +40,13 @@ void UBTTaskNode_BasicMonsterChase::TickTask(UBehaviorTreeComponent& OwnerComp, 
 {
 	Super::TickTask(OwnerComp, pNodeMemory, DeltaSeconds);
 
+	// 상태 변화시 Failed
+	if (EBasicMonsterState::Chase != GetCurState<EBasicMonsterState>(OwnerComp))
+	{
+		FinishLatentTask(OwnerComp, EBTNodeResult::Failed);
+		return;
+	}
+
 	ABasicMonsterBase* Monster = GetSelfActor<ABasicMonsterBase>(OwnerComp);
 	FVector MonsterLocation = Monster->GetActorLocation();
 
@@ -60,13 +67,6 @@ void UBTTaskNode_BasicMonsterChase::TickTask(UBehaviorTreeComponent& OwnerComp, 
 			// 이동
 			Monster->GetAIController()->MoveToLocation(TargetLocation);
 		}
-	}
-
-	// 상태 변화시 Failed
-	if (EBasicMonsterState::Chase != GetCurState<EBasicMonsterState>(OwnerComp))
-	{
-		FinishLatentTask(OwnerComp, EBTNodeResult::Failed);
-		return;
 	}
 
 	// 공격 범위 안에 있으면 Attack
