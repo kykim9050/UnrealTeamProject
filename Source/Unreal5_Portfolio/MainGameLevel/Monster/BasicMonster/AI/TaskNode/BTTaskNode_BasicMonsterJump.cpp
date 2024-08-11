@@ -4,6 +4,7 @@
 #include "BTTaskNode_BasicMonsterJump.h"
 #include "MainGameLevel/Monster/Base/BasicMonsterBase.h"
 
+#include "Kismet/KismetMathLibrary.h"
 #include "Kismet/GameplayStatics.h"
 
 #include "Global/ContentsLog.h"
@@ -26,6 +27,12 @@ EBTNodeResult::Type UBTTaskNode_BasicMonsterJump::ExecuteTask(UBehaviorTreeCompo
 
 	UGameplayStatics::SuggestProjectileVelocity_CustomArc(GetWorld(), Velocity, MonsterLocation, LandingLocation, 0.0f, 0.5f);
 	Monster->LaunchCharacter(Velocity, true, true);
+
+	FRotator TurnRot = UKismetMathLibrary::FindLookAtRotation(MonsterLocation, LandingLocation);
+	MonsterLocation.Z = 0.0f;
+	LandingLocation.Z = 0.0f;
+
+	Monster->SetActorRotation(TurnRot);
 
 	return EBTNodeResult::Type::InProgress;
 }
