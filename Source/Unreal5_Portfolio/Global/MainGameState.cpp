@@ -130,6 +130,11 @@ void AMainGameState::GameStateCheck_Implementation(AActor* _OtherActor)
 	}
 }
 
+void AMainGameState::SetIsPlayCinematic(bool _Value)
+{
+	bPlayCinematic = _Value;
+}
+
 void AMainGameState::SpawnTriggerBox(FVector _Pos, FRotator _Rot)
 {
 	UMainGameInstance* Inst = UMainGameBlueprintFunctionLibrary::GetMainGameInstance(GetWorld());

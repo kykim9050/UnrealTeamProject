@@ -9,6 +9,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Navigation/PathFollowingComponent.h"
 
+#include "Global/MainGameBlueprintFunctionLibrary.h"
 #include "Global/ContentsLog.h"
 
 EBTNodeResult::Type UBTTaskNode_BasicMonsterChase::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
@@ -39,18 +40,34 @@ void UBTTaskNode_BasicMonsterChase::TickTask(UBehaviorTreeComponent& OwnerComp, 
 {
 	Super::TickTask(OwnerComp, pNodeMemory, DeltaSeconds);
 
+	ABasicMonsterBase* Monster = GetSelfActor<ABasicMonsterBase>(OwnerComp);
+	FVector MonsterLocation = Monster->GetActorLocation();
+
+	AActor* TargetActor = GetValueAsObject<AActor>(OwnerComp, TEXT("TargetActor"));
+	FVector TargetLocation = TargetActor->GetActorLocation();
+
+	// 시네마틱 체크
+	AMainGameState* MainGameState = UMainGameBlueprintFunctionLibrary::GetMainGameState(GetWorld());
+	if (nullptr != MainGameState)
+	{
+		if (true == MainGameState->IsPlayCinematic())
+		{
+			Monster->GetAIController()->StopMovement();
+			return;
+		}
+		else
+		{
+			// 이동
+			Monster->GetAIController()->MoveToLocation(TargetLocation);
+		}
+	}
+
 	// 상태 변화시 Failed
 	if (EBasicMonsterState::Chase != GetCurState<EBasicMonsterState>(OwnerComp))
 	{
 		FinishLatentTask(OwnerComp, EBTNodeResult::Failed);
 		return;
 	}
-
-	ABasicMonsterBase* Monster = GetSelfActor<ABasicMonsterBase>(OwnerComp);
-	FVector MonsterLocation = Monster->GetActorLocation();
-
-	AActor* TargetActor = GetValueAsObject<AActor>(OwnerComp, TEXT("TargetActor"));
-	FVector TargetLocation = TargetActor->GetActorLocation();
 
 	// 공격 범위 안에 있으면 Attack
 	UBasicMonsterData* MonsterData = Monster->GetSettingData();
@@ -61,7 +78,4 @@ void UBTTaskNode_BasicMonsterChase::TickTask(UBehaviorTreeComponent& OwnerComp, 
 		StateChange(OwnerComp, EBasicMonsterState::Attack);
 		return;
 	}
-
-	// 이동
-	Monster->GetAIController()->MoveToLocation(TargetLocation);
 }

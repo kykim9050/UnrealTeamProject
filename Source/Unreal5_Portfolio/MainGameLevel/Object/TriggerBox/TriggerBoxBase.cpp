@@ -79,7 +79,6 @@ void ATriggerBoxBase::OnOverlapBegin(AActor* OverlappedActor, AActor* OtherActor
 
 void ATriggerBoxBase::SetAllPlayersLocation_Implementation(const FVector& NewLocation)
 {
-
 	const float DistanceFromCenter = 300.0f;
 
 	TArray<FVector> PlayerLocations;
@@ -130,6 +129,13 @@ void ATriggerBoxBase::PlayCinematicSequence_Implementation()
 	{
 		SequencePlayer->Play();
 
+		// 시네마틱 재생 여부 설정	
+		AMainGameState* MainGameState = UMainGameBlueprintFunctionLibrary::GetMainGameState(GetWorld());
+		if (nullptr != MainGameState)
+		{
+			MainGameState->SetIsPlayCinematic(true);
+		}
+
 		// 시네마틱 시퀀스가 끝났을 때 호출되는 델리게이트 바인딩
 		SequencePlayer->OnFinished.AddDynamic(this, &ATriggerBoxBase::OnSequenceFinished);
 	}
@@ -147,8 +153,15 @@ void ATriggerBoxBase::OnSequenceFinished()
 		}
 	}
 
-	// 백그라운드 사운드 재생
-	BackgroundSoundOnOff(UMainGameBlueprintFunctionLibrary::GetMainGameState(GetWorld()), true);
+	AMainGameState* MainGameState = UMainGameBlueprintFunctionLibrary::GetMainGameState(GetWorld());
+	if (nullptr != MainGameState)
+	{
+		// 시네마틱 재생 여부 설정	
+		MainGameState->SetIsPlayCinematic(false);
+
+		// 백그라운드 사운드 재생 정지
+		BackgroundSoundOnOff(MainGameState, true);
+	}
 
 	Destroy();
 }

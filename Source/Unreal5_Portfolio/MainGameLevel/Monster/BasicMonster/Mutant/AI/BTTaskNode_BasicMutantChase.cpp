@@ -8,6 +8,7 @@
 
 #include "GameFramework/CharacterMovementComponent.h"
 
+#include "Global/MainGameBlueprintFunctionLibrary.h"
 #include "Global/ContentsLog.h"
 
 EBTNodeResult::Type UBTTaskNode_BasicMutantChase::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
@@ -38,17 +39,34 @@ void UBTTaskNode_BasicMutantChase::TickTask(UBehaviorTreeComponent& OwnerComp, u
 {
 	Super::TickTask(OwnerComp, pNodeMemory, DeltaSeconds);
 
-	if (EBasicMonsterState::Chase != static_cast<EBasicMonsterState>(GetCurState(OwnerComp)))
-	{
-		FinishLatentTask(OwnerComp, EBTNodeResult::Failed);
-		return;
-	}
-
 	ABasicMutant* Mutant = GetSelfActor<ABasicMutant>(OwnerComp);
 	FVector MutantLocation = Mutant->GetActorLocation();
 
 	AActor* Target = GetValueAsObject<AActor>(OwnerComp, TEXT("TargetActor"));
 	FVector TargetLocation = Target->GetActorLocation();
+
+	// 시네마틱 체크
+	AMainGameState* MainGameState = UMainGameBlueprintFunctionLibrary::GetMainGameState(GetWorld());
+	if (nullptr != MainGameState)
+	{
+		if (true == MainGameState->IsPlayCinematic())
+		{
+			Mutant->GetAIController()->StopMovement();
+			return;
+		}
+		else
+		{
+			// 이동
+			Mutant->GetAIController()->MoveToLocation(TargetLocation);
+		}
+	}
+
+	// 상태 변화시 Failed
+	if (EBasicMonsterState::Chase != static_cast<EBasicMonsterState>(GetCurState(OwnerComp)))
+	{
+		FinishLatentTask(OwnerComp, EBTNodeResult::Failed);
+		return;
+	}
 
 	// Attack Range Check
 	UBasicMutantData* MutantData = Mutant->GetSettingData();

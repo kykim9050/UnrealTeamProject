@@ -69,6 +69,8 @@ public:
 	void GameStateCheck(AActor* _OtherActor);
 	void GameStateCheck_Implementation(AActor* _OtherActor);
 
+	void SetIsPlayCinematic(bool _Value);
+
 	UFUNCTION()
 	FORCEINLINE int GetPlayerCount()
 	{
@@ -105,6 +107,11 @@ public:
 		IsStageChange = _Value;
 	}
 
+	FORCEINLINE bool IsPlayCinematic() const
+	{
+		return bPlayCinematic;
+	}
+
 	void PlayBackgroundSound();
 
 	void StopBackgroundSound();
@@ -134,6 +141,12 @@ private:
 	/// </summary>
 	UPROPERTY()
 	bool IsStageChange = false;
+
+	/// <summary>
+	/// 시네마틱 재생 여부에 대한 변수
+	/// </summary>
+	UPROPERTY()
+	bool bPlayCinematic = false;
 
 	/// <summary>
 	/// 플레이어 수
