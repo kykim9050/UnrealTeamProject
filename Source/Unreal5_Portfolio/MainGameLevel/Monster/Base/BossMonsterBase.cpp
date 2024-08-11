@@ -30,7 +30,6 @@ ABossMonsterBase::ABossMonsterBase()
 
 	// Attack Component
 	AttackComponent = CreateDefaultSubobject<USphereComponent>(TEXT("Attack Component"));
-	AttackComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	AttackComponent->SetupAttachment(RootComponent);
 
 	// Dissolve
@@ -123,6 +122,10 @@ void ABossMonsterBase::BeginPlay()
 	Cast<UBossHpbarUserWidget>(BossUHD->GetWidget(EUserWidgetType::BossHpbar))->SetHp(SettingData->Hp, SettingData->BaseData->MaxHp);
 	BossUHD->UIOn(EUserWidgetType::BossHpbar);
 
+	// Binding
+	AttackComponent->OnComponentEndOverlap.AddDynamic(this, &ABossMonsterBase::OnAttackOverlapEnd);
+	AttackComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
 	// 서버 체크
 	if (false == HasAuthority())
 	{
@@ -136,9 +139,6 @@ void ABossMonsterBase::BeginPlay()
 		LOG(MonsterLog, Fatal, TEXT("AIController Is Null"));
 		return;
 	}
-
-	// Binding
-	AttackComponent->OnComponentEndOverlap.AddDynamic(this, &ABossMonsterBase::OnAttackOverlapEnd);
 }
 
 void ABossMonsterBase::Tick(float DeltaTime)
@@ -177,11 +177,13 @@ void ABossMonsterBase::OnAttackOverlapEnd(UPrimitiveComponent* OverlappedComp, A
 		ATestPlayerState* HitPlayerState = Cast<ATestPlayerState>(HitCharacter->GetPlayerState());
 		if (nullptr == HitPlayerState)
 		{
-			LOG(MonsterLog, Fatal, TEXT("HitPlayerState Is Not Valid"));
 			return;
 		}
 
-		HitPlayerState->AddDamage(SettingData->AttackDamage);
+		if (true == HasAuthority())
+		{
+			HitPlayerState->AddDamage(SettingData->AttackDamage);
+		}
 	}
 }
 
