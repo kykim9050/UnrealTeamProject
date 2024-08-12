@@ -64,7 +64,7 @@ void UServerBtnUserWidget::OnConnectButtonClicked()
 {
 	if (nullptr == TitleHUD)
 	{
-		LOG(UILog, Fatal, "Controller is Null");
+		LOG(UILog, Fatal, "TitleHUD is Null");
 	}
 
 	TitleHUD->UISwitch(EUserWidgetType::ServerBtn);

@@ -21,9 +21,6 @@ class UNREAL5_PORTFOLIO_API UPlayerLobbyUserWidget : public UUserWidget
 	class UDefaultButtonUserWidget* B_Start;
 
 	UPROPERTY(meta = (BindWidget))
-	class UPlayerViewUserWidget* CurPlayerView;
-
-	UPROPERTY(meta = (BindWidget))
 	class UCharacterSelectionUserWidget* CharacterSelectionWindow;
 
 	UFUNCTION(BlueprintCallable)
@@ -34,12 +31,6 @@ class UNREAL5_PORTFOLIO_API UPlayerLobbyUserWidget : public UUserWidget
 
 public:
 	void NativeConstruct() override;
-
-	UFUNCTION()
-	void LobbyPlayerName(int _Order, FText _Name);
-
-	UFUNCTION()
-	void LobbyPlayerView(int _Order, int _CharacterType);
 
 	UFUNCTION(BlueprintCallable)
 	void OnReadyBtn();
