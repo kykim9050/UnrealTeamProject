@@ -236,7 +236,7 @@ void ATestCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLi
 
 void ATestCharacter::AnimationEnd(FString _CurMontage)
 {
-	if ("E_Drinking_Montage" == _CurMontage)
+	if ("E_Drinking_Montage" == _CurMontage || "A_Drinking_Montage" == _CurMontage)
 	{
 		PlayerHp_Heal();
 	}
