@@ -30,6 +30,10 @@ public:
 	UPROPERTY(EditAnywhere)
 	float RunSpeed = 600.0f;
 
+	// 공격력
+	UPROPERTY(EditAnywhere)
+	float AttackDamage = 0.0f;
+
 	// 공격 범위
 	UPROPERTY(EditAnywhere)
 	float AttackRange = 200.0f;
