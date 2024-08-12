@@ -23,6 +23,7 @@ UHeadNameWidgetComponent::UHeadNameWidgetComponent()
 	}
 	else
 	{
+		LOG(UILog, Fatal, "WBP_HeadName Not Found");
 		int a = 0;
 	}
 
