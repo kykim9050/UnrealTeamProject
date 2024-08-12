@@ -451,8 +451,16 @@ void ATestCharacter::PickUpItem(AItemBase* _Item)
 	ItemSlot[ItemSlotIndex].ReloadLeftNum = ItemData->GetReloadNum();		// 무기 장전 단위	 (Left) (-1일 경우 총기류 무기가 아님)
 	ItemSlot[ItemSlotIndex].Damage = ItemData->GetDamage();					// 무기 공격력 (0일 경우 무기가 아님)
 	ItemSlot[ItemSlotIndex].MeshRes = ItemData->GetResMesh();				// 스태틱 메시 리소스
-	ItemSlot[ItemSlotIndex].RelLoc = ItemData->GetRelLoc();					// ItemSocket, FPVItemSocket 상대적 위치
-	ItemSlot[ItemSlotIndex].RelRot = ItemData->GetRelRot();					// ItemSocket, FPVItemSocket 상대적 회전
+	if (FName("TestPlayer") == UIToSelectCharacter || FName("Vanguard") == UIToSelectCharacter)
+	{
+		ItemSlot[ItemSlotIndex].RelLoc = ItemData->GetRelLoc_E();			// ItemSocket, FPVItemSocket 상대적 위치
+		ItemSlot[ItemSlotIndex].RelRot = ItemData->GetRelRot_E();			// ItemSocket, FPVItemSocket 상대적 회전
+	}
+	else if (FName("AlienSoldier") == UIToSelectCharacter || FName("Crypto") == UIToSelectCharacter)
+	{
+		ItemSlot[ItemSlotIndex].RelLoc = ItemData->GetRelLoc_A();			// ItemSocket, FPVItemSocket 상대적 위치
+		ItemSlot[ItemSlotIndex].RelRot = ItemData->GetRelRot_A();			// ItemSocket, FPVItemSocket 상대적 회전
+	}
 	ItemSlot[ItemSlotIndex].RelScale = ItemData->GetRelScale();				// ItemSocket, FPVItemSocket 상대적 크기
 
 	// 필드에 존재하는 아이템 액터 삭제
@@ -475,11 +483,11 @@ void ATestCharacter::PickUpItem(AItemBase* _Item)
 	}
 
 	// To Controller -> To Widget
-	//ATestPlayerController* Con = Cast<ATestPlayerController>(GetController());
-	//if (nullptr != Con)
-	//{
-	//	Con->FGetItemToWidget.Execute();
-	//}
+	ATestPlayerController* Con = Cast<ATestPlayerController>(GetController());
+	if (nullptr != Con)
+	{
+		Con->FGetItemToWidget.Execute();
+	}
 }
 
 void ATestCharacter::DropItem(int _SlotIndex)
@@ -877,6 +885,7 @@ void ATestCharacter::BombSetStart()
 	// 폭탄 설치 가능.
 	IsBombSetting = true;
 	AreaObject->ResetBombTime();
+	SetItemSocketVisibility(false);
 	ChangeMontage(EPlayerUpperState::Bomb);
 }
 
@@ -914,6 +923,7 @@ void ATestCharacter::BombSetCancel()
 		}
 
 		// 이전 자세로 애니메이션 변경
+		SetItemSocketVisibility(true);
 		ChangeMontage(IdleDefault);
 	}
 }
@@ -936,6 +946,7 @@ void ATestCharacter::BombSetEnd()
 		DeleteItemInfo(static_cast<int>(EItemType::Bomb));
 
 		// 이전 자세로 애니메이션 변경
+		SetItemSocketVisibility(true);
 		ChangeMontage(IdleDefault);
 	}
 }
