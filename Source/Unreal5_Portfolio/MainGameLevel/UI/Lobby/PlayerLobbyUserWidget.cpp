@@ -130,30 +130,3 @@ bool UPlayerLobbyUserWidget::IsServer()
 	UMainGameInstance* Inst = UMainGameBlueprintFunctionLibrary::GetMainGameInstance(GetWorld());
 	return Inst->CurNetInfo.GetIsServer();
 }
-
-void UPlayerLobbyUserWidget::LobbyPlayerName(int _Order, FText _Name)
-{
-	switch (_Order)
-	{
-	case 0:
-		CurPlayerView->SetP0Name(_Name);
-		break;
-	case 1:
-		CurPlayerView->SetP1Name(_Name);
-		break;
-	case 2:
-		CurPlayerView->SetP2Name(_Name);
-		break;
-	case 3:
-		CurPlayerView->SetP3Name(_Name);
-		break;
-	default:
-		CurPlayerView->SetP0Name(_Name);
-		break;
-	}
-}
-
-void UPlayerLobbyUserWidget::LobbyPlayerView(int _Order, int _CharacterType)
-{
-	CurPlayerView->SetPlayerView(_Order, _CharacterType);
-}
