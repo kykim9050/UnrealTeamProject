@@ -1050,6 +1050,11 @@ void ATestCharacter::BulletCalculation()
 
 bool ATestCharacter::IsItemInItemSlot(int _Index)
 {
+	if (_Index == -1)
+	{
+		return false;
+	}
+
 	return ItemSlot[_Index].IsItemIn;
 }
 
