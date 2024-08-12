@@ -527,7 +527,7 @@ void ATestCharacter::FireRayCast_Implementation()
 	ATestPlayerController* Con = Cast<ATestPlayerController>(GetController());
 	FVector Start = GetMesh()->GetSocketLocation(FName("MuzzleSocket"));
 	//Start.Z -= 20.0f;
-	FVector End = (Con->GetControlRotation().Vector() * 2000.0f) + Start;
+	FVector End = (Con->GetControlRotation().Vector() * 4000.0f) + Start;
 
 	FHitResult Hit;
 	if (GetWorld())
