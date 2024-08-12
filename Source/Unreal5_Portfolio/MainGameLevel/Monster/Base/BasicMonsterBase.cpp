@@ -128,7 +128,7 @@ void ABasicMonsterBase::OnAttackOverlapEnd(UPrimitiveComponent* OverlappedComp, 
 		
 		if (true == HasAuthority())
 		{
-			HitPlayerState->AddDamage(SettingData->AttackDamage);
+			HitPlayerState->AddDamage(SettingData->BaseData->AttackDamage);
 		}
 	}
 }
