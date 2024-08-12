@@ -21,7 +21,6 @@ public:
 
 	// 개별 Data
 	float Hp = 0.0f;
-	float AttackDamage = 3.0f;
 
 	// 스폰 위치
 	FVector OriginPos = FVector::ZeroVector;
